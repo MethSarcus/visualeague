@@ -21,30 +21,6 @@ const overrides = {
   },
   colors: {
     primary: {
-      50: "#F7F2FE",
-      100: "#F0E6FC",
-      200: "#E8D9FB",
-      300: "#E1CDFA",
-      400: "#D9C0F8",
-      500: "#D1B3F7",
-      600: "#CAA7F6",
-      700: "#C29AF5",
-      800: "#BA8DF3",
-      900: "#B381F2",
-    },
-    primary_dark: {
-      50: "#120D19",
-      100: "#241A30",
-      200: "#362749",
-      300: "#483461",
-      400: "#5A4179",
-      500: "#6B4D91",
-      600: "#6002ee",
-      700: "#8F67C2",
-      800: "#A174DA",
-      900: "#B381F2",
-    },
-    primary_google: {
       50: "#f4ebfe",
       100: "#e2cdfd",
       200: "#cfabfd",
@@ -56,7 +32,7 @@ const overrides = {
       800: "#7335d8",
       900: "#5f27ca",
     },
-    secondary_google: {
+    secondary: {
       50: "#d4f6f2",
       100: "#92e9dc",
       200: "#03dac4",
@@ -68,7 +44,7 @@ const overrides = {
       800: "#007957",
       900: "#005b39",
     },
-    surface_google: {
+    surface: {
       0: "#292929",
       1: "#121212",
       2: "#1E1E1E",

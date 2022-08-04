@@ -8,7 +8,7 @@ function UsernameForm(props: MyProps) {
   return (
     <Box
       display="inline-block"
-      bg={"brand.surface"}
+      bg={"surface.0"}
       opacity={1}
       boxShadow={5}
       p={10}

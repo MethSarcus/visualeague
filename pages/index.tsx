@@ -47,9 +47,9 @@ const Home: NextPage = () => {
             alt="Picture of draftboard"
             placeholder="blur" // Optional blur-up while loading
           />
-          <div className="formContainer">
+          <Box className="formContainer">
             <UsernameForm callback={onFormSubmit}/>
-          </div>
+          </Box>
         </div>
       </main>
     </div>

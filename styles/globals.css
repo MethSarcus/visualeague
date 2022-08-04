@@ -6,21 +6,183 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.LeagueCard {
+  color: red;
+  background-color: red;
 }
 
 * {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.UserPick {
+  background-color: red;
+}
+
+.DraftPickCardBackground {
+  background: #c4c4c4;
+  border-radius: 6px 6px 0px 6px;
+  width: 120px;
+  height: 43px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.bgImage {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background-attachment: fixed;
+}
+
+.DraftPickCardH1 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  padding-top: 3px;
+  padding-left: 3px;
+  display: flex;
+  align-items: center;
+  font-feature-settings: "kern" off;
+
+  color: #000000;
+}
+
+.DraftPickCardH2 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  padding-left: 3px;
+  align-items: center;
+
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.DraftPickCardPickNumber {
+  position: absolute;
+  left: 82.5%;
+  right: 5%;
+  top: 16.28%;
+  bottom: 60.47%;
+
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.DraftPickImageContainer {
+  position: absolute;
+  left: 76.67%;
+  right: 0%;
+  bottom: 0%;
+}
+
+.QB {
+  background: rgba(239, 116, 161, 0.8);
+}
+
+.RB {
+  background: rgba(143, 242, 202, 0.8);
+}
+
+.WR {
+  background: rgba(86, 201, 248, 0.8);
+}
+
+.TE {
+  background: rgba(254, 174, 88, 0.8);
+}
+
+.DL {
+  background: rgba(250, 153, 97, 0.8);
+}
+
+.DB {
+  background: rgba(254, 160, 202, 0.8);
+}
+
+.LB {
+  background: rgba(174, 182, 252, 0.8);
+}
+
+.DEF {
+  background: #7988a1;
+}
+
+.K {
+  background: #bd66ff;
+}
+
+.FLEX {
+  background: linear-gradient(
+    164deg,
+    rgba(143, 242, 202, 0.8) 10%,
+    rgba(254, 174, 88, 0.8) 50%,
+    rgba(86, 201, 248, 0.8) 90%
+  );
+}
+
+.SUPER_FLEX {
+  background: linear-gradient(
+    90deg,
+    rgba(143, 242, 202, 0.8) 0%,
+    rgba(254, 174, 88, 0.8) 50%,
+    rgba(86, 201, 248, 0.8) 100%
+  );
+}
+
+.REC_FLEX {
+  background: linear-gradient(
+    164deg,
+    rgba(143, 242, 202, 0.8) 30%,
+    rgba(254, 174, 88, 0.8) 70%
+  );
+}
+
+.WRRB_FLEX {
+  background: rgb(143, 242, 202);
+  background: linear-gradient(
+    164deg,
+    rgba(143, 242, 202, 0.8) 30%,
+    rgba(86, 201, 248, 0.8) 70%
+  );
+}
+
+.IDP_FLEX {
+  background: rgb(143, 242, 202);
+  background: linear-gradient(
+    90deg,
+    rgba(143, 242, 202, 0.8) 0%,
+    rgba(254, 174, 88, 0.8) 50%,
+    rgba(86, 201, 248, 0.8) 100%
+  );
+}
+
+.formContainer {
+  color: white;
+  visibility: visible;
+  border-radius: 5px;
+  padding: 20px;
+  opacity: 0.99;
 }
