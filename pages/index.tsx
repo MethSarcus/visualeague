@@ -14,14 +14,6 @@ const Home: NextPage = () => {
   const [text, setText] = useState("");
   const router = useRouter();
 
-  const onFormSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
-    router.push({
-      pathname: "/user/" + text + "/overview",
-    });
-  };
-
   return (
     <div className={styles.container}>
       <Head>
@@ -32,12 +24,6 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <div className="App">
-          <header className="App-header">
-            <h1>Draft Sniper</h1>
-          </header>
           <Image
             className="bgImage"
             src={bg}
@@ -47,9 +33,28 @@ const Home: NextPage = () => {
             alt="Picture of draftboard"
             placeholder="blur" // Optional blur-up while loading
           />
-          <Box className="formContainer">
-            <UsernameForm callback={onFormSubmit}/>
-          </Box>
+      <main className={styles.main}>
+        <div className="App">
+
+          <Container className="formContainer" maxW={'2xl'} bg={"surface.0"} boxShadow={5}
+              p={20}
+              overflow="hidden"
+              borderRadius={10}>
+            <Box w={'2xl'} maxH={'2xl'}>
+              <Heading
+                display="flex"
+                flexDirection="row"
+                justifyContent="center"
+                alignItems="center"
+                size="2xl"
+                color="#FFFFFF"
+                pb={30}
+              >
+                Dynasty Dash
+              </Heading>
+              <UsernameForm />
+            </Box>
+          </Container>
         </div>
       </main>
     </div>

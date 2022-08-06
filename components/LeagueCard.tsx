@@ -5,6 +5,8 @@ import {
   Spacer,
   ButtonGroup,
   Box,
+  useStyleConfig,
+  useMultiStyleConfig,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -14,9 +16,13 @@ import ScoringPopover from "./ScoringPopover";
 
 type MyProps = {
   league: LeagueSettings;
+  variant: string;
+  size: string;
 };
 
 const LeagueCard = (props: MyProps) => {
+  const { variant, size, ...rest } = props;
+  const styles = useMultiStyleConfig("LeagueCard", { variant, size });
   const router = useRouter();
 
   function onSub(e: React.SyntheticEvent) {
@@ -41,7 +47,7 @@ const LeagueCard = (props: MyProps) => {
       bg="surface_google.2"
       textColor={"brand.on_surface"}
     >
-      <Box as="b" fontSize="sm" textAlign={"center"}>
+      <Box as="b" fontSize="sm" textAlign={"center"}  __css={styles.league_name}>
         {props.league.name}
       </Box>
       <Stack direction={"row"}>

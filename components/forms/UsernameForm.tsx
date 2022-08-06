@@ -1,32 +1,37 @@
-import { Box, Button, Heading, Input, useStyleConfig } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Collapse,
+  Heading,
+  Input,
+  useStyleConfig,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { useRouter } from "next/router";
 import { FormEventHandler, useState } from "react";
+import useSWR from "swr";
+import LeagueCellGroup from "./LeagueCellGroup";
 
-type MyProps = { callback: FormEventHandler };
 
-function UsernameForm(props: MyProps) {
+function UsernameForm() {
   const [text, setText] = useState("");
+  const [usernameSubmitted, setUsernameSubmitted] = useState(false);
+  const onFormSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    setUsernameSubmitted(true)
+  };
+
+  const textChanged = (username: string) => {
+    setUsernameSubmitted(false)
+    setText(username)
+  }
+
   return (
-    <Box
-      display="inline-block"
-      bg={"surface.0"}
-      opacity={1}
-      boxShadow={5}
-      p={10}
-      overflow="hidden"
-      borderRadius={10}
-    >
-      <Heading
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        alignItems="center"
-        size="2xl"
-        color="#FFFFFF"
-        pb={30}
-      >
-        Draft Sniper
-      </Heading>
-      <form onSubmit={props.callback}>
+    <Box>
+       <form onSubmit={onFormSubmit}>
         <Input
           variant="outline"
           placeholder="Username"
@@ -34,8 +39,9 @@ function UsernameForm(props: MyProps) {
           display="inline-block"
           mt={3}
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => textChanged(e.target.value)}
         />
+        {!usernameSubmitted &&
         <Button
           variant="solid"
           size="md"
@@ -45,8 +51,15 @@ function UsernameForm(props: MyProps) {
           mt={2}
         >
           Submit
-        </Button>
+        </Button>}
       </form>
+      <Collapse in={usernameSubmitted} animate>
+      <Box>
+        <Box as="h1">Leagues</Box>
+          <LeagueCellGroup usernameSubmitted={usernameSubmitted} username={text}/>
+      </Box>
+      </Collapse>
+
     </Box>
   );
 }
