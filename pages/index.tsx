@@ -24,23 +24,27 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-          <Image
-            className="bgImage"
-            src={bg}
-            objectFit={"cover"}
-            layout={"fill"}
-            z-index={0}
-            alt="Picture of draftboard"
-            placeholder="blur" // Optional blur-up while loading
-          />
+      <Image
+        className="bgImage"
+        src={bg}
+        objectFit={"cover"}
+        layout={"fill"}
+        z-index={0}
+        alt="Picture of draftboard"
+        placeholder="blur" // Optional blur-up while loading
+      />
       <main className={styles.main}>
         <div className="App">
-
-          <Container className="formContainer" maxW={'2xl'} bg={"surface.0"} boxShadow={5}
-              p={20}
-              overflow="hidden"
-              borderRadius={10}>
-            <Box w={'2xl'} maxH={'2xl'}>
+          <Container
+            className="formContainer"
+            maxW={"2xl"}
+            bg={"surface.0"}
+            boxShadow={5}
+            p={20}
+            overflow="hidden"
+            borderRadius={10}
+          >
+            <Box w={"2xl"} maxH={"2xl"}>
               <Heading
                 display="flex"
                 flexDirection="row"
