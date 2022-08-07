@@ -26,7 +26,7 @@ const UserLeagueCell = (props: MyProps) => {
       />
       <Box as="p">{props.league.name}</Box>
       <Button ml={2} variant="outline" size="xs" colorScheme={"primary"} onClick={() => {router.push({
-                  pathname: "/league/" + props.league.league_id + "/overview"
+                  pathname: "/league/" + props.league.league_id
                 })}}>
         View
       </Button>
