@@ -53,6 +53,13 @@ const Home: NextPage = () => {
                 Dynasty Dash
               </Heading>
               <UsernameForm />
+              <button
+                type="button"
+                onClick={(e) => {
+                e.preventDefault();
+                window.location.href='https://sleeper.com/settings/profile';
+              }}
+> Click here</button>
             </Box>
           </Container>
         </div>
