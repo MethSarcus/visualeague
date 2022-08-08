@@ -7,7 +7,6 @@ import { Box, Container, Heading, Input, Text } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import Image from "next/image";
 import bg from "../images/glitchedbg.png";
-import Card from "../components/Card";
 import UsernameForm from "../components/forms/UsernameForm";
 
 const Home: NextPage = () => {

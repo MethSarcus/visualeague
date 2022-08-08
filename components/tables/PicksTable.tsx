@@ -2,8 +2,8 @@ import { Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-
 import axios from "axios";
 import React, { useContext } from "react";
 import useSWR from "swr";
-import { Context } from "../contexts/Context";
-import { DraftPick } from "../interfaces/sleeper_api/DraftPick";
+import { Context } from "../../contexts/Context";
+import { DraftPick } from "../../interfaces/sleeper_api/DraftPick";
 
 type MyProps = { draftId: string };
 

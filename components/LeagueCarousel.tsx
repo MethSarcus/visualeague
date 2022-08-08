@@ -1,7 +1,7 @@
 import { WrapItem, Wrap } from "@chakra-ui/react";
 import React from "react";
 import { LeagueSettings } from "../interfaces/sleeper_api/LeagueSettings";
-import LeagueCard from "./LeagueCard";
+import LeagueCard from "./cards/LeagueCard";
 
 type MyProps = { leagues: LeagueSettings[] };
 export default class LeagueCarousel extends React.Component<MyProps> {
@@ -15,7 +15,7 @@ export default class LeagueCarousel extends React.Component<MyProps> {
         {this.props.leagues.map((league) => {
           return (
             <WrapItem key={league.league_id}>
-              <LeagueCard league={league} />
+              <LeagueCard league={league} variant={""} size={""} />
             </WrapItem>
           );
         })}

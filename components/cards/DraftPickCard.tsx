@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "@chakra-ui/react";
-import { DraftPick } from "../interfaces/sleeper_api/DraftPick";
+import { DraftPick } from "../../interfaces/sleeper_api/DraftPick";
 
 type MyProps = { pick: DraftPick };
 

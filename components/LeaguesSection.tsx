@@ -1,7 +1,7 @@
 
 import { Box, Wrap, WrapItem } from "@chakra-ui/react";
 import { LeagueSettings } from "../interfaces/sleeper_api/LeagueSettings";
-import LeagueCard from "./LeagueCard";
+import LeagueCard from "./cards/LeagueCard";
 import LeagueCarousel from "./LeagueCarousel";
 
 type MyProps = { leagues: LeagueSettings[], filteredLeagueStates: string[], title: string };
@@ -18,7 +18,7 @@ const LeaguesSection = (props: MyProps) => {
         }).map((league) => {
           return (
             <WrapItem key={league.league_id}>
-              <LeagueCard league={league} />
+              <LeagueCard league={league} variant={""} size={""} />
             </WrapItem>
           );
         })}
