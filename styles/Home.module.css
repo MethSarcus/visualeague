@@ -1,6 +1,3 @@
-.container {
-  padding: 0 2rem;
-}
 
 .main {
   min-height: 100vh;
@@ -10,6 +7,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: black;
+  /* background-image: url('../images/bg.png');
+  background-size: 100vmax;
+  background-repeat: no-repeat; */
 }
 
 .footer {

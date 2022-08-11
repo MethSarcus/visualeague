@@ -1,13 +1,11 @@
+import { Box, Container, Heading } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
-import React, { useState, useRef } from "react";
-import { Box, Container, Heading, Input, Text } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
-import Image from "next/image";
-import bg from "../images/glitchedbg.png";
+import { useState } from "react";
+import GenericStatCard from "../components/cards/GenericStatCard";
 import UsernameForm from "../components/forms/UsernameForm";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   const [text, setText] = useState("");
@@ -23,17 +21,9 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Image
-        className="bgImage"
-        src={bg}
-        objectFit={"cover"}
-        layout={"fill"}
-        z-index={0}
-        alt="Picture of draftboard"
-        placeholder="blur" // Optional blur-up while loading
-      />
       <main className={styles.main}>
         <div className="App">
+          <GenericStatCard statName={"lorem ipsum"} statValue="00.00"></GenericStatCard>
           <Container
             className="formContainer"
             maxW={"2xl"}
