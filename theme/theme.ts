@@ -9,7 +9,7 @@ const theme = extendTheme({
     global: {
       // styles for the `body`
       body: {
-        bg: "black.400",
+        bg: "surface.0",
         color: "white",
       },
       // styles for the `a`

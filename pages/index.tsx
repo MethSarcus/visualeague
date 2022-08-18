@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import GenericStatCard from "../components/cards/GenericStatCard";
+import GenericStatCard, { OrdinalStatCard } from "../components/cards/GenericStatCard";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
 
@@ -24,10 +24,11 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div className="App">
           <GenericStatCard statName={"lorem ipsum"} statValue="00.00"></GenericStatCard>
+          <OrdinalStatCard statName={"lorem ipsum"} statValue="10.00"></OrdinalStatCard>
           <Container
             className="formContainer"
             maxW={"2xl"}
-            bg={"surface.0"}
+            bg={"surface.1"}
             boxShadow={5}
             p={20}
             overflow="hidden"
