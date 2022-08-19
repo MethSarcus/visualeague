@@ -1,6 +1,7 @@
 
 .main {
   min-height: 100vh;
+  min-width: 100vw;
   padding: 4rem 0;
   flex: 1;
   display: flex;

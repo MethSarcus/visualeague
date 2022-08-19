@@ -23,26 +23,24 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <div className="App">
-          <GenericStatCard statName={"lorem ipsum"} statValue="00.00"></GenericStatCard>
-          <OrdinalStatCard statName={"lorem ipsum"} statValue="10.00"></OrdinalStatCard>
           <Container
             className="formContainer"
             maxW={"2xl"}
             bg={"surface.1"}
             boxShadow={5}
-            p={20}
+            p={12}
             overflow="hidden"
             borderRadius={10}
           >
-            <Box w={"2xl"} maxH={"2xl"}>
+            <Box maxH={"2xl"} w={['xs','md','lg', 'xl', '2xl']}>
               <Heading
                 display="flex"
                 flexDirection="row"
                 justifyContent="center"
                 alignItems="center"
-                size="2xl"
+                size={['lg', 'xl', '2xl']}
                 color="#FFFFFF"
-                pb={30}
+                pb={10}
               >
                 Dynasty Dash
               </Heading>

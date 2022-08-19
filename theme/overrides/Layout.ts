@@ -49,7 +49,7 @@ export const sizes = {
       xl: '42rem',
       '2xl': '56rem',
       container: {
-        sm: '5000px',
+        sm: '60px',
         md: '5000px',
         lg: '5000px',
         xl: '5000px',
