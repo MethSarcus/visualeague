@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";
-import { DraftPick } from "../../interfaces/sleeper_api/DraftPick";
+import { DraftPick } from "../../../interfaces/sleeper_api/DraftPick";
 import { render } from "react-dom";
 
 type MyProps = { statName: String; statValue: String };
@@ -47,5 +47,5 @@ export const OrdinalStatCard = (props: MyProps) => {
       </Center>
       <Spacer></Spacer>
     </Flex>
-  );
-};
+  )
+}

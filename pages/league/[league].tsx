@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   Box,
-  Container,
+  Center,
   Grid,
   GridItem,
   Heading,
@@ -36,8 +36,9 @@ const LeaguePage: NextPage = () => {
         <GridItem pl="2" bg="green.300" area={"main"}>
           
         </GridItem>
-        <GridItem pl="2" bg="blue.300" area={"footer"}>
-          Footer
+        <GridItem  bg="blue.300" area={"footer"}>
+          <Center h={"100%"} fontSize={'xs'} fontWeight="medium"> © Seth Marcus 2022</Center>
+       
         </GridItem>
       </Grid>
     </Box>
