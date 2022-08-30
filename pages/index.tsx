@@ -26,7 +26,7 @@ const Home: NextPage = () => {
           <Container
             className="formContainer"
             maxW={"2xl"}
-            bg={"surface.1"}
+            bg={"surface.0"}
             boxShadow={5}
             p={12}
             overflow="hidden"
