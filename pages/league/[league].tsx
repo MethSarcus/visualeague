@@ -1,17 +1,22 @@
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
 import {
-  Box,
-  Center,
-  Grid,
+  Box, Center, Grid,
   GridItem,
   Heading,
-  Image,
-  Link,
-  Text,
+  SimpleGrid,
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react";
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import GenericStatCard from "../../components/cards/statcards/GenericStatCard";
+import Footer from "../../components/Footer";
 import Navbar from "../../components/nav/Navbar";
+import LeagueOverviewDataTable from "../../components/tables/LeagueOverviewDatatable";
+import FantasyLeagueMember from "../../interfaces/sleeper_api/custom/FantasyLeagueMember";
+
+
+const tempTestMembers = [new FantasyLeagueMember("23452352", "smeth", 1),new FantasyLeagueMember("23452352", "meth", 2),new FantasyLeagueMember("23452352", "clyde", 3)]
 
 const LeaguePage: NextPage = () => {
   const [text, setText] = useState("");
@@ -30,14 +35,35 @@ const LeaguePage: NextPage = () => {
         color="surface.0"
         fontWeight="bold"
       >
-        <GridItem pl="2" area={"header"}>
+        <GridItem area={"header"}>
           <Navbar />
         </GridItem>
-        <GridItem pl="2" bg="green.300" area={"main"}>
+
+        
+        <GridItem width={'100%'} bg="surface.0" area={"main"} p={4}>
+          <Center color="white"><Heading>League</Heading></Center>
+            <Wrap spacing={6} mt={2}>
+              <WrapItem>
+                <GenericStatCard statName={"Stat"} statValue={"00.00"}/>
+              </WrapItem>
+              <WrapItem>
+                <GenericStatCard statName={"Stat"} statValue={"00.00"}/>
+              </WrapItem>
+              <WrapItem>
+                <GenericStatCard statName={"Stat"} statValue={"00.00"}/>
+              </WrapItem>
+              <WrapItem>
+                <GenericStatCard statName={"Stat"} statValue={"00.00"}/>
+              </WrapItem>
+              <WrapItem>
+                <GenericStatCard statName={"Stat"} statValue={"00.00"}/>
+              </WrapItem>
+            </Wrap>
           
         </GridItem>
-        <GridItem  bg="blue.300" area={"footer"}>
-          <Center h={"100%"} fontSize={'xs'} fontWeight="medium"> © Seth Marcus 2022</Center>
+
+        <GridItem  bg="surface.1" area={"footer"}>
+          <Footer/>
        
         </GridItem>
       </Grid>

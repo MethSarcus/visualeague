@@ -8,7 +8,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #292929;
+  background-color: #121212;
   /* background-image: url('../images/bg.png');
   background-size: 100vmax;
   background-repeat: no-repeat; */
@@ -116,3 +116,4 @@
     flex-direction: column;
   }
 }
+
