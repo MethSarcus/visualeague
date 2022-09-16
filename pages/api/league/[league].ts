@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
 import { LeagueSettings } from "../../../interfaces/sleeper_api/LeagueSettings";
-import League from "../../../interfaces/sleeper_api/custom/League";
+import SleeperLeague from "../../../interfaces/sleeper_api/custom/League";
 import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
 import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
 import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
@@ -30,7 +30,7 @@ function runMiddleware(
 }
 
 type Data = {
-  league: League;
+  league: SleeperLeague;
 };
 
 export default async function handler(
@@ -44,7 +44,7 @@ export default async function handler(
     const completeLeague = await getCompleteLeague(league.toString());
     res.status(200).json({ league: completeLeague });
   } else {
-    res.status(401).json({ league: new League([], {} as LeagueSettings, [], []) });
+    res.status(401).json({ league: new SleeperLeague([], {} as LeagueSettings, [], []) });
   }
 }
 
@@ -153,7 +153,7 @@ async function getCompleteLeague(leagueId: string) {
   console.log(matchups);
 
   // use await on Promise.all so the Promises execute in parallel
-  return new League(
+  return new SleeperLeague(
     leagueUsers as SleeperUser[],
     leagueSettings as LeagueSettings,
     matchups as SleeperMatchup[],

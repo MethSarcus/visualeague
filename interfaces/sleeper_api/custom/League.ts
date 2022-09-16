@@ -4,7 +4,7 @@ import { SleeperRoster } from "../SleeperRoster";
 import { SleeperUser } from "../SleeperUser";
 import FantasyLeagueMember from "./FantasyLeagueMember";
 
-export default class League {
+export default class SleeperLeague {
    
     public users: SleeperUser[]
     public sleeperDetails: LeagueSettings
