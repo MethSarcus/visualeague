@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
 import { LeagueSettings } from "../../../interfaces/sleeper_api/LeagueSettings";
-import SleeperLeague from "../../../interfaces/sleeper_api/custom/League";
+import SleeperLeague from "../../../interfaces/sleeper_api/custom/SleeperLeague";
 import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
 import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
 import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
@@ -149,8 +149,6 @@ async function getCompleteLeague(leagueId: string) {
   const matchups = await Promise.all(
     getMatchups(leagueId, (leagueSettings as LeagueSettings).settings.leg)
   );
-
-  console.log(matchups);
 
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(

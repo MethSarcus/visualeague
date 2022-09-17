@@ -1,4 +1,4 @@
-export default class FantasyLeagueMember {
+export default class LeagueMember {
    
     public id: string;
     public displayName: string;
