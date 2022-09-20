@@ -174,7 +174,7 @@ export const getVariablePPR = (scoring_settings: ScoringSettings) => {
     }
 
     return returnString;
-  } else if (scoring_settings.rec > 0) {
+  } else if (scoring_settings.rec && scoring_settings.rec > 0) {
     returnString += scoring_settings.rec.toFixed(1) + " PPR";
     if (positionRec && positionRec > 0) {
       returnString += " " + bonusPos + " Prem";
