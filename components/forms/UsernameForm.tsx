@@ -47,17 +47,20 @@ function UsernameForm() {
           size="lg"
           display="inline-block"
           mt={3}
+          h={7}
           value={text}
           onChange={(e) => textChanged(e.target.value)}
         />
         {!usernameSubmitted && (
           <Button
             variant="solid"
-            size="md"
+            size="sm"
             type="submit"
-            backgroundColor="#6200EE"
+            backgroundColor="primary.500"
             color="#000000"
+            textColor={'white'}
             mt={2}
+            h={6}
           >
             Submit
           </Button>
@@ -91,6 +94,7 @@ function UsernameForm() {
             <Button
               variant={"outline"}
               colorScheme={"primary"}
+              mt={3}
               size={"xs"}
               onClick={onStorageCleared}
             >

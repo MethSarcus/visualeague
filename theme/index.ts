@@ -9,9 +9,13 @@ import Card from "./components/CardTheme";
 import DraftPickCard from "./components/DarftPickCardTheme";
 import PositionBadge from "./components/PositionBadge";
 import FlexPositionBadge from "./components/FlexPositionBadge";
+import { borderRadius, sizes, spacing } from "./overrides/Layout";
 
 const overrides = {
   theme,
+  ...sizes,
+  ...borderRadius,
+
   // Other foundational style overrides go here
   components: {
     Card,
@@ -45,17 +49,17 @@ const overrides = {
       900: "#005b39",
     },
     surface: {
-      0: "#292929",
-      1: "#121212",
-      2: "#1E1E1E",
-      3: "#232323",
-      4: "#252525",
-      5: "#272727",
-      6: "#2C2C2C",
-      7: "#2F2F2F",
-      8: "#333333",
-      9: "#353535",
-      10: "#383838",
+      0: "rgb(37, 37, 37)",
+      1: "rgb(56, 56, 56)",
+      2: "rgb(75, 75, 75)",
+      3: "rgb(94, 94, 94)",
+      4: "rgb(113, 113, 113)",
+      5: "rgb(132, 132, 132)",
+      6: "rgb(5, 5, 5)",
+      7: "rgb(151, 151, 151)",
+      8: "rgb(189, 189, 189)",
+      9: "rgb(208, 208, 208)",
+      10: "rgb(226, 226, 226)",
     },
     position: {
       QB: "rgba(239, 116, 161, 0.8)",
