@@ -148,13 +148,21 @@ async function getCompleteLeague(leagueId: string) {
   // instead of awaiting this call, create an array of Promises
   const matchups = await Promise.all(
     getMatchups(leagueId, (leagueSettings as LeagueSettings).settings.leg)
-  );
+  ) as SleeperMatchup[][];
+  
+  console.log(matchups)
+  const allPlayerIds = []
+  matchups.forEach((week: SleeperMatchup[]) => {
+    week.forEach(matchup => {
+      allPlayerStats.push(matchup.players)
+    })
+  })
 
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(
     leagueUsers as SleeperUser[],
     leagueSettings as LeagueSettings,
-    matchups as SleeperMatchup[],
+    matchups.flat() as SleeperMatchup[],
     leagueRosters as SleeperRoster[]
   );
 }
