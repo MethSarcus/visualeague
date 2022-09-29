@@ -32,6 +32,7 @@ export interface LeagueSettings {
     avatar?: string | null;
   }
   export interface Settings {
+    last_scored_leg: number;
     max_keepers: number;
     draft_rounds: number;
     trade_review_days: number;
