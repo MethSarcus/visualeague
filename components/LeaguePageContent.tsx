@@ -1,4 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Code, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -18,9 +18,15 @@ const LeaguePageContent = () => {
   const league = new League(leagueData.league);
 
   return (
+    <Box>
     <Heading color={"white"}>
       {league.settings.name}
     </Heading>
+    <Code>
+    {JSON.stringify(league.getPlayerStat(4866, 1))}
+    </Code>
+    </Box>
+
   );
 };
 
