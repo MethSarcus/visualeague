@@ -14,6 +14,7 @@ export async function connectToDatabase() {
     const options = {
       useUnifiedTopology: true,
       useNewUrlParser: true,
+      maxPoolSize: 25
     } as ConnectionOptions
 
     // Connect to cluster

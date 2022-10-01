@@ -195,38 +195,20 @@ async function getMatchupStat(matchup: SleeperMatchup[], db: typeof MongoClient,
   return playerPromises;
 }
 
-async function getMatchupStats(matchups: SleeperMatchup[][], db: typeof MongoClient) {
-  const playerStats: Map<number, any> = new Map();
-  matchups.forEach(async (weeklyMatchup, index) => {
-    let weekNum = index + 1;
-    let playerList: string[][] = [];
-    weeklyMatchup.forEach((matchup) => {
-      playerList.push(matchup.players)
-    });
-    let playerStatsObj = (getStats(db, playerList.flat(), weekNum));
-
-    console.log(playerStatsObj);
-    playerStats.set(weekNum, await Promise.all(playerStatsObj));
-
-  });
-  console.log(playerStats)
-  return playerStats;
-}
-
 async function getCompleteLeague(leagueId: string) {
   const leagueSettings = await getLeague(leagueId);
   const leagueUsers = await getLeagueMembers(leagueId);
   const leagueRosters = await getLeagueRosters(leagueId);
-  let playerStats: any;
+  let playerStats = [];
   let db = connectToDatabase();
 
   // instead of awaiting this call, create an array of Promises
   const matchups = (await Promise.all(
     getMatchups(leagueId, (leagueSettings as LeagueSettings).settings.last_scored_leg)
   )) as SleeperMatchup[][];
-  playerStats = (await getMatchupStat(matchups[0], db, 1));
-
-  console.log(playerStats);
+  for (let i = 0; i < matchups.length; i++) {
+    playerStats.push(await getMatchupStat(matchups[i], db, i + 1));
+  }
 
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(
@@ -234,6 +216,8 @@ async function getCompleteLeague(leagueId: string) {
     leagueSettings as LeagueSettings,
     matchups.flat() as SleeperMatchup[],
     leagueRosters as SleeperRoster[],
-    await (Promise.all(playerStats))
+    await (Promise.all(playerStats.map(function(innerPromiseArray) {
+      return Promise.all(innerPromiseArray);
+ })))
   );
 }

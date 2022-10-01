@@ -9,14 +9,14 @@ export default class SleeperLeague {
     public sleeperDetails: LeagueSettings
     public matchups: SleeperMatchup[]
     public rosters: SleeperRoster[]
-    public matchupStats: any
+    public matchupProjections: any
 
 
-    constructor(users: SleeperUser[], leagueSettings: LeagueSettings, matchups: SleeperMatchup[], rosters: SleeperRoster[], matchupStats: any) {
+    constructor(users: SleeperUser[], leagueSettings: LeagueSettings, matchups: SleeperMatchup[], rosters: SleeperRoster[], matchupProjections: any) {
       this.users = users
       this.sleeperDetails = leagueSettings
       this.matchups = matchups
       this.rosters = rosters
-      this.matchupStats = matchupStats
+      this.matchupProjections = matchupProjections
     }
   }
