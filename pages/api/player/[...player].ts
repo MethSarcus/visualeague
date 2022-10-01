@@ -125,8 +125,29 @@ export async function getMultiPlayerProjections(
 
     let projections = db.collection("player_projections");
     let query = {_id:{$in:playerIds}};
+    let projection = await projections.find(query).toArray()
+    return projection;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-    let projection = await projections.find(query);
+export async function getMultiPlayerStats(
+  connectToDatabase: typeof MongoClient,
+  playerIds: string[],
+  week: number
+) {
+  const client = await connectToDatabase;
+  if (!client) {
+    return;
+  }
+
+  try {
+    const db = client.db(`week_${week}`);
+
+    let projections = db.collection("player_stats");
+    let query = {_id:{$in:playerIds}};
+    let projection = await projections.find(query).toArray()
     return projection;
   } catch (err) {
     console.log(err);

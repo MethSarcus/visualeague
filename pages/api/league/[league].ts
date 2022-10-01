@@ -6,7 +6,12 @@ import SleeperLeague from "../../../interfaces/sleeper_api/custom/SleeperLeague"
 import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
 import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
 import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
-import { getPlayerProjections, getPlayerStats } from "../player/[...player]";
+import {
+  getMultiPlayerProjections,
+  getMultiPlayerStats,
+  getPlayerProjections,
+  getPlayerStats,
+} from "../player/[...player]";
 const { connectToDatabase } = require("../../../lib/mongodb");
 const { MongoClient } = require("mongodb");
 
@@ -49,7 +54,9 @@ export default async function handler(
   } else {
     res
       .status(401)
-      .json({ league: new SleeperLeague([], {} as LeagueSettings, [], [], []) });
+      .json({
+        league: new SleeperLeague([], {} as LeagueSettings, [], [], [], []),
+      });
   }
 }
 
@@ -133,20 +140,23 @@ function getMatchups(leagueId: string, numWeeks: number) {
 // -------------------------------------------------------------------
 // Gets all matchups
 // -------------------------------------------------------------------
-function getStats(connectToDatabase: typeof MongoClient, playerIds: string[], week: number) {
+function getStats(
+  connectToDatabase: typeof MongoClient,
+  playerIds: string[],
+  week: number
+) {
   const promises: Promise<unknown>[] = [];
   playerIds.forEach((playerId) => {
     promises.push(
       new Promise((resolve) => {
         setTimeout(
           () =>
-            resolve(
-              getPlayerProjections(connectToDatabase, playerId, week)),
+            resolve(getPlayerProjections(connectToDatabase, playerId, week)),
           200
         );
       })
-    )
-  })
+    );
+  });
 
   return promises;
 }
@@ -166,33 +176,69 @@ function getMatchup(leagueId: string, week: number) {
   });
 }
 
-function getPlayer( connectToDatabase: typeof MongoClient,
+function getPlayer(
+  connectToDatabase: typeof MongoClient,
   playerId: string,
-  week: number) {
+  week: number
+) {
   // get matchup for given week in given league
   return new Promise((resolve) => {
     setTimeout(
-      () =>
-        resolve(
-          getPlayerStats(
-            connectToDatabase, playerId, week
-          )
-        ),
+      () => resolve(getPlayerStats(connectToDatabase, playerId, week)),
       200
     );
   });
 }
 
-async function getMatchupStat(matchup: SleeperMatchup[], db: typeof MongoClient, weekNum: number) {
-    const playerPromises: Promise<{ player_stats: any; player_projections: any; } | undefined>[] = [];
-    matchup.flat().forEach((matchup) => {
-      matchup.players.forEach(player => {
-        playerPromises.push(getPlayerProjections(db, player, weekNum));
-      });
-      
+async function getMatchupStat(
+  matchup: SleeperMatchup[],
+  db: typeof MongoClient,
+  weekNum: number
+) {
+  const playerPromises: Promise<
+    { player_stats: any; player_projections: any } | undefined
+  >[] = [];
+  matchup.flat().forEach((matchup) => {
+    matchup.players.forEach((player) => {
+      playerPromises.push(getPlayerProjections(db, player, weekNum));
     });
+  });
 
   return playerPromises;
+}
+
+async function getMultiMatchupStats(
+  matchup: SleeperMatchup[],
+  db: typeof MongoClient,
+  weekNum: number
+) {
+  const players: string[] = [];
+  matchup.flat().forEach((matchup) => {
+    matchup.players.forEach((player) => {
+      players.push(player);
+    });
+  });
+
+  let stats: any = getMultiPlayerStats(db, players, weekNum);
+
+  return stats;
+}
+
+async function getMultiMatchupProjections(
+  matchup: SleeperMatchup[],
+  db: typeof MongoClient,
+  weekNum: number
+) {
+  const players: string[] = [];
+  matchup.flat().forEach((matchup) => {
+    matchup.players.forEach((player) => {
+      players.push(player);
+    });
+  });
+
+  let stats: any = getMultiPlayerProjections(db, players, weekNum);
+
+  return stats;
 }
 
 async function getCompleteLeague(leagueId: string) {
@@ -200,24 +246,27 @@ async function getCompleteLeague(leagueId: string) {
   const leagueUsers = await getLeagueMembers(leagueId);
   const leagueRosters = await getLeagueRosters(leagueId);
   let playerStats = [];
+  let playerProjections = [];
   let db = connectToDatabase();
 
   // instead of awaiting this call, create an array of Promises
   const matchups = (await Promise.all(
-    getMatchups(leagueId, (leagueSettings as LeagueSettings).settings.last_scored_leg)
+    getMatchups(
+      leagueId,
+      (leagueSettings as LeagueSettings).settings.last_scored_leg
+    )
   )) as SleeperMatchup[][];
   for (let i = 0; i < matchups.length; i++) {
-    playerStats.push(await getMatchupStat(matchups[i], db, i + 1));
+    playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
+    playerProjections.push(await getMultiMatchupProjections(matchups[i], db, i + 1));
   }
-
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(
     leagueUsers as SleeperUser[],
     leagueSettings as LeagueSettings,
     matchups.flat() as SleeperMatchup[],
     leagueRosters as SleeperRoster[],
-    await (Promise.all(playerStats.map(function(innerPromiseArray) {
-      return Promise.all(innerPromiseArray);
- })))
+    playerStats,
+    playerProjections
   );
 }
