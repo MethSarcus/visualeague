@@ -21,12 +21,6 @@ import LeagueOverviewDataTable from "../../components/tables/LeagueOverviewDatat
 import FantasyLeagueMember from "../../interfaces/sleeper_api/custom/FantasyLeagueMember";
 import League from "../../interfaces/sleeper_api/custom/League";
 
-const tempTestMembers = [
-  new FantasyLeagueMember("23452352", "smeth", 1),
-  new FantasyLeagueMember("23452352", "meth", 2),
-  new FantasyLeagueMember("23452352", "clyde", 3),
-];
-
 const LeaguePage: NextPage = () => {
   const [text, setText] = useState("");
   

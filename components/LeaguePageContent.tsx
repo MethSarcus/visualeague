@@ -1,32 +1,55 @@
 import { Box, Code, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+import { Context } from "../contexts/Context";
 import League from "../interfaces/sleeper_api/custom/League";
+import GenericStatCard from "./cards/statcards/GenericStatCard";
 
 const LeaguePageContent = () => {
   const router = useRouter();
+  const [context, setContext] = useContext(Context);
+  const [state, setState] = useState({});
   const leagueId = router.query.league;
-
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
   const { data: leagueData, error: leagueError } = useSWR(
     leagueId != undefined ? `/api/league/${router.query.league}` : null,
     fetcher
   );
-  if (leagueError) return <Heading color={"white"} h={"100%"}>Failed to load</Heading>;
-  if (!leagueData) return <Heading color={"white"} h={"100%"} >Loading...</Heading>;
-  const league = new League(leagueData.league);
+
+  useEffect(() => {
+    if (leagueData && leagueData.league) {
+      console.log(leagueData)
+      setContext(new League(leagueData.league));
+      setState(new League(leagueData.league));
+    }
+  }, [leagueData, setContext]);
+
+  if (leagueError)
+    return (
+      <Heading color={"white"} h={"100%"}>
+        Failed to load
+      </Heading>
+    );
+  if (!leagueData)
+    return (
+      <Heading color={"white"} h={"100%"}>
+        Loading...
+      </Heading>
+    );
 
   return (
     <Box>
-    <Heading color={"white"}>
-      {league.settings.name}
-    </Heading>
-    <Code>
-    {JSON.stringify(league.getPlayerStat(4866, 1))}
-    </Code>
+      {context.settings != undefined && (
+        <Heading color={"white"}>{context.settings.name}</Heading>
+      )}
+      {context.settings != undefined && (
+        <Code>{JSON.stringify(context.getPlayerStat(4866, 1))}</Code>
+      )}
+      {/* {context.settings != undefined && <GenericStatCard statName={""} statValue={"3"} league={state}/>} */}
     </Box>
-
   );
 };
 

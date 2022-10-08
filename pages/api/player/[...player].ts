@@ -153,3 +153,24 @@ export async function getMultiPlayerStats(
     console.log(err);
   }
 }
+
+export async function getMultiPlayerDetails(
+  connectToDatabase: typeof MongoClient,
+  playerIds: string[]
+) {
+  const client = await connectToDatabase;
+  if (!client) {
+    return;
+  }
+
+  try {
+    const db = client.db(`players`);
+
+    let details = db.collection("player_details");
+    let query = {_id:{$in:playerIds}};
+    let detail = await details.find(query).toArray()
+    return detail;
+  } catch (err) {
+    console.log(err);
+  }
+}

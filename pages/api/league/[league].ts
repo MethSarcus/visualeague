@@ -7,6 +7,7 @@ import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
 import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
 import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
 import {
+  getMultiPlayerDetails,
   getMultiPlayerProjections,
   getMultiPlayerStats,
   getPlayerProjections,
@@ -55,7 +56,7 @@ export default async function handler(
     res
       .status(401)
       .json({
-        league: new SleeperLeague([], {} as LeagueSettings, [], [], [], []),
+        league: new SleeperLeague([], {} as LeagueSettings, [], [], [], [], []),
       });
   }
 }
@@ -247,6 +248,8 @@ async function getCompleteLeague(leagueId: string) {
   const leagueRosters = await getLeagueRosters(leagueId);
   let playerStats = [];
   let playerProjections = [];
+  let playerDetails = [];
+  let allPlayers: string[][] = [];
   let db = connectToDatabase();
 
   // instead of awaiting this call, create an array of Promises
@@ -257,16 +260,27 @@ async function getCompleteLeague(leagueId: string) {
     )
   )) as SleeperMatchup[][];
   for (let i = 0; i < matchups.length; i++) {
+
+  }
+  for (let i = 0; i < matchups.length; i++) {
     playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
     playerProjections.push(await getMultiMatchupProjections(matchups[i], db, i + 1));
+    matchups.forEach((weekMatchups) => {
+      weekMatchups.forEach(curMatch => {
+        allPlayers.push(curMatch.players)
+      })
+    })
   }
+
+  playerDetails.push(await getMultiPlayerDetails(db, [...new Set(allPlayers.flat().flat())]))
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(
     leagueUsers as SleeperUser[],
     leagueSettings as LeagueSettings,
-    matchups.flat() as SleeperMatchup[],
+    matchups as SleeperMatchup[][],
     leagueRosters as SleeperRoster[],
     playerStats,
-    playerProjections
+    playerProjections,
+    playerDetails[0]
   );
 }
