@@ -3,8 +3,9 @@ import DataTable, {
 } from "react-data-table-component"
 import React from "react"
 import LeagueMember from "../../classes/custom/LeagueMember"
+import League from "../../classes/custom/League"
 
-type MyProps = { members: LeagueMember[] }
+type MyProps = { league: League }
 
 interface DataRow {
 	name: string
@@ -61,6 +62,10 @@ const customStyles = {
 }
 
 const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
+	const formattedMembers: DataRow[] = []
+	props.league.members.forEach((value: LeagueMember) => {
+		formattedMembers.push(formatMemberDataForTable(value))
+	});
 	// data provides access to your row data
 
 	// const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
@@ -88,13 +93,12 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	// 		},
 	// 	},
 	// ]
-	console.log(props.members)
 	return (
 		<DataTable
 		theme="dark"
 			columns={columns}
 			defaultSortFieldId={1}
-			data={Array.from(props.members).map((member: LeagueMember) => formatMemberDataForTable(member))}
+			data={formattedMembers}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}
 			dense={true}

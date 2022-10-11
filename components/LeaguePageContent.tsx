@@ -49,7 +49,7 @@ const LeaguePageContent = () => {
         <Heading color={"white"}>{context.settings.name}</Heading>
       )}
       {context.settings != undefined && (
-        <LeagueOverviewDataTable members={context.members}></LeagueOverviewDataTable>
+        <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
       )}
       {/* {context.settings != undefined && <GenericStatCard statName={""} statValue={"3"} league={state}/>} */}
     </Box>
