@@ -39,7 +39,6 @@ export default class League {
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups);
     this.calcMemberScores();
-    console.log(this);
   }
 
   //Creates a map mapping week number to a map of player id to the players stats

@@ -88,13 +88,13 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	// 		},
 	// 	},
 	// ]
-
+	console.log(props.members)
 	return (
 		<DataTable
 		theme="dark"
 			columns={columns}
 			defaultSortFieldId={1}
-			data={props.members.map((member: LeagueMember) => formatMemberDataForTable(member))}
+			data={Array.from(props.members).map((member: LeagueMember) => formatMemberDataForTable(member))}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}
 			dense={true}

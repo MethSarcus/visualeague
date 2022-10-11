@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { Context } from "../contexts/Context";
 import League from "../classes/custom/League";
 import GenericStatCard from "./cards/statcards/GenericStatCard";
+import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 
 const LeaguePageContent = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const LeaguePageContent = () => {
         <Heading color={"white"}>{context.settings.name}</Heading>
       )}
       {context.settings != undefined && (
-        <Code>{JSON.stringify(context.getPlayerStat(4866, 1))}</Code>
+        <LeagueOverviewDataTable members={context.members}></LeagueOverviewDataTable>
       )}
       {/* {context.settings != undefined && <GenericStatCard statName={""} statValue={"3"} league={state}/>} */}
     </Box>
