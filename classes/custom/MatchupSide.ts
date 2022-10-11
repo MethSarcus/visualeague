@@ -14,12 +14,14 @@ export class MatchupSide {
   pf: number = 0;
   pp: number = 0;
   opslap: number = 0;
+  gp: number = 0
   projectedScore: number = 0;
   roster_id: number;
   starters: MatchupPlayer[];
   bench: MatchupPlayer[];
   matchup_id: number;
   custom_points: number = 0;
+  gut_plays: number = 0;
 
   constructor(
     matchup: SleeperMatchup,
@@ -89,7 +91,20 @@ export class MatchupSide {
         optimalProjectedLineup.forEach((starter) => {
           this.opslap += starter.score;
         });
+
+        this.gp = this.pf - this.opslap
+        this.gut_plays += this.getGutPlays(this.starters, optimalProjectedLineup).length
       }
     }
+
+
+  }
+
+  getGutPlays(lineup: MatchupPlayer[], optimalProjectedLineup: MatchupPlayer[]) {
+    let gutPlays = lineup.filter(player => {
+      return (!optimalProjectedLineup.includes(player))
+    })
+
+    return gutPlays
   }
 }

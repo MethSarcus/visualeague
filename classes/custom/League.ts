@@ -15,12 +15,18 @@ export default class League {
   public weeks: Map<number, Week> = new Map();
   public transactions: SleeperTransaction[];
   public settings: LeagueSettings;
+  public modifiedSettings?: LeagueSettings;
+  public useModifiedSettings: boolean = false
   public playerDetails: Map<string, SleeperPlayerDetails> = new Map();
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
   public memberIdToRosterId: Map<string, number> = new Map();
 
-  constructor(sleeperLeague: SleeperLeague) {
+  constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
+    if (modifiedSettings) {
+      this.modifiedSettings = modifiedSettings
+      this.useModifiedSettings = true
+    }
     sleeperLeague.player_details.forEach((player: any) => {
       this.playerDetails.set(player._id, player.details);
     });
@@ -34,6 +40,7 @@ export default class League {
     });
 
     this.transactions = []; //TODO add api calls for getting this info
+    this.settings = sleeperLeague.sleeperDetails;
     this.settings = sleeperLeague.sleeperDetails;
     this.setStats(sleeperLeague.player_stats);
     this.setProjections(sleeperLeague.player_projections);
@@ -113,12 +120,16 @@ export default class League {
             homeMember.stats.pf += homeTeam.pf;
             homeMember.stats.pp += homeTeam.pp;
             homeMember.stats.opslap += homeTeam.opslap;
+            homeMember.stats.gp += homeTeam.gp;
+            homeMember.stats.gutPlays += homeTeam.gut_plays;
             homeMember.stats.custom_points += homeTeam.custom_points;
             homeMember.stats.pa += awayTeam.pf;
 
             awayMember.stats.pf += awayTeam.pf;
             awayMember.stats.pp += awayTeam.pp;
             awayMember.stats.opslap += awayTeam.opslap;
+            awayMember.stats.gp += awayTeam.gp;
+            awayMember.stats.gutPlays += awayTeam.gut_plays;
             awayMember.stats.custom_points += awayTeam.custom_points;
             awayMember.stats.pa += homeTeam.pf;
 

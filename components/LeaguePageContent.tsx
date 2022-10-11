@@ -23,8 +23,10 @@ const LeaguePageContent = () => {
   useEffect(() => {
     if (leagueData && leagueData.league) {
       console.log(leagueData)
-      setContext(new League(leagueData.league));
-      setState(new League(leagueData.league));
+      let league = new League(leagueData.league)
+      console.log(league)
+      setContext(league);
+      setState(league);
     }
   }, [leagueData, setContext]);
 
