@@ -19,6 +19,7 @@ export interface LeagueSettings {
     last_message_time: number;
     last_message_text_map?: null;
     last_message_id: string;
+    playoff_week_start?: number | null
     last_message_attachment?: null;
     last_author_is_bot?: boolean | null;
     last_author_id: string;
@@ -32,6 +33,7 @@ export interface LeagueSettings {
     avatar?: string | null;
   }
   export interface Settings {
+    last_scored_leg: number;
     max_keepers: number;
     draft_rounds: number;
     trade_review_days: number;

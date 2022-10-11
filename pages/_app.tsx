@@ -6,7 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import customTheme from "../theme/index";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [context, setContext] = useState("default context value");
+  const [context, setContext] = useState({});
 
   return <Context.Provider value={[context, setContext]}><ChakraProvider theme={customTheme}>
   <Component {...pageProps} /></ChakraProvider></Context.Provider>
