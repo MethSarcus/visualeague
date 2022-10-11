@@ -11,4 +11,7 @@ export default class MemberScores {
     public wins: number = 0
     public losses: number = 0
     public ties: number = 0
+    public power_wins: number = 0
+    public power_losses: number = 0
+    public power_ties: number = 0
   }
