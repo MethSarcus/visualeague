@@ -1,4 +1,6 @@
+import { MatchupPlayer } from "../../../data_classes/MatchupPlayer";
 import { Week } from "../../../data_classes/Week";
+import { getPositionRosterSlots, getRosterSlotPositions, LINEUP_POSITION, POSITION } from "../../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../LeagueSettings";
 import { SleeperMatchup } from "../SleeperMatchup";
 import { SleeperRoster } from "../SleeperRoster";
@@ -34,14 +36,15 @@ export default class League {
 
     this.transactions = []; //TODO add api calls for getting this info
     this.settings = sleeperLeague.sleeperDetails;
-    this.setStats(sleeperLeague.player_stats, sleeperLeague.player_projections);
+    this.setStats(sleeperLeague.player_stats);
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups)
     this.calcMemberScores()
     console.log(this)
   }
 
-  setStats(stats: any, projections: any) {
+  //Creates a map mapping week number to a map of player id to the players stats
+  setStats(stats: any) {
     stats.forEach((statList: any, index: number) => {
       let weekNum = index + 1;
       this.playerStatMap.set(weekNum, new Map());
@@ -51,6 +54,7 @@ export default class League {
     });
   }
 
+  //Creates a map mapping week number to a map of player id to the players projections
   setProjections(projections: any) {
     projections.forEach((projectionList: any, index: number) => {
       let weekNum = index + 1;
@@ -88,9 +92,6 @@ export default class League {
   calcMemberScores() {
     this.weeks.forEach((week) => {
         week.matchups.forEach(matchup => {
-          
-          
-
           if (matchup.awayTeam) {
             let homeId = matchup.homeTeam.roster_id
             let awayId = matchup.awayTeam.roster_id
@@ -161,3 +162,6 @@ class MemberScores {
   public timesUnderdog: number = 0
   public upsets: number = 0
 }
+
+
+
