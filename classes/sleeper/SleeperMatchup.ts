@@ -1,4 +1,4 @@
-import { MatchupPlayer } from "../../data_classes/MatchupPlayer";
+import { MatchupPlayer } from "../custom/MatchupPlayer";
 
 export interface SleeperMatchup {
         starters_points: number[]

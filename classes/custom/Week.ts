@@ -1,8 +1,7 @@
-import { SleeperPlayerDetails } from "../interfaces/sleeper_api/custom/Player"
-import { LeagueSettings } from "../interfaces/sleeper_api/LeagueSettings"
-import { SleeperMatchup } from "../interfaces/sleeper_api/SleeperMatchup"
-import { Matchup } from "./Matchup"
-import { MatchupPlayer } from "./MatchupPlayer"
+import { SleeperPlayerDetails } from "./Player"
+import { LeagueSettings } from "../sleeper/LeagueSettings"
+import { SleeperMatchup } from "../sleeper/SleeperMatchup"
+import Matchup from "./Matchup"
 import { MatchupSide } from "./MatchupSide"
 
 export class Week {

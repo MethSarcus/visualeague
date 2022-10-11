@@ -18,8 +18,8 @@ import Footer from "../../components/Footer";
 import LeaguePageContent from "../../components/LeaguePageContent";
 import Navbar from "../../components/nav/Navbar";
 import LeagueOverviewDataTable from "../../components/tables/LeagueOverviewDatatable";
-import FantasyLeagueMember from "../../interfaces/sleeper_api/custom/FantasyLeagueMember";
-import League from "../../interfaces/sleeper_api/custom/League";
+import FantasyLeagueMember from "../../classes/FantasyLeagueMember";
+import League from "../../classes/custom/League";
 
 const LeaguePage: NextPage = () => {
   const [text, setText] = useState("");

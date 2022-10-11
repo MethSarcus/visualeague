@@ -1,7 +1,7 @@
-import { LeagueSettings } from "../LeagueSettings";
-import { SleeperMatchup } from "../SleeperMatchup";
-import { SleeperRoster } from "../SleeperRoster";
-import { SleeperUser } from "../SleeperUser";
+import { LeagueSettings } from "./LeagueSettings";
+import { SleeperMatchup } from "./SleeperMatchup";
+import { SleeperRoster } from "./SleeperRoster";
+import { SleeperUser } from "./SleeperUser";
 
 export default class SleeperLeague {
   public users: SleeperUser[];

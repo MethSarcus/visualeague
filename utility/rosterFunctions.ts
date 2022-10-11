@@ -1,8 +1,8 @@
-import { MatchupPlayer } from "../data_classes/MatchupPlayer";
+import { MatchupPlayer } from "../classes/custom/MatchupPlayer";
 import {
   LeagueSettings,
   ScoringSettings,
-} from "../interfaces/sleeper_api/LeagueSettings";
+} from "../classes/sleeper/LeagueSettings";
 
 export const getAllLeaguePositions = (leagues: LeagueSettings[]) => {
   var positions: POSITION[][] = [];

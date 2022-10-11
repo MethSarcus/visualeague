@@ -1,13 +1,12 @@
-import { MatchupPlayer } from "../../../data_classes/MatchupPlayer";
-import { Week } from "../../../data_classes/Week";
-import { getPositionRosterSlots, getRosterSlotPositions, LINEUP_POSITION, POSITION } from "../../../utility/rosterFunctions";
-import { LeagueSettings, ScoringSettings } from "../LeagueSettings";
-import { SleeperMatchup } from "../SleeperMatchup";
-import { SleeperRoster } from "../SleeperRoster";
-import { SleeperTransaction } from "../SleeperTransaction";
-import { SleeperUser } from "../SleeperUser";
+import { Week } from "./Week";
+import { LeagueSettings } from "../sleeper/LeagueSettings";
+import { SleeperMatchup } from "../sleeper/SleeperMatchup";
+import { SleeperRoster } from "../sleeper/SleeperRoster";
+import { SleeperTransaction } from "../sleeper/SleeperTransaction";
+import { SleeperUser } from "../sleeper/SleeperUser";
 import { SleeperPlayerDetails } from "./Player";
-import SleeperLeague from "./SleeperLeague";
+import SleeperLeague from "../sleeper/SleeperLeague";
+import LeagueMember from "./LeagueMember";
 
 export default class League {
 
@@ -114,6 +113,17 @@ export default class League {
               awayMember.stats.custom_points += awayTeam.custom_points
               awayMember.stats.pa += homeTeam.pf
 
+              if (homeTeam.pf > awayTeam.pf) {
+                homeMember.stats.wins += 1
+                awayMember.stats.losses += 1
+              } else if (homeTeam.pf < awayTeam.pf) {
+                awayMember.stats.wins += 1
+                homeMember.stats.losses += 1
+              } else {
+                homeMember.stats.ties += 1
+                awayMember.stats.ties += 1
+              }
+
               if (homeTeam.projectedScore < awayTeam.projectedScore) {
                 homeMember.stats.timesUnderdog += 1
                 if (matchup.winnerRosterId == homeId) {
@@ -133,35 +143,9 @@ export default class League {
   }
 }
 
-class LeagueMember {
-  public userDetails: SleeperUser;
-  public roster: SleeperRoster;
-  public name: string;
-  public userId: string;
-  public avatar: string;
-  public stats: MemberScores = new MemberScores();
 
 
-  constructor(userDetails: SleeperUser, roster: SleeperRoster) {
-    this.userDetails = userDetails;
-    this.roster = roster;
-    this.name = userDetails.display_name;
-    this.userId = userDetails.user_id;
-    this.avatar = userDetails.avatar;
-  }
-}
 
-class MemberScores {
-  public pf: number = 0
-  public pa: number = 0
-  public pp: number = 0
-  public opslap: number = 0
-  public custom_points: number = 0
-  public gp: number = 0
-  public winnableLosses: number = 0
-  public timesUnderdog: number = 0
-  public upsets: number = 0
-}
 
 
 
