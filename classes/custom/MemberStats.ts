@@ -5,6 +5,7 @@ export default class MemberScores {
     public opslap: number = 0
     public custom_points: number = 0
     public gp: number = 0
+    public gutPlays = 0
     public winnableLosses: number = 0
     public timesUnderdog: number = 0
     public upsets: number = 0
