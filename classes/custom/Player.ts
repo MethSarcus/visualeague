@@ -1,4 +1,4 @@
-import { ScoringSettings } from "../LeagueSettings";
+import { ScoringSettings } from "../sleeper/LeagueSettings";
 
 export default class Player {
   public points_scored: number = 0;

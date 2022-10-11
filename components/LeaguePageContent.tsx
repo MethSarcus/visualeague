@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Context } from "../contexts/Context";
-import League from "../interfaces/sleeper_api/custom/League";
+import League from "../classes/custom/League";
 import GenericStatCard from "./cards/statcards/GenericStatCard";
 
 const LeaguePageContent = () => {

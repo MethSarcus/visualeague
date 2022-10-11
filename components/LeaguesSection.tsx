@@ -1,6 +1,6 @@
 
 import { Box, Wrap, WrapItem } from "@chakra-ui/react";
-import { LeagueSettings } from "../interfaces/sleeper_api/LeagueSettings";
+import { LeagueSettings } from "../classes/sleeper/LeagueSettings";
 import LeagueCard from "./cards/LeagueCard";
 import LeagueCarousel from "./LeagueCarousel";
 

@@ -1,4 +1,4 @@
-import { ScoringSettings } from "../interfaces/sleeper_api/LeagueSettings"
+import { ScoringSettings } from "../sleeper/LeagueSettings"
 
 export class MatchupPlayer {
     playerId?: string

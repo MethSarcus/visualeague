@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SleeperPlayerDetails } from "../../../interfaces/sleeper_api/custom/Player";
+import { SleeperPlayerDetails } from "../../../classes/custom/Player";
 
 const { connectToDatabase } = require("../../../lib/mongodb");
 const { MongoClient } = require("mongodb");

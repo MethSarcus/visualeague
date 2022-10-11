@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
-import { LeagueSettings } from "../../../interfaces/sleeper_api/LeagueSettings";
-import SleeperLeague from "../../../interfaces/sleeper_api/custom/SleeperLeague";
-import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
-import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
-import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
+import { LeagueSettings } from "../../../classes/sleeper/LeagueSettings";
+import SleeperLeague from "../../../classes/sleeper/SleeperLeague";
+import { SleeperUser } from "../../../classes/sleeper/SleeperUser";
+import { SleeperMatchup } from "../../../classes/sleeper/SleeperMatchup";
+import { SleeperRoster } from "../../../classes/sleeper/SleeperRoster";
 import {
   getMultiPlayerDetails,
   getMultiPlayerProjections,

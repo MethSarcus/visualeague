@@ -1,13 +1,13 @@
-import { SleeperPlayerDetails } from "../interfaces/sleeper_api/custom/Player";
-import { LeagueSettings } from "../interfaces/sleeper_api/LeagueSettings";
-import { SleeperMatchup } from "../interfaces/sleeper_api/SleeperMatchup";
+import { SleeperPlayerDetails } from "./Player";
+import { LeagueSettings } from "../sleeper/LeagueSettings";
+import { SleeperMatchup } from "../sleeper/SleeperMatchup";
 import {
     getOptimalLineup,
     getOptimalProjectedLineup,
   getRosterSlotPositions,
   LINEUP_POSITION,
   POSITION,
-} from "../utility/rosterFunctions";
+} from "../../utility/rosterFunctions";
 import { MatchupPlayer } from "./MatchupPlayer";
 
 export class MatchupSide {

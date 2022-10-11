@@ -1,12 +1,10 @@
 import DataTable, {
-	ExpanderComponentProps,
 	TableColumn,
 } from "react-data-table-component"
 import React from "react"
-import { DraftPick } from "../../interfaces/sleeper_api/DraftPick";
-import FantasyLeagueMember from "../../interfaces/sleeper_api/custom/FantasyLeagueMember";
+import LeagueMember from "../../classes/custom/LeagueMember"
 
-type MyProps = { members: FantasyLeagueMember[] }
+type MyProps = { members: LeagueMember[] }
 
 interface DataRow {
 	name: string
@@ -96,7 +94,7 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 		theme="dark"
 			columns={columns}
 			defaultSortFieldId={1}
-			data={props.members.map((member: FantasyLeagueMember) => formatMemberDataForTable(member))}
+			data={props.members.map((member: LeagueMember) => formatMemberDataForTable(member))}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}
 			dense={true}
@@ -104,11 +102,11 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	)
 }
 
-function formatMemberDataForTable(member: FantasyLeagueMember): DataRow {
+function formatMemberDataForTable(member: LeagueMember): DataRow {
 	return {
-		name: member.displayName,
-		record: member.wins + "-" + member.losses,
-		pf: member.pf
+		name: member.name,
+		record: member.stats.wins + "-" + member.stats.losses,
+		pf: member.stats.pf
 	}
 }
 
