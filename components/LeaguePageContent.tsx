@@ -1,4 +1,4 @@
-import { Box, Code, Heading } from "@chakra-ui/react";
+import { Box, Button, Code, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { Context } from "../contexts/Context";
 import League from "../classes/custom/League";
 import GenericStatCard from "./cards/statcards/GenericStatCard";
 import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
+
+
 
 const LeaguePageContent = () => {
   const router = useRouter();
@@ -26,9 +28,15 @@ const LeaguePageContent = () => {
       let league = new League(leagueData.league)
       console.log(league)
       setContext(league);
-      setState(league);
     }
   }, [leagueData, setContext]);
+
+  const changeName = () => {
+    context.settings.name = 'test'
+    console.log(context)
+  }
+  
+
 
   if (leagueError)
     return (
@@ -51,6 +59,7 @@ const LeaguePageContent = () => {
       {context.settings != undefined && (
         <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
       )}
+      <Button onClick={changeName}>Button</Button>
       {/* {context.settings != undefined && <GenericStatCard statName={""} statValue={"3"} league={state}/>} */}
     </Box>
   );
