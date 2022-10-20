@@ -37,9 +37,15 @@ const LeaguePageContent = () => {
       let league = new CustomSleeperLeague(leagueData.league);
       console.log(league);
       setContext(league);
-      setState(league);
     }
   }, [leagueData, setContext]);
+
+  const changeName = () => {
+    context.settings.name = 'test'
+    console.log(context)
+  }
+  
+
 
   if (leagueError)
     return (
