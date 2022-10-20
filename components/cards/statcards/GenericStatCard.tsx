@@ -3,9 +3,9 @@ import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";
 import { DraftPick } from "../../../classes/sleeper/DraftPick";
 import { render } from "react-dom";
 import { Context } from "../../../contexts/Context";
-import League from "../../../classes/custom/League";
+import CustomSleeperLeague from "../../../classes/custom/League";
 
-type MyProps = { statName: String; statValue: String, league: League };
+type MyProps = { statName: String; statValue: String, league: CustomSleeperLeague };
 
 const GenericStatCard = (props: MyProps) => {
   const [context, setContext] = useContext(Context);

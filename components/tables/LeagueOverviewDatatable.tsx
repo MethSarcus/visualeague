@@ -3,14 +3,18 @@ import DataTable, {
 } from "react-data-table-component"
 import React from "react"
 import LeagueMember from "../../classes/custom/LeagueMember"
-import League from "../../classes/custom/League"
+import CustomSleeperLeague from "../../classes/custom/League"
 
-type MyProps = { league: League }
+type MyProps = { league: CustomSleeperLeague }
 
 interface DataRow {
 	name: string
 	record: string
 	pf: number
+	pa: number
+	pp: number
+	gp: number
+	opslap: number
 }
 
 const columns: TableColumn<DataRow>[] = [
@@ -18,18 +22,44 @@ const columns: TableColumn<DataRow>[] = [
 		name: "Team",
 		selector: (row) => row.name,
 		sortable: true,
+		grow: 1
 	},
 	{
 		name: "Record",
 		selector: (row) => row.record,
 		sortable: true,
+		grow: 0
 	},
 	{
 		name: "PF",
 		selector: (row) => row.pf,
 		sortable: true,
-		grow: 6
-	}
+		grow: 0
+	},
+	{
+		name: "PA",
+		selector: (row) => row.pa,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "PP",
+		selector: (row) => row.pp,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "GP",
+		selector: (row) => row.gp,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "OPSLAP",
+		selector: (row) => row.opslap,
+		sortable: true,
+		grow: 0
+	},
 ]
 
 const customStyles = {
@@ -110,7 +140,11 @@ function formatMemberDataForTable(member: LeagueMember): DataRow {
 	return {
 		name: member.name,
 		record: member.stats.wins + "-" + member.stats.losses,
-		pf: member.stats.pf
+		pf: parseFloat(member.stats.pf.toFixed(2)),
+		pa: parseFloat(member.stats.pa.toFixed(2)),
+		pp: parseFloat(member.stats.pp.toFixed(2)),
+		gp: parseFloat(member.stats.gp.toFixed(2)),
+		opslap: parseFloat(member.stats.opslap.toFixed(2))
 	}
 }
 

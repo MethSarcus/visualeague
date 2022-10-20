@@ -1,5 +1,5 @@
 import { Week } from "./Week";
-import { LeagueSettings } from "../sleeper/LeagueSettings";
+import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
 import { SleeperRoster } from "../sleeper/SleeperRoster";
 import { SleeperTransaction } from "../sleeper/SleeperTransaction";
@@ -8,12 +8,17 @@ import { SleeperPlayerDetails } from "./Player";
 import SleeperLeague from "../sleeper/SleeperLeague";
 import LeagueMember from "./LeagueMember";
 import { MatchupSide } from "./MatchupSide";
+import produce, { immerable } from "immer";
+import MemberScores from "./MemberStats";
 
-export default class League {
+
+export default class CustomSleeperLeague {
   //members maps roster ID to leaguemember
+  [immerable] = true
   public members: Map<number, LeagueMember> = new Map();
   public weeks: Map<number, Week> = new Map();
   public transactions: SleeperTransaction[];
+  public allMatchups: SleeperMatchup[][];
   public settings: LeagueSettings;
   public modifiedSettings?: LeagueSettings;
   public useModifiedSettings: boolean = false
@@ -26,6 +31,8 @@ export default class League {
     if (modifiedSettings) {
       this.modifiedSettings = modifiedSettings
       this.useModifiedSettings = true
+    } else {
+      this.modifiedSettings = sleeperLeague.sleeperDetails
     }
     sleeperLeague.player_details.forEach((player: any) => {
       this.playerDetails.set(player._id, player.details);
@@ -39,6 +46,7 @@ export default class League {
       });
     });
 
+    this.allMatchups = sleeperLeague.matchups
     this.transactions = []; //TODO add api calls for getting this info
     this.settings = sleeperLeague.sleeperDetails;
     this.settings = sleeperLeague.sleeperDetails;
@@ -70,6 +78,20 @@ export default class League {
     });
   }
 
+  modifyStats(customSettings: ScoringSettings) {
+    this.modifiedSettings = produce(this.modifiedSettings, (draftState: LeagueSettings) => {
+      draftState.scoring_settings = customSettings
+    });
+    this.useModifiedSettings = true
+    this.recalcStats()
+  }
+
+  disableModifiedStats() {
+    this.useModifiedSettings = false
+  }
+
+
+
   setWeeks(allMatchups: SleeperMatchup[][]) {
     allMatchups.forEach((weekMatchups: SleeperMatchup[], index: number) => {
       let weekNum = index + 1;
@@ -80,13 +102,17 @@ export default class League {
       ) {
         isPlayoffs = true;
       }
+      let settings = this.settings
+      if (this.useModifiedSettings && this.modifiedSettings) {
+        settings = this.modifiedSettings
+      }
       let week = new Week(
         weekNum,
         weekMatchups,
         this.playerStatMap,
         this.playerProjectionMap,
         this.playerDetails,
-        this.settings,
+        settings,
         isPlayoffs
       );
       this.weeks.set(weekNum, week);
@@ -103,6 +129,14 @@ export default class League {
 
   changeName(name: string) {
     this.settings.name = name;
+  }
+
+  recalcStats() {
+    for (let [key, member] of this.members) {
+      member.stats = new MemberScores()
+  }
+  this.setWeeks(this.allMatchups);
+  this.calcMemberScores();
   }
 
   calcMemberScores() {
