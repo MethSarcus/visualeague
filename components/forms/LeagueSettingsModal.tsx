@@ -101,7 +101,9 @@ const LeagueSettingsModal = () => {
           <ModalBody>
             {context.settings && (
               <VStack align={"start"}>
-                {Object.keys(context.modifiedSettings.scoring_settings).map(
+                {Object.keys(context.modifiedSettings.scoring_settings).sort(function(a,b){
+    return a.localeCompare(b);
+}).map(
                   (setting) => {
                     return (
                       <Center key={setting}>
@@ -110,13 +112,15 @@ const LeagueSettingsModal = () => {
                           isDisabled={!checked}
                           variant={"filled"}
                           size="xs"
-                          maxW={8}
+                          ml={1}
+                          maxW={7}
                           defaultValue={
                             context.modifiedSettings.scoring_settings[setting]
                           }
                         >
                           <NumberInputField
                             id={setting}
+                            padding={2}
                             onChange={onInputChange}
                           />
                         </NumberInput>
