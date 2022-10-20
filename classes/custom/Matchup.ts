@@ -1,6 +1,6 @@
 import { MatchupSide } from "./MatchupSide"
 
-export class Matchup {
+export default class Matchup {
     homeTeam: MatchupSide
     awayTeam?: MatchupSide
     winnerRosterId: number

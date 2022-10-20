@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SleeperPlayerDetails } from "../../../interfaces/sleeper_api/custom/Player";
+import { SleeperPlayerDetails } from "../../../classes/custom/Player";
 
 const { connectToDatabase } = require("../../../lib/mongodb");
 const { MongoClient } = require("mongodb");
@@ -81,7 +81,7 @@ export async function getPlayerStats(
 
     let stat = await stats.findOne(query);
     let projection = await projections.findOne(query);
-    return {player_stats: stat, player_projections: projection};
+    return { player_stats: stat, player_projections: projection };
   } catch (err) {
     console.log(err);
   }
@@ -124,8 +124,8 @@ export async function getMultiPlayerProjections(
     const db = client.db(`week_${week}`);
 
     let projections = db.collection("player_projections");
-    let query = {_id:{$in:playerIds}};
-    let projection = await projections.find(query).toArray()
+    let query = { _id: { $in: playerIds } };
+    let projection = await projections.find(query).toArray();
     return projection;
   } catch (err) {
     console.log(err);
@@ -146,8 +146,8 @@ export async function getMultiPlayerStats(
     const db = client.db(`week_${week}`);
 
     let projections = db.collection("player_stats");
-    let query = {_id:{$in:playerIds}};
-    let projection = await projections.find(query).toArray()
+    let query = { _id: { $in: playerIds } };
+    let projection = await projections.find(query).toArray();
     return projection;
   } catch (err) {
     console.log(err);
@@ -167,8 +167,17 @@ export async function getMultiPlayerDetails(
     const db = client.db(`players`);
 
     let details = db.collection("player_details");
-    let query = {_id:{$in:playerIds}};
-    let detail = await details.find(query).toArray()
+    let query = { _id: { $in: playerIds } };
+    let projectionQuery = {
+      projection: {
+        "details.fantasy_positions": 1,
+        "details.position": 1,
+        "details.last_name": 1,
+        "details.first_name": 1,
+        "details.player_id": 1,
+      },
+    };
+    let detail = await details.find(query, projectionQuery).toArray();
     return detail;
   } catch (err) {
     console.log(err);

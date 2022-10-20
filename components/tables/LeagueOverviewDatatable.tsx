@@ -1,17 +1,20 @@
 import DataTable, {
-	ExpanderComponentProps,
 	TableColumn,
 } from "react-data-table-component"
 import React from "react"
-import { DraftPick } from "../../interfaces/sleeper_api/DraftPick";
-import FantasyLeagueMember from "../../interfaces/sleeper_api/custom/FantasyLeagueMember";
+import LeagueMember from "../../classes/custom/LeagueMember"
+import CustomSleeperLeague from "../../classes/custom/League"
 
-type MyProps = { members: FantasyLeagueMember[] }
+type MyProps = { league: CustomSleeperLeague }
 
 interface DataRow {
 	name: string
 	record: string
 	pf: number
+	pa: number
+	pp: number
+	gp: number
+	opslap: number
 }
 
 const columns: TableColumn<DataRow>[] = [
@@ -19,18 +22,44 @@ const columns: TableColumn<DataRow>[] = [
 		name: "Team",
 		selector: (row) => row.name,
 		sortable: true,
+		grow: 1
 	},
 	{
 		name: "Record",
 		selector: (row) => row.record,
 		sortable: true,
+		grow: 0
 	},
 	{
 		name: "PF",
 		selector: (row) => row.pf,
 		sortable: true,
-		grow: 6
-	}
+		grow: 0
+	},
+	{
+		name: "PA",
+		selector: (row) => row.pa,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "PP",
+		selector: (row) => row.pp,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "GP",
+		selector: (row) => row.gp,
+		sortable: true,
+		grow: 0
+	},
+	{
+		name: "OPSLAP",
+		selector: (row) => row.opslap,
+		sortable: true,
+		grow: 0
+	},
 ]
 
 const customStyles = {
@@ -63,6 +92,10 @@ const customStyles = {
 }
 
 const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
+	const formattedMembers: DataRow[] = []
+	props.league.members.forEach((value: LeagueMember) => {
+		formattedMembers.push(formatMemberDataForTable(value))
+	});
 	// data provides access to your row data
 
 	// const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
@@ -90,13 +123,12 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	// 		},
 	// 	},
 	// ]
-
 	return (
 		<DataTable
 		theme="dark"
 			columns={columns}
 			defaultSortFieldId={1}
-			data={props.members.map((member: FantasyLeagueMember) => formatMemberDataForTable(member))}
+			data={formattedMembers}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}
 			dense={true}
@@ -104,11 +136,15 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	)
 }
 
-function formatMemberDataForTable(member: FantasyLeagueMember): DataRow {
+function formatMemberDataForTable(member: LeagueMember): DataRow {
 	return {
-		name: member.displayName,
-		record: member.wins + "-" + member.losses,
-		pf: member.pf
+		name: member.name,
+		record: member.stats.wins + "-" + member.stats.losses,
+		pf: parseFloat(member.stats.pf.toFixed(2)),
+		pa: parseFloat(member.stats.pa.toFixed(2)),
+		pp: parseFloat(member.stats.pp.toFixed(2)),
+		gp: parseFloat(member.stats.gp.toFixed(2)),
+		opslap: parseFloat(member.stats.opslap.toFixed(2))
 	}
 }
 

@@ -1,12 +1,17 @@
-import { Box, Code, Heading } from "@chakra-ui/react";
+import { Box, Button, Code, Container, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Context } from "../contexts/Context";
-import League from "../interfaces/sleeper_api/custom/League";
+import CustomSleeperLeague from "../classes/custom/League";
 import GenericStatCard from "./cards/statcards/GenericStatCard";
+import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
+import produce from "immer";
+import {enableAllPlugins} from "immer"
+import LeagueSettingsModal from "./forms/LeagueSettingsModal";
 
+enableAllPlugins()
 const LeaguePageContent = () => {
   const router = useRouter();
   const [context, setContext] = useContext(Context);
@@ -19,13 +24,28 @@ const LeaguePageContent = () => {
     fetcher
   );
 
+  const changeLeagueInfo = () => {
+    const nextState = produce(context, (draftState: CustomSleeperLeague) => {
+      draftState.settings.name = "test"
+    });
+    setContext(nextState);
+  };
+
   useEffect(() => {
     if (leagueData && leagueData.league) {
-      console.log(leagueData)
-      setContext(new League(leagueData.league));
-      setState(new League(leagueData.league));
+      console.log(leagueData);
+      let league = new CustomSleeperLeague(leagueData.league);
+      console.log(league);
+      setContext(league);
     }
   }, [leagueData, setContext]);
+
+  const changeName = () => {
+    context.settings.name = 'test'
+    console.log(context)
+  }
+  
+
 
   if (leagueError)
     return (
@@ -41,15 +61,15 @@ const LeaguePageContent = () => {
     );
 
   return (
-    <Box>
+    <Container>
       {context.settings != undefined && (
         <Heading color={"white"}>{context.settings.name}</Heading>
       )}
       {context.settings != undefined && (
-        <Code>{JSON.stringify(context.getPlayerStat(4866, 1))}</Code>
+        <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
       )}
-      {/* {context.settings != undefined && <GenericStatCard statName={""} statValue={"3"} league={state}/>} */}
-    </Box>
+      {context.settings && <LeagueSettingsModal/>}
+    </Container>
   );
 };
 

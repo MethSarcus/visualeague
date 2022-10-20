@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
-import { LeagueSettings } from "../../../interfaces/sleeper_api/LeagueSettings";
-import SleeperLeague from "../../../interfaces/sleeper_api/custom/SleeperLeague";
-import { SleeperUser } from "../../../interfaces/sleeper_api/SleeperUser";
-import { SleeperMatchup } from "../../../interfaces/sleeper_api/SleeperMatchup";
-import { SleeperRoster } from "../../../interfaces/sleeper_api/SleeperRoster";
+import { LeagueSettings } from "../../../classes/sleeper/LeagueSettings";
+import SleeperLeague from "../../../classes/sleeper/SleeperLeague";
+import { SleeperUser } from "../../../classes/sleeper/SleeperUser";
+import { SleeperMatchup } from "../../../classes/sleeper/SleeperMatchup";
+import { SleeperRoster } from "../../../classes/sleeper/SleeperRoster";
 import {
   getMultiPlayerDetails,
   getMultiPlayerProjections,
@@ -53,11 +53,9 @@ export default async function handler(
     const completeLeague = await getCompleteLeague(league.toString());
     res.status(200).json({ league: completeLeague });
   } else {
-    res
-      .status(401)
-      .json({
-        league: new SleeperLeague([], {} as LeagueSettings, [], [], [], [], []),
-      });
+    res.status(401).json({
+      league: new SleeperLeague([], {} as LeagueSettings, [], [], [], [], []),
+    });
   }
 }
 
@@ -242,10 +240,24 @@ async function getMultiMatchupProjections(
   return stats;
 }
 
+// const getData = (leagueId: string) => {
+//   const leagueSettings = getLeague(leagueId);
+//   const leagueUsers = getLeagueMembers(leagueId);
+//   const leagueRosters = getLeagueRosters(leagueId);
+//   return {
+//     leagueSettings,
+//     leagueUsers,
+//     leagueRosters,
+//   };
+// };
+
 async function getCompleteLeague(leagueId: string) {
   const leagueSettings = await getLeague(leagueId);
   const leagueUsers = await getLeagueMembers(leagueId);
   const leagueRosters = await getLeagueRosters(leagueId);
+
+ 
+
   let playerStats = [];
   let playerProjections = [];
   let playerDetails = [];
@@ -256,23 +268,25 @@ async function getCompleteLeague(leagueId: string) {
   const matchups = (await Promise.all(
     getMatchups(
       leagueId,
-      (leagueSettings as LeagueSettings).settings.last_scored_leg
+      (leagueSettings as  LeagueSettings).settings.last_scored_leg
     )
   )) as SleeperMatchup[][];
-  for (let i = 0; i < matchups.length; i++) {
-
-  }
+  for (let i = 0; i < matchups.length; i++) {}
   for (let i = 0; i < matchups.length; i++) {
     playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
-    playerProjections.push(await getMultiMatchupProjections(matchups[i], db, i + 1));
+    playerProjections.push(
+      await getMultiMatchupProjections(matchups[i], db, i + 1)
+    );
     matchups.forEach((weekMatchups) => {
-      weekMatchups.forEach(curMatch => {
-        allPlayers.push(curMatch.players)
-      })
-    })
+      weekMatchups.forEach((curMatch) => {
+        allPlayers.push(curMatch.players);
+      });
+    });
   }
 
-  playerDetails.push(await getMultiPlayerDetails(db, [...new Set(allPlayers.flat().flat())]))
+  playerDetails.push(
+    await getMultiPlayerDetails(db, [...new Set(allPlayers.flat().flat())])
+  );
   // use await on Promise.all so the Promises execute in parallel
   return new SleeperLeague(
     leagueUsers as SleeperUser[],

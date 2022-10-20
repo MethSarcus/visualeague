@@ -18,7 +18,7 @@ import {
 import {
   LeagueSettings,
   ScoringSettings,
-} from "../interfaces/sleeper_api/LeagueSettings";
+} from "../classes/sleeper/LeagueSettings";
 import {
   hasPremiumScoring,
   hasVariablePPR,
