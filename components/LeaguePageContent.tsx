@@ -9,7 +9,6 @@ import GenericStatCard from "./cards/statcards/GenericStatCard";
 import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 import produce from "immer";
 import {enableAllPlugins} from "immer"
-import LeagueSettingsModal from "./forms/LeagueSettingsModal";
 import Sidebar from "./nav/Sidebar";
 
 enableAllPlugins()

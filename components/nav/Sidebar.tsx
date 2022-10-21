@@ -20,6 +20,7 @@ import {
   NumberInputField,
   Switch,
   Text,
+  Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -74,13 +75,17 @@ export default function Sidebar() {
   return (
     <>
       {context.settings && (
-        <Button colorScheme="teal" onClick={onOpen}>
-          Open
-        </Button>
+        <IconButton
+        bg={"none"}
+        _hover={{background: "primary.100"}}
+          icon={<HamburgerIcon />}
+          onClick={onOpen}
+          aria-label={"settings"}
+        />
       )}
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent bg={"surface.1"} textColor="white">
           <DrawerCloseButton />
           <DrawerHeader>
             {" "}
@@ -100,40 +105,64 @@ export default function Sidebar() {
           <DrawerBody>
             {context.settings && (
               <VStack align={"start"}>
-                {Object.keys(context.modifiedSettings.scoring_settings).map(
-                  (setting) => {
+                {Object.keys(context.modifiedSettings.scoring_settings)
+                  .sort(function (a, b) {
+                    return a.localeCompare(b);
+                  })
+                  .map((setting) => {
                     return (
                       <Center key={setting}>
                         {formatScoreKey(setting)}:{" "}
                         <NumberInput
-                        ml={2}
-                        colorScheme={"primary"}
+                          ml={2}
+                          isInvalid={
+                            customSettings.scoring_settings[setting] !=
+                            context.settings.scoring_settings[setting]
+                          }
                           isDisabled={!checked}
                           variant={"filled"}
                           size="sm"
+                          textColor={"white"}
                           defaultValue={
                             context.modifiedSettings.scoring_settings[setting]
                           }
                         >
-                          <NumberInputField
-                          size={1}
-                            id={setting}
-                            onChange={onInputChange}
-                          />
+                          <Tooltip
+                            isDisabled={
+                              customSettings.scoring_settings[setting] ==
+                              context.settings.scoring_settings[setting]
+                            }
+                            label={
+                              "Original Value: " +
+                              context.settings.scoring_settings[setting]
+                            }
+                            placement={"right"}
+                          >
+                            <NumberInputField
+                              size={1}
+                              bg={"surface.2"}
+                              _hover={{ background: "surface.3" }}
+                              id={setting}
+                              onChange={onInputChange}
+                            />
+                          </Tooltip>
                         </NumberInput>
                       </Center>
                     );
-                  }
-                )}
+                  })}
               </VStack>
             )}
           </DrawerBody>
 
           <DrawerFooter>
-          <Button size={"sm"} onClick={onClose} variant="ghost">
+            <Button size={"sm"} onClick={onClose} variant="ghost">
               Close
             </Button>
-            <Button size={"sm"} onClick={onApplyPressed} colorScheme={"primary"} >
+            <Button
+              size={"sm"}
+              onClick={onApplyPressed}
+              colorScheme={"primary"}
+            >
               Apply
             </Button>
           </DrawerFooter>

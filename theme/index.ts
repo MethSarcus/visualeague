@@ -9,11 +9,12 @@ import Card from "./components/CardTheme";
 import DraftPickCard from "./components/DarftPickCardTheme";
 import PositionBadge from "./components/PositionBadge";
 import FlexPositionBadge from "./components/FlexPositionBadge";
-import { borderRadius, sizes, spacing } from "./overrides/Layout";
+import { borderRadius } from "./overrides/Layout";
+// import { borderRadius, sizes, spacing } from "./overrides/Layout";
 
 const overrides = {
   theme,
-  ...sizes,
+  // ...sizes,
   ...borderRadius,
 
   // Other foundational style overrides go here
