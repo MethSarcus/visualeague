@@ -1,28 +1,37 @@
 import {
-  useDisclosure,
+  Avatar,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
+  Center,
+  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  FormLabel,
+  Heading,
+  HStack,
+  IconButton,
+  Input,
   NumberInput,
   NumberInputField,
-  Center,
-  VStack,
-  FormLabel,
   Switch,
-  HStack,
+  Text,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { useContext, useEffect, useRef, useState } from "react";
 import produce from "immer";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import CustomSleeperLeague from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
 
-const LeagueSettingsModal = () => {
+export default function Sidebar() {
   const [context, setContext] = useContext(Context);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [customSettings, setCustomSettings] = React.useState(
@@ -51,9 +60,9 @@ const LeagueSettingsModal = () => {
   };
 
   const onApplyPressed = () => {
-    let settings = context.settings.scoring_settings
+    let settings = context.settings.scoring_settings;
     if (checked) {
-      settings = customSettings.scoring_settings
+      settings = customSettings.scoring_settings;
     }
     const nextState = produce(context, (draftState: CustomSleeperLeague) => {
       draftState.modifyStats(settings);
@@ -64,28 +73,31 @@ const LeagueSettingsModal = () => {
 
   return (
     <>
-      <Button size={"sm"} ref={btnRef} p={1} onClick={onOpen}>
-        Alter Settings
-      </Button>
-
-      <Modal
-        onClose={onClose}
-        finalFocusRef={btnRef}
-        isOpen={isOpen}
-        scrollBehavior={"inside"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
+      {context.settings && (
+        <Button colorScheme="teal" onClick={onOpen}>
+          Open
+        </Button>
+      )}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            {" "}
             League Settings
             <br />
-            {context && (<HStack align={"start"}>
+            {context && (
+              <HStack align={"start"}>
                 <FormLabel htmlFor="isChecked">Use Custom Settings</FormLabel>
-                <Switch id="isChecked" isChecked={checked} onChange={onCheckboxClick}/></HStack>
+                <Switch
+                  id="isChecked"
+                  isChecked={checked}
+                  onChange={onCheckboxClick}
+                />
+              </HStack>
             )}
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+          </DrawerHeader>
+          <DrawerBody>
             {context.settings && (
               <VStack align={"start"}>
                 {Object.keys(context.modifiedSettings.scoring_settings).map(
@@ -94,15 +106,17 @@ const LeagueSettingsModal = () => {
                       <Center key={setting}>
                         {formatScoreKey(setting)}:{" "}
                         <NumberInput
+                        ml={2}
+                        colorScheme={"primary"}
                           isDisabled={!checked}
                           variant={"filled"}
-                          size="xs"
-                          maxW={8}
+                          size="sm"
                           defaultValue={
                             context.modifiedSettings.scoring_settings[setting]
                           }
                         >
                           <NumberInputField
+                          size={1}
                             id={setting}
                             onChange={onInputChange}
                           />
@@ -113,26 +127,22 @@ const LeagueSettingsModal = () => {
                 )}
               </VStack>
             )}
-          </ModalBody>
-          <ModalFooter>
-            <Button size={"sm"} onClick={onClose}>
+          </DrawerBody>
+
+          <DrawerFooter>
+          <Button size={"sm"} onClick={onClose} variant="ghost">
               Close
             </Button>
-            <Button size={"sm"} onClick={onApplyPressed} variant="ghost">
+            <Button size={"sm"} onClick={onApplyPressed} colorScheme={"primary"} >
               Apply
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
-};
-
-export default LeagueSettingsModal;
+}
 
 function formatScoreKey(key: string) {
   return key.replaceAll("_", " ");
-}
-function onCheckboxClick(e: any) {
-  throw new Error("Function not implemented.");
 }

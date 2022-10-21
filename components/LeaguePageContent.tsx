@@ -10,6 +10,7 @@ import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 import produce from "immer";
 import {enableAllPlugins} from "immer"
 import LeagueSettingsModal from "./forms/LeagueSettingsModal";
+import Sidebar from "./nav/Sidebar";
 
 enableAllPlugins()
 const LeaguePageContent = () => {
@@ -68,7 +69,7 @@ const LeaguePageContent = () => {
       {context.settings != undefined && (
         <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
       )}
-      {context.settings && <LeagueSettingsModal/>}
+      
     </Container>
   );
 };
