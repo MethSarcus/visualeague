@@ -75,13 +75,29 @@ export const getPositionRosterSlots = (slotId: string) => {
       return [LINEUP_POSITION.QB, LINEUP_POSITION.SUPER_FLEX];
     }
     case POSITION.RB: {
-      return [LINEUP_POSITION.RB, LINEUP_POSITION.FLEX, LINEUP_POSITION.SUPER_FLEX, LINEUP_POSITION.WRRB_FLEX];
+      return [
+        LINEUP_POSITION.RB,
+        LINEUP_POSITION.FLEX,
+        LINEUP_POSITION.SUPER_FLEX,
+        LINEUP_POSITION.WRRB_FLEX,
+      ];
     }
     case POSITION.WR: {
-      return [LINEUP_POSITION.WR, LINEUP_POSITION.FLEX, LINEUP_POSITION.SUPER_FLEX, LINEUP_POSITION.WRRB_FLEX, LINEUP_POSITION.REC_FLEX];
+      return [
+        LINEUP_POSITION.WR,
+        LINEUP_POSITION.FLEX,
+        LINEUP_POSITION.SUPER_FLEX,
+        LINEUP_POSITION.WRRB_FLEX,
+        LINEUP_POSITION.REC_FLEX,
+      ];
     }
     case POSITION.TE: {
-      return [LINEUP_POSITION.TE, LINEUP_POSITION.FLEX, LINEUP_POSITION.SUPER_FLEX, LINEUP_POSITION.REC_FLEX];
+      return [
+        LINEUP_POSITION.TE,
+        LINEUP_POSITION.FLEX,
+        LINEUP_POSITION.SUPER_FLEX,
+        LINEUP_POSITION.REC_FLEX,
+      ];
     }
     case POSITION.DEF: {
       return [LINEUP_POSITION.DEF];
@@ -132,7 +148,7 @@ export enum LINEUP_POSITION {
   SUPER_FLEX = "SUPER_FLEX",
   IDP_FLEX = "IDP_FLEX",
   BN = "BN",
-  IR = "IR"
+  IR = "IR",
 }
 
 //A function that takes in a sleeper scoring settings json object and returns what type of receiving points are given
@@ -245,7 +261,6 @@ export const getVariablePPR = (scoring_settings: ScoringSettings) => {
   }
 };
 
-
 //Returns true if any position scores extra points for receptions
 export const hasPremiumScoring = (scoring_settings: ScoringSettings) => {
   if (
@@ -290,68 +305,172 @@ export const hasVariablePPR = (scoring_settings: ScoringSettings) => {
   }
 };
 
-export function getOptimalLineup(players: MatchupPlayer[], starterPositions: LINEUP_POSITION[]) {
-  let optimalLineup: MatchupPlayer[] = []
+export function getOptimalLineup(
+  players: MatchupPlayer[],
+  starterPositions: LINEUP_POSITION[]
+) {
+  let optimalLineup: MatchupPlayer[] = [];
   players = players.sort((a: MatchupPlayer, b: MatchupPlayer) => {
     if (a.score < b.score) {
-      return 1
+      return 1;
     } else if (a.score > b.score) {
-      return -1
+      return -1;
     } else {
-      return 0
+      return 0;
     }
-  })
+  });
 
   starterPositions.forEach((position) => {
-    let eligiblePlayers = players.filter(player => {
-      if (optimalLineup.includes(player) || !getPositionRosterSlots(player.eligiblePositions?.at(0) as LINEUP_POSITION).includes(position)) {
-        return false
+    let eligiblePlayers = players.filter((player) => {
+      if (
+        optimalLineup.includes(player) ||
+        !getPositionRosterSlots(
+          player.eligiblePositions?.at(0) as LINEUP_POSITION
+        ).includes(position)
+      ) {
+        return false;
       } else {
-        return true
+        return true;
       }
-    })
+    });
 
-    optimalLineup.push(eligiblePlayers[0])
-  })
+    optimalLineup.push(eligiblePlayers[0]);
+  });
 
-  return optimalLineup
+  return optimalLineup;
 }
 
-export function getOptimalProjectedLineup(players: MatchupPlayer[], starterPositions: LINEUP_POSITION[]) {
-  let optimalLineup: MatchupPlayer[] = []
+export function getOptimalProjectedLineup(
+  players: MatchupPlayer[],
+  starterPositions: LINEUP_POSITION[]
+) {
+  let optimalLineup: MatchupPlayer[] = [];
   players = players.sort((a: MatchupPlayer, b: MatchupPlayer) => {
     if (a.projectedScore < b.projectedScore) {
-      return 1
+      return 1;
     } else if (a.projectedScore > b.projectedScore) {
-      return -1
+      return -1;
     } else {
-      return 0
+      return 0;
     }
-  })
+  });
 
   starterPositions.forEach((position) => {
-    let eligiblePlayers = players.filter(player => {
-      if (optimalLineup.includes(player) || !getPositionRosterSlots(player.eligiblePositions?.at(0) as LINEUP_POSITION).includes(position)) {
-        return false
+    let eligiblePlayers = players.filter((player) => {
+      if (
+        optimalLineup.includes(player) ||
+        !getPositionRosterSlots(
+          player.eligiblePositions?.at(0) as LINEUP_POSITION
+        ).includes(position)
+      ) {
+        return false;
       } else {
-        return true
+        return true;
       }
-    })
+    });
 
-    optimalLineup.push(eligiblePlayers[0])
-  })
+    optimalLineup.push(eligiblePlayers[0]);
+  });
 
-  return optimalLineup
+  return optimalLineup;
 }
 
-function getEligiblePlayersForSlot(players: MatchupPlayer[], position: POSITION) {
-  let eligiblePlayers: MatchupPlayer[] = []
-  players.forEach(player => {
+function getEligiblePlayersForSlot(
+  players: MatchupPlayer[],
+  position: POSITION
+) {
+  let eligiblePlayers: MatchupPlayer[] = [];
+  players.forEach((player) => {
     if (player.eligiblePositions?.includes(position)) {
-      eligiblePlayers.push(player)
+      eligiblePlayers.push(player);
     }
-  })
+  });
 
-  return eligiblePlayers
+  return eligiblePlayers;
+}
 
+export function getPositionColor(position: POSITION) {
+  switch (position) {
+    case POSITION.QB: {
+      return "rgba(239, 116, 161, 0.8)";
+    }
+    case POSITION.RB: {
+      return "rgba(143, 242, 202, 0.8)";
+    }
+    case POSITION.WR: {
+      return "rgba(86, 201, 248, 0.8)";
+    }
+    case POSITION.TE: {
+      return "rgba(254, 174, 88, 0.8)";
+    }
+    case POSITION.DL: {
+      return "rgba(250, 153, 97, 0.8)";
+    }
+    case POSITION.DB: {
+      return "rgba(254, 160, 202, 0.8)";
+    }
+    case POSITION.LB: {
+      return "rgba(174, 182, 252, 0.8)";
+    }
+    case POSITION.K: {
+      return "#7988a1";
+    }
+    case POSITION.DEF: {
+      return "#bd66ff";
+    }
+    default: {
+      return "#000000"
+    }
+  }
+}
+
+export const project_colors = {
+  primary: {
+    50: "#f4ebfe",
+    100: "#e2cdfd",
+    200: "#cfabfd",
+    300: "#bb86fc",
+    400: "#aa67f9",
+    500: "#994af1",
+    600: "#8e44ea",
+    700: "#803be0",
+    800: "#7335d8",
+    900: "#5f27ca",
+  },
+  secondary: {
+    50: "#d4f6f2",
+    100: "#92e9dc",
+    200: "#03dac4",
+    300: "#00c7ab",
+    400: "#00b798",
+    500: "#00a885",
+    600: "#009a77",
+    700: "#008966",
+    800: "#007957",
+    900: "#005b39",
+  },
+  surface: {
+    0: "rgb(37, 37, 37)",
+    1: "rgb(56, 56, 56)",
+    2: "rgb(75, 75, 75)",
+    3: "rgb(94, 94, 94)",
+    4: "rgb(113, 113, 113)",
+    5: "rgb(132, 132, 132)",
+    6: "rgb(5, 5, 5)",
+    7: "rgb(151, 151, 151)",
+    8: "rgb(189, 189, 189)",
+    9: "rgb(208, 208, 208)",
+    10: "rgb(226, 226, 226)",
+  },
+  position: {
+    QB: "rgba(239, 116, 161, 0.8)",
+    RB: "rgba(143, 242, 202, 0.8)",
+    WR: "rgba(86, 201, 248, 0.8)",
+    TE: "rgba(254, 174, 88, 0.8)",
+    DL: "rgba(250, 153, 97, 0.8)",
+    DB: "rgba(254, 160, 202, 0.8)",
+    LB: "rgba(174, 182, 252, 0.8)",
+    K: "#7988a1",
+    DEF: "#bd66ff"
+  }
 }

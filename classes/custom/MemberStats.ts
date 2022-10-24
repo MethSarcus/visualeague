@@ -1,3 +1,5 @@
+import { POSITION } from "../../utility/rosterFunctions"
+
 export default class MemberScores {
     public pf: number = 0
     public pa: number = 0
@@ -15,4 +17,8 @@ export default class MemberScores {
     public power_wins: number = 0
     public power_losses: number = 0
     public power_ties: number = 0
+    public position_scores: Map<POSITION, number> = new Map()
+    public projected_position_scores: Map<POSITION, number> = new Map()
+    public position_starts: Map<POSITION, number> = new Map()
   }
+  

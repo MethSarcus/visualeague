@@ -158,6 +158,17 @@ export default class CustomSleeperLeague {
             homeMember.stats.gutPlays += homeTeam.gut_plays;
             homeMember.stats.custom_points += homeTeam.custom_points;
             homeMember.stats.pa += awayTeam.pf;
+            homeTeam.position_starts.forEach((value, key) => {
+              if (homeMember?.stats.position_scores.has(key)) {
+                homeMember?.stats.position_starts.set(key, homeMember.stats.position_starts.get(key)!! + value);
+                homeMember?.stats.position_scores.set(key, homeMember.stats.position_scores.get(key)!! + homeTeam.position_scores.get(key)!!);
+                homeMember?.stats.projected_position_scores.set(key, homeMember.stats.projected_position_scores.get(key)!! + homeTeam.position_projected_scores.get(key)!!);
+              } else {
+                homeMember?.stats.position_starts.set(key, value);
+                homeMember?.stats.position_scores.set(key, homeTeam.position_scores.get(key)!!);
+                homeMember?.stats.projected_position_scores.set(key, homeTeam.position_projected_scores.get(key)!!);
+              }
+            })
 
             awayMember.stats.pf += awayTeam.pf;
             awayMember.stats.pp += awayTeam.pp;
@@ -166,6 +177,18 @@ export default class CustomSleeperLeague {
             awayMember.stats.gutPlays += awayTeam.gut_plays;
             awayMember.stats.custom_points += awayTeam.custom_points;
             awayMember.stats.pa += homeTeam.pf;
+
+            awayTeam.position_starts.forEach((value, key) => {
+              if (awayMember?.stats.position_scores.has(key)) {
+                awayMember?.stats.position_starts.set(key, awayMember.stats.position_starts.get(key)!! + value);
+                awayMember?.stats.position_scores.set(key, awayMember.stats.position_scores.get(key)!! + awayTeam.position_scores.get(key)!!);
+                awayMember?.stats.projected_position_scores.set(key, awayMember.stats.projected_position_scores.get(key)!! + awayTeam.position_projected_scores.get(key)!!);
+              } else {
+                awayMember?.stats.position_starts.set(key, value);
+                awayMember?.stats.position_scores.set(key, awayTeam.position_scores.get(key)!!);
+                awayMember?.stats.projected_position_scores.set(key, awayTeam.position_projected_scores.get(key)!!);
+              }
+            })
 
             if (homeTeam.pf > awayTeam.pf) {
               homeMember.stats.wins += 1;

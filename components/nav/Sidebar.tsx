@@ -24,10 +24,10 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import produce from "immer";
 import React from "react";
+import { GoGear } from "react-icons/go";
 import CustomSleeperLeague from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
@@ -78,7 +78,7 @@ export default function Sidebar() {
         <IconButton
         bg={"none"}
         _hover={{background: "primary.100"}}
-          icon={<HamburgerIcon />}
+          icon={<GoGear/>}
           onClick={onOpen}
           aria-label={"settings"}
         />
