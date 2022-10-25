@@ -1,4 +1,4 @@
-import { Box, Button, Code, Container, Heading } from "@chakra-ui/react";
+import { Box, Button, Code, Container, Flex, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
@@ -8,10 +8,11 @@ import CustomSleeperLeague from "../classes/custom/League";
 import GenericStatCard from "./cards/statcards/GenericStatCard";
 import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 import produce from "immer";
-import {enableAllPlugins} from "immer"
+import { enableAllPlugins } from "immer";
 import Sidebar from "./nav/Sidebar";
+import BarChart from "./charts/BarChart";
 
-enableAllPlugins()
+enableAllPlugins();
 const LeaguePageContent = () => {
   const router = useRouter();
   const [context, setContext] = useContext(Context);
@@ -26,7 +27,7 @@ const LeaguePageContent = () => {
 
   const changeLeagueInfo = () => {
     const nextState = produce(context, (draftState: CustomSleeperLeague) => {
-      draftState.settings.name = "test"
+      draftState.settings.name = "test";
     });
     setContext(nextState);
   };
@@ -39,13 +40,6 @@ const LeaguePageContent = () => {
       setContext(league);
     }
   }, [leagueData, setContext]);
-
-  const changeName = () => {
-    context.settings.name = 'test'
-    console.log(context)
-  }
-  
-
 
   if (leagueError)
     return (
@@ -61,15 +55,19 @@ const LeaguePageContent = () => {
     );
 
   return (
-    <Container>
-      {context.settings != undefined && (
-        <Heading color={"white"}>{context.settings.name}</Heading>
-      )}
-      {context.settings != undefined && (
-        <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
-      )}
-      
-    </Container>
+    <>
+      <Container maxW={"container.xl"} maxH={"container.xl"}>
+        {context.settings != undefined && (
+          <Heading color={"white"}>{context.settings.name}</Heading>
+        )}
+        {context.settings != undefined && (
+          <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
+        )}
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && (<BarChart league={context}/>)}
+        </Box>
+      </Container>
+    </>
   );
 };
 

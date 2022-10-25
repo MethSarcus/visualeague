@@ -7,14 +7,25 @@ export class MatchupPlayer {
     projectedScore: number = 0
     stats?: ScoringSettings
     projectedStats?: ScoringSettings
-    eligiblePositions?: string[] = []
+    eligiblePositions: string[] = ["QB",
+    "RB",
+    "WR",
+    "TE",
+    "DEF",
+    "K",
+    "DL",
+    "LB",
+    "DB"]
 
     constructor(playerId?: string, position?: string, stats?: ScoringSettings, projectedStats?: ScoringSettings, eligiblePositions?: string[], leagueSettings?: ScoringSettings) {
         this.playerId = playerId
         this.position = position
         this.stats = stats
         this.projectedStats = projectedStats
-        this.eligiblePositions = eligiblePositions
+        if (eligiblePositions) {
+            this.eligiblePositions = eligiblePositions
+        }
+    
         this.calculatePoints(leagueSettings!)
         
     }
