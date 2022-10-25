@@ -120,6 +120,7 @@ const BarChart = (props: MyProps) => {
     function formatScoresForBarChart(league: CustomSleeperLeague, statType?: MemberStat) {
         let keys: Set<string> = new Set<string>();
         let data: object[] = []
+        
         league.members.forEach((member: LeagueMember, key: number) => {
             let memberData: {[k: string]: any} = {}
             memberData.member = member.name
@@ -129,6 +130,8 @@ const BarChart = (props: MyProps) => {
                 memberData[`${key}Color`] = getPositionColor(key)
             })
 
+            memberData["PA"] = parseFloat(member.stats.pa.toFixed(2)) * -1 
+            
             data.push(memberData)
         })
 
