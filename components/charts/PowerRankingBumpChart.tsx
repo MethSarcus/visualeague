@@ -61,8 +61,11 @@ function formatScoresForBumpChart(league: CustomSleeperLeague) {
   league.members.forEach((member) => {
     memberPowerWins.set(member.roster.roster_id, []);
   });
-  console.log(memberPowerWins);
+
+  let weeks: any[] = []
+
   league.weeks.forEach((week) => {
+    weeks.push(week.weekNumber)
     let teams = week.getAllTeams().sort((a: MatchupSide, b: MatchupSide) => {
       if (a.pf < b.pf) {
         return 1;
@@ -73,7 +76,6 @@ function formatScoresForBumpChart(league: CustomSleeperLeague) {
       }
     });
     teams.forEach((team, index) => {
-      console.log(league.members.get(team.roster_id)?.name + ": " + index);
       if (memberPowerWins.get(team.roster_id) != undefined) {
         (memberPowerWins.get(team.roster_id) as number[]).push(
           teams.length - index - 1
@@ -95,7 +97,7 @@ function formatScoresForBumpChart(league: CustomSleeperLeague) {
         id: leagueMember.name,
         data: memberWins.map((wins, index) => {
           return {
-            x: index + 1,
+            x: weeks[index],
             y: wins,
           };
         }),
