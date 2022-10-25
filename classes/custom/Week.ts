@@ -8,7 +8,6 @@ export class Week {
     matchups: Map<number, Matchup> = new Map()
     weekNumber: number
 
-
     constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerStats: any, playerProjections: any, playerDetails: Map<string, SleeperPlayerDetails>, leagueSettings: LeagueSettings, isPlayoffs: boolean) {
         this.weekNumber = weekNumber
         let matchupIds = new Map()
@@ -34,5 +33,37 @@ export class Week {
 
     getHighestScorer() {
 
+    }
+
+    getAllTeams() {
+      let teams: MatchupSide[] = []
+      this.matchups.forEach((matchup) => {
+        if (matchup.awayTeam) {
+          teams.push(matchup.homeTeam)
+          teams.push(matchup.awayTeam)
+        }
+      })
+
+      return teams
+    }
+
+    getAllScores() {
+      let teams = this.getAllTeams()
+      return teams.sort((a: MatchupSide, b: MatchupSide) => {
+        if (a.pf < b.pf) {
+          return 1;
+        } else if (a.pf > b.pf) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }).map((value, index) => {
+        return {
+          id: value.roster_id,
+          score: value.pf,
+          week: this.weekNumber,
+          rank: index + 1
+        }
+      })
     }
 }
