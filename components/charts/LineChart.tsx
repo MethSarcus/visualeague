@@ -29,6 +29,7 @@ const LineChart = (props: MyProps) => {
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       curve="linear"
       enableGridX={false}
+      enableCrosshair={false}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -40,7 +41,7 @@ const LineChart = (props: MyProps) => {
       yFormat=" >-.1f"
       axisTop={null}
       axisRight={null}
-      enableSlices={"x"}
+      enableSlices={false}
       axisBottom={{
         tickSize: 5,
         tickPadding: 5,
@@ -58,6 +59,19 @@ const LineChart = (props: MyProps) => {
         legendPosition: "middle",
       }}
       pointSize={10}
+      tooltip={({ point }) => {
+            return (
+                <div
+                    style={{
+                        background: 'white',
+                        padding: '9px 12px',
+                        border: '1px solid #ccc',
+                    }}
+                >
+                    <div>{`${point.serieId}: ${parseFloat(point.data.y as any).toFixed(2)}`}</div>
+                </div>
+            )
+        }}
       pointColor={{ theme: "background" }}
       pointBorderWidth={2}
       pointBorderColor={{ from: "serieColor" }}
@@ -126,7 +140,6 @@ function formatScoresForLineChart(league: CustomSleeperLeague) {
       });
     }
   });
-  console.log(data);
   return data;
 }
 

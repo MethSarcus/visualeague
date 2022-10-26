@@ -11,7 +11,7 @@ function Navbar() {
       <HStack spacing="24px" pl={3} paddingY={1} flex={1}>
         <Box as={"b"} fontSize="lg">
           <Link href="/">
-            <a>Dynasty Dash</a>
+            <a>Fanstatsy</a>
           </Link>
         </Box>
 
