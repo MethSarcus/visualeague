@@ -13,7 +13,6 @@ const GenericStatCard = (props: MyProps) => {
   useEffect(() => {
     if (context.settings) {
       props.league.changeName("testName")
-      console.log(context.settings.name)
     }
   }, [context, context.settings, props.league, setContext]);
 

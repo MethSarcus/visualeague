@@ -40,8 +40,8 @@ const BarChart = (props: MyProps) => {
         data={data}
         keys={keys}
         indexBy="member"
-        //layout='horizontal' maybe do this or add a toggle for it
-        margin={{ top: 50, right: 80, bottom: 50, left: 80 }}
+        layout='horizontal'
+        margin={{ top: 50, right: 80, bottom: 50, left: 120 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
@@ -62,7 +62,7 @@ const BarChart = (props: MyProps) => {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'Team',
+            legend: 'PF',
             legendPosition: 'middle',
             legendOffset: 32
         }}
@@ -70,9 +70,9 @@ const BarChart = (props: MyProps) => {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: "Points Scored",
+            legend: "Team",
             legendPosition: 'middle',
-            legendOffset: -40
+            legendOffset: -100
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
@@ -124,16 +124,27 @@ const BarChart = (props: MyProps) => {
         league.members.forEach((member: LeagueMember, key: number) => {
             let memberData: {[k: string]: any} = {}
             memberData.member = member.name
+            memberData.pf = member.stats.pf
             member.stats.position_scores.forEach((value, key) => {
                 keys.add(key)
                 memberData[key] = parseFloat(value.toFixed(2))
                 memberData[`${key}Color`] = getPositionColor(key)
+
             })
 
-            memberData["PA"] = parseFloat(member.stats.pa.toFixed(2)) * -1 
             
             data.push(memberData)
         })
+        console.log(data)
+        data.sort((a: any, b: any) => {
+            if (a.pf < b.pf) {
+              return 1;
+            } else if (a.pf > b.pf) {
+              return -1;
+            } else {
+              return 0;
+            }
+          });
 
         let formattedData = {chartKeys: Array.from(keys), chartData: data}
 
