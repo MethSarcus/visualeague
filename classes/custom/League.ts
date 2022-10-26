@@ -10,6 +10,7 @@ import LeagueMember from "./LeagueMember";
 import { MatchupSide } from "./MatchupSide";
 import produce, { immerable } from "immer";
 import MemberScores from "./MemberStats";
+import { POSITION } from "../../utility/rosterFunctions";
 
 
 export default class CustomSleeperLeague {
@@ -88,6 +89,21 @@ export default class CustomSleeperLeague {
 
   disableModifiedStats() {
     this.useModifiedSettings = false
+  }
+
+  getPositions() {
+    if (this.settings.roster_positions != undefined) {
+      return this.settings.roster_positions.map((pos) => {
+        if (Object.values(POSITION).includes(pos as POSITION)) {
+          return pos as POSITION;
+        }
+      })
+      .filter((value, index, array) => {
+        return value != undefined && array.indexOf(value) === index;
+      })
+    } else {
+      return []
+    }
   }
 
 

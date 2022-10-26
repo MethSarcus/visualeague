@@ -135,7 +135,6 @@ const BarChart = (props: MyProps) => {
             
             data.push(memberData)
         })
-        console.log(data)
         data.sort((a: any, b: any) => {
             if (a.pf < b.pf) {
               return 1;
