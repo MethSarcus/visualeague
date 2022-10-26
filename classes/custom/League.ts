@@ -215,13 +215,7 @@ export default class CustomSleeperLeague {
           }
         }
       });
-      let teams: MatchupSide[] = [];
-      week.matchups.forEach((matchup) => {
-        if (matchup.awayTeam) {
-          teams.push(matchup.homeTeam);
-          teams.push(matchup.awayTeam);
-        }
-      });
+      let teams: MatchupSide[] = week.getAllTeams();
 
       teams.sort((a: MatchupSide, b: MatchupSide) => {
         if (a.pf < b.pf) {

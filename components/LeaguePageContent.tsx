@@ -10,7 +10,10 @@ import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 import produce from "immer";
 import { enableAllPlugins } from "immer";
 import Sidebar from "./nav/Sidebar";
-import BarChart from "./charts/BarChart";
+import BarChart from "./charts/PFBarChart";
+import BumpChart from "./charts/BumpChart";
+import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
+import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -64,7 +67,18 @@ const LeaguePageContent = () => {
           <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
         )}
         <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && (<BarChart league={context}/>)}
+          {context.settings !== undefined && <BarChart league={context} />}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && <BumpChart league={context} />}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && <AreaBumpChart league={context} />}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && (
+            <PowerRankingBumpChart league={context} />
+          )}
         </Box>
       </Container>
     </>
