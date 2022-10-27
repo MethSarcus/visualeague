@@ -8,11 +8,13 @@ import {
   GridItem,
   Heading,
   SimpleGrid,
+  Spacer,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -35,6 +37,7 @@ import LineupPieChart from "./charts/LineupPieChart";
 import RadialBarChart from "./charts/PFRadialBar";
 import PFRadialBarChart from "./charts/PFRadialBar";
 import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
+import BaseStatsLayout from "./groups/BaseStatsLayout";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -90,10 +93,10 @@ const LeaguePageContent = () => {
             <Tab>Advanced Stats</Tab>
             <Tab>Whacky Charts</Tab>
           </TabList>
-          
-          <TabPanels>
-            <TabPanel width={"100%"}>
-              <Container maxW={"container.xxl"}>
+
+          <TabPanels textColor="black">
+            <TabPanel>
+              <Container maxW={"container.xl"}>
                 <Grid
                   templateRows="repeat(12, 1fr)"
                   templateColumns="repeat(12, 1fr)"
@@ -102,7 +105,20 @@ const LeaguePageContent = () => {
                   <GridItem height={"500px"} colSpan={12} textColor="black">
                     <BarChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={8} textColor="black">
+                  <GridItem maxH={"250px"} colSpan={2} textColor="black">
+                    <VStack>
+                      <GenericStatCard
+                        statName={"Highest PF"}
+                        statValue={"100"}
+                      />
+                      <Spacer />
+                      <GenericStatCard
+                        statName={"Lowest PF"}
+                        statValue={"100"}
+                      />
+                    </VStack>
+                  </GridItem>
+                  <GridItem height={"350px"} colSpan={10} textColor="black">
                     <LineChart league={context} />
                   </GridItem>
                   <GridItem height={"350px"} colSpan={4} textColor="black">
@@ -119,7 +135,7 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={3} height={"500px"}>
+                  <GridItem colSpan={8} height={"500px"}>
                     <MemberSkillScatterPlot league={context} />
                   </GridItem>
                   <GridItem colSpan={6} height={"500px"}>
@@ -153,7 +169,6 @@ const LeaguePageContent = () => {
                   </GridItem>
                   <GridItem colSpan={12} height={"500px"}>
                     <PowerRankingBumpChart league={context} />
-                    
                   </GridItem>
                 </Grid>
               </Container>

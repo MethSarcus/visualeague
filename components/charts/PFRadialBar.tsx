@@ -32,7 +32,6 @@ const PFRadialBarChart = (props: MyProps) => {
     let data = formatScoresForBarChart(props.league) as any
 
     if (data.length <= 0) return <Spinner/>
-    console.log(data)
     return (<ResponsiveRadialBar
         data={data}
         valueFormat=" >-.2f"
@@ -116,7 +115,6 @@ const PFRadialBarChart = (props: MyProps) => {
             }
         })
 
-        console.log(data)
         data.sort((a: any, b: any) => {
             if (a.pf < b.pf) {
               return 1;
