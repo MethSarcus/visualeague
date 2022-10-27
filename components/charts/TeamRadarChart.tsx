@@ -21,15 +21,17 @@ const TeamRadarChart = (props: MyProps) => {
     }
 
     if (data.length <= 0) return <Spinner/>
-    return (<ResponsiveRadar
+    return (<Box height={"350px"}>
+
+    <ResponsiveRadar
         data={data.chartData}
         keys={data.keys}
         theme={theme}
         indexBy="position"
         valueFormat=">-.2f"
-        margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+        margin={{ top: 50, right: 150, bottom: 50, left: 0 }}
         borderColor={{ from: 'color' }}
-        gridLabelOffset={36}
+        gridLabelOffset={20}
         dotSize={10}
         dotColor={{ theme: 'background' }}
         dotBorderWidth={2}
@@ -38,9 +40,9 @@ const TeamRadarChart = (props: MyProps) => {
         motionConfig="wobbly"
         legends={[
             {
-                anchor: 'top-left',
+                anchor: 'right',
                 direction: 'column',
-                translateX: -50,
+                translateX: -90,
                 translateY: -40,
                 itemWidth: 80,
                 itemHeight: 20,
@@ -51,13 +53,13 @@ const TeamRadarChart = (props: MyProps) => {
                     {
                         on: 'hover',
                         style: {
-                            itemTextColor: '#000'
+                            itemTextColor: '#FFFFFF'
                         }
                     }
                 ]
             }
         ]}
-    />)
+    /></Box>)
 }
 
 

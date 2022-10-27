@@ -83,83 +83,84 @@ const LeaguePageContent = () => {
       {context.settings != undefined && (
         <Heading color={"white"}>{context.settings.name}</Heading>
       )}
-      {context.settings != undefined && <Tabs variant="soft-rounded" textColor={"white"}>
-        <TabList>
-          <Tab>Basic Stats</Tab>
-          <Tab>Advanced Stats</Tab>
-          <Tab>Whacky Charts</Tab>
-        </TabList>
-        (<TabPanels>
-          <TabPanel width={"100%"}>
-            <Container maxW={"container.xxl"}>
-            <Grid
-            templateRows="repeat(12, 1fr)"
-            templateColumns="repeat(12, 1fr)"
-            gap={4}
-          >
-            <GridItem height={"500px"} colSpan={12}>
-              <BarChart league={context} />
-            </GridItem>
-            <GridItem height={"350px"} colSpan={8}>
-              <LineChart league={context} />
-            </GridItem>
-            <GridItem height={"350px"} colSpan={4}>
-              <TeamRadarChart league={context} />
-            </GridItem>
+      {context.settings != undefined && (
+        <Tabs variant="soft-rounded" textColor={"white"}>
+          <TabList>
+            <Tab>Basic Stats</Tab>
+            <Tab>Advanced Stats</Tab>
+            <Tab>Whacky Charts</Tab>
+          </TabList>
+          
+          <TabPanels>
+            <TabPanel width={"100%"}>
+              <Container maxW={"container.xxl"}>
+                <Grid
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem height={"500px"} colSpan={12} textColor="black">
+                    <BarChart league={context} />
+                  </GridItem>
+                  <GridItem height={"350px"} colSpan={8} textColor="black">
+                    <LineChart league={context} />
+                  </GridItem>
+                  <GridItem height={"350px"} colSpan={4} textColor="black">
+                    <TeamRadarChart league={context} />
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
 
+            <TabPanel>
+              <Container maxW={"container.xl"}>
+                <Grid
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem colSpan={3} height={"500px"}>
+                    <MemberSkillScatterPlot league={context} />
+                  </GridItem>
+                  <GridItem colSpan={6} height={"500px"}>
+                    <PFRadialBarChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={3} height={"500px"}>
+                    <LineupPieChart
+                      players={
+                        context.weeks.get(1).matchups.get(1).homeTeam.starters
+                      }
+                      playerDetails={context.playerDetails}
+                    />
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
 
-
-
-          </Grid>
-            </Container>
-          </TabPanel>
-
-          <TabPanel>
-            <Container maxW={"container.xl"}>
-            <Grid
-            templateRows="repeat(12, 1fr)"
-            templateColumns="repeat(12, 1fr)"
-            gap={4}
-          >
-            <GridItem colSpan={3} height={"500px"}>
-              <MemberSkillScatterPlot league={context} />
-            </GridItem>
-            <GridItem colSpan={6} height={"500px"}>
-              <PFRadialBarChart league={context} />
-            </GridItem>
-            <GridItem colSpan={3} height={"500px"}>
-              <LineupPieChart
-                players={context.weeks.get(1).matchups.get(1).homeTeam.starters}
-                playerDetails={context.playerDetails}
-              />
-            </GridItem>
-            </Grid>
-            </Container>
-          </TabPanel>
-
-          <TabPanel>
-            <Container maxW={"container.xl"}>
-            <Grid
-            width={"100%"}
-            height={"350px"}
-            templateRows="repeat(12, 1fr)"
-            templateColumns="repeat(12, 1fr)"
-            gap={4}
-          >
-            <GridItem colSpan={6} height={"500px"}>
-              <BumpChart league={context} />
-            </GridItem>
-            <GridItem colSpan={6} height={"500px"}>
-              <AreaBumpChart league={context} />
-            </GridItem>
-            <GridItem colSpan={12} height={"500px"}>
-              <PowerRankingBumpChart league={context} />
-            </GridItem>
-            </Grid>
-            </Container>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>}
+            <TabPanel>
+              <Container maxW={"container.xl"}>
+                <Grid
+                  width={"100%"}
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem colSpan={6} height={"500px"}>
+                    <BumpChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={6} height={"500px"}>
+                    <AreaBumpChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={12} height={"500px"}>
+                    <PowerRankingBumpChart league={context} />
+                    
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )}
     </>
   );
 };
