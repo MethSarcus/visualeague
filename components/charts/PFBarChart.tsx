@@ -41,7 +41,7 @@ const BarChart = (props: MyProps) => {
         keys={keys}
         indexBy="member"
         layout='horizontal'
-        margin={{ top: 50, right: 80, bottom: 50, left: 120 }}
+        margin={{ top: 20, right: 80, bottom: 40, left: 170 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
@@ -70,7 +70,7 @@ const BarChart = (props: MyProps) => {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: "Team",
+            legend: "",
             legendPosition: 'middle',
             legendOffset: -100
         }}

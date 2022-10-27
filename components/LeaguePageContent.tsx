@@ -1,4 +1,19 @@
-import { Box, Button, Code, Container, Flex, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Code,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  SimpleGrid,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
@@ -19,6 +34,7 @@ import LineChart from "./charts/LineChart";
 import LineupPieChart from "./charts/LineupPieChart";
 import RadialBarChart from "./charts/PFRadialBar";
 import PFRadialBarChart from "./charts/PFRadialBar";
+import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -64,48 +80,87 @@ const LeaguePageContent = () => {
 
   return (
     <>
-      <Container maxW={"container.xl"} maxH={"container.xl"}>
-        {context.settings != undefined && (
-          <Heading color={"white"}>{context.settings.name}</Heading>
-        )}
-        {context.settings != undefined && (
-          <LeagueOverviewDataTable league={context}></LeagueOverviewDataTable>
-        )}
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && <BarChart league={context} />}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && <BumpChart league={context} />}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && <AreaBumpChart league={context} />}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && (
-            <PowerRankingBumpChart league={context} />
-          )}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && (
-            <TeamRadarChart league={context} />
-          )}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && (
-            <LineChart league={context} />
-          )}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.settings !== undefined && (
-            <PFRadialBarChart league={context} />
-          )}
-        </Box>
-        <Box width={"100%"} height={"50vh"}>
-          {context.weeks !== undefined && (
-            <LineupPieChart players={context.weeks.get(1).matchups.get(1).homeTeam.starters} playerDetails={context.playerDetails}/>
-          )}
-        </Box>
-      </Container>
+      {context.settings != undefined && (
+        <Heading color={"white"}>{context.settings.name}</Heading>
+      )}
+      {context.settings != undefined && (
+        <Tabs variant="soft-rounded" textColor={"white"}>
+          <TabList>
+            <Tab>Basic Stats</Tab>
+            <Tab>Advanced Stats</Tab>
+            <Tab>Whacky Charts</Tab>
+          </TabList>
+          
+          <TabPanels>
+            <TabPanel width={"100%"}>
+              <Container maxW={"container.xxl"}>
+                <Grid
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem height={"500px"} colSpan={12} textColor="black">
+                    <BarChart league={context} />
+                  </GridItem>
+                  <GridItem height={"350px"} colSpan={8} textColor="black">
+                    <LineChart league={context} />
+                  </GridItem>
+                  <GridItem height={"350px"} colSpan={4} textColor="black">
+                    <TeamRadarChart league={context} />
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
+
+            <TabPanel>
+              <Container maxW={"container.xl"}>
+                <Grid
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem colSpan={3} height={"500px"}>
+                    <MemberSkillScatterPlot league={context} />
+                  </GridItem>
+                  <GridItem colSpan={6} height={"500px"}>
+                    <PFRadialBarChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={3} height={"500px"}>
+                    <LineupPieChart
+                      players={
+                        context.weeks.get(1).matchups.get(1).homeTeam.starters
+                      }
+                      playerDetails={context.playerDetails}
+                    />
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
+
+            <TabPanel>
+              <Container maxW={"container.xl"}>
+                <Grid
+                  width={"100%"}
+                  templateRows="repeat(12, 1fr)"
+                  templateColumns="repeat(12, 1fr)"
+                  gap={4}
+                >
+                  <GridItem colSpan={6} height={"500px"}>
+                    <BumpChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={6} height={"500px"}>
+                    <AreaBumpChart league={context} />
+                  </GridItem>
+                  <GridItem colSpan={12} height={"500px"}>
+                    <PowerRankingBumpChart league={context} />
+                    
+                  </GridItem>
+                </Grid>
+              </Container>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )}
     </>
   );
 };

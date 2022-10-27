@@ -26,7 +26,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
     <ResponsiveAreaBump
       data={data}
       theme={theme}
-      margin={{ top: 40, right: 200, bottom: 40, left: 200 }}
+      margin={{ top: 60, right: 200, bottom: 40, left: 200 }}
       spacing={5}
       colors={{ scheme: "nivo" }}
       blendMode="multiply"

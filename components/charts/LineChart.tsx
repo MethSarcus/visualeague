@@ -26,7 +26,7 @@ const LineChart = (props: MyProps) => {
     <ResponsiveLine
       data={data}
       theme={theme}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={{ top: 20, right: 170, bottom: 50, left: 60 }}
       curve="linear"
       enableGridX={false}
       enableCrosshair={false}
@@ -46,7 +46,7 @@ const LineChart = (props: MyProps) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "Week",
+        legend: "",
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -66,6 +66,7 @@ const LineChart = (props: MyProps) => {
                         background: 'white',
                         padding: '9px 12px',
                         border: '1px solid #ccc',
+                        color: "black"
                     }}
                 >
                     <div>{`${point.serieId}: ${parseFloat(point.data.y as any).toFixed(2)}`}</div>

@@ -20,6 +20,7 @@
     "@nivo/pie": "^0.80.0",
     "@nivo/radar": "^0.80.0",
     "@nivo/radial-bar": "^0.80.0",
+    "@nivo/scatterplot": "^0.80.0",
     "@nivo/tooltip": "^0.80.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
