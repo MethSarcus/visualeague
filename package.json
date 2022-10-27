@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.11",
+    "@emotion/react": "^11.10.4",
     "@chakra-ui/react": "^2.3.5",
-    "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.4",
     "@nivo/bar": "^0.80.0",
     "@nivo/bump": "^0.80.0",
