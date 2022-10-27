@@ -14,6 +14,11 @@ import BarChart from "./charts/PFBarChart";
 import BumpChart from "./charts/BumpChart";
 import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
 import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
+import TeamRadarChart from "./charts/TeamRadarChart";
+import LineChart from "./charts/LineChart";
+import LineupPieChart from "./charts/LineupPieChart";
+import RadialBarChart from "./charts/PFRadialBar";
+import PFRadialBarChart from "./charts/PFRadialBar";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -78,6 +83,26 @@ const LeaguePageContent = () => {
         <Box width={"100%"} height={"50vh"}>
           {context.settings !== undefined && (
             <PowerRankingBumpChart league={context} />
+          )}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && (
+            <TeamRadarChart league={context} />
+          )}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && (
+            <LineChart league={context} />
+          )}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.settings !== undefined && (
+            <PFRadialBarChart league={context} />
+          )}
+        </Box>
+        <Box width={"100%"} height={"50vh"}>
+          {context.weeks !== undefined && (
+            <LineupPieChart players={context.weeks.get(1).matchups.get(1).homeTeam.starters} playerDetails={context.playerDetails}/>
           )}
         </Box>
       </Container>
