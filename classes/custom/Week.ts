@@ -62,7 +62,9 @@ export class Week {
           id: value.roster_id,
           score: value.pf,
           week: this.weekNumber,
-          rank: index + 1
+          rank: index + 1,
+          gp: value.gp,
+          pp: value.pp
         }
       })
     }
