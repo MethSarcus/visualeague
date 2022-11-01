@@ -1,62 +1,26 @@
 import React, { useContext, useEffect } from "react";
-import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";
-import { DraftPick } from "../../../classes/sleeper/DraftPick";
-import { render } from "react-dom";
-import { Context } from "../../../contexts/Context";
-import CustomSleeperLeague from "../../../classes/custom/League";
+import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";;
 
-type MyProps = { statName: String; statValue: String, league: CustomSleeperLeague };
+type MyProps = { statName: String; statValue: String };
 
 const GenericStatCard = (props: MyProps) => {
-  const [context, setContext] = useContext(Context);
-
-  useEffect(() => {
-    if (context.settings) {
-      props.league.changeName("testName")
-    }
-  }, [context, context.settings, props.league, setContext]);
-
 
   return (
     <Box
-      my={1}
-      p={4}
+      p={6}
+      textAlign={"center"}
       bg={"surface.1"}
-      maxW="xs"
-      fontSize={"lg"}
-      borderRadius={10}
+      maxW="lg"
+      borderRadius={7}
       boxShadow={"2xl"}
       color="white"
     >
-      <Text>{context.settings.name}</Text>
-      <Text>{props.statValue}</Text>
+      <Box p={1} fontWeight='semibold'>{props.statName}</Box>
+      <Box p={1}>{props.statValue}</Box>
     </Box>
   );
 };
 
 export default GenericStatCard;
 
-export const OrdinalStatCard = (props: MyProps) => {
-  return (
-    <Flex
-      my={1}
-      py={3}
-      px={0}
-      bg={"surface.1"}
-      maxW="xs"
-      borderRadius={10}
-      boxShadow={"2xl"}
-      color="white"
-      alignItems={"left"}
-    >
-      <Center>
-        <Box mx={2} bg={"surface.2"} alignItems={"start"} fontWeight={"bold"} fontSize={"lg"} p={2}>1st</Box>
-        <Box >
-          <Text fontSize={"md"}>{props.statName}</Text>
-          <Text fontSize={"sm"}>{props.statValue}</Text>
-        </Box>
-      </Center>
-      <Spacer></Spacer>
-    </Flex>
-  )
-}
+

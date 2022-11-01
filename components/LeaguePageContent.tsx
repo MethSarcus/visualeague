@@ -8,11 +8,13 @@ import {
   GridItem,
   Heading,
   SimpleGrid,
+  Spacer,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -35,6 +37,7 @@ import LineupPieChart from "./charts/LineupPieChart";
 import RadialBarChart from "./charts/PFRadialBar";
 import PFRadialBarChart from "./charts/PFRadialBar";
 import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
+import BaseStatsLayout from "./groups/BaseStatsLayout";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -90,10 +93,10 @@ const LeaguePageContent = () => {
             <Tab>Advanced Stats</Tab>
             <Tab>Whacky Charts</Tab>
           </TabList>
-          
-          <TabPanels>
-            <TabPanel width={"100%"}>
-              <Container maxW={"container.xxl"}>
+
+          <TabPanels textColor="black">
+            <TabPanel px={[0,  "auto"]} mx={[0,  "auto"]}>
+              <Container maxW={"container.xl"} p={[0,  "auto"]} m={[0,  "auto"]}>
                 <Grid
                   templateRows="repeat(12, 1fr)"
                   templateColumns="repeat(12, 1fr)"
@@ -102,10 +105,10 @@ const LeaguePageContent = () => {
                   <GridItem height={"500px"} colSpan={12} textColor="black">
                     <BarChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={8} textColor="black">
+                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
                     <LineChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={4} textColor="black">
+                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
                     <TeamRadarChart league={context} />
                   </GridItem>
                 </Grid>
@@ -119,7 +122,7 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={3} height={"500px"}>
+                  <GridItem colSpan={8} height={"500px"}>
                     <MemberSkillScatterPlot league={context} />
                   </GridItem>
                   <GridItem colSpan={6} height={"500px"}>
@@ -145,15 +148,14 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={6} height={"500px"}>
+                  <GridItem colSpan={[12, 8, 4]} height={"500px"}>
                     <BumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={6} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
                     <AreaBumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={12} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
                     <PowerRankingBumpChart league={context} />
-                    
                   </GridItem>
                 </Grid>
               </Container>
