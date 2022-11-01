@@ -95,8 +95,8 @@ const LeaguePageContent = () => {
           </TabList>
 
           <TabPanels textColor="black">
-            <TabPanel>
-              <Container maxW={"container.xl"}>
+            <TabPanel px={[0,  "auto"]} mx={[0,  "auto"]}>
+              <Container maxW={"container.xl"} p={[0,  "auto"]} m={[0,  "auto"]}>
                 <Grid
                   templateRows="repeat(12, 1fr)"
                   templateColumns="repeat(12, 1fr)"
@@ -105,23 +105,10 @@ const LeaguePageContent = () => {
                   <GridItem height={"500px"} colSpan={12} textColor="black">
                     <BarChart league={context} />
                   </GridItem>
-                  <GridItem maxH={"250px"} colSpan={2} textColor="black">
-                    <VStack>
-                      <GenericStatCard
-                        statName={"Highest PF"}
-                        statValue={"100"}
-                      />
-                      <Spacer />
-                      <GenericStatCard
-                        statName={"Lowest PF"}
-                        statValue={"100"}
-                      />
-                    </VStack>
-                  </GridItem>
-                  <GridItem height={"350px"} colSpan={10} textColor="black">
+                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
                     <LineChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={4} textColor="black">
+                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
                     <TeamRadarChart league={context} />
                   </GridItem>
                 </Grid>
@@ -161,13 +148,13 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={6} height={"500px"}>
+                  <GridItem colSpan={[12, 8, 4]} height={"500px"}>
                     <BumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={6} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
                     <AreaBumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={12} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
                     <PowerRankingBumpChart league={context} />
                   </GridItem>
                 </Grid>

@@ -41,7 +41,7 @@ const BarChart = (props: MyProps) => {
         keys={keys}
         indexBy="member"
         layout='horizontal'
-        margin={{ top: 20, right: 80, bottom: 40, left: 170 }}
+        margin={{ top: 50, right: 10, bottom: 50, left: 80 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
@@ -69,7 +69,7 @@ const BarChart = (props: MyProps) => {
         axisLeft={{
             tickSize: 5,
             tickPadding: 5,
-            tickRotation: 0,
+            tickRotation: -30,
             legend: "",
             legendPosition: 'middle',
             legendOffset: -100
@@ -88,14 +88,12 @@ const BarChart = (props: MyProps) => {
         legends={[
             {
                 dataFrom: 'keys',
-                anchor: 'right',
-                direction: 'column',
+                anchor: 'top',
+                direction: 'row',
                 justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
+                translateY: -20,
                 itemTextColor: "white",
-                itemWidth: 100,
+                itemWidth: 50,
                 itemHeight: 20,
                 itemDirection: 'left-to-right',
                 itemOpacity: 1,
