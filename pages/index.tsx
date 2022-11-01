@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import GenericStatCard, { OrdinalStatCard } from "../components/cards/statcards/GenericStatCard";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
 

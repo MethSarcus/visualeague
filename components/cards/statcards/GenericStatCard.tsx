@@ -1,9 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";
-import { DraftPick } from "../../../classes/sleeper/DraftPick";
-import { render } from "react-dom";
-import { Context } from "../../../contexts/Context";
-import CustomSleeperLeague from "../../../classes/custom/League";
+import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";;
 
 type MyProps = { statName: String; statValue: String };
 
