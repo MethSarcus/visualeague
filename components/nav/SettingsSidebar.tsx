@@ -32,7 +32,7 @@ import CustomSleeperLeague from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
 
-export default function Sidebar() {
+export default function SettingsSidebar() {
   const [context, setContext] = useContext(Context);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [customSettings, setCustomSettings] = React.useState(

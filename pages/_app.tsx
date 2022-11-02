@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [context, setContext] = useState({});
 
   return <Context.Provider value={[context, setContext]}><ChakraProvider theme={customTheme}>
-  <Component {...pageProps} /></ChakraProvider><Analytics /></Context.Provider>
+  <Component {...pageProps} /><Analytics /></ChakraProvider></Context.Provider>
 }
 
 export default MyApp

@@ -26,7 +26,7 @@ import GenericStatCard from "./cards/statcards/GenericStatCard";
 import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
 import produce from "immer";
 import { enableAllPlugins } from "immer";
-import Sidebar from "./nav/Sidebar";
+import SettingsSidebar from "./nav/SettingsSidebar";
 import BarChart from "./charts/PFBarChart";
 import BumpChart from "./charts/BumpChart";
 import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
@@ -148,13 +148,13 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={[12, 8, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12]} height={"500px"}>
                     <BumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
                     <AreaBumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
                     <PowerRankingBumpChart league={context} />
                   </GridItem>
                 </Grid>

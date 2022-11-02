@@ -16,7 +16,7 @@ const TeamRadarChart = (props: MyProps) => {
     let data = formatScoresForRadarChart(Array.from(props.league.members.values()), props.league.getPositions() as POSITION[]) as any
     const [hiddenMembers, setHiddenMembers] = useState([])
     const theme = {
-        "background": project_colors.surface[1],
+        "background": "none",
         "textColor": "white"
     }
 
