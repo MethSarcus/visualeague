@@ -1,32 +1,20 @@
 import {
-  Avatar,
   Button,
-  Center,
-  Divider,
-  Drawer,
+  Center, Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  FormLabel,
-  Heading,
-  HStack,
-  IconButton,
-  Input,
-  NumberInput,
+  DrawerOverlay, FormLabel, HStack,
+  IconButton, NumberInput,
   NumberInputField,
-  Switch,
-  Text,
-  Tooltip,
+  Switch, Tooltip,
   useDisclosure,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
-import { useContext, useEffect, useRef, useState } from "react";
 import produce from "immer";
-import React from "react";
+import React, { useContext } from "react";
 import { GoGear } from "react-icons/go";
 import CustomSleeperLeague from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";

@@ -2,9 +2,6 @@ import { Spinner } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
 import { MatchupPlayer } from "../../classes/custom/MatchupPlayer";
 import { SleeperPlayerDetails } from "../../classes/custom/Player";
-import {
-  project_colors,
-} from "../../utility/rosterFunctions";
 import { PositionColors } from "./ChartColors";
 
 interface MyProps {

@@ -1,6 +1,6 @@
 import { Wrap, WrapItem } from "@chakra-ui/react";
 import axios from "axios";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import UserLeagueCell from "../UserLeagueCell";

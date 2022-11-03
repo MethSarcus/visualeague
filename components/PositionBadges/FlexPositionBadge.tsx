@@ -1,9 +1,5 @@
 import {
-  SimpleGrid,
-  Box,
-  Center,
-  useStyleConfig,
-  HStack,
+  Center, SimpleGrid, useStyleConfig
 } from "@chakra-ui/react";
 
 type MyProps = {

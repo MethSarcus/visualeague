@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Box, Center, Container, Flex, Spacer, Text } from "@chakra-ui/react";;
+import { Box } from "@chakra-ui/react";
+;
 
 type MyProps = { statName: String; statValue: String };
 

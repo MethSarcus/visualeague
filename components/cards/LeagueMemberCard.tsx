@@ -1,22 +1,7 @@
 import {
-  Button,
-  Text,
-  Stack,
-  Spacer,
-  ButtonGroup,
-  Box,
-  useStyleConfig,
-  useMultiStyleConfig,
-  Center,
-  Avatar,
-  Heading,
+  Avatar, Button
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import React from "react";
 import LeagueMember from "../../classes/custom/LeagueMember";
-import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
-import { getLeagueReceptionScoringType } from "../../utility/rosterFunctions";
-import ScoringPopover from "../ScoringPopover";
 
 type MyProps = {
   member: LeagueMember;

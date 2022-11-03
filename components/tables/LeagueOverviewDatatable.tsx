@@ -1,9 +1,8 @@
 import DataTable, {
-	TableColumn,
+	TableColumn
 } from "react-data-table-component"
-import React from "react"
-import LeagueMember from "../../classes/custom/LeagueMember"
 import CustomSleeperLeague from "../../classes/custom/League"
+import LeagueMember from "../../classes/custom/LeagueMember"
 
 type MyProps = { league: CustomSleeperLeague }
 

@@ -1,40 +1,17 @@
 import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  Divider,
-  Drawer,
+  Button, Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  FormLabel,
-  Heading,
-  HStack,
-  IconButton,
-  Input,
-  NumberInput,
-  NumberInputField,
-  Stack,
-  Switch,
-  Text,
-  Tooltip,
-  useDisclosure,
-  VStack,
+  DrawerOverlay, useDisclosure
 } from "@chakra-ui/react";
-import { useContext, useEffect, useRef, useState } from "react";
 import produce from "immer";
-import React from "react";
-import { GoGear } from "react-icons/go";
+import React, { useContext } from "react";
 import CustomSleeperLeague from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
-import { ArrowForwardIcon, EmailIcon, HamburgerIcon } from "@chakra-ui/icons";
-import LeagueMember from "../../classes/custom/LeagueMember";
 import MemberList from "../groups/MemberList";
 
 export default function TeamSidebar() {

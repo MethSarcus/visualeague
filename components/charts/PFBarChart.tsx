@@ -1,10 +1,8 @@
 import { Spinner } from '@chakra-ui/react';
-import { BarDatum, ResponsiveBar } from '@nivo/bar'
-import { useContext, useEffect, useState } from 'react';
+import { BarDatum, ResponsiveBar } from '@nivo/bar';
 import CustomSleeperLeague from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
-import { Context } from '../../contexts/Context';
-import { getPositionColor, POSITION, project_colors } from '../../utility/rosterFunctions';
+import { getPositionColor, project_colors } from '../../utility/rosterFunctions';
 import { PositionColors } from './ChartColors';
 
 

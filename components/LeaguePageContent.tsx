@@ -1,43 +1,28 @@
 import {
-  Box,
-  Button,
-  Code,
-  Container,
-  Flex,
-  Grid,
+  Container, Grid,
   GridItem,
-  Heading,
-  SimpleGrid,
-  Spacer,
-  Tab,
+  Heading, Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs,
-  VStack,
+  Tabs
 } from "@chakra-ui/react";
 import axios from "axios";
+import produce, { enableAllPlugins } from "immer";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Context } from "../contexts/Context";
 import CustomSleeperLeague from "../classes/custom/League";
-import GenericStatCard from "./cards/statcards/GenericStatCard";
-import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
-import produce from "immer";
-import { enableAllPlugins } from "immer";
-import SettingsSidebar from "./nav/SettingsSidebar";
-import BarChart from "./charts/PFBarChart";
+import { Context } from "../contexts/Context";
 import BumpChart from "./charts/BumpChart";
-import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
-import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
-import TeamRadarChart from "./charts/TeamRadarChart";
 import LineChart from "./charts/LineChart";
 import LineupPieChart from "./charts/LineupPieChart";
-import RadialBarChart from "./charts/PFRadialBar";
-import PFRadialBarChart from "./charts/PFRadialBar";
 import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
-import BaseStatsLayout from "./groups/BaseStatsLayout";
+import BarChart from "./charts/PFBarChart";
+import PFRadialBarChart from "./charts/PFRadialBar";
+import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
+import TeamRadarChart from "./charts/TeamRadarChart";
+import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
