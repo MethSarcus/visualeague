@@ -15,7 +15,7 @@ function Navbar() {
           </Box>
         <Box as={"b"} fontSize="lg">
           <Link href="/">
-            <a>Fanstatsy</a>
+            <a>Visualeague</a>
           </Link>
         </Box>
 
