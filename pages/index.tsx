@@ -13,9 +13,9 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Dynasty Dash</title>
+        <title>Visualeague</title>
         <meta
-          name="A Dashboard for Dynasty Leagues"
+          name="Visualize your league"
           content="Created by Seth Marcus"
         />
         <link rel="icon" href="/favicon.ico" />
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
                 color="#FFFFFF"
                 pb={10}
               >
-                Dynasty Dash
+                Visualeague
               </Heading>
               <UsernameForm />
             </Box>

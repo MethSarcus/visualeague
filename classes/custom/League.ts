@@ -1,16 +1,16 @@
-import { Week } from "./Week";
+import produce, { immerable } from "immer";
+import { POSITION } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
+import SleeperLeague from "../sleeper/SleeperLeague";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
 import { SleeperRoster } from "../sleeper/SleeperRoster";
 import { SleeperTransaction } from "../sleeper/SleeperTransaction";
 import { SleeperUser } from "../sleeper/SleeperUser";
-import { SleeperPlayerDetails } from "./Player";
-import SleeperLeague from "../sleeper/SleeperLeague";
 import LeagueMember from "./LeagueMember";
 import { MatchupSide } from "./MatchupSide";
-import produce, { immerable } from "immer";
 import MemberScores from "./MemberStats";
-import { POSITION } from "../../utility/rosterFunctions";
+import { SleeperPlayerDetails } from "./Player";
+import { Week } from "./Week";
 
 
 export default class CustomSleeperLeague {

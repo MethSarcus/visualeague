@@ -1,9 +1,8 @@
 import { Spinner } from '@chakra-ui/react';
-import { ResponsiveBump } from '@nivo/bump';
 import { ResponsiveScatterPlot } from '@nivo/scatterplot';
 import CustomSleeperLeague from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
-import { getPositionColor, POSITION, project_colors } from '../../utility/rosterFunctions';
+import { project_colors } from '../../utility/rosterFunctions';
 
 
 interface MyProps {

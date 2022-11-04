@@ -2,30 +2,14 @@ import { Spinner } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
 import { MatchupPlayer } from "../../classes/custom/MatchupPlayer";
 import { SleeperPlayerDetails } from "../../classes/custom/Player";
-import {
-  project_colors,
-} from "../../utility/rosterFunctions";
+import { PositionColors } from "./ChartColors";
 
 interface MyProps {
   players: MatchupPlayer[];
   playerDetails?: Map<string, SleeperPlayerDetails>;
 }
-const colors: Record<string, string> = {
-  QB: "hsl(338, 79%, 70%)",
-  RB: "rgba(143, 242, 202, 0.95)",
-  WR: "rgba(86, 201, 248, 0.95)",
-  TE: "rgba(254, 174, 88, 0.95)",
-  DL: "rgba(250, 153, 97, 0.95)",
-  DB: "rgba(254, 160, 202, 0.95)",
-  LB: "rgba(174, 182, 252, 0.95)",
-  K: "#7988a1",
-  DEF: "#bd66ff",
-};
 
-const theme = {
-  background: project_colors.surface[1],
-  textColor: project_colors.surface[1],
-};
+
 
 const LineupPieChart = (props: MyProps) => {
 
@@ -44,7 +28,7 @@ const LineupPieChart = (props: MyProps) => {
         label: fullName,
         value: player.score.toFixed(2),
         position: player.eligiblePositions[0],
-        color: colors[player.eligiblePositions[0]],
+        color: PositionColors[player.eligiblePositions[0]],
       };
     });
   };
@@ -64,8 +48,6 @@ const LineupPieChart = (props: MyProps) => {
         textAnchor="middle"
         dominantBaseline="central"
         style={{
-          fontSize: "3em",
-          fontWeight: 600,
           fill: "white",
         }}
       >
@@ -79,10 +61,9 @@ const LineupPieChart = (props: MyProps) => {
   return (
     <ResponsivePie
       data={data}
-      theme={theme}
       sortByValue={true}
       colors={{ datum: "data.color" }}
-      margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+      margin={{ top: 80, right: 80, bottom: 80, left: 80 }}
       innerRadius={0.5}
       padAngle={0.7}
       cornerRadius={3}

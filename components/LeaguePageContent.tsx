@@ -1,43 +1,28 @@
 import {
-  Box,
-  Button,
-  Code,
-  Container,
-  Flex,
-  Grid,
+  Container, Grid,
   GridItem,
-  Heading,
-  SimpleGrid,
-  Spacer,
-  Tab,
+  Heading, Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs,
-  VStack,
+  Tabs
 } from "@chakra-ui/react";
 import axios from "axios";
+import produce, { enableAllPlugins } from "immer";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Context } from "../contexts/Context";
 import CustomSleeperLeague from "../classes/custom/League";
-import GenericStatCard from "./cards/statcards/GenericStatCard";
-import LeagueOverviewDataTable from "./tables/LeagueOverviewDatatable";
-import produce from "immer";
-import { enableAllPlugins } from "immer";
-import Sidebar from "./nav/Sidebar";
-import BarChart from "./charts/PFBarChart";
+import { Context } from "../contexts/Context";
 import BumpChart from "./charts/BumpChart";
-import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
-import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
-import TeamRadarChart from "./charts/TeamRadarChart";
 import LineChart from "./charts/LineChart";
 import LineupPieChart from "./charts/LineupPieChart";
-import RadialBarChart from "./charts/PFRadialBar";
-import PFRadialBarChart from "./charts/PFRadialBar";
 import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
-import BaseStatsLayout from "./groups/BaseStatsLayout";
+import BarChart from "./charts/PFBarChart";
+import PFRadialBarChart from "./charts/PFRadialBar";
+import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
+import TeamRadarChart from "./charts/TeamRadarChart";
+import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -148,13 +133,13 @@ const LeaguePageContent = () => {
                   templateColumns="repeat(12, 1fr)"
                   gap={4}
                 >
-                  <GridItem colSpan={[12, 8, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12]} height={"500px"}>
                     <BumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
                     <AreaBumpChart league={context} />
                   </GridItem>
-                  <GridItem colSpan={[12, 12, 4]} height={"500px"}>
+                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
                     <PowerRankingBumpChart league={context} />
                   </GridItem>
                 </Grid>

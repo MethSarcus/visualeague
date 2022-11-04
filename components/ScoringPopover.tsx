@@ -1,31 +1,19 @@
 import {
-  Popover,
-  PopoverTrigger,
-  Button,
-  PopoverContent,
-  PopoverArrow,
-  Stack,
-  StackItem,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  Box,
-  Text,
-  Badge,
-  Code,
-  HStack,
+  Button, Code,
+  HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger, Stack,
+  StackItem, Text
 } from "@chakra-ui/react";
 import {
   LeagueSettings,
-  ScoringSettings,
+  ScoringSettings
 } from "../classes/sleeper/LeagueSettings";
 import {
   hasPremiumScoring,
   hasVariablePPR,
-  POSITION,
+  POSITION
 } from "../utility/rosterFunctions";
-import PositionBadge from "./PositionBadges/PositionBadge";
 import FlexPositionBadge from "./PositionBadges/FlexPositionBadge";
+import PositionBadge from "./PositionBadges/PositionBadge";
 
 type MyProps = {
   league: LeagueSettings;

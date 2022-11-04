@@ -1,12 +1,5 @@
-import { Box, Center, Flex, Spacer, Spinner, VStack, Wrap, WrapItem } from "@chakra-ui/react";
-import { ResponsiveBump } from "@nivo/bump";
+import { Flex, Spacer, VStack } from "@chakra-ui/react";
 import CustomSleeperLeague from "../../classes/custom/League";
-import LeagueMember from "../../classes/custom/LeagueMember";
-import {
-  getPositionColor,
-  POSITION,
-  project_colors,
-} from "../../utility/rosterFunctions";
 import GenericStatCard from "../cards/statcards/GenericStatCard";
 
 interface MyProps {

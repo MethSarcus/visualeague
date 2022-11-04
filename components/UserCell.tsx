@@ -1,9 +1,6 @@
-import { Avatar, Box, Button, Center, Tag, TagLabel } from "@chakra-ui/react";
+import { Avatar, Box, Button, Center } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
-import { LeagueSettings } from "../classes/sleeper/LeagueSettings";
 import { SleeperUser } from "../classes/sleeper/SleeperUser";
-import { getLeagueReceptionScoringType } from "../utility/rosterFunctions";
 
 type MyProps = {
   user: SleeperUser

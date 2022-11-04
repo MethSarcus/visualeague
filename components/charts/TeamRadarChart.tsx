@@ -1,11 +1,9 @@
 import { Box, Spinner } from '@chakra-ui/react';
-import { ResponsiveAreaBump, ResponsiveBump } from '@nivo/bump';
 import { ResponsiveRadar } from '@nivo/radar';
-import { BasicTooltip } from '@nivo/tooltip';
 import { useState } from 'react';
 import CustomSleeperLeague from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
-import { getPositionColor, POSITION, project_colors } from '../../utility/rosterFunctions';
+import { POSITION } from '../../utility/rosterFunctions';
 
 
 interface MyProps {
@@ -16,7 +14,7 @@ const TeamRadarChart = (props: MyProps) => {
     let data = formatScoresForRadarChart(Array.from(props.league.members.values()), props.league.getPositions() as POSITION[]) as any
     const [hiddenMembers, setHiddenMembers] = useState([])
     const theme = {
-        "background": project_colors.surface[1],
+        "background": "none",
         "textColor": "white"
     }
 

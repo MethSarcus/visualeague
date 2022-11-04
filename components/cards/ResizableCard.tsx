@@ -1,13 +1,8 @@
 
 import {
-  Box,
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Image,
+  Box, Image,
   Link,
-  Text,
+  Text
 } from "@chakra-ui/react";
 
 const ResizableCard = () => {

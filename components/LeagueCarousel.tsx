@@ -1,4 +1,4 @@
-import { WrapItem, Wrap } from "@chakra-ui/react";
+import { Wrap, WrapItem } from "@chakra-ui/react";
 import React from "react";
 import { LeagueSettings } from "../classes/sleeper/LeagueSettings";
 import LeagueCard from "./cards/LeagueCard";

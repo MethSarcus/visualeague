@@ -1,12 +1,5 @@
 import {
-  Button,
-  Text,
-  Stack,
-  Spacer,
-  ButtonGroup,
-  Box,
-  useStyleConfig,
-  useMultiStyleConfig,
+  Box, Button, ButtonGroup, Spacer, Stack, Text, useMultiStyleConfig
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
