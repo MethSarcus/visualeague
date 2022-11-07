@@ -15,15 +15,11 @@ const LeaguePage: NextPage = () => {
 
 
   return (
-    <Box w={"100%"} h="100%" bg={"surface.0"}>
+    <Box bg={"surface.0"} >
       <Grid
         templateAreas={`"header header"
                   "main main"
                   "footer footer"`}
-        gridTemplateRows={"50px 1fr 30px"}
-        gridTemplateColumns={"150px 1fr"}
-        h="100%"
-        gap="1"
         color="surface.0"
         fontWeight="bold"
       >
@@ -31,7 +27,7 @@ const LeaguePage: NextPage = () => {
           <Navbar />
         </GridItem>
 
-        <GridItem width={"100%"} bg="surface.0" area={"main"} p={4} overflow={'scroll'}>
+        <GridItem bg="surface.0" area={"main"} p={[0, 0, 4]} overflow={'scroll'}>
           <LeaguePageContent />
         </GridItem>
 
@@ -40,6 +36,7 @@ const LeaguePage: NextPage = () => {
         </GridItem>
       </Grid>
     </Box>
+
   );
 };
 

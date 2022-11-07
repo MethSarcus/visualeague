@@ -55,13 +55,13 @@ const LeaguePageContent = () => {
 
   if (leagueError)
     return (
-      <Heading color={"white"} h={"100%"}>
+      <Heading color={"white"} >
         Failed to load
       </Heading>
     );
   if (!leagueData)
     return (
-      <Heading color={"white"} h={"100%"}>
+      <Heading color={"white"} >
         Loading...
       </Heading>
     );
@@ -69,17 +69,17 @@ const LeaguePageContent = () => {
   return (
     <>
       {context.settings != undefined && (
-        <Heading color={"white"}>{context.settings.name}</Heading>
+        <Heading width={"100%"} textAlign={"center"} my={3} size={"sm"} color={"white"}>{context.settings.name}</Heading>
       )}
       {context.settings != undefined && (
-        <Tabs variant="soft-rounded" textColor={"white"}>
+        <Tabs textColor={"white"} maxWidth={"100vw"} >
           <TabList>
             <Tab>Basic Stats</Tab>
             <Tab>Advanced Stats</Tab>
             <Tab>Whacky Charts</Tab>
           </TabList>
 
-          <TabPanels textColor="black">
+          <TabPanels textColor="black" maxWidth={"100vw"}>
             <TabPanel px={[0,  "auto"]} mx={[0,  "auto"]}>
               <Container maxW={"container.xl"} p={[0,  "auto"]} m={[0,  "auto"]}>
                 <Grid

@@ -45,9 +45,9 @@ function UsernameForm() {
           variant="outline"
           placeholder="Username"
           size="lg"
+          p={5}
           display="inline-block"
-          mt={3}
-          h={7}
+          mt={[0, 3]}
           value={text}
           onChange={(e) => textChanged(e.target.value)}
         />
@@ -56,10 +56,11 @@ function UsernameForm() {
             variant="solid"
             size="sm"
             type="submit"
+            p={4}
             backgroundColor="primary.500"
             color="#000000"
             textColor={'white'}
-            mt={2}
+            mt={4}
             h={6}
           >
             Submit
@@ -79,8 +80,8 @@ function UsernameForm() {
         </Collapse>
         {!usernameSubmitted && storedUsernames.length > 0 && (
           <Box>
-            <Box mt={4}>Recent Searches</Box>
-            <Wrap>
+            <Box mt={6}>Recent Searches</Box>
+            <Wrap mt={2}>
               {storedUsernames.map((item) => {
                 return (
                   <WrapItem onClick={() => setText(item)} key={item}>
