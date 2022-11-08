@@ -72,7 +72,7 @@ const LeaguePageContent = () => {
         <Heading width={"100%"} textAlign={"center"} my={3} size={"sm"} color={"white"}>{context.settings.name}</Heading>
       )}
       {context.settings != undefined && (
-        <Tabs textColor={"white"} maxWidth={"100vw"} >
+        <Tabs isLazy isFitted variant={"line"} textColor={"white"} maxWidth={"100vw"} >
           <TabList>
             <Tab>Basic Stats</Tab>
             <Tab>Advanced Stats</Tab>

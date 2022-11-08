@@ -26,7 +26,6 @@ export default function SettingsSidebar() {
   const [customSettings, setCustomSettings] = React.useState(
     context.modifiedSettings
   );
-  const [searchTerm, setSearchTerm] = React.useState("");
   const [checked, setChecked] = React.useState(
     context.settings.useModifiedSettings
   );
@@ -47,12 +46,6 @@ export default function SettingsSidebar() {
         );
       })
     );
-  };
-
-  const onSearchChange = async (e: {
-    target: { id: string | number; value: string };
-  }) => {
-    setSearchTerm(e.target.value);
   };
 
 
@@ -96,8 +89,6 @@ export default function SettingsSidebar() {
                   onChange={onCheckboxClick}
                 />
                 </Center>
-
-                <Input size={"xs"} placeholder='Search' onChange={onSearchChange}/>
               </VStack>
             )}
           </DrawerHeader>
