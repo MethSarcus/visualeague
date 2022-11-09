@@ -50,7 +50,7 @@ export interface LeagueSettings {
     waiver_type: number;
     bench_lock: number;
     reserve_allow_sus: number;
-    type: number;
+    type: number; //0 for redraft 1 for dynasty
     reserve_allow_cov: number;
     waiver_clear_days: number;
     daily_waivers_last_ran: number;

@@ -23,12 +23,12 @@ import PFRadialBarChart from "./charts/PFRadialBar";
 import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
 import TeamRadarChart from "./charts/TeamRadarChart";
 import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
+import TradePageContent from "./page_layouts/TradePageContent";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
   const router = useRouter();
   const [context, setContext] = useContext(Context);
-  const [state, setState] = useState({});
   const leagueId = router.query.league;
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -36,13 +36,6 @@ const LeaguePageContent = () => {
     leagueId != undefined ? `/api/league/${router.query.league}` : null,
     fetcher
   );
-
-  const changeLeagueInfo = () => {
-    const nextState = produce(context, (draftState: CustomSleeperLeague) => {
-      draftState.settings.name = "test";
-    });
-    setContext(nextState);
-  };
 
   useEffect(() => {
     if (leagueData && leagueData.league) {
@@ -76,7 +69,7 @@ const LeaguePageContent = () => {
           <TabList>
             <Tab>Basic Stats</Tab>
             <Tab>Advanced Stats</Tab>
-            <Tab>Whacky Charts</Tab>
+            <Tab>Trades</Tab>
           </TabList>
 
           <TabPanels textColor="black" maxWidth={"100vw"}>
@@ -126,23 +119,8 @@ const LeaguePageContent = () => {
             </TabPanel>
 
             <TabPanel>
-              <Container maxW={"container.xl"}>
-                <Grid
-                  width={"100%"}
-                  templateRows="repeat(12, 1fr)"
-                  templateColumns="repeat(12, 1fr)"
-                  gap={4}
-                >
-                  <GridItem colSpan={[12, 12]} height={"500px"}>
-                    <BumpChart league={context} />
-                  </GridItem>
-                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
-                    <AreaBumpChart league={context} />
-                  </GridItem>
-                  <GridItem colSpan={[12, 12, 12]} height={"500px"}>
-                    <PowerRankingBumpChart league={context} />
-                  </GridItem>
-                </Grid>
+              <Container overflowY={"scroll"} maxH={"container.xl"} w="-moz-fit-content">
+                <TradePageContent/>
               </Container>
             </TabPanel>
           </TabPanels>

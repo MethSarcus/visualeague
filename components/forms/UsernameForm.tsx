@@ -71,7 +71,7 @@ function UsernameForm() {
       <Box>
         <Collapse in={usernameSubmitted} animate>
           <Box pt={3}>
-            <Box as="h1">Leagues</Box>
+            <Box as="h1" mb={1}>Leagues</Box>
             <LeagueCellGroup
               usernameSubmitted={usernameSubmitted}
               username={text}
