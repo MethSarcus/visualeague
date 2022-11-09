@@ -1,4 +1,4 @@
-import { Box, Container, Heading } from "@chakra-ui/react";
+import { Box, Container, Heading, Center } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -20,8 +20,9 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className={`${styles.main} landing_screen`}>
         <div className="App">
+          <Center h={"container.md"}>
           <Container
             className="formContainer"
             maxW={"2xl"}
@@ -46,6 +47,8 @@ const Home: NextPage = () => {
               <UsernameForm />
             </Box>
           </Container>
+          </Center>
+          
         </div>
       </main>
     </div>

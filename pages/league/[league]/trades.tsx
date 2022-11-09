@@ -6,7 +6,6 @@ import {
   import type { NextPage } from "next";
   import { useState } from "react";
   import Footer from "../../../components/Footer";
-  import LeaguePageContent from "../../../components/LeaguePageContent";
   import Navbar from "../../../components/nav/Navbar";
 import TradePageContent from "../../../components/page_layouts/TradePageContent";
   

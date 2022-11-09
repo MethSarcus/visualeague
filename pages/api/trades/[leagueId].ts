@@ -52,7 +52,6 @@ export default async function handler(
     )) as SleeperTransaction[][];
     const trades = transactions
       .flat()
-      .flat()
       .filter((transaction) => transaction.type == tradeString);
     res.status(200).json({ trades: trades });
   } else {

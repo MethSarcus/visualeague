@@ -245,8 +245,6 @@ async function getCompleteLeague(leagueId: string) {
   const leagueUsers = await getLeagueMembers(leagueId);
   const leagueRosters = await getLeagueRosters(leagueId);
 
- 
-
   let playerStats = [];
   let playerProjections = [];
   let playerDetails = [];

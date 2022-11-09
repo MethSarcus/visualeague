@@ -1,29 +1,28 @@
 import {
-  Container, Grid,
+  Container,
+  Grid,
   GridItem,
-  Heading, Tab,
+  Heading,
+  Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs
+  Tabs,
 } from "@chakra-ui/react";
 import axios from "axios";
 import produce, { enableAllPlugins } from "immer";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import League from "../classes/custom/League";
-import { Context } from "../contexts/Context";
-import BumpChart from "./charts/BumpChart";
-import LineChart from "./charts/LineChart";
-import LineupPieChart from "./charts/LineupPieChart";
-import MemberSkillScatterPlot from "./charts/MemberSkillScatterPlot";
-import BarChart from "./charts/PFBarChart";
-import PFRadialBarChart from "./charts/PFRadialBar";
-import PowerRankingBumpChart from "./charts/PowerRankingBumpChart";
-import TeamRadarChart from "./charts/TeamRadarChart";
-import AreaBumpChart from "./charts/WeeklyPFAreaBumpChart";
-import TradePageContent from "./page_layouts/TradePageContent";
+import League from "../../classes/custom/League";
+import { Context } from "../../contexts/Context";
+import LineChart from "../charts/LineChart";
+import LineupPieChart from "../charts/LineupPieChart";
+import MemberSkillScatterPlot from "../charts/MemberSkillScatterPlot";
+import BarChart from "../charts/PFBarChart";
+import PFRadialBarChart from "../charts/PFRadialBar";
+import TeamRadarChart from "../charts/TeamRadarChart";
+import TradePageContent from "./TradePageContent";
 
 enableAllPlugins();
 const LeaguePageContent = () => {
@@ -39,42 +38,45 @@ const LeaguePageContent = () => {
 
   useEffect(() => {
     if (leagueData && leagueData.league) {
-      console.log(leagueData);
       let league = new League(leagueData.league);
       console.log(league);
       setContext(league);
     }
   }, [leagueData, setContext]);
 
-  if (leagueError)
-    return (
-      <Heading color={"white"} >
-        Failed to load
-      </Heading>
-    );
-  if (!leagueData)
-    return (
-      <Heading color={"white"} >
-        Loading...
-      </Heading>
-    );
+  if (leagueError) return <Heading color={"white"}>Failed to load</Heading>;
+  if (!leagueData) return <Heading color={"white"}>Loading...</Heading>;
 
   return (
     <>
       {context.settings != undefined && (
-        <Heading width={"100%"} textAlign={"center"} my={3} size={"sm"} color={"white"}>{context.settings.name}</Heading>
+        <Heading
+          width={"100%"}
+          textAlign={"center"}
+          my={3}
+          size={"sm"}
+          color={"white"}
+        >
+          {context.settings.name}
+        </Heading>
       )}
       {context.settings != undefined && (
-        <Tabs isLazy isFitted variant={"line"} textColor={"white"} maxWidth={"100vw"} >
+        <Tabs
+          isLazy
+          isFitted
+          variant={"line"}
+          textColor={"white"}
+          maxWidth={"100vw"}
+        >
           <TabList>
             <Tab>Basic Stats</Tab>
             <Tab>Advanced Stats</Tab>
             <Tab>Trades</Tab>
           </TabList>
 
-          <TabPanels textColor="black" maxWidth={"100vw"}>
-            <TabPanel px={[0,  "auto"]} mx={[0,  "auto"]}>
-              <Container maxW={"container.xl"} p={[0,  "auto"]} m={[0,  "auto"]}>
+          <TabPanels textColor="black" maxWidth={"100vw"} background="surface.2">
+            <TabPanel px={[0, "auto"]} mx={[0, "auto"]}>
+              <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
                 <Grid
                   templateRows="repeat(12, 1fr)"
                   templateColumns="repeat(12, 1fr)"
@@ -83,10 +85,18 @@ const LeaguePageContent = () => {
                   <GridItem height={"500px"} colSpan={12} textColor="black">
                     <BarChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
+                  <GridItem
+                    height={"350px"}
+                    colSpan={[12, 6]}
+                    textColor="black"
+                  >
                     <LineChart league={context} />
                   </GridItem>
-                  <GridItem height={"350px"} colSpan={[12, 6]} textColor="black">
+                  <GridItem
+                    height={"350px"}
+                    colSpan={[12, 6]}
+                    textColor="black"
+                  >
                     <TeamRadarChart league={context} />
                   </GridItem>
                 </Grid>
@@ -119,9 +129,7 @@ const LeaguePageContent = () => {
             </TabPanel>
 
             <TabPanel>
-              <Container overflowY={"scroll"} maxH={"container.xl"} w="-moz-fit-content">
-                <TradePageContent/>
-              </Container>
+              <TradePageContent />
             </TabPanel>
           </TabPanels>
         </Tabs>
