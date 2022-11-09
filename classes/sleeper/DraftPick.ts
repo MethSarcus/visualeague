@@ -10,6 +10,15 @@ export interface DraftPick {
     draft_id: string;
   }
 
+export interface TradedPick {
+    season: string
+    round: number
+    roster_id: number
+    previous_owner_id: number
+    owner_id: number
+    league_id?: string
+  }
+
 export interface CombinedDraftPick {
   combined_pick_no: number;
   draft_history: DraftPick[];
