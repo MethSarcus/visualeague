@@ -27,7 +27,7 @@ const Home: NextPage = () => {
             maxW={"2xl"}
             bg={"surface.0"}
             boxShadow={5}
-            p={12}
+            p={[4, 8, 10, 12]}
             overflow="hidden"
             borderRadius={10}
           >
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
                 alignItems="center"
                 size={['lg', 'xl', '2xl']}
                 color="#FFFFFF"
-                pb={10}
+                pb={6}
               >
                 Visualeague
               </Heading>

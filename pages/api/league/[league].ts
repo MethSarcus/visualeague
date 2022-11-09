@@ -62,7 +62,7 @@ export default async function handler(
 // -------------------------------------------------------------------
 // these functions retrieve all draft picks for all a user
 // -------------------------------------------------------------------
-function getLeague(leagueId: string) {
+export function getLeague(leagueId: string) {
   // gets league details
   return new Promise((resolve) => {
     setTimeout(
@@ -240,17 +240,6 @@ async function getMultiMatchupProjections(
   return stats;
 }
 
-// const getData = (leagueId: string) => {
-//   const leagueSettings = getLeague(leagueId);
-//   const leagueUsers = getLeagueMembers(leagueId);
-//   const leagueRosters = getLeagueRosters(leagueId);
-//   return {
-//     leagueSettings,
-//     leagueUsers,
-//     leagueRosters,
-//   };
-// };
-
 async function getCompleteLeague(leagueId: string) {
   const leagueSettings = await getLeague(leagueId);
   const leagueUsers = await getLeagueMembers(leagueId);
@@ -271,7 +260,6 @@ async function getCompleteLeague(leagueId: string) {
       (leagueSettings as  LeagueSettings).settings.last_scored_leg
     )
   )) as SleeperMatchup[][];
-  for (let i = 0; i < matchups.length; i++) {}
   for (let i = 0; i < matchups.length; i++) {
     playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
     playerProjections.push(

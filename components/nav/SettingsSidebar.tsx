@@ -7,7 +7,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay, FormLabel, HStack,
-  IconButton, NumberInput,
+  IconButton, Input, NumberInput,
   NumberInputField,
   Switch, Tooltip,
   useDisclosure,
@@ -48,6 +48,7 @@ export default function SettingsSidebar() {
     );
   };
 
+
   const onApplyPressed = () => {
     let settings = context.settings.scoring_settings;
     if (checked) {
@@ -76,18 +77,19 @@ export default function SettingsSidebar() {
         <DrawerContent bg={"surface.1"} textColor="white">
           <DrawerCloseButton />
           <DrawerHeader>
-            {" "}
             League Settings
             <br />
             {context && (
-              <HStack align={"start"}>
-                <FormLabel htmlFor="isChecked">Use Custom Settings</FormLabel>
+              <VStack align={"start"} >
+                <Center>
+                <FormLabel size={"xs"} htmlFor="isChecked">Use Custom Settings</FormLabel>
                 <Switch
                   id="isChecked"
                   isChecked={checked}
                   onChange={onCheckboxClick}
                 />
-              </HStack>
+                </Center>
+              </VStack>
             )}
           </DrawerHeader>
           <DrawerBody>
@@ -97,9 +99,10 @@ export default function SettingsSidebar() {
                   .sort(function (a, b) {
                     return a.localeCompare(b);
                   })
+                  // .filter(setting => setting.includes(searchTerm))
                   .map((setting) => {
                     return (
-                      <Center key={setting}>
+                      <Center key={setting} visibility={"visible"}>
                         {formatScoreKey(setting)}:{" "}
                         <NumberInput
                           ml={2}

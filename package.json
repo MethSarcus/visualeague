@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.10.4",
     "@nivo/bar": "^0.80.0",
     "@nivo/bump": "^0.80.0",
+    "@nivo/chord": "^0.80.0",
     "@nivo/core": "^0.80.0",
     "@nivo/line": "^0.80.0",
     "@nivo/pie": "^0.80.0",

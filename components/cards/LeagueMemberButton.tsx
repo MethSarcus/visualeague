@@ -7,7 +7,7 @@ type MyProps = {
   member: LeagueMember;
 };
 
-const LeagueMemberCard = (props: MyProps) => {
+const LeagueMemberButton = (props: MyProps) => {
   return (
       <Button size={"xl"} p={3} colorScheme="primary" leftIcon={<Avatar
         src={`https://sleepercdn.com/avatars/thumbs/${props.member.avatar}`}
@@ -19,4 +19,4 @@ const LeagueMemberCard = (props: MyProps) => {
   );
 };
 
-export default LeagueMemberCard;
+export default LeagueMemberButton;
