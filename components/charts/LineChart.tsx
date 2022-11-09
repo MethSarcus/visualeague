@@ -1,13 +1,13 @@
 import { Spinner } from "@chakra-ui/react";
 import { ResponsiveLine } from "@nivo/line";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import {
   project_colors
 } from "../../utility/rosterFunctions";
 
 interface MyProps {
-  league: CustomSleeperLeague;
+  league: League;
 }
 
 const LineChart = (props: MyProps) => {
@@ -106,7 +106,7 @@ const LineChart = (props: MyProps) => {
   );
 };
 
-function formatScoresForLineChart(league: CustomSleeperLeague) {
+function formatScoresForLineChart(league: League) {
   let data: object[] = [];
   let memberWeekScoreMap: Map<number, object[]> = new Map();
 

@@ -1,13 +1,13 @@
 import { Spinner } from '@chakra-ui/react';
 import { BarDatum, ResponsiveBar } from '@nivo/bar';
-import CustomSleeperLeague from '../../classes/custom/League';
+import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { getPositionColor, project_colors } from '../../utility/rosterFunctions';
 import { PositionColors } from './ChartColors';
 
 
 interface MyProps {
-    league: CustomSleeperLeague
+    league: League
 }
 
   const theme = {
@@ -103,7 +103,7 @@ const BarChart = (props: MyProps) => {
 }
 
 
-    function formatScoresForBarChart(league: CustomSleeperLeague, statType?: MemberStat) {
+    function formatScoresForBarChart(league: League, statType?: MemberStat) {
         let keys: Set<string> = new Set<string>();
         let data: object[] = []
         

@@ -1,12 +1,12 @@
 import { Spinner } from '@chakra-ui/react';
 import { ResponsiveScatterPlot } from '@nivo/scatterplot';
-import CustomSleeperLeague from '../../classes/custom/League';
+import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { project_colors } from '../../utility/rosterFunctions';
 
 
 interface MyProps {
-    league: CustomSleeperLeague
+    league: League
 }
 
 const MemberSkillScatterPlot = (props: MyProps) => {
@@ -73,7 +73,7 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 }
 
 
-    function formatScoresForScatterPlot(league: CustomSleeperLeague) {
+    function formatScoresForScatterPlot(league: League) {
         let data: object[] = []
         let memberSkillsMap: Map<number, object[]> = new Map()
 

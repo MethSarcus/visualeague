@@ -1,13 +1,13 @@
 import { Spinner } from "@chakra-ui/react";
 import { ResponsiveAreaBump } from "@nivo/bump";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import { MatchupSide } from "../../classes/custom/MatchupSide";
 import {
   project_colors
 } from "../../utility/rosterFunctions";
 
 interface MyProps {
-  league: CustomSleeperLeague;
+  league: League;
 }
 
 const PowerRankingBumpChart = (props: MyProps) => {
@@ -50,7 +50,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
   );
 };
 
-function formatScoresForBumpChart(league: CustomSleeperLeague) {
+function formatScoresForBumpChart(league: League) {
   let data: object[] = [];
 
   //Roster ID to array of power wins each week

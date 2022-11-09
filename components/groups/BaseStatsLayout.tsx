@@ -1,9 +1,9 @@
 import { Flex, Spacer, VStack } from "@chakra-ui/react";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import GenericStatCard from "../cards/statcards/GenericStatCard";
 
 interface MyProps {
-  league: CustomSleeperLeague;
+  league: League;
 }
 
 const BaseStatsLayout = (props: MyProps) => {

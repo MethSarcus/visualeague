@@ -13,7 +13,7 @@ import { SleeperPlayerDetails } from "./Player";
 import { Week } from "./Week";
 
 
-export default class CustomSleeperLeague {
+export default class League {
   //members maps roster ID to leaguemember
   [immerable] = true
   public members: Map<number, LeagueMember> = new Map();

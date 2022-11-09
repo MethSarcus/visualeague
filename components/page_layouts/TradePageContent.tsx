@@ -3,7 +3,7 @@ import axios from "axios";
 import router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import { SleeperTransaction } from "../../classes/sleeper/SleeperTransaction";
 import TradeCard from "../cards/TradeCard";
 

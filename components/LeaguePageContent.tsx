@@ -12,7 +12,7 @@ import produce, { enableAllPlugins } from "immer";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import CustomSleeperLeague from "../classes/custom/League";
+import League from "../classes/custom/League";
 import { Context } from "../contexts/Context";
 import BumpChart from "./charts/BumpChart";
 import LineChart from "./charts/LineChart";
@@ -40,7 +40,7 @@ const LeaguePageContent = () => {
   useEffect(() => {
     if (leagueData && leagueData.league) {
       console.log(leagueData);
-      let league = new CustomSleeperLeague(leagueData.league);
+      let league = new League(leagueData.league);
       console.log(league);
       setContext(league);
     }
