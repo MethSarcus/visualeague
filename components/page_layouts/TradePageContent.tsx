@@ -1,15 +1,18 @@
 import { Box, Wrap, Heading, SimpleGrid, Container } from "@chakra-ui/react";
 import axios from "axios";
 import router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../classes/custom/League";
 import { SleeperTransaction } from "../../classes/sleeper/SleeperTransaction";
+import { Context } from "../../contexts/Context";
 import TradeCard from "../cards/TradeCard";
+import TradeChordChart from "../charts/TradeChordChart";
 
 
 export default function TradePageContent() {
     const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+    const context = useContext(Context)
     const router = useRouter();
     const leagueId = router.query.league;
     const [trades, setTrades] = useState([])
@@ -20,9 +23,7 @@ export default function TradePageContent() {
 
     useEffect(() => {
         if (tradeData && tradeData.trades) {
-          console.log(tradeData);
           setTrades(tradeData.trades);
-          console.log(trades);
         }
       }, [tradeData, setTrades, trades]);
     
@@ -39,6 +40,9 @@ export default function TradePageContent() {
           </Heading>
         );
     
-    return (<Box textColor={"white"}>{trades.map((trade: SleeperTransaction) => {return <TradeCard key={trade.transaction_id} trade={trade}/>})}</Box>)
+    return (<Box textColor={"white"}>
+      <Box w={"500px"} h={"500px"} color={"black"}><TradeChordChart trades={trades}/></Box>
+      {trades.map((trade: SleeperTransaction) => {return <TradeCard key={trade.transaction_id} trade={trade}/>})}
+      </Box>)
 }
 
