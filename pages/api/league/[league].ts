@@ -240,17 +240,6 @@ async function getMultiMatchupProjections(
   return stats;
 }
 
-// const getData = (leagueId: string) => {
-//   const leagueSettings = getLeague(leagueId);
-//   const leagueUsers = getLeagueMembers(leagueId);
-//   const leagueRosters = getLeagueRosters(leagueId);
-//   return {
-//     leagueSettings,
-//     leagueUsers,
-//     leagueRosters,
-//   };
-// };
-
 async function getCompleteLeague(leagueId: string) {
   const leagueSettings = await getLeague(leagueId);
   const leagueUsers = await getLeagueMembers(leagueId);
