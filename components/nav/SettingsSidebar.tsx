@@ -16,7 +16,7 @@ import {
 import produce from "immer";
 import React, { useContext } from "react";
 import { GoGear } from "react-icons/go";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
 
@@ -54,7 +54,7 @@ export default function SettingsSidebar() {
     if (checked) {
       settings = customSettings.scoring_settings;
     }
-    const nextState = produce(context, (draftState: CustomSleeperLeague) => {
+    const nextState = produce(context, (draftState: League) => {
       draftState.modifyStats(settings);
       draftState.useModifiedSettings = checked;
     });

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import produce from "immer";
 import React, { useContext } from "react";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
 import MemberList from "../groups/MemberList";
@@ -47,7 +47,7 @@ export default function TeamSidebar() {
     if (checked) {
       settings = customSettings.scoring_settings;
     }
-    const nextState = produce(context, (draftState: CustomSleeperLeague) => {
+    const nextState = produce(context, (draftState: League) => {
       draftState.modifyStats(settings);
       draftState.useModifiedSettings = checked;
     });

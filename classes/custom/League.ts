@@ -12,17 +12,16 @@ import MemberScores from "./MemberStats";
 import { SleeperPlayerDetails } from "./Player";
 import { Week } from "./Week";
 
-
-export default class CustomSleeperLeague {
+export default class League {
   //members maps roster ID to leaguemember
-  [immerable] = true
+  [immerable] = true;
   public members: Map<number, LeagueMember> = new Map();
   public weeks: Map<number, Week> = new Map();
   public transactions: SleeperTransaction[];
   public allMatchups: SleeperMatchup[][];
   public settings: LeagueSettings;
   public modifiedSettings?: LeagueSettings;
-  public useModifiedSettings: boolean = false
+  public useModifiedSettings: boolean = false;
   public playerDetails: Map<string, SleeperPlayerDetails> = new Map();
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
@@ -30,10 +29,10 @@ export default class CustomSleeperLeague {
 
   constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
     if (modifiedSettings) {
-      this.modifiedSettings = modifiedSettings
-      this.useModifiedSettings = true
+      this.modifiedSettings = modifiedSettings;
+      this.useModifiedSettings = true;
     } else {
-      this.modifiedSettings = sleeperLeague.sleeperDetails
+      this.modifiedSettings = sleeperLeague.sleeperDetails;
     }
     sleeperLeague.player_details.forEach((player: any) => {
       this.playerDetails.set(player._id, player.details);
@@ -47,11 +46,12 @@ export default class CustomSleeperLeague {
       });
     });
 
-    this.allMatchups = sleeperLeague.matchups
+    this.allMatchups = sleeperLeague.matchups;
     this.transactions = []; //TODO add api calls for getting this info
     this.settings = sleeperLeague.sleeperDetails;
     this.settings = sleeperLeague.sleeperDetails;
     this.setStats(sleeperLeague.player_stats);
+    this.initMemberTradeStats();
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups);
     this.calcMemberScores();
@@ -80,33 +80,35 @@ export default class CustomSleeperLeague {
   }
 
   modifyStats(customSettings: ScoringSettings) {
-    this.modifiedSettings = produce(this.modifiedSettings, (draftState: LeagueSettings) => {
-      draftState.scoring_settings = customSettings
-    });
-    this.useModifiedSettings = true
-    this.recalcStats()
+    this.modifiedSettings = produce(
+      this.modifiedSettings,
+      (draftState: LeagueSettings) => {
+        draftState.scoring_settings = customSettings;
+      }
+    );
+    this.useModifiedSettings = true;
+    this.recalcStats();
   }
 
   disableModifiedStats() {
-    this.useModifiedSettings = false
+    this.useModifiedSettings = false;
   }
 
   getPositions() {
     if (this.settings.roster_positions != undefined) {
-      return this.settings.roster_positions.map((pos) => {
-        if (Object.values(POSITION).includes(pos as POSITION)) {
-          return pos as POSITION;
-        }
-      })
-      .filter((value, index, array) => {
-        return value != undefined && array.indexOf(value) === index;
-      })
+      return this.settings.roster_positions
+        .map((pos) => {
+          if (Object.values(POSITION).includes(pos as POSITION)) {
+            return pos as POSITION;
+          }
+        })
+        .filter((value, index, array) => {
+          return value != undefined && array.indexOf(value) === index;
+        });
     } else {
-      return []
+      return [];
     }
   }
-
-
 
   setWeeks(allMatchups: SleeperMatchup[][]) {
     allMatchups.forEach((weekMatchups: SleeperMatchup[], index: number) => {
@@ -118,9 +120,9 @@ export default class CustomSleeperLeague {
       ) {
         isPlayoffs = true;
       }
-      let settings = this.settings
+      let settings = this.settings;
       if (this.useModifiedSettings && this.modifiedSettings) {
-        settings = this.modifiedSettings
+        settings = this.modifiedSettings;
       }
       let week = new Week(
         weekNum,
@@ -147,12 +149,18 @@ export default class CustomSleeperLeague {
     this.settings.name = name;
   }
 
+  initMemberTradeStats() {
+    this.members.forEach((member: LeagueMember, rosterId: number) => {
+      for (let i = 1; i <= this.members.size; i++) member.tradeStats.set(i, 0);
+    });
+  }
+
   recalcStats() {
     for (let [key, member] of this.members) {
-      member.stats = new MemberScores()
-  }
-  this.setWeeks(this.allMatchups);
-  this.calcMemberScores();
+      member.stats = new MemberScores();
+    }
+    this.setWeeks(this.allMatchups);
+    this.calcMemberScores();
   }
 
   calcMemberScores() {
@@ -176,15 +184,32 @@ export default class CustomSleeperLeague {
             homeMember.stats.pa += awayTeam.pf;
             homeTeam.position_starts.forEach((value, key) => {
               if (homeMember?.stats.position_scores.has(key)) {
-                homeMember?.stats.position_starts.set(key, homeMember.stats.position_starts.get(key)!! + value);
-                homeMember?.stats.position_scores.set(key, homeMember.stats.position_scores.get(key)!! + homeTeam.position_scores.get(key)!!);
-                homeMember?.stats.projected_position_scores.set(key, homeMember.stats.projected_position_scores.get(key)!! + homeTeam.position_projected_scores.get(key)!!);
+                homeMember?.stats.position_starts.set(
+                  key,
+                  homeMember.stats.position_starts.get(key)!! + value
+                );
+                homeMember?.stats.position_scores.set(
+                  key,
+                  homeMember.stats.position_scores.get(key)!! +
+                    homeTeam.position_scores.get(key)!!
+                );
+                homeMember?.stats.projected_position_scores.set(
+                  key,
+                  homeMember.stats.projected_position_scores.get(key)!! +
+                    homeTeam.position_projected_scores.get(key)!!
+                );
               } else {
                 homeMember?.stats.position_starts.set(key, value);
-                homeMember?.stats.position_scores.set(key, homeTeam.position_scores.get(key)!!);
-                homeMember?.stats.projected_position_scores.set(key, homeTeam.position_projected_scores.get(key)!!);
+                homeMember?.stats.position_scores.set(
+                  key,
+                  homeTeam.position_scores.get(key)!!
+                );
+                homeMember?.stats.projected_position_scores.set(
+                  key,
+                  homeTeam.position_projected_scores.get(key)!!
+                );
               }
-            })
+            });
 
             awayMember.stats.pf += awayTeam.pf;
             awayMember.stats.pp += awayTeam.pp;
@@ -196,15 +221,32 @@ export default class CustomSleeperLeague {
 
             awayTeam.position_starts.forEach((value, key) => {
               if (awayMember?.stats.position_scores.has(key)) {
-                awayMember?.stats.position_starts.set(key, awayMember.stats.position_starts.get(key)!! + value);
-                awayMember?.stats.position_scores.set(key, awayMember.stats.position_scores.get(key)!! + awayTeam.position_scores.get(key)!!);
-                awayMember?.stats.projected_position_scores.set(key, awayMember.stats.projected_position_scores.get(key)!! + awayTeam.position_projected_scores.get(key)!!);
+                awayMember?.stats.position_starts.set(
+                  key,
+                  awayMember.stats.position_starts.get(key)!! + value
+                );
+                awayMember?.stats.position_scores.set(
+                  key,
+                  awayMember.stats.position_scores.get(key)!! +
+                    awayTeam.position_scores.get(key)!!
+                );
+                awayMember?.stats.projected_position_scores.set(
+                  key,
+                  awayMember.stats.projected_position_scores.get(key)!! +
+                    awayTeam.position_projected_scores.get(key)!!
+                );
               } else {
                 awayMember?.stats.position_starts.set(key, value);
-                awayMember?.stats.position_scores.set(key, awayTeam.position_scores.get(key)!!);
-                awayMember?.stats.projected_position_scores.set(key, awayTeam.position_projected_scores.get(key)!!);
+                awayMember?.stats.position_scores.set(
+                  key,
+                  awayTeam.position_scores.get(key)!!
+                );
+                awayMember?.stats.projected_position_scores.set(
+                  key,
+                  awayTeam.position_projected_scores.get(key)!!
+                );
               }
-            })
+            });
 
             if (homeTeam.pf > awayTeam.pf) {
               homeMember.stats.wins += 1;

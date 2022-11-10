@@ -1,10 +1,10 @@
 import DataTable, {
 	TableColumn
 } from "react-data-table-component"
-import CustomSleeperLeague from "../../classes/custom/League"
+import League from "../../classes/custom/League"
 import LeagueMember from "../../classes/custom/LeagueMember"
 
-type MyProps = { league: CustomSleeperLeague }
+type MyProps = { league: League }
 
 interface DataRow {
 	name: string

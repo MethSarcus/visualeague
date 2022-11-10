@@ -2,7 +2,7 @@ import { Spinner } from '@chakra-ui/react';
 import { BarDatum, ResponsiveBar } from '@nivo/bar'
 import { ResponsiveRadialBar } from '@nivo/radial-bar';
 import { useContext, useEffect, useState } from 'react';
-import CustomSleeperLeague from '../../classes/custom/League';
+import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { Context } from '../../contexts/Context';
 import { getPositionColor, POSITION, project_colors } from '../../utility/rosterFunctions';
@@ -10,7 +10,7 @@ import { PositionColors } from './ChartColors';
 
 
 interface MyProps {
-    league: CustomSleeperLeague
+    league: League
 }
   const theme = {
     "background": "none",
@@ -72,7 +72,7 @@ const PFRadialBarChart = (props: MyProps) => {
 }
 
 
-    function formatScoresForBarChart(league: CustomSleeperLeague, statType?: MemberStat) {
+    function formatScoresForBarChart(league: League, statType?: MemberStat) {
         let data: object[] = []
         let memberPositionScores: Map<number, object[]> = new Map()
 

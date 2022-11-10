@@ -1,17 +1,9 @@
 
 .main {
-  min-height: 100vh;
-  min-width: 100vw;
-  padding: 4rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   background-color: #121212;
-  /* background-image: url('../images/bg.png');
-  background-size: 100vmax;
-  background-repeat: no-repeat; */
 }
 
 .footer {
@@ -116,4 +108,3 @@
     flex-direction: column;
   }
 }
-

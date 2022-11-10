@@ -1,6 +1,6 @@
 import { background, Box, Stack } from "@chakra-ui/react";
 import { useContext } from "react";
-import CustomSleeperLeague from "../../classes/custom/League";
+import League from "../../classes/custom/League";
 import { TradedPick } from "../../classes/sleeper/DraftPick";
 import {
   Adds,

@@ -1,13 +1,13 @@
 import { Box, Spinner } from '@chakra-ui/react';
 import { ResponsiveRadar } from '@nivo/radar';
 import { useState } from 'react';
-import CustomSleeperLeague from '../../classes/custom/League';
+import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { POSITION } from '../../utility/rosterFunctions';
 
 
 interface MyProps {
-    league: CustomSleeperLeague
+    league: League
 }
 
 const TeamRadarChart = (props: MyProps) => {

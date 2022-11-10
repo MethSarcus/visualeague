@@ -9,6 +9,7 @@ export default class LeagueMember {
     public userId: string;
     public avatar: string;
     public stats: MemberScores = new MemberScores();
+    public tradeStats: Map<number, number> = new Map();
   
     constructor(userDetails: SleeperUser, roster: SleeperRoster) {
       this.userDetails = userDetails;
