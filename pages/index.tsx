@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
+import CustomHead from "../utility/CustomHead";
 
 const Home: NextPage = () => {
   const [text, setText] = useState("");
@@ -12,14 +13,7 @@ const Home: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Visualeague</title>
-        <meta
-          name="Visualize your league"
-          content="Created by Seth Marcus"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <CustomHead/>
       <main className={styles.main}>
         <div className="App">
           <Container
@@ -31,13 +25,13 @@ const Home: NextPage = () => {
             overflow="hidden"
             borderRadius={10}
           >
-            <Box maxH={"2xl"} w={['xs','md','lg', 'xl', '2xl']}>
+            <Box maxH={"2xl"} w={["xs", "md", "lg", "xl", "2xl"]}>
               <Heading
                 display="flex"
                 flexDirection="row"
                 justifyContent="center"
                 alignItems="center"
-                size={['lg', 'xl', '2xl']}
+                size={["lg", "xl", "2xl"]}
                 color="#FFFFFF"
                 pb={6}
               >
