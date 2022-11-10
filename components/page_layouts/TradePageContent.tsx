@@ -38,20 +38,39 @@ export default function TradePageContent() {
   if (!tradeData) return <Heading color={"white"}>Loading...</Heading>;
 
   return (
-    <Container maxW={"container.xl"} maxH={"80vh"} overflowY={"scroll"} p={[0, "auto"]} m={[0, "auto"]}>
+    <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
       <Grid
-        templateRows="repeat(12, 1fr)"
-        templateColumns="repeat(12, 1fr)"
-        gap={4}
+        templateRows="repeat(6, 1fr)"
+        templateColumns="repeat(4, 1fr)"
+        templateAreas={`"stats stats stats stats"
+        "chart chart trades trades"
+        "chart chart trades trades"
+        "chart chart trades trades"
+        "chart chart trades trades"`}
+        gap={2}
       >
-          <GridItem rowSpan={4} color={"black"} colSpan={6}>
+    <GridItem pl='2' bg='pink.300' area={'stats'}>
+      Stats
+    </GridItem>
+    <GridItem height={"500px"} area={'chart'}>
+      <TradeChordChart trades={trades} />
+    </GridItem>
+    <GridItem  area="trades" >
+    <Container textColor={"white"} maxH={"50vh"} overflowY={"scroll"} color='white'>
+    {trades.map((trade: SleeperTransaction) => {
+            return <TradeCard key={trade.transaction_id} trade={trade} />;
+          })}
+  </Container>
+
+          </GridItem>
+          {/* <GridItem color={"black"} area="chart">
             <TradeChordChart trades={trades} />
           </GridItem>
-          <GridItem textColor={"white"} colSpan={6} rowSpan={4}>
+          <GridItem textColor={"white"} colSpan={2} rowSpan={1} area="trades">
           {trades.map((trade: SleeperTransaction) => {
             return <TradeCard key={trade.transaction_id} trade={trade} />;
           })}
-          </GridItem>
+          </GridItem> */}
       </Grid>
     </Container>
   );

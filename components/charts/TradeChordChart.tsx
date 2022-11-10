@@ -23,9 +23,10 @@ const TradeChordChart = (props: MyProps) => {
     return (context[0].members && <ResponsiveChord
         data={data}
         keys={getChordKeys(context[0].members)}
-        margin={{ top: 60, right: 60, bottom: 90, left: 60 }}
+        margin={{ bottom: 90}}
         valueFormat=".2f"
         padAngle={0.02}
+        enableLabel={false}
         innerRadiusRatio={0.96}
         innerRadiusOffset={0.02}
         inactiveArcOpacity={0.25}
@@ -63,8 +64,8 @@ const TradeChordChart = (props: MyProps) => {
         motionConfig="stiff"
         legends={[
             {
-                anchor: 'bottom',
-                direction: 'row',
+                anchor: 'left',
+                direction: 'column',
                 justify: false,
                 translateX: 0,
                 translateY: 70,

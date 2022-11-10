@@ -1,5 +1,7 @@
 import {
+  Box,
   Container,
+  Flex,
   Grid,
   GridItem,
   Heading,
@@ -48,7 +50,7 @@ const LeaguePageContent = () => {
   if (!leagueData) return <Heading color={"white"}>Loading...</Heading>;
 
   return (
-    <>
+    <Box overflowX={"hidden"}>
       {context.settings != undefined && (
         <Heading
           width={"100%"}
@@ -74,12 +76,12 @@ const LeaguePageContent = () => {
             <Tab>Trades</Tab>
           </TabList>
 
-          <TabPanels textColor="black" maxWidth={"100vw"} background="surface.2">
-            <TabPanel px={[0, "auto"]} mx={[0, "auto"]}>
+          <TabPanels textColor="black" background="surface.2">
+            <TabPanel px={[0, "auto"]} mx={[.5, "auto"]}>
               <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
                 <Grid
-                  templateRows="repeat(12, 1fr)"
-                  templateColumns="repeat(12, 1fr)"
+                  templateRows="12"
+                  templateColumns="12"
                   gap={4}
                 >
                   <GridItem height={"500px"} colSpan={12} textColor="black">
@@ -106,8 +108,8 @@ const LeaguePageContent = () => {
             <TabPanel>
               <Container maxW={"container.xl"}>
                 <Grid
-                  templateRows="repeat(12, 1fr)"
-                  templateColumns="repeat(12, 1fr)"
+                  templateRows="12"
+                  templateColumns="12"
                   gap={4}
                 >
                   <GridItem colSpan={8} height={"500px"}>
@@ -134,7 +136,7 @@ const LeaguePageContent = () => {
           </TabPanels>
         </Tabs>
       )}
-    </>
+    </Box>
   );
 };
 

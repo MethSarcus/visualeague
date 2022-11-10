@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Grid,
   GridItem,
 } from "@chakra-ui/react";
@@ -28,8 +29,10 @@ const LeaguePage: NextPage = () => {
     </Head>
     <main className={styles.main}>
       <div className="App">
-      <Box bg={"surface.0"} maxH="100vh" maxW={"100vw"} overflow={"none"}>
       <Grid
+      gap={0}
+      h={"100vh"}
+        gridTemplateRows={'.03fr 1fr'}
         templateAreas={`"header header"
                   "main main"
                   "footer footer"`}
@@ -44,11 +47,10 @@ const LeaguePage: NextPage = () => {
           <LeaguePageContent />
         </GridItem>
 
-        <GridItem bg="surface.1" area={"footer"}>
+        <GridItem bg="surface.1" mt={"auto"} area={"footer"}>
           <Footer />
         </GridItem>
       </Grid>
-    </Box>
       </div>
       </main>
       </div>
