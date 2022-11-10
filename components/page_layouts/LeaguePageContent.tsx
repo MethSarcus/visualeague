@@ -76,7 +76,7 @@ const LeaguePageContent = () => {
             <Tab>Trades</Tab>
           </TabList>
 
-          <TabPanels textColor="black" background="surface.2">
+          <TabPanels textColor="black">
             <TabPanel px={[0, "auto"]} mx={[.5, "auto"]}>
               <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
                 <Grid

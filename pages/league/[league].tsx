@@ -43,11 +43,11 @@ const LeaguePage: NextPage = () => {
           <Navbar />
         </GridItem>
 
-        <GridItem bg="surface.0" area={"main"} p={[0, 0, 4]} overflow={'scroll'}>
+        <GridItem area={"main"} p={[0, 0, 4]} overflow={'scroll'}>
           <LeaguePageContent />
         </GridItem>
 
-        <GridItem bg="surface.1" mt={"auto"} area={"footer"}>
+        <GridItem bg="surface.0" mt={"auto"} area={"footer"}>
           <Footer />
         </GridItem>
       </Grid>
