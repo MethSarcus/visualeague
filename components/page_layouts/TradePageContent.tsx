@@ -1,3 +1,4 @@
+"use client"
 import {
   Box,
   Wrap,
@@ -8,6 +9,7 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
@@ -19,12 +21,10 @@ import TradeChordChart from "../charts/TradeChordChart";
 
 export default function TradePageContent() {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const context = useContext(Context);
-  const router = useRouter();
-  const leagueId = router.query.league;
+  const leagueId = usePathname()?.replace("/league/","").replace("/trades", "");
   const [trades, setTrades] = useState([]);
   const { data: tradeData, error: tradeError } = useSWR(
-    leagueId != undefined ? `/api/trades/${router.query.league}` : null,
+    leagueId != undefined ? `/api/trades/${leagueId}` : null,
     fetcher
   );
 

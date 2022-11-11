@@ -1,5 +1,6 @@
+"use client"
 import { Avatar, Box, Button, Center } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
 import { LeagueSettings } from "../classes/sleeper/LeagueSettings";
 
 type MyProps = {
@@ -23,9 +24,7 @@ const UserLeagueCell = (props: MyProps) => {
         mr={2}
       />
       <Box as="p">{props.league.name}</Box>
-      <Button ml={2} variant="outline" size="xs" colorScheme={"primary"} onClick={() => {router.push({
-                  pathname: "/league/" + props.league.league_id
-                })}}>
+      <Button ml={2} variant="outline" size="xs" colorScheme={"primary"} onClick={() => {router.push("/league/" + props.league.league_id)}}>
         View
       </Button>
     </Center>
