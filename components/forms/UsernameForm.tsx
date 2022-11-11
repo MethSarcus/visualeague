@@ -1,3 +1,4 @@
+"use client"
 import { Box, Button, Collapse, Input, Wrap, WrapItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import LeagueCellGroup from "./LeagueCellGroup";

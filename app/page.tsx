@@ -1,7 +1,6 @@
 "use client"
 import { Center, Container, Heading, Box } from "@chakra-ui/react";
 import UsernameForm from "../components/forms/UsernameForm";
-import CustomHead from "../utility/CustomHead";
 import styles from "../styles/Home.module.css";
 
 export default function Page() {

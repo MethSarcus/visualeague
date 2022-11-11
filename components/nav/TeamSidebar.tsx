@@ -4,13 +4,9 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay, useDisclosure
+  DrawerHeader, DrawerOverlay, useDisclosure
 } from "@chakra-ui/react";
-import produce from "immer";
 import React, { useContext } from "react";
-import League from "../../classes/custom/League";
-import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { Context } from "../../contexts/Context";
 import MemberList from "../groups/MemberList";
 
@@ -20,39 +16,6 @@ export default function TeamSidebar() {
   const [customSettings, setCustomSettings] = React.useState(
     context.modifiedSettings
   );
-  const [checked, setChecked] = React.useState(
-    context.settings.useModifiedSettings
-  );
-
-  const btnRef = React.useRef(null);
-
-  function onCheckboxClick(e: any) {
-    setChecked(e.target.checked);
-  }
-
-  const onInputChange = async (e: {
-    target: { id: string | number; value: string };
-  }) => {
-    setCustomSettings(
-      produce(customSettings, (draftState: LeagueSettings) => {
-        (draftState.scoring_settings as any)[e.target.id] = parseFloat(
-          e.target.value
-        );
-      })
-    );
-  };
-
-  const onApplyPressed = () => {
-    let settings = context.settings.scoring_settings;
-    if (checked) {
-      settings = customSettings.scoring_settings;
-    }
-    const nextState = produce(context, (draftState: League) => {
-      draftState.modifyStats(settings);
-      draftState.useModifiedSettings = checked;
-    });
-    setContext(nextState);
-  };
 
   return (
     <>
@@ -71,7 +34,8 @@ export default function TeamSidebar() {
             <br />
           </DrawerHeader>
           <DrawerBody p={0}>
-            {context.settings && (<MemberList members={context.members} callback={() => {}}/>)}
+          { context != undefined && context.settings && (<MemberList members={context.members} leagueId={context.settings.league_id}/>)}
+            
           </DrawerBody>
 
           <DrawerFooter>
