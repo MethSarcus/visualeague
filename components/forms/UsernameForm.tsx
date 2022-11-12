@@ -1,5 +1,5 @@
 "use client"
-import { Box, Button, Collapse, Input, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Button, Collapse, Container, Fade, Input, ScaleFade, SlideFade, Wrap, WrapItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import LeagueCellGroup from "./LeagueCellGroup";
 
@@ -39,7 +39,7 @@ function UsernameForm() {
   };
 
   return (
-    <Box>
+    <Container>
       <form onSubmit={onFormSubmit}>
         <Input
           list={"data"}
@@ -69,9 +69,8 @@ function UsernameForm() {
         )}
       </form>
 
-      <Box>
-        <Collapse in={usernameSubmitted} animate>
-          <Box pt={3}>
+      <Collapse in={usernameSubmitted}>
+          <Box pt={6}>
             <Box as="h1" mb={1}>Leagues</Box>
             <LeagueCellGroup
               usernameSubmitted={usernameSubmitted}
@@ -79,16 +78,17 @@ function UsernameForm() {
             />
           </Box>
         </Collapse>
-        {!usernameSubmitted && storedUsernames.length > 0 && (
-          <Box>
-            <Box mt={6}>Recent Searches</Box>
-            <Wrap mt={2}>
-              {storedUsernames.map((item) => {
+        <Collapse in={!usernameSubmitted && storedUsernames.length > 0}>
+            <Box pt={6}>Recent Searches</Box>
+            <Wrap pt={2}>
+              {storedUsernames.map((item, index) => {
                 return (
                   <WrapItem onClick={() => setText(item)} key={item}>
+                   <ScaleFade in={true} initialScale={0.01}>
                     <Button colorScheme={"secondary"} size={"xs"}>
                       {item}
                     </Button>
+                    </ScaleFade>
                   </WrapItem>
                 );
               })}
@@ -102,10 +102,10 @@ function UsernameForm() {
             >
               Clear
             </Button>
-          </Box>
-        )}
-      </Box>
-    </Box>
+        </Collapse>
+
+        
+    </Container>
   );
 }
 

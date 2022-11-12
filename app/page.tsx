@@ -1,14 +1,30 @@
 "use client"
-import { Center, Container, Heading, Box } from "@chakra-ui/react";
+import { Center, Container, Heading, Box, GridItem, Grid } from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { text } from "stream/consumers";
+import LeagueCellGroup from "../components/forms/LeagueCellGroup";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
 
 export default function Page() {
+  const [usernameSubmitted, setUsernameSubmitted] = useState(false)
+  const [userName, setUsername] = useState(null)
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <div className="App">
-          <Center h={"container.md"}>
+        <Grid
+        templateAreas={`"empty"
+        "main"
+        `}
+  templateRows='1fr'
+  templateColumns='1fr'
+>
+
+          <GridItem area={"empty"} h={"25vh"}/>
+           
+          <GridItem area={"main"} w="100vw">
             <Container
               className="formContainer"
               maxW={"2xl"}
@@ -18,7 +34,7 @@ export default function Page() {
               overflow="hidden"
               borderRadius={10}
             >
-              <Box maxH={"2xl"} w={["xs", "md", "lg", "xl", "2xl"]}>
+              <Box  w={["xs", "md", "lg", "xl", "2xl"]}>
                 <Heading
                   display="flex"
                   flexDirection="row"
@@ -31,9 +47,16 @@ export default function Page() {
                   VisuaLeague
                 </Heading>
                 <UsernameForm />
+
+                {/* { usernameSubmitted && <LeagueCellGroup
+
+                    usernameSubmitted={usernameSubmitted}
+                    username={use}
+                />} */}
               </Box>
             </Container>
-          </Center>
+            </GridItem>
+          </Grid>
         </div>
       </main>
     </div>

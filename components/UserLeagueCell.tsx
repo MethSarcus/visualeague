@@ -1,5 +1,5 @@
 "use client"
-import { Avatar, Box, Button, Center } from "@chakra-ui/react";
+import { Avatar, Box, Button, Center, ScaleFade } from "@chakra-ui/react";
 import { useRouter } from 'next/navigation';
 import { LeagueSettings } from "../classes/sleeper/LeagueSettings";
 
@@ -15,6 +15,7 @@ const UserLeagueCell = (props: MyProps) => {
   const router = useRouter();
 
   return (
+    <ScaleFade initialScale={0.01} in={true}>
     <Center borderRadius="6" bg={"surface.1"} p={2} px={3}>
       <Avatar
         src={`https://sleepercdn.com/avatars/thumbs/${props.league.avatar}`}
@@ -28,6 +29,7 @@ const UserLeagueCell = (props: MyProps) => {
         View
       </Button>
     </Center>
+    </ScaleFade>
   );
 };
 
