@@ -1,40 +1,31 @@
+"use client";
 import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
+    Container,
+    Grid,
+    GridItem, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Box
 } from "@chakra-ui/react";
 import axios from "axios";
-import produce, { enableAllPlugins } from "immer";
-import { useRouter } from "next/router";
+import type { NextPage } from "next";
+import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import League from "../../classes/custom/League";
-import { Context } from "../../contexts/Context";
-import LineChart from "../charts/LineChart";
-import LineupPieChart from "../charts/LineupPieChart";
-import MemberSkillScatterPlot from "../charts/MemberSkillScatterPlot";
-import BarChart from "../charts/PFBarChart";
-import PFRadialBarChart from "../charts/PFRadialBar";
-import TeamRadarChart from "../charts/TeamRadarChart";
-import TradePageContent from "./TradePageContent";
+import League from "../../../classes/custom/League";
+import LineChart from "../../../components/charts/LineChart";
+import LineupPieChart from "../../../components/charts/LineupPieChart";
+import MemberSkillScatterPlot from "../../../components/charts/MemberSkillScatterPlot";
+import BarChart from "../../../components/charts/PFBarChart";
+import PFRadialBarChart from "../../../components/charts/PFRadialBar";
+import TeamRadarChart from "../../../components/charts/TeamRadarChart";
+import { Context } from "../../../contexts/Context";
 
-enableAllPlugins();
-const LeaguePageContent = () => {
-  const router = useRouter();
+export default function LeaguePage() {
+  const [text, setText] = useState("");
   const [context, setContext] = useContext(Context);
-  const leagueId = router.query.league;
+  const leagueId = usePathname()?.replace("/league/", "");
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
   const { data: leagueData, error: leagueError } = useSWR(
-    leagueId != undefined ? `/api/league/${router.query.league}` : null,
+    leagueId != undefined ? `/api/league/${leagueId}` : null,
     fetcher
   );
 
@@ -77,13 +68,9 @@ const LeaguePageContent = () => {
           </TabList>
 
           <TabPanels textColor="black">
-            <TabPanel px={[0, "auto"]} mx={[.5, "auto"]}>
+            <TabPanel px={[0, "auto"]} mx={[0.5, "auto"]}>
               <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
-                <Grid
-                  templateRows="12"
-                  templateColumns="12"
-                  gap={4}
-                >
+                <Grid templateRows="12" templateColumns="12" gap={4}>
                   <GridItem height={"500px"} colSpan={12} textColor="black">
                     <BarChart league={context} />
                   </GridItem>
@@ -107,11 +94,7 @@ const LeaguePageContent = () => {
 
             <TabPanel>
               <Container maxW={"container.xl"}>
-                <Grid
-                  templateRows="12"
-                  templateColumns="12"
-                  gap={4}
-                >
+                <Grid templateRows="12" templateColumns="12" gap={4}>
                   <GridItem colSpan={8} height={"500px"}>
                     <MemberSkillScatterPlot league={context} />
                   </GridItem>
@@ -129,15 +112,9 @@ const LeaguePageContent = () => {
                 </Grid>
               </Container>
             </TabPanel>
-
-            <TabPanel>
-              <TradePageContent />
-            </TabPanel>
           </TabPanels>
         </Tabs>
       )}
     </Box>
   );
 };
-
-export default LeaguePageContent;

@@ -1,6 +1,5 @@
 import { Wrap, WrapItem } from "@chakra-ui/react";
 import axios from "axios";
-import { useRouter } from "next/router";
 import useSWR from "swr";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import UserLeagueCell from "../UserLeagueCell";
@@ -11,7 +10,6 @@ type MyProps = {
 };
 
 const LeagueCellGroup = (props: MyProps) => {
-  const router = useRouter();
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const { data: userData, error: userError } = useSWR(
     props.usernameSubmitted
