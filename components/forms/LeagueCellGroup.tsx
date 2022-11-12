@@ -1,4 +1,4 @@
-import { Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Spinner, Wrap, WrapItem } from "@chakra-ui/react";
 import axios from "axios";
 import useSWR from "swr";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
@@ -28,7 +28,7 @@ const LeagueCellGroup = (props: MyProps) => {
     fetcher
   );
   if (userError) return <div>Failed to load</div>;
-  if (!userData || !leaguesData) return <div>Loading...</div>;
+  if (!userData || !leaguesData) return <Spinner size={"md"} />
 
   return (
     <Wrap>

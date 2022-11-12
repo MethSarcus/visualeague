@@ -52,7 +52,7 @@ function UsernameForm() {
           value={text}
           onChange={(e) => textChanged(e.target.value)}
         />
-        {!usernameSubmitted && (
+         <Collapse in={!usernameSubmitted}>
           <Button
             variant="solid"
             size="sm"
@@ -66,7 +66,7 @@ function UsernameForm() {
           >
             Submit
           </Button>
-        )}
+        </Collapse>
       </form>
 
       <Collapse in={usernameSubmitted}>

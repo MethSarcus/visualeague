@@ -2,10 +2,11 @@
 import { Center, Container, Heading, Box, GridItem, Grid } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { text } from "stream/consumers";
+import logo from "../public/images/logo.png"
 import LeagueCellGroup from "../components/forms/LeagueCellGroup";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
-
+import Image from 'next/image';
 export default function Page() {
   const [usernameSubmitted, setUsernameSubmitted] = useState(false)
   const [userName, setUsername] = useState(null)
@@ -28,24 +29,17 @@ export default function Page() {
             <Container
               className="formContainer"
               maxW={"2xl"}
-              bg={"surface.0"}
+              maxH={"2xl"}
+              bg={"surface"}
+              outline={"solid"}
+              outlineColor={"surface.1"}
               boxShadow={5}
               p={[4, 8, 10, 12]}
-              overflow="hidden"
+              overflow="scroll"
               borderRadius={10}
             >
               <Box  w={["xs", "md", "lg", "xl", "2xl"]}>
-                <Heading
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  size={["lg", "xl", "2xl"]}
-                  color="#FFFFFF"
-                  pb={6}
-                >
-                  VisuaLeague
-                </Heading>
+              <Image alt="Visualeague" src={logo} />
                 <UsernameForm />
 
                 {/* { usernameSubmitted && <LeagueCellGroup
