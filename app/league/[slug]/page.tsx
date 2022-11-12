@@ -18,7 +18,7 @@ import PFRadialBarChart from "../../../components/charts/PFRadialBar";
 import TeamRadarChart from "../../../components/charts/TeamRadarChart";
 import { Context } from "../../../contexts/Context";
 
-const LeaguePage: NextPage = () => {
+export default function LeaguePage() {
   const [text, setText] = useState("");
   const [context, setContext] = useContext(Context);
   const leagueId = usePathname()?.replace("/league/", "");
@@ -118,5 +118,3 @@ const LeaguePage: NextPage = () => {
     </Box>
   );
 };
-
-export default LeaguePage;
