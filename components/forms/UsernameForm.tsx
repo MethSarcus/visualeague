@@ -70,7 +70,7 @@ function UsernameForm() {
       </form>
 
       <Collapse in={usernameSubmitted}>
-          <Box pt={6}>
+          <Box pt={6} overflowY={"scroll"}>
             <Box as="h1" mb={1}>Leagues</Box>
             <LeagueCellGroup
               usernameSubmitted={usernameSubmitted}

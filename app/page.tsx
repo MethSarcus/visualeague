@@ -29,14 +29,14 @@ export default function Page() {
               maxW={"2xl"}
               maxH={"2xl"}
               bg={"surface"}
-              outline={["none","solid"]}
+              outline={{sm: "none",md: "solid"}}
               outlineColor={["surface","surface.1"]}
               boxShadow={5}
               p={[4, 8, 10, 12]}
-              overflow="scroll"
+              overflow="none"
               borderRadius={10}
             >
-              <Box  w={["xs", "md", "lg", "xl", "2xl"]}>
+              <Box  w={["xs", "md", "lg", "xl", "2xl"]} color={"white"}>
               <Image alt="Visualeague" src={logo} />
                 <UsernameForm />
 
