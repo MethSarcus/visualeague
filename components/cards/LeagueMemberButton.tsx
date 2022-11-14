@@ -1,5 +1,5 @@
 import {
-  Avatar, Button
+  Avatar, Button, Box
 } from "@chakra-ui/react";
 import Link from "next/link";
 import LeagueMember from "../../classes/custom/LeagueMember";
@@ -11,15 +11,17 @@ type MyProps = {
 
 const LeagueMemberButton = (props: MyProps) => {
   return (
-    <Link href={`league/${props.leagueId}/${props.member.roster.roster_id}`}>
-      <Button size={"xl"} p={3} colorScheme="primary" leftIcon={<Avatar
+    <Box my={1}>
+    <Link href={`league/${props.leagueId}/team/${props.member.roster.roster_id}`}>
+      <Button size={"sm"} p={3} colorScheme="secondary" leftIcon={<Avatar
         src={`https://sleepercdn.com/avatars/thumbs/${props.member.avatar}`}
-        size="md"
+        size="xs"
         name={props.member.name}
       />}>
           {`${props.member.name} (${props.member.stats.wins}-${props.member.stats.losses})`}
       </Button>
       </Link>
+      </Box>
   );
 };
 

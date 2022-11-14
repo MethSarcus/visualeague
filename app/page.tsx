@@ -8,8 +8,6 @@ import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
 import Image from 'next/image';
 export default function Page() {
-  const [usernameSubmitted, setUsernameSubmitted] = useState(false)
-  const [userName, setUsername] = useState(null)
 
   return (
     <div className={styles.container}>
@@ -31,8 +29,8 @@ export default function Page() {
               maxW={"2xl"}
               maxH={"2xl"}
               bg={"surface"}
-              outline={"solid"}
-              outlineColor={"surface.1"}
+              outline={["none","solid"]}
+              outlineColor={["surface","surface.1"]}
               boxShadow={5}
               p={[4, 8, 10, 12]}
               overflow="scroll"

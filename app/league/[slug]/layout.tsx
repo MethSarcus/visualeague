@@ -22,7 +22,7 @@ export default function LeagueLayout({
             color="surface.0"
             fontWeight="bold"
           >
-            <GridItem area={"header"}>
+            <GridItem area={"header"} >
               <Navbar />
             </GridItem>
 
