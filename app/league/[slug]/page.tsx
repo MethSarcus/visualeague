@@ -16,6 +16,8 @@ import MemberSkillScatterPlot from "../../../components/charts/MemberSkillScatte
 import BarChart from "../../../components/charts/PFBarChart";
 import PFRadialBarChart from "../../../components/charts/PFRadialBar";
 import TeamRadarChart from "../../../components/charts/TeamRadarChart";
+import NumericalAvatar from "../../../components/groups/NumericalAvatar";
+import NumericalAvatarGroup from "../../../components/groups/NumericalAvatarGroup";
 import { Context } from "../../../contexts/Context";
 
 export default function LeaguePage() {
@@ -53,6 +55,9 @@ export default function LeaguePage() {
           {context.settings.name}
         </Heading>
       )}
+
+      {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
+      
       {context.settings != undefined && (
         <Tabs
           isLazy

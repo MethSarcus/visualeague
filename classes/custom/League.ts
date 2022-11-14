@@ -1,5 +1,5 @@
 import produce, { immerable } from "immer";
-import { POSITION } from "../../utility/rosterFunctions";
+import { ordinal_suffix_of, POSITION } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
@@ -9,6 +9,7 @@ import { SleeperUser } from "../sleeper/SleeperUser";
 import LeagueMember from "./LeagueMember";
 import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
+import { OrdinalStatInfo } from "./OrdinalStatInfo";
 import { SleeperPlayerDetails } from "./Player";
 import { Week } from "./Week";
 
@@ -55,6 +56,18 @@ export default class League {
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups);
     this.calcMemberScores();
+  }
+
+
+  getPfOrdinalStats(): OrdinalStatInfo[] {
+    let pfStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      pfStats.push(member)
+    })
+
+    return pfStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pf - a.stats.pf).map((member, index) => {
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)} PF`, member.avatar)
+    })
   }
 
   //Creates a map mapping week number to a map of player id to the players stats
