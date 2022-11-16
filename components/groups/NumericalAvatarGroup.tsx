@@ -11,9 +11,9 @@ interface MyProps {
 
 const NumericalAvatarGroup = (props: MyProps) => {
     return (
-    <Box color={"white"}>
+    <Box p={6} color={"white"}>
         <Text fontSize='md'>{props.statTitle}</Text>
-        <HStack spacing={4}>
+        <HStack spacing={4} mt={2}>
         
         {props.avatars.map((avatarStats) => {
             return <NumericalAvatar key={avatarStats.name} avatarStats={avatarStats}/>})}

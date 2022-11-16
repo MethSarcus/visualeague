@@ -2,7 +2,7 @@
 import {
     Container,
     Grid,
-    GridItem, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Box
+    GridItem, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Box, Skeleton
 } from "@chakra-ui/react";
 import axios from "axios";
 import type { NextPage } from "next";
@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../../classes/custom/League";
+import GenericStatCard from "../../../components/cards/statcards/GenericStatCard";
+import { OrdinalStatCard } from "../../../components/cards/statcards/OrdinalStatCard";
 import LineChart from "../../../components/charts/LineChart";
 import LineupPieChart from "../../../components/charts/LineupPieChart";
 import MemberSkillScatterPlot from "../../../components/charts/MemberSkillScatterPlot";
@@ -57,10 +59,12 @@ export default function LeaguePage() {
       )}
 
       {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
+
+      {context.settings != undefined && <GenericStatCard statName={"Best PF"} statValue={"111"} statOwner={"person"}/>}
       
       {context.settings != undefined && (
         <Tabs
-          isLazy
+          overflowX={'hidden'}
           isFitted
           variant={"line"}
           textColor={"white"}
