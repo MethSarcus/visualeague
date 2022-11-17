@@ -2,7 +2,7 @@ import { Spinner } from '@chakra-ui/react';
 import { ResponsiveAreaBump } from '@nivo/bump';
 import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
-import { project_colors } from '../../utility/rosterFunctions';
+import { project_colors } from "../../utility/project_colors";
 
 
 interface MyProps {

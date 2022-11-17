@@ -7,18 +7,17 @@ const GenericStatCard = (props: MyProps) => {
 
   return (
     <Box
-      p={4}
+      p={2}
       textAlign={"center"}
-      bg={"surface"}
+      bg={"surface.0"}
       border={"1px"}
-      color={"white"}
-      maxW="200px"
+      
       borderRadius={4}
       boxShadow={"2xl"}
     >
-      <Box p={1} fontWeight='semibold'>{props.statName}</Box>
-      <Box p={1}>{props.statOwner}</Box>
-      <Box p={1}>{props.statValue}</Box>
+      <Box fontWeight='black' fontSize={".5em"} color={"textTheme.mediumEmphasis"}>{props.statName}</Box>
+      <Box fontSize={".7em"} fontWeight={"medium"} color={"textTheme.highEmphasis"}>{props.statOwner}</Box>
+      <Box fontSize={".5em"} fontWeight="light" color={"textTheme.mediumEmphasis"}>{props.statValue}</Box>
     </Box>
   );
 };

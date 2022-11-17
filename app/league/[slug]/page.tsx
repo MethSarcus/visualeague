@@ -1,8 +1,20 @@
 "use client";
 import {
-    Container,
-    Grid,
-    GridItem, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Box, Skeleton
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Box,
+  Skeleton,
+  Spacer,
+  HStack,
+  Center,
+  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
 import type { NextPage } from "next";
@@ -20,6 +32,7 @@ import PFRadialBarChart from "../../../components/charts/PFRadialBar";
 import TeamRadarChart from "../../../components/charts/TeamRadarChart";
 import NumericalAvatar from "../../../components/groups/NumericalAvatar";
 import NumericalAvatarGroup from "../../../components/groups/NumericalAvatarGroup";
+import LeagueOverviewDataTable from "../../../components/tables/LeagueOverviewDatatable";
 import { Context } from "../../../contexts/Context";
 
 export default function LeaguePage() {
@@ -58,11 +71,50 @@ export default function LeaguePage() {
         </Heading>
       )}
 
-      {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
+      <Grid
+        gap={2}
+        m={4}
+        templateAreas={`"pfStats pfStats pfStats"
+                          "pfTable pfTable pfTable"
+                          "pfChart pfChart pfChart"`}
+        gridTemplateColumns={"1fr 1fr 1fr"}
+      >
+        <GridItem area={"pfStats"}>
+          <Flex>
+          <GenericStatCard
+            statName={"Best PF"}
+            statValue={"1000"}
+            statOwner={"Tom Cruise"}
+          />
+          <Spacer/>
+          <GenericStatCard
+            statName={"Best PF"}
+            statValue={"1000"}
+            statOwner={"Tom Cruise"}
+          />
+          <Spacer/>
+                    <GenericStatCard
+            statName={"Best PF"}
+            statValue={"1000"}
+            statOwner={"Tom Cruise"}
+          />
+          <Spacer/>
+          <GenericStatCard
+            statName={"Best PF"}
+            statValue={"1000"}
+            statOwner={"Tom Cruise"}
+          />
+          </Flex>
+        </GridItem>
+        <GridItem area={"pfTable"} overflowX={"scroll"} borderRadius={4}><LeagueOverviewDataTable league={context}/></GridItem>
+        <GridItem area={"pfChart"}>few</GridItem>
+      </Grid>
 
-      {context.settings != undefined && <GenericStatCard statName={"Best PF"} statValue={"111"} statOwner={"person"}/>}
-      
-      {context.settings != undefined && (
+      {/* {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
+
+      {context.settings != undefined && <GenericStatCard statName={"Best PF"} statValue={"111"} statOwner={"person"}/>} */}
+
+      {/* {context.settings != undefined && (
         <Tabs
           overflowX={'hidden'}
           isFitted
@@ -123,7 +175,7 @@ export default function LeaguePage() {
             </TabPanel>
           </TabPanels>
         </Tabs>
-      )}
+      )} */}
     </Box>
   );
-};
+}

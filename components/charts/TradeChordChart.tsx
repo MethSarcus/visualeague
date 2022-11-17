@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { SleeperTransaction } from '../../classes/sleeper/SleeperTransaction';
 import { Context } from '../../contexts/Context';
-import { project_colors } from '../../utility/rosterFunctions';
+import { project_colors } from "../../utility/project_colors";
 
 
 interface MyProps {

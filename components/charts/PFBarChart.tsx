@@ -2,7 +2,8 @@ import { Spinner } from '@chakra-ui/react';
 import { BarDatum, ResponsiveBar } from '@nivo/bar';
 import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
-import { getPositionColor, project_colors } from '../../utility/rosterFunctions';
+import { getPositionColor } from '../../utility/rosterFunctions';
+import { project_colors } from "../../utility/project_colors";
 import { PositionColors } from './ChartColors';
 
 
