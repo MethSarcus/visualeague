@@ -1,4 +1,4 @@
-import { Box, Skeleton } from "@chakra-ui/react"
+import { Box, Skeleton, Spinner } from "@chakra-ui/react"
 import DataTable, {
 	TableColumn
 } from "react-data-table-component"
@@ -101,6 +101,8 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			data={formattedMembers}
 			customStyles={customStyles}
 			conditionalRowStyles={conditionalRowStyles}
+			progressPending={props.league.settings == undefined}
+			progressComponent={<Spinner />}
 			responsive={true}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}

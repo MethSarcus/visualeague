@@ -22,11 +22,10 @@ function Navbar() {
       >
         <MobileSidebar/>
         <Box as={"b"} fontSize="lg" mr={2}>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}`}>
+          
+            <Link href={`league/${context?.settings?.league_id}`}>
               <Button variant={"ghost"}>Visualeague</Button>
             </Link>
-          )}
         </Box>
       </HStack>
       <HStack
@@ -44,14 +43,16 @@ function Navbar() {
               <Button variant={"ghost"}>Visualeague</Button>
             </Link>
           )}
+          {context == undefined && (
+              <Button variant={"ghost"}>Visualeague</Button>
+          )}
         </Box>
         <TeamSidebar />
         <Box>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}/ranks`}>
+            <Link href={`league/${context?.settings?.league_id}/ranks`}>
               <Button
                 size={"sm"}
-                colorScheme={"secondary"}
+                colorScheme={"primary"}
                 textColor="black"
                 variant="ghost"
                 aria-label={"teams"}
@@ -59,11 +60,9 @@ function Navbar() {
                 Power Rankings
               </Button>
             </Link>
-          )}
         </Box>
         <Box>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}/trades`}>
+            <Link href={`league/${context?.settings?.league_id}/trades`}>
               <Button
                 size={"sm"}
                 colorScheme={"secondary"}
@@ -74,7 +73,6 @@ function Navbar() {
                 Trading
               </Button>
             </Link>
-          )}
         </Box>
       </HStack>
       <Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>

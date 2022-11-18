@@ -58,6 +58,7 @@ export default class League {
     this.calcMemberScores();
   }
 
+  
 
   getPfOrdinalStats(): OrdinalStatInfo[] {
     let pfStats: LeagueMember[] = []
@@ -67,6 +68,17 @@ export default class League {
 
     return pfStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pf - a.stats.pf).map((member, index) => {
       return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)} PF`, member.avatar)
+    })
+  }
+
+  getGpOrdinalStats(): OrdinalStatInfo[] {
+    let gpStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      gpStats.push(member)
+    })
+
+    return gpStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.gp - a.stats.gp).map((member, index) => {
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)} GP`, member.avatar)
     })
   }
 

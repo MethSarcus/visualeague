@@ -1,42 +1,32 @@
 "use client";
 import {
+  Box,
+  Button,
+  Collapse,
   Container,
+  Flex,
   Grid,
   GridItem,
   Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Box,
+  IconButton,
   Skeleton,
+  SkeletonText,
   Spacer,
-  HStack,
-  Center,
-  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
-import type { NextPage } from "next";
+import { MdExpandLess, MdExpandMore, MdMore } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../../classes/custom/League";
 import GenericStatCard from "../../../components/cards/statcards/GenericStatCard";
-import { OrdinalStatCard } from "../../../components/cards/statcards/OrdinalStatCard";
-import LineChart from "../../../components/charts/LineChart";
-import LineupPieChart from "../../../components/charts/LineupPieChart";
-import MemberSkillScatterPlot from "../../../components/charts/MemberSkillScatterPlot";
-import BarChart from "../../../components/charts/PFBarChart";
-import PFRadialBarChart from "../../../components/charts/PFRadialBar";
-import TeamRadarChart from "../../../components/charts/TeamRadarChart";
-import NumericalAvatar from "../../../components/groups/NumericalAvatar";
-import NumericalAvatarGroup from "../../../components/groups/NumericalAvatarGroup";
+import HomeStatGroup from "../../../components/groups/stats/HomeStatGroup";
 import LeagueOverviewDataTable from "../../../components/tables/LeagueOverviewDatatable";
 import { Context } from "../../../contexts/Context";
 
 export default function LeaguePage() {
-  const [text, setText] = useState("");
+  const [show, setShow] = useState(false);
+  const handleToggle = () => setShow(!show);
   const [context, setContext] = useContext(Context);
   const leagueId = usePathname()?.replace("/league/", "");
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -55,59 +45,49 @@ export default function LeaguePage() {
   }, [leagueData, setContext]);
 
   if (leagueError) return <Heading color={"white"}>Failed to load</Heading>;
-  if (!leagueData) return <Heading color={"white"}>Loading...</Heading>;
 
   return (
     <Box overflowX={"hidden"}>
-      {context.settings != undefined && (
-        <Heading
-          width={"100%"}
-          textAlign={"center"}
-          my={3}
-          size={"sm"}
-          color={"white"}
-        >
-          {context.settings.name}
+      <Skeleton
+        height={"30px"}
+        fontWeight="black"
+        isLoaded={context.settings != undefined}
+      >
+        <Heading textAlign={"center"} py={2} size={"md"} m={2} color={"white"}>
+          {context?.settings?.name}
         </Heading>
-      )}
+      </Skeleton>
 
       <Grid
         gap={2}
-        m={4}
+        mx={4}
+        my={2}
         templateAreas={`"pfStats pfStats pfStats"
                           "pfTable pfTable pfTable"
                           "pfChart pfChart pfChart"`}
         gridTemplateColumns={"1fr 1fr 1fr"}
       >
         <GridItem area={"pfStats"}>
-          <Flex>
-          <GenericStatCard
-            statName={"Best PF"}
-            statValue={"1000"}
-            statOwner={"Tom Cruise"}
-          />
-          <Spacer/>
-          <GenericStatCard
-            statName={"Best PF"}
-            statValue={"1000"}
-            statOwner={"Tom Cruise"}
-          />
-          <Spacer/>
-                    <GenericStatCard
-            statName={"Best PF"}
-            statValue={"1000"}
-            statOwner={"Tom Cruise"}
-          />
-          <Spacer/>
-          <GenericStatCard
-            statName={"Best PF"}
-            statValue={"1000"}
-            statOwner={"Tom Cruise"}
-          />
+          <HomeStatGroup league={context} />
+        </GridItem>
+        <GridItem overflowX={"hidden"} area={"pfTable"} borderRadius={4}>
+          <Collapse startingHeight={"30%"} in={show}>
+            <LeagueOverviewDataTable  league={context} />
+          </Collapse>
+          <Flex dropShadow={"2xl"} boxShadow="2xl" alignContent={"flex-end"} position={"relative"}>
+            <Spacer/>
+            <IconButton
+              top="-1.7em"
+              icon={show ? <MdExpandLess/> : <MdExpandMore />}
+              borderRadius={"full"}
+              colorScheme="secondary"
+              size="sm"
+              onClick={handleToggle}
+              mt="1rem"
+              aria-label={""}/>
           </Flex>
         </GridItem>
-        <GridItem area={"pfTable"} overflowX={"scroll"} borderRadius={4}><LeagueOverviewDataTable league={context}/></GridItem>
-        <GridItem area={"pfChart"}>few</GridItem>
+        <GridItem area={"pfChart"}></GridItem>
       </Grid>
 
       {/* {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
