@@ -23,34 +23,21 @@ import GenericStatCard from "../../../components/cards/statcards/GenericStatCard
 import HomeStatGroup from "../../../components/groups/stats/HomeStatGroup";
 import LeagueOverviewDataTable from "../../../components/tables/LeagueOverviewDatatable";
 import { Context } from "../../../contexts/Context";
+import BarChart from "../../../components/charts/PFBarChart";
 
 export default function LeaguePage() {
   const [show, setShow] = useState(false);
   const handleToggle = () => setShow(!show);
   const [context, setContext] = useContext(Context);
   const leagueId = usePathname()?.replace("/league/", "");
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
-  const { data: leagueData, error: leagueError } = useSWR(
-    leagueId != undefined ? `/api/league/${leagueId}` : null,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (leagueData && leagueData.league) {
-      let league = new League(leagueData.league);
-      console.log(league);
-      setContext(league);
-    }
-  }, [leagueData, setContext]);
-
-  if (leagueError) return <Heading color={"white"}>Failed to load</Heading>;
 
   return (
     <Box overflowX={"hidden"}>
       <Skeleton
         height={"30px"}
         fontWeight="black"
+        mx={10}
+        my={2}
         isLoaded={context.settings != undefined}
       >
         <Heading textAlign={"center"} py={2} size={"md"} m={2} color={"white"}>
@@ -59,7 +46,7 @@ export default function LeaguePage() {
       </Skeleton>
 
       <Grid
-        gap={2}
+        gap={4}
         mx={4}
         my={2}
         templateAreas={`"pfStats pfStats pfStats"
@@ -71,7 +58,7 @@ export default function LeaguePage() {
           <HomeStatGroup league={context} />
         </GridItem>
         <GridItem overflowX={"hidden"} area={"pfTable"} borderRadius={4}>
-          <Collapse startingHeight={"30%"} in={show}>
+          <Collapse startingHeight={"10%"} in={show}>
             <LeagueOverviewDataTable  league={context} />
           </Collapse>
           <Flex dropShadow={"2xl"} boxShadow="2xl" alignContent={"flex-end"} position={"relative"}>
@@ -86,8 +73,9 @@ export default function LeaguePage() {
               mt="1rem"
               aria-label={""}/>
           </Flex>
+          {context.settings != undefined &&  <Box height={"500px"} textColor="black"><BarChart league={context} /></Box>}
         </GridItem>
-        <GridItem area={"pfChart"}></GridItem>
+        <GridItem area={"pfChart"} ></GridItem>
       </Grid>
 
       {/* {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}

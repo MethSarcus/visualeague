@@ -8,15 +8,19 @@ import {
 import axios from "axios";
 import type { NextPage } from "next";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { SleeperTransaction } from "../../../../classes/sleeper/SleeperTransaction";
 import TradeCard from "../../../../components/cards/TradeCard";
 import TradeChordChart from "../../../../components/charts/TradeChordChart";
+import { Context } from "../../../../contexts/Context";
   
   export default function Page() {
+    const [context, setContext] = useContext(Context)
     const fetcher = (url: string) => axios.get(url).then((res) => res.data);
     const leagueId = usePathname()?.replace("/league/","").replace("/trades", "");
+    console.log(leagueId)
+  
     const [trades, setTrades] = useState([]);
     const { data: tradeData, error: tradeError } = useSWR(
       leagueId != undefined ? `/api/trades/${leagueId}` : null,
@@ -24,10 +28,10 @@ import TradeChordChart from "../../../../components/charts/TradeChordChart";
     );
   
     useEffect(() => {
-      if (tradeData && tradeData.trades) {
+      if (tradeData && tradeData.trades && context.settings != undefined) {
         setTrades(tradeData.trades);
       }
-    }, [tradeData, setTrades, trades]);
+    }, [context, tradeData, setTrades, trades]);
   
     if (tradeError) return <Heading color={"white"}>Failed to load</Heading>;
     if (!tradeData) return <Heading color={"white"}>Loading...</Heading>;

@@ -6,7 +6,12 @@ import TeamSidebar from "./TeamSidebar";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
-function Navbar() {
+
+interface MyProps {
+  leagueID: string | undefined
+}
+
+function Navbar(props: MyProps) {
   const [context, setContext] = useContext(Context);
 
   return (
@@ -23,7 +28,7 @@ function Navbar() {
         <MobileSidebar/>
         <Box as={"b"} fontSize="lg" mr={2}>
           
-            <Link href={`league/${context?.settings?.league_id}`}>
+            <Link href={`league/${props.leagueID}`}>
               <Button variant={"ghost"}>Visualeague</Button>
             </Link>
         </Box>
@@ -51,6 +56,7 @@ function Navbar() {
         <Box>
             <Link href={`league/${context?.settings?.league_id}/ranks`}>
               <Button
+              disabled={props.leagueID == undefined}
                 size={"sm"}
                 colorScheme={"primary"}
                 textColor="black"
