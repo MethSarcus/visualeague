@@ -11,26 +11,22 @@ const BaseStatsLayout = (props: MyProps) => {
     <Flex h={'100%'}>
     <VStack>
       <GenericStatCard
-        statName={"Highest PF"}
-        statValue={"100"}
-      />
+          statName={"Highest PF"}
+          statValue={"100"} isLoaded={true} isGoodThing={false}      />
       <Spacer/>
       <GenericStatCard
-        statName={"Lowest PF"}
-        statValue={"100"}
-      />
+          statName={"Lowest PF"}
+          statValue={"100"} isLoaded={true} isGoodThing={false}      />
     </VStack>
     <Spacer />
     <VStack>
       <GenericStatCard
-        statName={"Highest PF"}
-        statValue={"100"}
-      />
+          statName={"Highest PF"}
+          statValue={"100"} isLoaded={true} isGoodThing={false}      />
       <Spacer/>
       <GenericStatCard
-        statName={"Lowest PF"}
-        statValue={"100"}
-      />
+          statName={"Lowest PF"}
+          statValue={"100"} isLoaded={true} isGoodThing={false}      />
     </VStack>
     </Flex>
   );
