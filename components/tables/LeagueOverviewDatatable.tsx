@@ -1,100 +1,69 @@
+import { Box, Skeleton, Spinner } from "@chakra-ui/react"
 import DataTable, {
 	TableColumn
 } from "react-data-table-component"
 import League from "../../classes/custom/League"
 import LeagueMember from "../../classes/custom/LeagueMember"
-
-type MyProps = { league: League }
-
-interface DataRow {
-	name: string
-	record: string
-	pf: number
-	pa: number
-	pp: number
-	gp: number
-	opslap: number
-}
-
-const columns: TableColumn<DataRow>[] = [
-	{
-		name: "Team",
-		selector: (row) => row.name,
-		sortable: true,
-		grow: 1
-	},
-	{
-		name: "Record",
-		selector: (row) => row.record,
-		sortable: true,
-		grow: 0
-	},
-	{
-		name: "PF",
-		selector: (row) => row.pf,
-		sortable: true,
-		grow: 0
-	},
-	{
-		name: "PA",
-		selector: (row) => row.pa,
-		sortable: true,
-		grow: 0
-	},
-	{
-		name: "PP",
-		selector: (row) => row.pp,
-		sortable: true,
-		grow: 0
-	},
-	{
-		name: "GP",
-		selector: (row) => row.gp,
-		sortable: true,
-		grow: 0
-	},
-	{
-		name: "OPSLAP",
-		selector: (row) => row.opslap,
-		sortable: true,
-		grow: 0
-	},
-]
-
-const customStyles = {
-    rows: {
-        style: {
-            minHeight: '72px', // override the row height
-        },
-    },
-	columns: {
-        style: {
-            innerWidth: '0px', // override the cell padding for data cells
-            outerWidth: '1px',
-			width: "4px"
-        },
-	},
-    headCells: {
-        style: {
-            paddingLeft: '0px', // override the cell padding for head cells
-            paddingRight: '0px',
-			width: "4px"
-        },
-    },
-    cells: {
-        style: {
-            innerWidth: 3, // override the cell padding for data cells
-            outerWidth: 7,
-			width: 6
-        },
-    },
-}
+import { project_colors } from "../../utility/project_colors"
+import { useMediaQuery } from '@chakra-ui/react'
 
 const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	const formattedMembers: DataRow[] = []
-	props.league.members.forEach((value: LeagueMember) => {
-		formattedMembers.push(formatMemberDataForTable(value))
-	});
+	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
+	const columns: TableColumn<DataRow>[] = [
+		{
+			name: "Team",
+			selector: (row) => row.name,
+			sortable: true,
+			grow: 1,
+		},
+		{
+			name: "Record",
+			selector: (row) => row.record,
+			sortable: true,
+			grow: 1,
+			omit: isOnMobile,
+		},
+		{
+			name: "PF",
+			selector: (row) => row.pf,
+			sortable: true,
+			grow: 1,
+		},
+		{
+			name: "OPSLAP",
+			selector: (row) => row.opslap,
+			sortable: true,
+			grow: 1
+		},
+		{
+			name: "PA",
+			selector: (row) => row.pa,
+			sortable: true,
+			grow: 1,
+			omit: isOnMobile,
+		},
+		
+		{
+			name: "PP",
+			selector: (row) => row.pp,
+			sortable: true,
+			grow: 1,
+		},
+		{
+			name: "GP",
+			selector: (row) => row.gp,
+			sortable: true,
+			grow: 1,
+		},
+	
+	]
+	if (props.league.members != undefined) {
+		props.league.members.forEach((value: LeagueMember) => {
+			formattedMembers.push(formatMemberDataForTable(value))
+		});
+	}
+
 	// data provides access to your row data
 
 	// const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
@@ -110,30 +79,86 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	// 		</pre>
 	// 	)
 	// }
-	// const conditionalRowStyles = [
-	// 	{
-	// 		when: (row: any) => row.id.includes(props.focusedUser),
-	// 		style: {
-	// 			backgroundColor: "green",
-	// 			color: "white",
-	// 			"&:hover": {
-	// 				cursor: "pointer",
-	// 			},
-	// 		},
-	// 	},
-	// ]
+	const conditionalRowStyles = [
+		{
+			when: (row: any) => true,
+			style: {
+				backgroundColor: "green",
+				color: "white",
+				"&:hover": {
+					cursor: "pointer",
+				},
+			},
+		},
+	]
 	return (
+		<Skeleton isLoaded={props.league != undefined}>
 		<DataTable
 		theme="dark"
 			columns={columns}
-			defaultSortFieldId={1}
+			defaultSortFieldId={3}
+			defaultSortAsc={false}
 			data={formattedMembers}
+			customStyles={customStyles}
+			conditionalRowStyles={conditionalRowStyles}
+			progressPending={props.league.settings == undefined}
+			progressComponent={<Spinner />}
+			responsive={true}
 			// conditionalRowStyles={conditionalRowStyles}
 			// expandableRowsComponent={ExpandedComponent}
 			dense={true}
 		/>
+		</Skeleton>
+
 	)
 }
+
+
+type MyProps = { league: League }
+
+interface DataRow {
+	name: string
+	record: string
+	pf: number
+	pa: number
+	pp: number
+	gp: number
+	opslap: number
+}
+
+
+
+const customStyles = {
+    rows: {
+        style: {
+            minHeight: '72px', // override the row height
+        },
+    },
+	columns: {
+        style: {
+			
+        },
+	},
+    headCells: {
+
+        style: {
+			background: project_colors.surface[2],
+			fontSize: ".5em",
+			minWidth: "60px!important",
+			color: project_colors.textTheme.highEmphasis,
+        },
+    },
+    cells: {
+        style: {
+			fontSize: ".6em",
+			minWidth: "60px!important",
+			color: project_colors.textTheme.highEmphasis,
+			background: project_colors.surface[1]
+        },
+    },
+}
+
+
 
 function formatMemberDataForTable(member: LeagueMember): DataRow {
 	return {

@@ -6,7 +6,12 @@ import TeamSidebar from "./TeamSidebar";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
-function Navbar() {
+
+interface MyProps {
+  leagueID: string | undefined
+}
+
+function Navbar(props: MyProps) {
   const [context, setContext] = useContext(Context);
 
   return (
@@ -22,11 +27,10 @@ function Navbar() {
       >
         <MobileSidebar/>
         <Box as={"b"} fontSize="lg" mr={2}>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}`}>
+          
+            <Link href={`league/${props.leagueID}`}>
               <Button variant={"ghost"}>Visualeague</Button>
             </Link>
-          )}
         </Box>
       </HStack>
       <HStack
@@ -44,14 +48,17 @@ function Navbar() {
               <Button variant={"ghost"}>Visualeague</Button>
             </Link>
           )}
+          {context == undefined && (
+              <Button variant={"ghost"}>Visualeague</Button>
+          )}
         </Box>
         <TeamSidebar />
         <Box>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}/ranks`}>
+            <Link href={`league/${context?.settings?.league_id}/ranks`}>
               <Button
+              disabled={props.leagueID == undefined}
                 size={"sm"}
-                colorScheme={"secondary"}
+                colorScheme={"primary"}
                 textColor="black"
                 variant="ghost"
                 aria-label={"teams"}
@@ -59,11 +66,9 @@ function Navbar() {
                 Power Rankings
               </Button>
             </Link>
-          )}
         </Box>
         <Box>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}/trades`}>
+            <Link href={`league/${context?.settings?.league_id}/trades`}>
               <Button
                 size={"sm"}
                 colorScheme={"secondary"}
@@ -74,7 +79,6 @@ function Navbar() {
                 Trading
               </Button>
             </Link>
-          )}
         </Box>
       </HStack>
       <Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>

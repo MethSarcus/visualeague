@@ -62,6 +62,11 @@ const overrides = {
       9: "rgb(208, 208, 208)",
       10: "rgb(226, 226, 226)",
     },
+    textTheme: {
+      highEmphasis: "#E0E0E0",
+      mediumEmphasis: "#A0A0A0",
+      disabled: "#6C6C6C"
+    },
     position: {
       QB: "rgba(239, 116, 161, 0.8)",
       RB: "rgba(143, 242, 202, 0.8)",
