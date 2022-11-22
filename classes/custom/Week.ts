@@ -47,6 +47,19 @@ export class Week {
       return teams
     }
 
+    getMemberMatchupSide(rosterId: number): MatchupSide {
+      let memberMatchupSide;
+      this.matchups.forEach(matchup => {
+        if (matchup.homeTeam.roster_id == rosterId) {
+          memberMatchupSide = matchup.homeTeam;
+        } else if (matchup.awayTeam?.roster_id == rosterId) {
+          memberMatchupSide = matchup.awayTeam!
+        }
+      })
+
+      return memberMatchupSide as unknown as MatchupSide
+    }
+
     getAllScores() {
       let teams = this.getAllTeams()
       return teams.sort((a: MatchupSide, b: MatchupSide) => {

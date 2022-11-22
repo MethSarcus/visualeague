@@ -7,6 +7,7 @@ import { SleeperRoster } from "../sleeper/SleeperRoster";
 import { SleeperTransaction } from "../sleeper/SleeperTransaction";
 import { SleeperUser } from "../sleeper/SleeperUser";
 import LeagueMember from "./LeagueMember";
+import LeagueStats from "./LeagueStats";
 import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
@@ -27,6 +28,7 @@ export default class League {
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
   public memberIdToRosterId: Map<string, number> = new Map();
+  public stats: LeagueStats = new LeagueStats()
 
   constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
     if (modifiedSettings) {
@@ -56,6 +58,7 @@ export default class League {
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups);
     this.calcMemberScores();
+    this.setLeagueStats();
   }
 
   
@@ -160,6 +163,28 @@ export default class League {
       );
       this.weeks.set(weekNum, week);
     });
+  }
+
+  setLeagueStats() {
+    let pf = 0
+    let pa = 0
+    let pp = 0
+    let opslap = 0
+    let gp = 0
+    this.members.forEach((member, rosterId) => {
+      pf += member.stats.pf
+      pa += member.stats.pa
+      pp += member.stats.pp
+      opslap += member.stats.opslap
+      gp += member.stats.gp
+    })
+
+    this.stats.avg_pf = (pf/this.members.size)
+    this.stats.avg_pa = (pa/this.members.size)
+    this.stats.avg_pp = (pp/this.members.size)
+    this.stats.avg_opslap = (opslap/this.members.size)
+    this.stats.avg_gp = (gp/this.members.size)
+
   }
 
   getPlayerStat(playerId: number, weekNum: number) {

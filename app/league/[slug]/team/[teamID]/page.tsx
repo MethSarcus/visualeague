@@ -21,7 +21,7 @@ export default function TeamPage() {
         gridTemplateColumns={"1fr 1fr 1fr"}
       >
         <GridItem area={"TeamSum"}>
-            {context?.members != undefined && <TeamCard member={context?.members.get(parseInt(memberId!))} variant={""} size={"md"}/>}
+            {context?.members != undefined && <TeamCard member={context?.members.get(parseInt(memberId!))} league={context} variant={""} size={"md"}/>}
             <GenericStatCard isLoaded={false} isGoodThing={false}/>
           
         </GridItem>
