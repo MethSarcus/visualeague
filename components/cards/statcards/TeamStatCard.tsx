@@ -6,10 +6,17 @@ type MyProps = {
   statValue?: String | null | undefined;
   statOwner?: String | null | undefined;
   isLoaded: boolean;
-  isGoodThing: boolean;
+  isGoodThing: boolean | null | undefined;
 };
 
-const GenericStatCard = (props: MyProps) => {
+const TeamStatCard = (props: MyProps) => {
+    let borderColor = "#B00020"
+
+    if (props.isGoodThing == null || props.isGoodThing == undefined) {
+        borderColor = "grey"
+    } else if (props.isGoodThing == true) {
+        borderColor =  "rgb(151,245,143, .8)"
+    }
   return (
     <Box
       p={2}
@@ -19,13 +26,13 @@ const GenericStatCard = (props: MyProps) => {
       borderRadius={4}
       boxShadow={"2xl"}
       borderTop="2px"
-      borderTopColor={props.isGoodThing ? "rgb(151,245,143, .8)" : "#B00020"}
+      borderTopColor={borderColor}
     >
 
             <SkeletonText noOfLines={3} spacing={1} isLoaded={props.isLoaded}>
               <Box
                 fontWeight="bold"
-                fontSize={".7em"}
+                fontSize={".8em"}
                 color={"textTheme.highEmphasis"}
               >
                 {props.statName}
@@ -38,7 +45,7 @@ const GenericStatCard = (props: MyProps) => {
                 {props.statOwner}
               </Box>
               <Box
-                fontSize={".7em"}
+                fontSize={".8em"}
                 fontWeight="light"
                 color={"textTheme.mediumEmphasis"}
               >
@@ -49,4 +56,4 @@ const GenericStatCard = (props: MyProps) => {
   );
 };
 
-export default GenericStatCard;
+export default TeamStatCard;

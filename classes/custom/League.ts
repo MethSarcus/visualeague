@@ -70,7 +70,13 @@ export default class League {
     })
 
     return pfStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pf - a.stats.pf).map((member, index) => {
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)} PF`, member.avatar)
+      let isAboveAverage = null
+      if (index + 1 < pfStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > pfStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)}`, member.avatar, isAboveAverage)
     })
   }
 
@@ -81,7 +87,30 @@ export default class League {
     })
 
     return gpStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.gp - a.stats.gp).map((member, index) => {
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)} GP`, member.avatar)
+      let isAboveAverage = null
+      if (index + 1 < gpStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > gpStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)}`, member.avatar, isAboveAverage)
+    })
+  }
+
+  getPowerRankOrdinalStats(): OrdinalStatInfo[] {
+    let powerRankStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      powerRankStats.push(member)
+    })
+
+    return powerRankStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.power_wins - a.stats.power_wins).map((member, index) => {
+      let isAboveAverage = null
+      if (index + 1 < powerRankStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > powerRankStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${(member.stats.power_wins/(member.stats.power_wins + member.stats.power_losses)).toFixed(3)}`, member.avatar, isAboveAverage)
     })
   }
 
