@@ -33,49 +33,65 @@ export default function LeaguePage() {
 
   return (
     <Box overflowX={"hidden"}>
-      <Skeleton
-        height={"30px"}
-        fontWeight="black"
-        mx={10}
-        my={2}
-        isLoaded={context.settings != undefined}
-      >
-        <Heading textAlign={"center"} py={2} size={"md"} m={2} color={"white"}>
-          {context?.settings?.name}
-        </Heading>
-      </Skeleton>
-
       <Grid
-        gap={4}
+        gap={3}
         mx={4}
         my={2}
-        templateAreas={`"pfStats pfStats pfStats"
+        templateAreas={`  "header header header"
+                          "pfStats pfStats pfStats"
                           "pfTable pfTable pfTable"
                           "pfChart pfChart pfChart"`}
         gridTemplateColumns={"1fr 1fr 1fr"}
       >
+        <GridItem area={"header"}>
+          <Skeleton
+            fontWeight="black"
+            mx={10}
+            isLoaded={context.settings != undefined}
+          >
+            <Heading
+              textAlign={"center"}
+              py={2}
+              size={"md"}
+              m={2}
+              color={"white"}
+            >
+              {context?.settings?.name}
+            </Heading>
+          </Skeleton>
+        </GridItem>
         <GridItem area={"pfStats"}>
           <HomeStatGroup league={context} />
         </GridItem>
         <GridItem overflowX={"hidden"} area={"pfTable"} borderRadius={4}>
           <Collapse startingHeight={"10%"} in={show}>
-            <LeagueOverviewDataTable  league={context} />
+            <LeagueOverviewDataTable league={context} />
           </Collapse>
-          <Flex dropShadow={"2xl"} boxShadow="2xl" alignContent={"flex-end"} position={"relative"}>
-            <Spacer/>
+          <Flex
+            dropShadow={"2xl"}
+            boxShadow="2xl"
+            alignContent={"flex-end"}
+            position={"relative"}
+          >
+            <Spacer />
             <IconButton
               top="-1.7em"
-              icon={show ? <MdExpandLess/> : <MdExpandMore />}
+              icon={show ? <MdExpandLess /> : <MdExpandMore />}
               borderRadius={"full"}
               colorScheme="secondary"
               size="sm"
               onClick={handleToggle}
               mt="1rem"
-              aria-label={""}/>
+              aria-label={""}
+            />
           </Flex>
-          {context.settings != undefined &&  <Box height={"500px"} textColor="black"><BarChart league={context} /></Box>}
+          {context.settings != undefined && (
+            <Box height={"500px"} textColor="black">
+              <BarChart league={context} />
+            </Box>
+          )}
         </GridItem>
-        <GridItem area={"pfChart"} ></GridItem>
+        <GridItem area={"pfChart"}></GridItem>
       </Grid>
 
       {/* {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}

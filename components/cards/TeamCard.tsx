@@ -1,27 +1,6 @@
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Heading,
-  Stack,
-  Text,
-  useMultiStyleConfig,
-  Image,
-  Box,
-  CardHeader,
-  StackDivider,
-  Avatar,
-  Center,
-  Flex,
-  VStack,
-  ButtonGroup,
-  Spacer,
-  StatLabel,
-  Stat,
-  StatArrow,
-  StatHelpText,
-  StatNumber,
+    Card, Center, Image, Text,
+    useMultiStyleConfig, VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import LeagueMember from "../../classes/custom/LeagueMember";
