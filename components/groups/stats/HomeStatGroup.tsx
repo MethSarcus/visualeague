@@ -22,14 +22,7 @@ export default function HomeStatGroup(props: MyProps) {
           statOwner={props.league?.getPfOrdinalStats?.()[0].name}
           isGoodThing={true} />
 
-      <GenericStatCard
-        statName={"Worst PF"}
-        isLoaded = {props.league?.settings != undefined}
-        statValue={props.league?.getPfOrdinalStats?.().at(-1)?.stat}
-        statOwner={props.league?.getPfOrdinalStats?.().at(-1)?.name}
-        isGoodThing={false}
-        
-      />
+
 
       <GenericStatCard
       isLoaded = {props.league?.settings != undefined}
@@ -38,6 +31,15 @@ export default function HomeStatGroup(props: MyProps) {
         statOwner={props.league?.getGpOrdinalStats?.().at(0)?.name}
         isGoodThing={true}
       
+      />
+
+      <GenericStatCard
+        statName={"Worst PF"}
+        isLoaded = {props.league?.settings != undefined}
+        statValue={props.league?.getPfOrdinalStats?.().at(-1)?.stat}
+        statOwner={props.league?.getPfOrdinalStats?.().at(-1)?.name}
+        isGoodThing={false}
+        
       />
 
       <GenericStatCard

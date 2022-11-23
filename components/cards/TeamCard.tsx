@@ -1,32 +1,16 @@
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Heading,
-  Stack,
-  Text,
-  useMultiStyleConfig,
-  Image,
   Box,
-  CardHeader,
-  StackDivider,
-  Avatar,
-  Center,
-  Flex,
-  VStack,
-  ButtonGroup,
-  Spacer,
-  StatLabel,
-  Stat,
-  StatArrow,
-  StatHelpText,
-  StatNumber,
+    Card, Center, Flex, Image, Text,
+    useMultiStyleConfig, VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import League from "../../classes/custom/League";
 import LeagueMember from "../../classes/custom/LeagueMember";
+import TeamCardPFBarChart from "../charts/team_charts/TeamCardPFBarChart";
+import TrendingLineChart from "../charts/team_charts/TrendingLineChart";
 
 type MyProps = {
+  league: League
   member: LeagueMember;
   variant: string;
   size: string;
@@ -38,19 +22,13 @@ const TeamCard = (props: MyProps) => {
   const router = useRouter();
 
   return (
-    // <VStack color={"textTheme.highEmphasis"} alignItems={"center"}>
-
-    //   <Text as="p">{`${props.member?.name}`} </Text>
-    //   <Text as="p">({props.member?.stats.wins} - {props.member?.stats.losses})</Text>
-
-    // </VStack>
     <Card
       direction="row"
       boxShadow={"lg"}
       alignContent={"center"}
       alignItems={"center"}
       rounded={"md"}
-      bg="surface.2"
+      bg="surface.0"
       textColor={"white"}
     >
       <Image
@@ -66,6 +44,9 @@ const TeamCard = (props: MyProps) => {
             ({props.member?.stats.wins} - {props.member?.stats.losses})
           </Text>
         </VStack>
+        <Box color={"black"} w={["150px"]} h={["80px"]}>
+        <TrendingLineChart league={props.league} memberId={props.member.roster.roster_id}/>
+        </Box>
       </Center>
     </Card>
   );

@@ -7,6 +7,7 @@ import { SleeperRoster } from "../sleeper/SleeperRoster";
 import { SleeperTransaction } from "../sleeper/SleeperTransaction";
 import { SleeperUser } from "../sleeper/SleeperUser";
 import LeagueMember from "./LeagueMember";
+import LeagueStats from "./LeagueStats";
 import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
@@ -27,6 +28,7 @@ export default class League {
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
   public memberIdToRosterId: Map<string, number> = new Map();
+  public stats: LeagueStats = new LeagueStats()
 
   constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
     if (modifiedSettings) {
@@ -56,6 +58,7 @@ export default class League {
     this.setProjections(sleeperLeague.player_projections);
     this.setWeeks(sleeperLeague.matchups);
     this.calcMemberScores();
+    this.setLeagueStats();
   }
 
   
@@ -67,7 +70,13 @@ export default class League {
     })
 
     return pfStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pf - a.stats.pf).map((member, index) => {
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)} PF`, member.avatar)
+      let isAboveAverage = null
+      if (index + 1 < pfStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > pfStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)}`, member.avatar, isAboveAverage)
     })
   }
 
@@ -78,7 +87,30 @@ export default class League {
     })
 
     return gpStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.gp - a.stats.gp).map((member, index) => {
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)} GP`, member.avatar)
+      let isAboveAverage = null
+      if (index + 1 < gpStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > gpStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)}`, member.avatar, isAboveAverage)
+    })
+  }
+
+  getPowerRankOrdinalStats(): OrdinalStatInfo[] {
+    let powerRankStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      powerRankStats.push(member)
+    })
+
+    return powerRankStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.power_wins - a.stats.power_wins).map((member, index) => {
+      let isAboveAverage = null
+      if (index + 1 < powerRankStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > powerRankStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${(member.stats.power_wins/(member.stats.power_wins + member.stats.power_losses)).toFixed(3)}`, member.avatar, isAboveAverage)
     })
   }
 
@@ -160,6 +192,28 @@ export default class League {
       );
       this.weeks.set(weekNum, week);
     });
+  }
+
+  setLeagueStats() {
+    let pf = 0
+    let pa = 0
+    let pp = 0
+    let opslap = 0
+    let gp = 0
+    this.members.forEach((member, rosterId) => {
+      pf += member.stats.pf
+      pa += member.stats.pa
+      pp += member.stats.pp
+      opslap += member.stats.opslap
+      gp += member.stats.gp
+    })
+
+    this.stats.avg_pf = (pf/this.members.size)
+    this.stats.avg_pa = (pa/this.members.size)
+    this.stats.avg_pp = (pp/this.members.size)
+    this.stats.avg_opslap = (opslap/this.members.size)
+    this.stats.avg_gp = (gp/this.members.size)
+
   }
 
   getPlayerStat(playerId: number, weekNum: number) {
