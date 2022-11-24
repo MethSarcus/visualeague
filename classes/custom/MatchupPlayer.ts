@@ -1,12 +1,12 @@
-import { ScoringSettings } from "../sleeper/LeagueSettings"
+import { ScoringAct, ScoringSettings } from "../sleeper/LeagueSettings"
 
 export class MatchupPlayer {
     playerId?: string
     position?: string
     score: number = 0
     projectedScore: number = 0
-    stats?: ScoringSettings
-    projectedStats?: ScoringSettings
+    stats?: ScoringAct
+    projectedStats?: ScoringAct
     eligiblePositions: string[] = ["QB",
     "RB",
     "WR",
@@ -20,8 +20,8 @@ export class MatchupPlayer {
     constructor(playerId?: string, position?: string, stats?: ScoringSettings, projectedStats?: ScoringSettings, eligiblePositions?: string[], leagueSettings?: ScoringSettings) {
         this.playerId = playerId
         this.position = position
-        this.stats = stats
-        this.projectedStats = projectedStats
+        this.stats = stats as ScoringAct
+        this.projectedStats = projectedStats as ScoringAct
         if (eligiblePositions) {
             this.eligiblePositions = eligiblePositions
         }

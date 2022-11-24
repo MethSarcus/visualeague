@@ -12,6 +12,7 @@ import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
 import { SleeperPlayerDetails } from "./Player";
+import SeasonPlayer from "./SeasonPlayer";
 import { Week } from "./Week";
 
 export default class League {
@@ -261,6 +262,26 @@ export default class League {
             homeMember.stats.gutPlays += homeTeam.gut_plays;
             homeMember.stats.custom_points += homeTeam.custom_points;
             homeMember.stats.pa += awayTeam.pf;
+
+            homeTeam.starters.forEach(player => {
+              if (homeMember!.players.has(player.playerId!)) {
+                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                homeMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
+
+            homeTeam.bench.forEach(player => {
+              if (homeMember!.players.has(player.playerId!)) {
+                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                homeMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
             homeTeam.position_starts.forEach((value, key) => {
               if (homeMember?.stats.position_scores.has(key)) {
                 homeMember?.stats.position_starts.set(
@@ -297,6 +318,26 @@ export default class League {
             awayMember.stats.gutPlays += awayTeam.gut_plays;
             awayMember.stats.custom_points += awayTeam.custom_points;
             awayMember.stats.pa += homeTeam.pf;
+
+            awayTeam.starters.forEach(player => {
+              if (awayMember!.players.has(player.playerId!)) {
+                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                awayMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
+
+            awayTeam.bench.forEach(player => {
+              if (awayMember!.players.has(player.playerId!)) {
+                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                awayMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
 
             awayTeam.position_starts.forEach((value, key) => {
               if (awayMember?.stats.position_scores.has(key)) {

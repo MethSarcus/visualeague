@@ -1,57 +1,74 @@
 "use client";
-import { Box, Container, Flex, SkeletonText } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Center,
+  Container,
+  Flex,
+  Text,
+  SkeletonCircle,
+  SkeletonText,
+} from "@chakra-ui/react";
+import { SleeperPlayerDetails } from "../../../classes/custom/Player";
+import SeasonPlayer from "../../../classes/custom/SeasonPlayer";
 
 type MyProps = {
-  player?: SeasonPlayer | null | undefined;
-  statValue?: String | null | undefined;
-  statOwner?: String | null | undefined;
+  player: SeasonPlayer | undefined;
+  playerDetails: SleeperPlayerDetails | undefined;
+  mainStat: String | undefined;
+  title: String | undefined;
+  subStat: String | undefined;
   isLoaded: boolean;
-  isGoodThing: boolean | null | undefined;
+  isGoodThing: boolean | undefined;
 };
 
 const TeamStatCard = (props: MyProps) => {
-    let borderColor = "#B00020"
+  let borderColor = "#B00020";
+  if (props.isGoodThing == null || props.isGoodThing == undefined) {
+    borderColor = "grey";
+  } else if (props.isGoodThing == true) {
+    borderColor = "rgb(151,245,143, .8)";
+  }
 
-    if (props.isGoodThing == null || props.isGoodThing == undefined) {
-        borderColor = "grey"
-    } else if (props.isGoodThing == true) {
-        borderColor =  "rgb(151,245,143, .8)"
-    }
   return (
     <Box
-      p={2}
+      py={2}
+      px={5}
+      dropShadow="2xl"
       textAlign={"center"}
-      bg={"surface.0"}
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
-      borderTop="2px"
-      borderTopColor={borderColor}
     >
+      <Box fontWeight="bold" fontSize={".9em"} color={"textTheme.highEmphasis"}>
+        {props.title}
+      </Box>
 
-            <SkeletonText noOfLines={3} spacing={1} isLoaded={props.isLoaded}>
-              <Box
-                fontWeight="bold"
-                fontSize={".8em"}
-                color={"textTheme.highEmphasis"}
-              >
-                {props.statName}
-              </Box>
-              <Box
-                fontSize={".9em"}
-                fontWeight={"medium"}
-                color={"textTheme.highEmphasis"}
-              >
-                {props.statOwner}
-              </Box>
-              <Box
-                fontSize={".8em"}
-                fontWeight="light"
-                color={"textTheme.mediumEmphasis"}
-              >
-                {props.statValue}
-              </Box>
-            </SkeletonText>
+      <Avatar
+        my={2}
+        size={"md"}
+        borderWidth={"1px"}
+        borderColor={"grey"}
+        src={`https://sleepercdn.com/content/nfl/players/${props.player?.id}.jpg`}
+      />
+      <Text color={"textTheme.highEmphasis"}>
+        {props.playerDetails?.first_name} {props.playerDetails?.last_name}
+      </Text>
+
+      <Text
+        fontSize={".7em"}
+        fontWeight={"medium"}
+        color={"textTheme.highEmphasis"}
+      >
+        {props.mainStat}
+      </Text>
+      <Text
+        fontSize={".6em"}
+        fontWeight="light"
+        color={"textTheme.mediumEmphasis"}
+      >
+        {props.subStat}
+      </Text>
     </Box>
   );
 };
