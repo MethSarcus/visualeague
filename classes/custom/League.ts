@@ -62,7 +62,26 @@ export default class League {
     this.setLeagueStats();
   }
 
-  
+  getMemberRank(memberId: number, statType: StatType) {
+    let stats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      stats.push(member)
+    })
+
+    let sorted = stats.sort((a:LeagueMember, b:LeagueMember) => b.stats[statType] - a.stats[statType]).map((member, index) => {
+      if (member.roster.roster_id == memberId) {
+        let isAboveAverage = null
+        if (index + 1 < stats.length/2) {
+          isAboveAverage = true
+        } else if (index + 1 > stats.length/2) {
+          isAboveAverage = false
+        }
+        return {rank: index + 1, aboveAverage: isAboveAverage}
+      }
+    }).filter(value => value!= undefined)
+
+    return sorted[0]
+  }
 
   getPfOrdinalStats(): OrdinalStatInfo[] {
     let pfStats: LeagueMember[] = []
@@ -78,6 +97,23 @@ export default class League {
         isAboveAverage = false
       }
       return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)}`, member.avatar, isAboveAverage)
+    })
+  }
+
+  getPaOrdinalStats(): OrdinalStatInfo[] {
+    let paStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      paStats.push(member)
+    })
+
+    return paStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pa - a.stats.pa).map((member, index) => {
+      let isAboveAverage = null
+      if (index + 1 < paStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > paStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pa.toFixed(2)}`, member.avatar, isAboveAverage)
     })
   }
 
@@ -416,4 +452,13 @@ export default class League {
       });
     });
   }
+}
+
+export enum StatType {
+  PF = "pf",
+  PA = "pa",
+  PP = "pp",
+  GP = "gp",
+  OPSLAP = "opslap",
+  POWER_RANK = "power_wins"
 }

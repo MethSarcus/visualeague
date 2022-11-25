@@ -43,7 +43,7 @@ export default class LeagueMember {
 
   getNotablePlayers() {
     let [highestScorer] = this.players.values()
-    let [highestAvgScorer] = this.players.values()
+    let [leastConsistent] = this.players.values()
     let [lowestAvgScorer] = this.players.values()
     let [mostConsistent] = this.players.values()
     let [mostAccuratePredictions] = this.players.values()
@@ -59,8 +59,8 @@ export default class LeagueMember {
           lowestAvgScorer = player
         }
   
-        if (player.avgPointsPerStart > highestAvgScorer.avgPointsPerStart) {
-          highestAvgScorer = player
+        if (player.stdDev > leastConsistent.stdDev) {
+          leastConsistent = player
         }
   
         if (player.stdDev > 0 && player.stdDev < mostConsistent.stdDev) {
@@ -76,7 +76,7 @@ export default class LeagueMember {
     let notablePlayers = {
       bestPlayer: highestScorer,
       lowestAvgScorer: lowestAvgScorer,
-      highestAvgScorer: highestAvgScorer,
+      leastConsistent: leastConsistent,
       mostConsistent: mostConsistent,
       mostAccuratePredictions: mostAccuratePredictions
     }

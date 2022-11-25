@@ -12,25 +12,23 @@ interface MyProps {
 }
 
 export default function TeamPlayerStatGroup(props: MyProps) {
-    if (props.league?.settings == undefined) return <div>Loading...</div>
-  const member = props.league?.members.get(props.memberId)
-  let playerDetails = props.league.playerDetails
+  if (props.league?.settings == undefined) return <div>Loading...</div>;
+  const member = props.league?.members.get(props.memberId);
+  let playerDetails = props.league.playerDetails;
 
-  let bestPlayer
-  let highestAvgScorer
-  let lowestAvgScorer
-  let mostConsistent
-  let leastPredictionError
-  
+  let bestPlayer;
+  let leastConsistent;
+  let lowestAvgScorer;
+  let mostConsistent;
+  let leastPredictionError;
 
   if (member) {
-    let notablePlayers = member?.getNotablePlayers()
-    bestPlayer = notablePlayers.bestPlayer
-    highestAvgScorer = notablePlayers.highestAvgScorer
-    lowestAvgScorer = notablePlayers.lowestAvgScorer
-    mostConsistent = notablePlayers.mostConsistent
-    leastPredictionError = notablePlayers.mostAccuratePredictions
-    
+    let notablePlayers = member?.getNotablePlayers();
+    bestPlayer = notablePlayers.bestPlayer;
+    leastConsistent = notablePlayers.leastConsistent;
+    lowestAvgScorer = notablePlayers.lowestAvgScorer;
+    mostConsistent = notablePlayers.mostConsistent;
+    leastPredictionError = notablePlayers.mostAccuratePredictions;
   }
   return (
     <HStack spacing={3} maxWidth="inherit">
@@ -39,14 +37,7 @@ export default function TeamPlayerStatGroup(props: MyProps) {
         player={bestPlayer}
         playerDetails={playerDetails.get(bestPlayer?.id!)}
         mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
-        isLoaded={true}
-        isGoodThing={true}
-      />
-                 <TeamPlayerStatCard
-        title={"Highest Avg"}
-        player={highestAvgScorer}
-        playerDetails={playerDetails.get(highestAvgScorer?.id!)}
-        mainStat={`${highestAvgScorer?.avgPointsPerStart.toFixed(2)} Avg PF`}
+        subStat={`${bestPlayer?.avgPointsPerStart.toFixed(2)} Avg`}
         isLoaded={true}
         isGoodThing={true}
       />
@@ -59,6 +50,15 @@ export default function TeamPlayerStatGroup(props: MyProps) {
         isGoodThing={false}
       />
       <TeamPlayerStatCard
+        title={"Least Consistent"}
+        player={leastConsistent}
+        playerDetails={playerDetails.get(leastConsistent?.id!)}
+        mainStat={`${leastConsistent?.stdDev.toFixed(2)} Std Dev`}
+        isLoaded={true}
+        isGoodThing={true}
+      />
+
+      <TeamPlayerStatCard
         title={"Most Consistent"}
         player={mostConsistent}
         playerDetails={playerDetails.get(mostConsistent?.id!)}
@@ -70,7 +70,9 @@ export default function TeamPlayerStatGroup(props: MyProps) {
         title={"Most Predictable"}
         player={leastPredictionError}
         playerDetails={playerDetails.get(leastPredictionError?.id!)}
-        mainStat={`${leastPredictionError?.rootMeanSquareError.toFixed(2)} RSME`}
+        mainStat={`${leastPredictionError?.rootMeanSquareError.toFixed(
+          2
+        )} RSME`}
         isLoaded={true}
         isGoodThing={true}
       />
