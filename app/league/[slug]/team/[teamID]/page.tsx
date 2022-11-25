@@ -11,7 +11,7 @@ import { Context } from "../../../../../contexts/Context";
 
 export default function TeamPage() {
   const [context, setContext] = useContext(Context);
-  const memberId = usePathname()?.slice(-1);
+  const memberId = usePathname()?.split("/").at(-1);
 
   return (
     <Box overflowX={"hidden"}>

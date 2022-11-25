@@ -14,58 +14,63 @@ interface MyProps {
 export default function TeamPlayerStatGroup(props: MyProps) {
     if (props.league?.settings == undefined) return <div>Loading...</div>
   const member = props.league?.members.get(props.memberId)
+  let playerDetails = props.league.playerDetails
+
   let bestPlayer
-  let bestPlayerDetails
+  let highestAvgScorer
+  let lowestAvgScorer
+  let mostConsistent
+  let leastPredictionError
+  
 
   if (member) {
-    bestPlayer = member.getBestPlayer()
-    bestPlayer.calcAdvancedStats()
-    bestPlayerDetails = props.league.playerDetails.get(bestPlayer.id)
+    let notablePlayers = member?.getNotablePlayers()
+    bestPlayer = notablePlayers.bestPlayer
+    highestAvgScorer = notablePlayers.highestAvgScorer
+    lowestAvgScorer = notablePlayers.lowestAvgScorer
+    mostConsistent = notablePlayers.mostConsistent
+    leastPredictionError = notablePlayers.mostAccuratePredictions
+    
   }
   return (
     <HStack spacing={3} maxWidth="inherit">
       <TeamPlayerStatCard
         title={"MVP"}
         player={bestPlayer}
-        playerDetails={bestPlayerDetails}
+        playerDetails={playerDetails.get(bestPlayer?.id!)}
         mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
-        subStat={bestPlayerDetails?.full_name}
         isLoaded={true}
         isGoodThing={true}
       />
-            <TeamPlayerStatCard
+                 <TeamPlayerStatCard
+        title={"Highest Avg"}
+        player={highestAvgScorer}
+        playerDetails={playerDetails.get(highestAvgScorer?.id!)}
+        mainStat={`${highestAvgScorer?.avgPointsPerStart.toFixed(2)} Avg PF`}
+        isLoaded={true}
+        isGoodThing={true}
+      />
+      <TeamPlayerStatCard
+        title={"LVP"}
+        player={lowestAvgScorer}
+        playerDetails={playerDetails.get(lowestAvgScorer?.id!)}
+        mainStat={`${lowestAvgScorer?.avgPointsPerStart.toFixed(2)} Avg PF`}
+        isLoaded={true}
+        isGoodThing={false}
+      />
+      <TeamPlayerStatCard
         title={"Most Consistent"}
-        player={bestPlayer}
-        playerDetails={bestPlayerDetails}
-        mainStat={`${bestPlayer?.stdDev.toFixed(2)} Std`}
-        subStat={bestPlayer?.avgPointsPerStart.toFixed(2)}
+        player={mostConsistent}
+        playerDetails={playerDetails.get(mostConsistent?.id!)}
+        mainStat={`${mostConsistent?.stdDev.toFixed(2)} Std Dev`}
         isLoaded={true}
         isGoodThing={true}
       />
-            <TeamPlayerStatCard
-        title={"Worst Player"}
-        player={bestPlayer}
-        playerDetails={bestPlayerDetails}
-        mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
-        subStat={bestPlayerDetails?.full_name}
-        isLoaded={true}
-        isGoodThing={true}
-      />
-            <TeamPlayerStatCard
-        title={"Overachiever"}
-        player={bestPlayer}
-        playerDetails={bestPlayerDetails}
-        mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
-        subStat={bestPlayerDetails?.full_name}
-        isLoaded={true}
-        isGoodThing={true}
-      />
-            <TeamPlayerStatCard
-        title={"Underachiever"}
-        player={bestPlayer}
-        playerDetails={bestPlayerDetails}
-        mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
-        subStat={bestPlayerDetails?.full_name}
+      <TeamPlayerStatCard
+        title={"Most Predictable"}
+        player={leastPredictionError}
+        playerDetails={playerDetails.get(leastPredictionError?.id!)}
+        mainStat={`${leastPredictionError?.rootMeanSquareError.toFixed(2)} RSME`}
         isLoaded={true}
         isGoodThing={true}
       />

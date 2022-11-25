@@ -17,7 +17,6 @@ type MyProps = {
   playerDetails: SleeperPlayerDetails | undefined;
   mainStat: String | undefined;
   title: String | undefined;
-  subStat: String | undefined;
   isLoaded: boolean;
   isGoodThing: boolean | undefined;
 };
@@ -67,7 +66,7 @@ const TeamStatCard = (props: MyProps) => {
         fontWeight="light"
         color={"textTheme.mediumEmphasis"}
       >
-        {props.subStat}
+        {props.playerDetails?.first_name} {props.playerDetails?.last_name}
       </Text>
     </Box>
   );

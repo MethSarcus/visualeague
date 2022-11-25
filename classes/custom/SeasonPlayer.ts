@@ -14,7 +14,9 @@ export default class SeasonPlayer {
   public projected_points: number = 0;
   public points_scored: number = 0;
   public stdDev: number = 0;
+  public rootMeanSquareError: number = 0;
   public avgPointsPerStart: number = 0;
+
 
   constructor(playerId: string, rosterId: number) {
     this.id = playerId;
@@ -40,6 +42,10 @@ export default class SeasonPlayer {
     }
   }
 
+  calcStarterStats() {
+    
+  }
+
   calcAdvancedStats() {
     let allActiveWeeks = this.weeks_played
       .concat(this.weeks_benched)
@@ -48,12 +54,31 @@ export default class SeasonPlayer {
           this.playerProjectedScores.get(weekNumber) != undefined &&
           (this.playerProjectedScores.get(weekNumber) as number) > 0
         );
-      }) as number[];
+      }).sort((a: number, b: number) => {return a - b}) as number[];
 
     let pointValues = allActiveWeeks.map((value) =>
       this.playerScores.get(value)
     ) as number[];
+    let projectedPointValues = allActiveWeeks.map((value) =>
+    this.playerProjectedScores.get(value)
+  ) as number[];
     this.stdDev = standardDeviation(pointValues);
     this.avgPointsPerStart = pointValues.reduce((a, b) => a + b, 0) / pointValues.length;
+
+    let weeklyDiffs: Map<number, number> = new Map()
+    allActiveWeeks.forEach((weekNum) => {
+      weeklyDiffs.set(weekNum, this.playerScores.get(weekNum)! - this.playerProjectedScores.get(weekNum)!)
+    })
+
+    let squaredDiffSum = 0
+    weeklyDiffs.forEach((diff, weekNum) => {
+      squaredDiffSum += Math.pow(diff, 2)
+    })
+
+    squaredDiffSum = squaredDiffSum / (allActiveWeeks.length)
+    
+    this.rootMeanSquareError = Math.sqrt(squaredDiffSum)
   }
+
+  
 }

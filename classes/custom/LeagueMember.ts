@@ -41,12 +41,46 @@ export default class LeagueMember {
     return firstValue;
   }
 
-  getPlayers() {
-    let [bestPlayer] = this.players.values()
-    let [worstPlayer] = this.players.values()
-    let [overAchiever] = this.players.values()
-    let [underAchiever] = this.players.values()
+  getNotablePlayers() {
+    let [highestScorer] = this.players.values()
+    let [highestAvgScorer] = this.players.values()
+    let [lowestAvgScorer] = this.players.values()
     let [mostConsistent] = this.players.values()
-    return bestPlayer;
+    let [mostAccuratePredictions] = this.players.values()
+
+    this.players.forEach((player, id) => {
+      if (player.weeks_played.length >= 2) {
+        player.calcAdvancedStats()
+        if (player.points_scored > highestScorer.points_scored) {
+          highestScorer = player
+        }
+  
+        if (player.avgPointsPerStart < lowestAvgScorer.avgPointsPerStart) {
+          lowestAvgScorer = player
+        }
+  
+        if (player.avgPointsPerStart > highestAvgScorer.avgPointsPerStart) {
+          highestAvgScorer = player
+        }
+  
+        if (player.stdDev > 0 && player.stdDev < mostConsistent.stdDev) {
+          mostConsistent = player
+        }
+  
+        if (player.rootMeanSquareError < highestScorer.rootMeanSquareError && player.rootMeanSquareError > 0) {
+          mostAccuratePredictions = player
+        }
+      }
+    })
+
+    let notablePlayers = {
+      bestPlayer: highestScorer,
+      lowestAvgScorer: lowestAvgScorer,
+      highestAvgScorer: highestAvgScorer,
+      mostConsistent: mostConsistent,
+      mostAccuratePredictions: mostAccuratePredictions
+    }
+
+    return notablePlayers;
   }
 }
