@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useContext } from "react";
 import GenericStatCard from "../../../../../components/cards/statcards/GenericStatCard";
 import TeamCard from "../../../../../components/cards/TeamCard";
+import TeamPageRadarChart from "../../../../../components/charts/team_charts/TeamPageRadarChart";
 import HomeStatGroup from "../../../../../components/groups/stats/HomeStatGroup";
 import TeamPlayerStatGroup from "../../../../../components/groups/stats/TeamPlayerStatGroup";
 import TeamStatGroup from "../../../../../components/groups/stats/TeamStatGroup";
@@ -22,8 +23,7 @@ export default function TeamPage() {
         templateAreas={`"TeamSum TeamSum TeamSum"
                           "stats stats stats"
                           "playerStats playerStats playerStats"
-                          "pfChart pfChart pfChart"`}
-        gridTemplateColumns={"1fr 1fr 1fr"}
+                          "radar radar radar"`}
       >
         <GridItem area={"TeamSum"} mt={3}>
           {context?.members != undefined && (
@@ -49,6 +49,9 @@ export default function TeamPage() {
               memberId={parseInt(memberId!)}
             />
           </Box>
+        </GridItem>
+        <GridItem maxH={"600px"} minH="300px" area={"radar"}>
+          <TeamPageRadarChart league={context} memberId={parseInt(memberId!)}/>
         </GridItem>
       </Grid>
     </Box>

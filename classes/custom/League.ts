@@ -243,7 +243,31 @@ export default class League {
       pp += member.stats.pp
       opslap += member.stats.opslap
       gp += member.stats.gp
+
     })
+    let positionStarts: Map<POSITION, number> = new Map()
+    let positionScores: Map<POSITION, number> = new Map()
+    this.members.forEach((member, rosterId) => {
+      member.stats.position_starts.forEach((numStarts, pos) => {
+        if (positionStarts.has(pos)) {
+          positionStarts.set(pos, positionStarts.get(pos)! + numStarts)
+        } else {
+          positionStarts.set(pos, numStarts)
+        }
+      })
+
+      member.stats.position_scores.forEach((points, pos) => {
+        if (positionScores.has(pos)) {
+          positionScores.set(pos, positionScores.get(pos)! + points)
+        } else {
+          positionScores.set(pos, points)
+        }
+      })
+
+    })
+
+    this.stats.position_scores = positionScores
+    this.stats.position_starts = positionStarts
 
     this.stats.avg_pf = (pf/this.members.size)
     this.stats.avg_pa = (pa/this.members.size)
