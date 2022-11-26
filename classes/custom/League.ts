@@ -1,5 +1,5 @@
 import produce, { immerable } from "immer";
-import { ordinal_suffix_of, POSITION } from "../../utility/rosterFunctions";
+import { LINEUP_POSITION, ordinal_suffix_of, POSITION } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
@@ -8,6 +8,7 @@ import { SleeperTransaction } from "../sleeper/SleeperTransaction";
 import { SleeperUser } from "../sleeper/SleeperUser";
 import LeagueMember from "./LeagueMember";
 import LeagueStats from "./LeagueStats";
+import Matchup from "./Matchup";
 import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
@@ -231,6 +232,43 @@ export default class League {
     });
   }
 
+  getMemberNotableWeeks(rosterId: number) {
+    let bestWeek: Matchup | undefined = undefined
+    let worstWeek: Matchup | undefined = undefined
+    let closestGame: Matchup | undefined = undefined
+    let furthestGame: Matchup | undefined = undefined
+    this.weeks.forEach((week) => {
+      let matchup = week.getMemberMatchup(rosterId)
+      if (matchup != undefined) {
+        if (bestWeek == undefined) {
+          bestWeek = matchup
+          worstWeek = matchup
+          closestGame = matchup
+          furthestGame = matchup
+        } else {
+          if (matchup.getMemberSide(rosterId)!.pf > bestWeek.getMemberSide(rosterId)!.pf) {
+            bestWeek = matchup
+          }
+  
+          if (matchup.getMemberSide(rosterId)!.pf < bestWeek.getMemberSide(rosterId)!.pf) {
+            worstWeek = matchup
+          }
+  
+          if (matchup.getMargin() < closestGame?.getMargin()!) {
+            closestGame = matchup
+          }
+  
+          if (matchup.getMargin() > closestGame?.getMargin()!) {
+            furthestGame = matchup
+          }
+  
+        }
+      }
+    })
+
+    return {bestWeek: bestWeek, worstWeek: worstWeek, closestGame: closestGame, furthestGame: furthestGame}
+  }
+
   setLeagueStats() {
     let pf = 0
     let pa = 0
@@ -327,7 +365,7 @@ export default class League {
               if (homeMember!.players.has(player.playerId!)) {
                 homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
                 seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
                 homeMember!.players.set(player.playerId!, seasonPlayer)
               }
@@ -337,7 +375,7 @@ export default class League {
               if (homeMember!.players.has(player.playerId!)) {
                 homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
                 seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
                 homeMember!.players.set(player.playerId!, seasonPlayer)
               }
@@ -383,7 +421,7 @@ export default class League {
               if (awayMember!.players.has(player.playerId!)) {
                 awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
                 seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
                 awayMember!.players.set(player.playerId!, seasonPlayer)
               }
@@ -393,7 +431,7 @@ export default class League {
               if (awayMember!.players.has(player.playerId!)) {
                 awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
                 seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
                 awayMember!.players.set(player.playerId!, seasonPlayer)
               }

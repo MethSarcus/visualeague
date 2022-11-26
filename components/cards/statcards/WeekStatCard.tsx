@@ -9,27 +9,22 @@ import {
   SkeletonCircle,
   SkeletonText,
 } from "@chakra-ui/react";
+import { MatchupSide } from "../../../classes/custom/MatchupSide";
 import { SleeperPlayerDetails } from "../../../classes/custom/Player";
 import SeasonPlayer from "../../../classes/custom/SeasonPlayer";
+import { Week } from "../../../classes/custom/Week";
+import LineupPieChart from "../../charts/LineupPieChart";
 
 type MyProps = {
-  player: SeasonPlayer | undefined;
-  playerDetails: SleeperPlayerDetails | undefined;
+  matchupSide: MatchupSide | undefined;
+  memberId: number | undefined
   mainStat: String | undefined;
   subStat?: String | undefined
   title: String | undefined;
   isLoaded: boolean;
-  isGoodThing: boolean | undefined;
 };
 
-const TeamStatCard = (props: MyProps) => {
-  let borderColor = "#B00020";
-  if (props.isGoodThing == null || props.isGoodThing == undefined) {
-    borderColor = "grey";
-  } else if (props.isGoodThing == true) {
-    borderColor = "rgb(151,245,143, .8)";
-  }
-
+const WeekStatCard = (props: MyProps) => {
   return (
     <Box
       py={2}
@@ -39,23 +34,13 @@ const TeamStatCard = (props: MyProps) => {
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
-      minW={"200px"}
-      minH={"175px"}
+      minWidth={"150px"}
+      minHeight={"150px"}
+
     >
       <Box fontWeight="bold" fontSize={"1.2em"} color={"textTheme.highEmphasis"}>
         {props.title}
       </Box>
-
-      <Avatar
-        my={2}
-        size={"md"}
-        borderWidth={"1px"}
-        borderColor={"grey"}
-        src={isNaN(+props.player?.id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.id.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.id}.jpg`}
-      />
-      <Text color={"textTheme.highEmphasis"}>
-        {props.playerDetails?.first_name} {props.playerDetails?.last_name}
-      </Text>
 
       <Text
         fontSize={".9em"}
@@ -75,4 +60,4 @@ const TeamStatCard = (props: MyProps) => {
   );
 };
 
-export default TeamStatCard;
+export default WeekStatCard;

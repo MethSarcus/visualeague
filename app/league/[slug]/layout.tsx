@@ -1,6 +1,7 @@
 "use client";
 import { Grid, GridItem, Heading } from "@chakra-ui/react";
 import axios from "axios";
+import { enableAllPlugins } from "immer";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect } from "react";
 import useSWR from "swr";
@@ -14,6 +15,7 @@ export default function LeagueLayout({
 }: {
   children: React.ReactNode;
 }) {
+  enableAllPlugins()
   const [context, setContext] = useContext(Context);
   let leagueId = usePathname()?.replace("/league/", "");
   if (leagueId?.includes("/trades")) {

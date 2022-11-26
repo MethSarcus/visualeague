@@ -1,6 +1,7 @@
 import { MatchupSide } from "./MatchupSide"
 
 export default class Matchup {
+    weekNumber: number
     homeTeam: MatchupSide
     awayTeam?: MatchupSide
     winnerRosterId: number
@@ -10,8 +11,9 @@ export default class Matchup {
     isByeWeek: boolean
     isPlayoffs: boolean
 
-    constructor(homeTeam: MatchupSide, isPlayoffs: boolean, awayTeam?: MatchupSide) {
+    constructor(weekNumber: number, homeTeam: MatchupSide, isPlayoffs: boolean, awayTeam?: MatchupSide) {
         this.homeTeam = homeTeam;
+        this.weekNumber = weekNumber
         this.awayTeam = awayTeam;
         this.isPlayoffs = isPlayoffs;
         this.matchup_id = homeTeam.matchup_id
@@ -30,5 +32,22 @@ export default class Matchup {
         }
 
         
+    }
+
+
+
+    public getMargin() {
+        return Math.abs(this.homeTeam.pf - this.awayTeam?.pf!)
+    }
+
+    public getMemberSide(rosterId: number) {
+        let matchupSide
+        if (this.homeTeam.roster_id == rosterId) {
+            matchupSide = this.homeTeam
+        } else if (this.awayTeam?.roster_id == rosterId) {
+            matchupSide = this.awayTeam
+        }
+
+        return matchupSide
     }
 }

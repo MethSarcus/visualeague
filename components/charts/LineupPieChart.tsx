@@ -1,27 +1,35 @@
 import { Spinner } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
+import { useContext } from "react";
 import { MatchupPlayer } from "../../classes/custom/MatchupPlayer";
 import { SleeperPlayerDetails } from "../../classes/custom/Player";
+import { Context } from "../../contexts/Context";
 import { PositionColors } from "./ChartColors";
 
 interface MyProps {
   players: MatchupPlayer[];
   playerDetails?: Map<string, SleeperPlayerDetails>;
+  margins?: object | undefined
 }
 
 
 
 const LineupPieChart = (props: MyProps) => {
-
+  const [context, setContext] = useContext(Context)
+  if (!props.players || context.settings == undefined) return <Spinner/>
+  let margins = props.margins
+  if (!props.margins) {
+    margins = { top: 80, right: 100, bottom: 80, left: 100 }
+  }
 
   const formatScoresForPieChart = (players: MatchupPlayer[]) => {
     return players.map((player) => {
       let fullName: any =
         (player && player.playerId && player.playerId != "0") || "Empty";
-      if (props.playerDetails != undefined && fullName != "Empty") {
+      if (context.playerDetails != undefined && fullName != "Empty") {
         fullName = `${
-          props.playerDetails!!.get(player.playerId!!)!!.first_name
-        } ${props.playerDetails!!.get(player.playerId!!)!!.last_name}`;
+          context.playerDetails!!.get(player.playerId!!)!!.first_name
+        } ${context.playerDetails!!.get(player.playerId!!)!!.last_name}`;
       }
       return {
         id: fullName,
@@ -63,7 +71,7 @@ const LineupPieChart = (props: MyProps) => {
       data={data}
       sortByValue={true}
       colors={{ datum: "data.color" }}
-      margin={{ top: 80, right: 80, bottom: 80, left: 80 }}
+      margin={margins}
       innerRadius={0.5}
       padAngle={0.7}
       cornerRadius={3}

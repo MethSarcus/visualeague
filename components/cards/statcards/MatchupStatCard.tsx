@@ -22,7 +22,7 @@ type MyProps = {
   isGoodThing: boolean | undefined;
 };
 
-const TeamStatCard = (props: MyProps) => {
+const MatchupStatCard = (props: MyProps) => {
   let borderColor = "#B00020";
   if (props.isGoodThing == null || props.isGoodThing == undefined) {
     borderColor = "grey";
@@ -75,4 +75,4 @@ const TeamStatCard = (props: MyProps) => {
   );
 };
 
-export default TeamStatCard;
+export default MatchupStatCard;

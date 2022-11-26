@@ -11,6 +11,7 @@ import {
 import { MatchupPlayer } from "./MatchupPlayer";
 
 export class MatchupSide {
+  weekNumber: number
   pf: number = 0;
   pp: number = 0;
   opslap: number = 0;
@@ -28,12 +29,14 @@ export class MatchupSide {
   
 
   constructor(
+    weekNumber: number,
     matchup: SleeperMatchup,
     stats: Map<string, any>,
     projections: Map<string, any>,
     playerDetails: Map<string, SleeperPlayerDetails>,
     settings: LeagueSettings
   ) {
+    this.weekNumber = weekNumber
     this.roster_id = matchup.roster_id;
     this.matchup_id = matchup.matchup_id;
     this.starters = matchup.starters.map((playerId, index) => {

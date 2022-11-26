@@ -2,6 +2,7 @@
 import { Box, Flex, HStack, SimpleGrid, Spacer } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
 import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
+import { POSITION } from "../../../utility/rosterFunctions";
 import GenericStatCard from "../../cards/statcards/GenericStatCard";
 import TeamPlayerStatCard from "../../cards/statcards/TeamPlayerStatCard";
 import TeamStatCard from "../../cards/statcards/TeamStatCard";
@@ -9,6 +10,7 @@ import TeamStatCard from "../../cards/statcards/TeamStatCard";
 interface MyProps {
   league?: League;
   memberId: number;
+  filteredPositions?: POSITION[]
 }
 
 export default function TeamPlayerStatGroup(props: MyProps) {
@@ -21,6 +23,7 @@ export default function TeamPlayerStatGroup(props: MyProps) {
   let lowestAvgScorer;
   let mostConsistent;
   let leastPredictionError;
+  let mostPredictionError;
 
   if (member) {
     let notablePlayers = member?.getNotablePlayers();
@@ -29,6 +32,7 @@ export default function TeamPlayerStatGroup(props: MyProps) {
     lowestAvgScorer = notablePlayers.lowestAvgScorer;
     mostConsistent = notablePlayers.mostConsistent;
     leastPredictionError = notablePlayers.mostAccuratePredictions;
+    mostPredictionError = notablePlayers.leastAccuratePredictions;
   }
   return (
     <HStack spacing={3} maxWidth="inherit">
@@ -71,6 +75,16 @@ export default function TeamPlayerStatGroup(props: MyProps) {
         player={leastPredictionError}
         playerDetails={playerDetails.get(leastPredictionError?.id!)}
         mainStat={`${leastPredictionError?.rootMeanSquareError.toFixed(
+          2
+        )} RSME`}
+        isLoaded={true}
+        isGoodThing={true}
+      />
+            <TeamPlayerStatCard
+        title={"Least Predictable"}
+        player={mostPredictionError}
+        playerDetails={playerDetails.get(mostPredictionError?.id!)}
+        mainStat={`${mostPredictionError?.rootMeanSquareError.toFixed(
           2
         )} RSME`}
         isLoaded={true}
