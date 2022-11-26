@@ -12,6 +12,7 @@ import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
 import { SleeperPlayerDetails } from "./Player";
+import SeasonPlayer from "./SeasonPlayer";
 import { Week } from "./Week";
 
 export default class League {
@@ -61,7 +62,26 @@ export default class League {
     this.setLeagueStats();
   }
 
-  
+  getMemberRank(memberId: number, statType: StatType) {
+    let stats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      stats.push(member)
+    })
+
+    let sorted = stats.sort((a:LeagueMember, b:LeagueMember) => b.stats[statType] - a.stats[statType]).map((member, index) => {
+      if (member.roster.roster_id == memberId) {
+        let isAboveAverage = null
+        if (index + 1 < stats.length/2) {
+          isAboveAverage = true
+        } else if (index + 1 > stats.length/2) {
+          isAboveAverage = false
+        }
+        return {rank: index + 1, aboveAverage: isAboveAverage}
+      }
+    }).filter(value => value!= undefined)
+
+    return sorted[0]
+  }
 
   getPfOrdinalStats(): OrdinalStatInfo[] {
     let pfStats: LeagueMember[] = []
@@ -77,6 +97,23 @@ export default class League {
         isAboveAverage = false
       }
       return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)}`, member.avatar, isAboveAverage)
+    })
+  }
+
+  getPaOrdinalStats(): OrdinalStatInfo[] {
+    let paStats: LeagueMember[] = []
+    this.members.forEach((member, rosterId) => {
+      paStats.push(member)
+    })
+
+    return paStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pa - a.stats.pa).map((member, index) => {
+      let isAboveAverage = null
+      if (index + 1 < paStats.length/2) {
+        isAboveAverage = true
+      } else if (index + 1 > paStats.length/2) {
+        isAboveAverage = false
+      }
+      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pa.toFixed(2)}`, member.avatar, isAboveAverage)
     })
   }
 
@@ -206,7 +243,31 @@ export default class League {
       pp += member.stats.pp
       opslap += member.stats.opslap
       gp += member.stats.gp
+
     })
+    let positionStarts: Map<POSITION, number> = new Map()
+    let positionScores: Map<POSITION, number> = new Map()
+    this.members.forEach((member, rosterId) => {
+      member.stats.position_starts.forEach((numStarts, pos) => {
+        if (positionStarts.has(pos)) {
+          positionStarts.set(pos, positionStarts.get(pos)! + numStarts)
+        } else {
+          positionStarts.set(pos, numStarts)
+        }
+      })
+
+      member.stats.position_scores.forEach((points, pos) => {
+        if (positionScores.has(pos)) {
+          positionScores.set(pos, positionScores.get(pos)! + points)
+        } else {
+          positionScores.set(pos, points)
+        }
+      })
+
+    })
+
+    this.stats.position_scores = positionScores
+    this.stats.position_starts = positionStarts
 
     this.stats.avg_pf = (pf/this.members.size)
     this.stats.avg_pa = (pa/this.members.size)
@@ -261,6 +322,26 @@ export default class League {
             homeMember.stats.gutPlays += homeTeam.gut_plays;
             homeMember.stats.custom_points += homeTeam.custom_points;
             homeMember.stats.pa += awayTeam.pf;
+
+            homeTeam.starters.forEach(player => {
+              if (homeMember!.players.has(player.playerId!)) {
+                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                homeMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
+
+            homeTeam.bench.forEach(player => {
+              if (homeMember!.players.has(player.playerId!)) {
+                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                homeMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
             homeTeam.position_starts.forEach((value, key) => {
               if (homeMember?.stats.position_scores.has(key)) {
                 homeMember?.stats.position_starts.set(
@@ -297,6 +378,26 @@ export default class League {
             awayMember.stats.gutPlays += awayTeam.gut_plays;
             awayMember.stats.custom_points += awayTeam.custom_points;
             awayMember.stats.pa += homeTeam.pf;
+
+            awayTeam.starters.forEach(player => {
+              if (awayMember!.players.has(player.playerId!)) {
+                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                awayMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
+
+            awayTeam.bench.forEach(player => {
+              if (awayMember!.players.has(player.playerId!)) {
+                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+              } else {
+                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id)
+                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                awayMember!.players.set(player.playerId!, seasonPlayer)
+              }
+            })
 
             awayTeam.position_starts.forEach((value, key) => {
               if (awayMember?.stats.position_scores.has(key)) {
@@ -375,4 +476,13 @@ export default class League {
       });
     });
   }
+}
+
+export enum StatType {
+  PF = "pf",
+  PA = "pa",
+  PP = "pp",
+  GP = "gp",
+  OPSLAP = "opslap",
+  POWER_RANK = "power_wins"
 }

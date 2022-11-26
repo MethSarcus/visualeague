@@ -438,3 +438,13 @@ export function ordinal_suffix_of(i: number) {
   }
   return i + "th";
 }
+
+export function standardDeviation(arr: number[], usePopulation = false) {
+  const mean = arr.reduce((acc: any, val: any) => acc + val, 0) / arr.length;
+  return Math.sqrt(
+    arr
+      .reduce((acc: any[], val: number) => acc.concat((val - mean) ** 2), [])
+      .reduce((acc: any, val: any) => acc + val, 0) /
+      (arr.length - (usePopulation ? 0 : 1))
+  );
+};
