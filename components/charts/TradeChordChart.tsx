@@ -120,7 +120,6 @@ const TradeChordChart = (props: MyProps) => {
             tradeMap.forEach((numTrades: number, id) => {
                 teamTrades.push(numTrades)
             })
-            console.log(teamTrades)
             data.push(teamTrades)
           });
         return data 

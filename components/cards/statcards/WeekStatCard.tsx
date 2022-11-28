@@ -8,6 +8,7 @@ import {
   Text,
   SkeletonCircle,
   SkeletonText,
+  Button,
 } from "@chakra-ui/react";
 import { MatchupSide } from "../../../classes/custom/MatchupSide";
 import { SleeperPlayerDetails } from "../../../classes/custom/Player";
@@ -35,20 +36,12 @@ const WeekStatCard = (props: MyProps) => {
       borderRadius={4}
       boxShadow={"2xl"}
       minWidth={"150px"}
-      minHeight={"150px"}
+      minHeight={"125px"}
 
     >
       <Box fontWeight="bold" fontSize={"1.2em"} color={"textTheme.highEmphasis"}>
         {props.title}
       </Box>
-
-      <Text
-        fontSize={".9em"}
-        fontWeight={"medium"}
-        color={"textTheme.highEmphasis"}
-      >
-        {props.mainStat}
-      </Text>
       <Text
         fontSize={".8em"}
         fontWeight="light"
@@ -56,6 +49,15 @@ const WeekStatCard = (props: MyProps) => {
       >
         {props.subStat}
       </Text>
+      <Text
+        fontSize={".9em"}
+        fontWeight={"medium"}
+        color={"textTheme.highEmphasis"}
+      >
+        {props.mainStat}
+      </Text>
+      <Button my={2} variant={"outline"} colorScheme={"secondary"} size={"xs"}>View</Button>
+
     </Box>
   );
 };

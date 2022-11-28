@@ -3,7 +3,7 @@ import { Grid, GridItem, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { enableAllPlugins } from "immer";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../../classes/custom/League";
 import Footer from "../../../components/Footer";
@@ -31,16 +31,22 @@ export default function LeagueLayout({
     leagueId != undefined ? `/api/league/${leagueId}` : null,
     fetcher
   );
+  const { data: tradeData, error: tradeError } = useSWR(
+    leagueId != undefined ? `/api/trades/${leagueId}` : null,
+    fetcher
+  );
+
 
   useEffect(() => {
-    if (leagueData && leagueData.league) {
+    if (leagueData && leagueData.league && tradeData.trades) {
       let league = new League(leagueData.league);
+      league.transactions = tradeData.trades
       console.log(league);
       setContext(league);
     }
-  }, [leagueData, setContext]);
+  }, [leagueData, setContext, tradeData]);
 
-  if (leagueError) return <Heading color={"white"}>Failed to load</Heading>;
+  if (leagueError || tradeError) return <Heading color={"white"}>Failed to load</Heading>;
   return (
     <section>
       <main className={styles.main}>
