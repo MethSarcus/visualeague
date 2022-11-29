@@ -86,7 +86,7 @@ export default function TradeCard(props: MyProps) {
     return <Box>Loading</Box>;
 
   return (
-    <Stack bg={"surface.0"} maxW={["container.sm","container.md"]} borderColor={"surface.0"} direction={["column", "row"]} shadow={"lg"} spacing={8}  borderWidth="thin" borderStyle={"solid"} borderRadius={4} p={4} my={2} _hover={{
+    <Stack bg={"surface.0"} maxW={["container.sm","container.md"]} borderColor={"surface.0"} direction={["column", "row"]} shadow={"lg"} spacing={6}  borderWidth="thin" borderStyle={"solid"} borderRadius={4} p={4} my={2} _hover={{
         shadow: "2xl",
         transitionDuration: ".5s"
       }}>

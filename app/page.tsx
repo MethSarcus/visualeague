@@ -7,6 +7,7 @@ import LeagueCellGroup from "../components/forms/LeagueCellGroup";
 import UsernameForm from "../components/forms/UsernameForm";
 import styles from "../styles/Home.module.css";
 import Image from 'next/image';
+import MatchupPreview from "../components/cards/MatchupPreview";
 export default function Page() {
 
   return (

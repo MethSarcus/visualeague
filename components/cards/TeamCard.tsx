@@ -1,24 +1,21 @@
 import {
   Box,
   Card,
-  Center,
-  Flex,
-  Grid,
+  Center, Grid,
   GridItem,
   Image,
   Text,
   useMultiStyleConfig,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import League from "../../classes/custom/League";
 import LeagueMember from "../../classes/custom/LeagueMember";
-import TeamCardPFBarChart from "../charts/team_charts/TeamCardPFBarChart";
 import TrendingLineChart from "../charts/team_charts/TrendingLineChart";
 
 type MyProps = {
   league: League;
-  member: LeagueMember;
+  member: LeagueMember | undefined;
   variant: string;
   size: string;
 };
@@ -50,7 +47,7 @@ const TeamCard = (props: MyProps) => {
         <GridItem area={"linechart"}>
           <TrendingLineChart
             league={props.league}
-            memberId={props.member.roster.roster_id}
+            memberId={props.member?.roster.roster_id!}
           />
         </GridItem>
       </Grid>

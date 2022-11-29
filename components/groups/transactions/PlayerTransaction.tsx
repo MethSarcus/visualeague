@@ -33,8 +33,8 @@ export default function PlayerTransaction(props: MyProps) {
 
       />
       <Box>
-        <Heading fontSize="xs">{name}</Heading>
-        <Text fontSize={"xs"} fontWeight={"light"}>{position}</Text>
+        <Heading fontSize="sm">{name}</Heading>
+        <Text fontSize={"sm"} fontWeight={"normal"}>{position}</Text>
       </Box>
     </HStack>
   );

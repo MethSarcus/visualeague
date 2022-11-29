@@ -1,5 +1,5 @@
 import produce, { immerable } from "immer";
-import { LINEUP_POSITION, ordinal_suffix_of, POSITION } from "../../utility/rosterFunctions";
+import { LINEUP_POSITION, ordinal_suffix_of, POSITION, standardDeviation } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
@@ -333,6 +333,56 @@ export default class League {
     });
   }
 
+  getNotableMembers() {
+    let bestManager: LeagueMember
+    let worstManager: LeagueMember
+    let highestScoring: LeagueMember
+    let lowestScoring: LeagueMember
+    let mostConsistent: LeagueMember
+    let leastConsistent: LeagueMember
+
+
+    this.members.forEach((member, rosterId) => {
+      if (!bestManager) {
+        bestManager = member
+        worstManager = member
+        highestScoring = member
+        lowestScoring = member
+        mostConsistent = member
+        leastConsistent = member
+      } else {
+        if (member.stats.pf > highestScoring.stats.pf) {
+          highestScoring = member
+        }
+        if (member.stats.pf < lowestScoring.stats.pf) {
+          lowestScoring = member
+        }
+        if (member.stats.gp > bestManager.stats.gp) {
+          bestManager = member
+        }
+        if (member.stats.gp < worstManager.stats.gp) {
+          worstManager = member
+        }
+        
+        if (member.stats.stdDev < mostConsistent.stats.stdDev) {
+          mostConsistent = member
+        }
+        if (member.stats.stdDev > leastConsistent.stats.stdDev) {
+          leastConsistent = member
+        }
+      }
+    })
+
+    return {
+      bestManager: bestManager!,
+      worstManager: worstManager!,
+      highestScoring: highestScoring!,
+      lowestScoring: lowestScoring!,
+      mostConsistent: mostConsistent!,
+      leastConsistent: leastConsistent!
+    }
+  }
+
   recalcStats() {
     for (let [key, member] of this.members) {
       member.stats = new MemberScores();
@@ -513,6 +563,24 @@ export default class League {
         }
       });
     });
+
+    this.members.forEach(member => {
+      let allWeekScores: number[] = []
+      this.getAllWeeksForMember(member.roster.roster_id).forEach(matchup => {
+        allWeekScores.push(matchup.getMemberSide(member.roster.roster_id)?.pf!)
+      })
+      
+      member.stats.stdDev = standardDeviation(allWeekScores);
+    })
+  }
+
+  getAllWeeksForMember(rosterId: number) {
+    let allWeeks: Matchup[] = []
+    this.weeks.forEach((week, weekNumber) => {
+      allWeeks.push(week.getMemberMatchup(rosterId))
+    })
+
+    return allWeeks
   }
 }
 

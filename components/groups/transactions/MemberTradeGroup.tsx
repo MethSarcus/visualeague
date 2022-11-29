@@ -17,7 +17,7 @@ const MemberTradeGroup = (props: MyProps) => {
   return (
     <Box
       textColor={"white"}
-      overflowY={"scroll"}
+      overflowY={"auto"}
       color="white"
     >
       {props.league?.transactions &&

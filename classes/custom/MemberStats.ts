@@ -4,6 +4,7 @@ export default class MemberScores {
     public pf: number = 0
     public pa: number = 0
     public pp: number = 0
+    public stdDev: number = 0
     public opslap: number = 0
     public custom_points: number = 0
     public gp: number = 0

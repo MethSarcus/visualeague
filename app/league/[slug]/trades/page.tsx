@@ -1,5 +1,6 @@
 "use client"
 import {
+  Box,
   Container,
   Grid,
   GridItem,
@@ -32,12 +33,12 @@ import { Context } from "../../../../contexts/Context";
     if (context.transactions == undefined) return <Heading color={"white"}>Loading</Heading>;
   
     return (
-      <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
+      <Box maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
         <Grid
           templateAreas={[mobileTemplate, desktopTemplate]}
-          gap={2}
+          gap={0}
         >
-      <GridItem height={"500px"} area={'chart'} p={3}>
+      <GridItem height={"500px"} area={'chart'} p={10} m={0}>
         <TradeChordChart trades={context.transactions} />
       </GridItem>
       <GridItem  area="trades" >
@@ -57,7 +58,7 @@ import { Context } from "../../../../contexts/Context";
             })}
             </GridItem> */}
         </Grid>
-      </Container>
+      </Box>
     );
   };
   

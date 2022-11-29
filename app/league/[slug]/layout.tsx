@@ -65,7 +65,7 @@ export default function LeagueLayout({
               <Navbar leagueID={leagueId} />
             </GridItem>
 
-            <GridItem area={"main"} p={[0, 0, 4]} overflow={"scroll"}>
+            <GridItem area={"main"} p={[0, 0, 4]} overflowY={"auto"}>
               {children}
             </GridItem>
 
