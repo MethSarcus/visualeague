@@ -42,6 +42,11 @@ export const project_colors = {
     9: "rgb(208, 208, 208)",
     10: "rgb(226, 226, 226)",
   },
+  statColor: {
+    good: "rgb(151,245,143, .8)",
+    bad: "#B00020",
+    neutral: "rgb(56, 56, 56)"
+  },
   position: {
     QB: "rgba(239, 116, 161, 0.8)",
     RB: "rgba(143, 242, 202, 0.8)",

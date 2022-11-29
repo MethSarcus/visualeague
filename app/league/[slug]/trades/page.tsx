@@ -1,5 +1,6 @@
 "use client"
 import {
+  Box,
   Container,
   Grid,
   GridItem,
@@ -19,41 +20,30 @@ import { Context } from "../../../../contexts/Context";
     const [context, setContext] = useContext(Context)
     const fetcher = (url: string) => axios.get(url).then((res) => res.data);
     const leagueId = usePathname()?.replace("/league/","").replace("/trades", "");
-    console.log(leagueId)
+    const desktopTemplate = `
+    "chart chart trades trades"
+    "chart chart trades trades"
+    "chart chart trades trades"
+    "chart chart trades trades"`
+
+    const mobileTemplate = `
+    "chart chart chart chart"
+    "trades trades trades trades"`
   
-    const [trades, setTrades] = useState([]);
-    const { data: tradeData, error: tradeError } = useSWR(
-      leagueId != undefined ? `/api/trades/${leagueId}` : null,
-      fetcher
-    );
-  
-    useEffect(() => {
-      if (tradeData && tradeData.trades && context.settings != undefined) {
-        setTrades(tradeData.trades);
-      }
-    }, [context, tradeData, setTrades, trades]);
-  
-    if (tradeError) return <Heading color={"white"}>Failed to load</Heading>;
-    if (!tradeData) return <Heading color={"white"}>Loading...</Heading>;
+    if (context.transactions == undefined) return <Heading color={"white"}>Loading</Heading>;
   
     return (
-      <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
+      <Box maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
         <Grid
-          templateRows="repeat(6, 1fr)"
-          templateColumns="repeat(4, 1fr)"
-          templateAreas={`
-          "chart chart trades trades"
-          "chart chart trades trades"
-          "chart chart trades trades"
-          "chart chart trades trades"`}
-          gap={2}
+          templateAreas={[mobileTemplate, desktopTemplate]}
+          gap={0}
         >
-      <GridItem height={"500px"} area={'chart'}>
-        <TradeChordChart trades={trades} />
+      <GridItem height={"500px"} area={'chart'} p={10} m={0}>
+        <TradeChordChart trades={context.transactions} />
       </GridItem>
       <GridItem  area="trades" >
       <Container textColor={"white"} maxH={"50vh"} overflowY={"scroll"} color='white'>
-      {trades.map((trade: SleeperTransaction) => {
+      {context.transactions.map((trade: SleeperTransaction) => {
               return <TradeCard key={trade.transaction_id} trade={trade} />;
             })}
     </Container>
@@ -68,7 +58,7 @@ import { Context } from "../../../../contexts/Context";
             })}
             </GridItem> */}
         </Grid>
-      </Container>
+      </Box>
     );
   };
   

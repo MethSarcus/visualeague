@@ -10,16 +10,14 @@ interface MyProps {
 }
 
 export default function HomeStatGroup(props: MyProps) {
-
-    const pfStats = props.league?.getPfOrdinalStats?.()
-    const gpStats = props.league?.getGpOrdinalStats?.()
+    const notableMembers = props.league?.getNotableMembers?.()
     return (
         <SimpleGrid columns={2} spacing={3}>
         <GenericStatCard
           statName={"Best PF"}
           isLoaded = {props.league?.settings != undefined}
-          statValue={props.league?.getPfOrdinalStats?.()[0].stat}
-          statOwner={props.league?.getPfOrdinalStats?.()[0].name}
+          statValue={notableMembers?.highestScoring.stats.pf.toFixed(2)}
+          statOwner={notableMembers?.highestScoring.name}
           isGoodThing={true} />
 
 
@@ -27,8 +25,8 @@ export default function HomeStatGroup(props: MyProps) {
       <GenericStatCard
       isLoaded = {props.league?.settings != undefined}
         statName={"Best Manager"}
-        statValue={props.league?.getGpOrdinalStats?.().at(0)?.stat}
-        statOwner={props.league?.getGpOrdinalStats?.().at(0)?.name}
+        statValue={`${notableMembers?.bestManager.stats.gp.toFixed(2)} Gut Points`}
+        statOwner={notableMembers?.bestManager.name}
         isGoodThing={true}
       
       />
@@ -36,8 +34,8 @@ export default function HomeStatGroup(props: MyProps) {
       <GenericStatCard
         statName={"Worst PF"}
         isLoaded = {props.league?.settings != undefined}
-        statValue={props.league?.getPfOrdinalStats?.().at(-1)?.stat}
-        statOwner={props.league?.getPfOrdinalStats?.().at(-1)?.name}
+        statValue={notableMembers?.lowestScoring.stats.pf.toFixed(2)}
+        statOwner={notableMembers?.lowestScoring.name}
         isGoodThing={false}
         
       />
@@ -45,8 +43,8 @@ export default function HomeStatGroup(props: MyProps) {
       <GenericStatCard
         isLoaded = {props.league?.settings != undefined}
         statName={"Worst Manager"}
-        statValue={props.league?.getGpOrdinalStats?.().at(-1)?.stat}
-        statOwner={props.league?.getGpOrdinalStats?.().at(-1)?.name}
+        statValue={`${notableMembers?.worstManager.stats.gp.toFixed(2)} Gut Points`}
+        statOwner={notableMembers?.worstManager.name}
         isGoodThing={false}
         
       />

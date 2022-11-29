@@ -1,5 +1,5 @@
 import { Box, Spinner } from '@chakra-ui/react';
-import { ArcTooltipComponentProps, ResponsiveChord, RibbonTooltipComponentProps } from '@nivo/chord';
+import { ArcTooltipComponentProps, ResponsiveChord, RibbonTooltipComponentProps, ChordArcMouseHandler } from '@nivo/chord';
 import { BasicTooltip, Chip, TableTooltip } from '@nivo/tooltip';
 import React, { useContext } from 'react';
 import LeagueMember from '../../classes/custom/LeagueMember';
@@ -120,7 +120,6 @@ const TradeChordChart = (props: MyProps) => {
             tradeMap.forEach((numTrades: number, id) => {
                 teamTrades.push(numTrades)
             })
-            console.log(teamTrades)
             data.push(teamTrades)
           });
         return data 

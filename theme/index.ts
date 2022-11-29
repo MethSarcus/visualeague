@@ -67,6 +67,11 @@ const overrides = {
       mediumEmphasis: "#A0A0A0",
       disabled: "#6C6C6C"
     },
+    statColor: {
+      good: "rgb(151,245,143, .8)",
+      bad: "#B00020",
+      neutral: "rgb(56, 56, 56)"
+    },
     position: {
       QB: "rgba(239, 116, 161, 0.8)",
       RB: "rgba(143, 242, 202, 0.8)",

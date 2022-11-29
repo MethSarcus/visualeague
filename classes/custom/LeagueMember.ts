@@ -1,3 +1,4 @@
+import { LINEUP_POSITION, POSITION } from "../../utility/rosterFunctions";
 import { SleeperRoster } from "../sleeper/SleeperRoster";
 import { SleeperUser } from "../sleeper/SleeperUser";
 import MemberScores from "./MemberStats";
@@ -41,17 +42,27 @@ export default class LeagueMember {
     return firstValue;
   }
 
-  getNotablePlayers() {
-    let [highestScorer] = this.players.values()
-    let [leastConsistent] = this.players.values()
-    let [lowestAvgScorer] = this.players.values()
-    let [mostConsistent] = this.players.values()
-    let [mostAccuratePredictions] = this.players.values()
+
+  getNotablePlayers(filteredPositions: POSITION[] = []) {
+    let highestScorer: SeasonPlayer | null
+    let mostConsistent: SeasonPlayer
+    let leastConsistent: SeasonPlayer
+    let lowestAvgScorer: SeasonPlayer
+    let mostAccuratePredictions: SeasonPlayer
+    let leastAccuratePredictions: SeasonPlayer
 
     this.players.forEach((player, id) => {
-      if (player.weeks_played.length >= 2) {
-        player.calcAdvancedStats()
-        if (player.points_scored > highestScorer.points_scored) {
+      if (highestScorer == null && player.weeks_played.length >= 3 &&  !filteredPositions.includes(player.positions[0])) {
+        highestScorer = player
+        leastConsistent = player
+        lowestAvgScorer = player
+        mostConsistent = player
+        mostAccuratePredictions = player
+        leastAccuratePredictions = player
+      }
+      if (player.weeks_played.length >= 3) {
+        player.calcStats()
+        if (player.starter_points > highestScorer?.starter_points!) {
           highestScorer = player
         }
   
@@ -63,22 +74,27 @@ export default class LeagueMember {
           leastConsistent = player
         }
   
-        if (player.stdDev > 0 && player.stdDev < mostConsistent.stdDev) {
+        if (player.stdDev < mostConsistent.stdDev) {
           mostConsistent = player
         }
   
-        if (player.rootMeanSquareError < highestScorer.rootMeanSquareError && player.rootMeanSquareError > 0) {
+        if (player.rootMeanSquareError < mostAccuratePredictions.rootMeanSquareError && player.rootMeanSquareError > 0) {
           mostAccuratePredictions = player
+        }
+
+        if (player.rootMeanSquareError > leastAccuratePredictions.rootMeanSquareError && player.rootMeanSquareError > 0) {
+          leastAccuratePredictions = player
         }
       }
     })
 
     let notablePlayers = {
-      bestPlayer: highestScorer,
-      lowestAvgScorer: lowestAvgScorer,
-      leastConsistent: leastConsistent,
-      mostConsistent: mostConsistent,
-      mostAccuratePredictions: mostAccuratePredictions
+      bestPlayer: highestScorer!,
+      lowestAvgScorer: lowestAvgScorer!,
+      leastConsistent: leastConsistent!,
+      mostConsistent: mostConsistent!,
+      mostAccuratePredictions: mostAccuratePredictions!,
+      leastAccuratePredictions: leastAccuratePredictions!
     }
 
     return notablePlayers;

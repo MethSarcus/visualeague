@@ -21,13 +21,12 @@ export class Week {
     
           matchupIds.forEach((matchupPair: SleeperMatchup[], matchupId: number) => {
             if (matchupPair.length == 2) {
-                this.matchups.set(matchupId, new Matchup(new MatchupSide(matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings),
+                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings),
                 isPlayoffs,
-                new MatchupSide(matchupPair[1], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings)))
+                new MatchupSide(weekNumber, matchupPair[1], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings)))
             } else {
-                this.matchups.set(matchupId, new Matchup(new MatchupSide(matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings), isPlayoffs))
+                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings), isPlayoffs))
             }
-            
         });
     }
 
@@ -45,6 +44,17 @@ export class Week {
       })
 
       return teams
+    }
+
+    getMemberMatchup(rosterId: number): Matchup {
+      let memberMatchup;
+      this.matchups.forEach(matchup => {
+        if (matchup.homeTeam.roster_id == rosterId || matchup.awayTeam?.roster_id == rosterId) {
+          memberMatchup = matchup;
+        }
+      })
+
+      return memberMatchup as unknown as Matchup
     }
 
     getMemberMatchupSide(rosterId: number): MatchupSide {
