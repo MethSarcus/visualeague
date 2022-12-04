@@ -1,4 +1,5 @@
 import { ComponentStyleConfig } from "@chakra-ui/react";
+import { project_colors } from "../../utility/project_colors";
 
 const PositionBadge: ComponentStyleConfig = {
   // The styles all Cards have in common
@@ -31,6 +32,7 @@ const PositionBadge: ComponentStyleConfig = {
     DL: { bg: "position.DL" },
     LB: { bg: "position.LB" },
     DB: { bg: "position.DB" },
+    SLEEPER: { bg: project_colors.sleeper.badge_background}
   },
   // The default variant value
   defaultProps: {

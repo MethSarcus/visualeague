@@ -1,17 +1,21 @@
 "use client"
 import {
-  Avatar, Box, Button, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SkeletonCircle,
+  Avatar, Box, Button, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, position, Radio, RadioGroup, SkeletonCircle,
   SkeletonText,
+  Stack,
   Text,
   useDisclosure,
   VStack
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import League from "../../classes/custom/League";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import Matchup from "../../classes/custom/Matchup";
 import { Context } from "../../contexts/Context";
 import { project_colors } from "../../utility/project_colors";
+import { LINEUP_POSITION } from "../../utility/rosterFunctions";
 import MatchupHeader from "../sleeper/MatchupHeader";
+import PositionalMatchupContainer from "../sleeper/PositionalMatchupContainer";
 
 interface MyProps {
   matchup?: Matchup;
@@ -21,6 +25,7 @@ interface MyProps {
 export default function MatchupPreview(props: MyProps) {
   const [context, setContext] = useContext(Context);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [value, setValue] = useState('1')
   let opponentId;
 
   if (props.matchup?.homeTeam.roster_id == props.member?.roster.roster_id) {
@@ -100,8 +105,24 @@ export default function MatchupPreview(props: MyProps) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading>Starters</Heading>
-            
+          <RadioGroup onChange={setValue} value={value}>
+      <Stack direction='row'>
+        <Radio value='1'>First</Radio>
+        <Radio value='2'>Second</Radio>
+        <Radio value='3'>Third</Radio>
+      </Stack>
+    </RadioGroup>
+            <Text fontWeight={"bold"} fontSize={"1.5em"} color={project_colors.sleeper.text_normal}>Starters</Text>
+            {(context as League).settings.roster_positions?.filter(rosPos => rosPos != "BN").map((pos, index) => {
+            return <PositionalMatchupContainer key={index} position={pos as LINEUP_POSITION} homePlayer={props.matchup?.homeTeam.starters.at(index)!} awayPlayer={props.matchup?.awayTeam?.starters.at(index)!}/>
+            }) as any}
+
+            <Box>
+            <Text fontWeight={"bold"} fontSize={"1.5em"} color={project_colors.sleeper.text_normal}>Bench</Text>
+            {(context as League).settings.roster_positions?.filter(rosPos => rosPos == "BN").map((pos, index) => {
+            return <PositionalMatchupContainer key={index} position={pos as LINEUP_POSITION} homePlayer={props.matchup?.homeTeam.bench.at(index)!} awayPlayer={props.matchup?.awayTeam?.bench.at(index)!}/>
+            }) as any}
+            </Box>
           </ModalBody>
 
           <ModalFooter>

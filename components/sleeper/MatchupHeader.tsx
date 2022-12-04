@@ -44,7 +44,10 @@ export default function MatchupHeader(props: MyProps) {
 
   return (
     <ModalHeader>
-    <Center mt={6}>
+      <Center>
+        Week {props.matchup.weekNumber}
+      </Center>
+    <Center mt={2}>
       <MatchupHeaderTeam
                   matchupSide={props.matchup.homeTeam}
                   isWinner={homeTeamWon}
@@ -68,6 +71,7 @@ export default function MatchupHeader(props: MyProps) {
       <InvertedMatchupHeaderTeam
         variant={"inverted"}
         matchupSide={props.matchup.awayTeam!}
+        isWinner={!homeTeamWon}
         member={awayMember}
         size={"lg"}
       />

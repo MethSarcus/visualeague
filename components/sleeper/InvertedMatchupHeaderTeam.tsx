@@ -47,7 +47,8 @@ export default function InvertedMatchupHeaderTeam(props: MyProps) {
         mr={-2}
         mt={-7}
         size={"md"}
-        ringColor={ringColor}
+        borderColor={ringColor}
+        borderWidth={2}
         src={props.member?.teamAvatar}
       />
       <Box pr={1}
@@ -66,7 +67,7 @@ export default function InvertedMatchupHeaderTeam(props: MyProps) {
         >
           {props.member?.stats.wins}-{props.member?.stats.losses} {`[#${props.member?.stats.overall_rank}]`}
         </Text>
-        <Text fontWeight={"semibold"} mt={3} fontSize={".8em"} color={"#A7BAD0"} lineHeight="10px">
+        <Text fontWeight={"semibold"} mt={4} fontSize={".8em"} color={"#A7BAD0"} lineHeight="10px">
           @{props.member?.userDetails.display_name}
         </Text>
         <Text fontWeight={"semibold"} color={"white"}>
