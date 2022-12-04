@@ -1,24 +1,10 @@
+"use client"
 import {
-  Avatar,
-  background,
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Skeleton,
-  SkeletonCircle,
+  Avatar, Box, Button, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SkeletonCircle,
   SkeletonText,
   Text,
   useDisclosure,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import LeagueMember from "../../classes/custom/LeagueMember";
@@ -103,39 +89,12 @@ export default function MatchupPreview(props: MyProps) {
         <Text color={"textTheme.mediumEmphasis"}>{winningText}</Text>
       </Box>
 
-      <Modal size={"4xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={"rgb(43,48,65)"} color={"white"}>
+        <ModalContent bg={"#1A202E"} color={"white"}>
           <ModalHeader>
             <Center>
-              <MatchupHeader
-                username={props.member?.name!}
-                teamName={props.member?.userDetails.display_name!}
-                score={props.matchup?.homeTeam.pf.toFixed(2)!}
-                ringColor={shadowColor}
-                projectedScore={props.matchup?.homeTeam.projectedScore!}
-                avatarId={props.member?.avatar!}
-                isWinner={false}
-              />
-              <Box
-                zIndex={5}
-                bg={"rgb(41, 47, 64)"}
-                borderRadius={"full"}
-                mx={-5}
-                lineHeight={"24px"}
-                p={3}
-                fontWeight="bold"
-              >
-                VS
-              </Box>
-              <MatchupHeader
-                username={props.member?.name!}
-                teamName={props.member?.userDetails.display_name!}
-                score={props.matchup?.homeTeam.pf.toFixed(2)!}
-                projectedScore={props.matchup?.homeTeam.projectedScore!}
-                avatarId={props.member?.avatar!}
-                isWinner={false}
-                ringColor={""}
+              <MatchupHeader matchup={props.matchup!}              
               />
             </Center>
           </ModalHeader>

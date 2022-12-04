@@ -1,50 +1,77 @@
-import { Flex, Avatar, Spacer, Box, Text } from "@chakra-ui/react";
+"use client"
+import {
+  Flex,
+  Avatar,
+  Center,
+  Box,
+  Text,
+  useMultiStyleConfig,
+  ModalHeader,
+  Circle,
+} from "@chakra-ui/react";
+import { useContext } from "react";
+import LeagueMember from "../../classes/custom/LeagueMember";
+import Matchup from "../../classes/custom/Matchup";
+import { Context } from "../../contexts/Context";
+import { project_colors } from "../../utility/project_colors";
+import InvertedMatchupHeaderTeam from "./InvertedMatchupHeaderTeam";
+import MatchupHeaderTeam from "./MatchupHeaderTeam";
 
 interface MyProps {
-  username: string;
-  teamName: string;
-  score: string;
-  projectedScore: number;
-  inverted?: boolean;
-  avatarId: string;
-  isWinner: boolean
-  ringColor: string
+  matchup: Matchup;
 }
 
 export default function MatchupHeader(props: MyProps) {
+  const [context, setContext] = useContext(Context);
+  if (context.settings == undefined) return <ModalHeader><div>Loading</div></ModalHeader>
+  let homeTeam = props.matchup.homeTeam;
+  let awayTeam = props.matchup.awayTeam;
+  let homeTeamWon;
+  let homeMember;
+  let awayMember;
+
+  
+    homeMember = context.getMember(homeTeam.roster_id) as LeagueMember;
+    awayMember = context.getMember(awayTeam?.roster_id) as LeagueMember;
+  if (
+    props.matchup.winnerRosterId != homeMember?.roster.roster_id &&
+    !props.matchup.isTie
+  ) {
+    homeTeamWon = false;
+  } else if (!props.matchup.isTie) {
+    homeTeamWon = true;
+  }
+
   return (
-    <Flex
-      p={5}
-      borderRadius="15px"
-      border={"solid"}
-      borderWidth={"thin"}
-      borderColor={"rgb(56,62,80)"}
-      maxW={"sm"}
-      bg={"rgb(49,56,72)"}
-    >
-      <Avatar
-        ring={1}
-        ringColor={props.ringColor}
-        src={`https://sleepercdn.com/avatars/${props.avatarId}`}
-      />
-      <Box pl={2} alignItems={props.inverted ? "start" : "end"}>
-        <Text fontWeight={"light"} color={"textTheme.mediumEmphasis"}>
-          {props.username}
-        </Text>
-        <Text fontWeight={"semibold"} color={"textTheme.highEmphasis"}>
-          {props.teamName}
-        </Text>
-      </Box>
-      <Spacer />
-      <Text
-        mt="auto"
-        mb="auto"
-        fontWeight={"semibold"}
-        color={"textTheme.highEmphasis"}
-        mr={2}
+    <ModalHeader>
+    <Center mt={6}>
+      <MatchupHeaderTeam
+                  matchupSide={props.matchup.homeTeam}
+                  isWinner={homeTeamWon}
+                  member={homeMember}
+                  size={"sm"} variant={"default"}      />
+      <Circle
+        zIndex={5}
+        bg={"#1A202E"}
+        color={"#A7BAD0"}
+        size={"30px"}
+        fontSize={".7em"}
+        p={1}
+        mx={-3}
+        fontWeight="semibold"
       >
-        {props.score}
-      </Text>
-    </Flex>
+        <Center textAlign={"center"}>
+        VS
+        </Center>
+        
+      </Circle>
+      <InvertedMatchupHeaderTeam
+        variant={"inverted"}
+        matchupSide={props.matchup.awayTeam!}
+        member={awayMember}
+        size={"lg"}
+      />
+    </Center>
+    </ModalHeader>
   );
 }

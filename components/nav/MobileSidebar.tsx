@@ -31,7 +31,7 @@ import TeamsMobileMenuContainer from "./TeamsMobileMenuContainer";
           <DrawerContent bg={"surface.1"} textColor="white">
             <DrawerCloseButton />
             <DrawerHeader>
-            { context != undefined && context.settings && <Center><Avatar src={`https://sleepercdn.com/avatars/thumbs/${context.settings.avatar}`}/><Heading ml={1} size={"md"}>{context.settings.name}</Heading></Center>}
+            { context != undefined && context.settings && <Center><Avatar name={context.settings.name} src={`https://sleepercdn.com/avatars/thumbs/${context.settings.avatar}`}/><Heading ml={1} size={"md"}>{context.settings.name}</Heading></Center>}
               <br />
             </DrawerHeader>
             <DrawerBody>
