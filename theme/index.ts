@@ -1,4 +1,5 @@
 // theme/index.js
+"use client"
 import { extendTheme } from "@chakra-ui/react";
 
 // Global style overrides
@@ -10,6 +11,7 @@ import DraftPickCard from "./components/DarftPickCardTheme";
 import PositionBadge from "./components/PositionBadge";
 import FlexPositionBadge from "./components/FlexPositionBadge";
 import { borderRadius } from "./overrides/Layout";
+//import MatchupHeaderTeam from "./components/MatchupHeaderTeam";
 // import { borderRadius, sizes, spacing } from "./overrides/Layout";
 
 const overrides = {
@@ -22,7 +24,8 @@ const overrides = {
     Card,
     DraftPickCard,
     PositionBadge,
-    FlexPositionBadge
+    FlexPositionBadge,
+    //MatchupHeaderTeam
   },
   colors: {
     primary: {

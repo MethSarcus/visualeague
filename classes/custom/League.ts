@@ -63,6 +63,14 @@ export default class League {
     this.setLeagueStats();
   }
 
+  getMember(rosterId: string | number) {
+    if (typeof rosterId == "string") {
+      return this.members.get(parseInt(rosterId))
+    } else {
+      return this.members.get(rosterId)
+    }
+  }
+
   getMemberRank(memberId: number, statType: StatType) {
     let stats: LeagueMember[] = []
     this.members.forEach((member, rosterId) => {
@@ -571,6 +579,11 @@ export default class League {
       })
       
       member.stats.stdDev = standardDeviation(allWeekScores);
+      member.stats.win_pct = member.stats.wins / (member.stats.wins + member.stats.losses + member.stats.ties)
+    })
+
+    this.members.forEach(member => {
+      member.stats.overall_rank = this.getMemberRank(member.roster.roster_id, StatType.OVERALL)?.rank!
     })
   }
 
@@ -590,5 +603,6 @@ export enum StatType {
   PP = "pp",
   GP = "gp",
   OPSLAP = "opslap",
-  POWER_RANK = "power_wins"
+  POWER_RANK = "power_wins",
+  OVERALL = "win_pct"
 }

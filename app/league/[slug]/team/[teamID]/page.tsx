@@ -68,7 +68,7 @@ export default function TeamPage() {
           )}
         </GridItem>
         <GridItem overflowX={"auto"} area={"schedule"}>
-          <Flex >
+          <Flex>
             {matchups.map((matchup: Matchup) => {
               return <MatchupPreview key={`week_${matchup.weekNumber}_preview`} matchup={matchup} member={member}/>
             })}

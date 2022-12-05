@@ -10,6 +10,8 @@ export default class LeagueMember {
   public name: string;
   public userId: string;
   public avatar: string;
+  public teamAvatar?: string | undefined;
+  public teamName: string;
   public stats: MemberScores = new MemberScores();
   public tradeStats: Map<number, number> = new Map();
   public players: Map<string, SeasonPlayer> = new Map();
@@ -19,7 +21,23 @@ export default class LeagueMember {
     this.roster = roster;
     this.name = userDetails.display_name;
     this.userId = userDetails.user_id;
-    this.avatar = userDetails.avatar;
+    this.avatar = userDetails.avatar
+
+    if (userDetails.metadata.team_name != null) {
+      this.teamName = userDetails.metadata.team_name
+    } else {
+      this.teamName = `Team ${userDetails.display_name}`
+    }
+
+    if (userDetails.metadata.avatar != null) {
+      let teamAvatar = userDetails.metadata.avatar.split("/").at(-1)
+      if (teamAvatar != undefined && teamAvatar?.split(".").length > 1) {
+        teamAvatar = teamAvatar.split(".").at(0)
+      }
+      this.teamAvatar = `https://sleepercdn.com/uploads/${teamAvatar}`
+    } else {
+      this.teamAvatar = `https://sleepercdn.com/avatars/${userDetails.avatar}`
+    }
   }
 
   getBestPlayer() {

@@ -43,8 +43,8 @@ export const project_colors = {
     10: "rgb(226, 226, 226)",
   },
   statColor: {
-    good: "rgb(151,245,143, .8)",
-    bad: "#B00020",
+    good: "rgb(121,229,172, 1)",
+    bad: "rgb(234,67,111, 1)",
     neutral: "rgb(56, 56, 56)"
   },
   position: {
@@ -56,7 +56,17 @@ export const project_colors = {
     DB: "rgba(254, 160, 202, 0.8)",
     LB: "rgba(174, 182, 252, 0.8)",
     K: "#7988a1",
-    DEF: "#bd66ff"
+    DEF: "#bd66ff",
+    BN: "#A7BAD0"
+  },
+  sleeper: {
+   light_card: "#43495A",
+   background_dark: "#1A202E" ,
+   text_normal: "#FBFBFB",
+   text_grey: "#A7BAD0",
+   text_dark: "#96A2B6",
+   badge_background: "#42495B",
+   border_color: "#2F3241"
   }
 };
 
