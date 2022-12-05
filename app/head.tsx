@@ -1,10 +1,11 @@
 export default async function Head() {
-    return (
-      <>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>VisuaLeague</title>
+  return (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>VisuaLeague</title>
       <meta name="Visualize your league" content="Created by Seth Marcus" />
       <meta name="theme-color" content="#1a2232" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
       <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -43,6 +44,6 @@ export default async function Head() {
         href="/favicons/favicon-512x512.png"
       />
       <link rel="icon" href="/favicon.ico" />
-      </>
-    )
-    }  
+    </>
+  );
+}

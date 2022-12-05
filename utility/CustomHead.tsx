@@ -6,7 +6,7 @@ export default function CustomHead() {
       <title>VisuaLeague</title>
       <meta name="Visualize your league" content="Created by Seth Marcus" />
       <meta name="theme-color" content="#1a2232" />
-      {/* <link
+      <link
         rel="apple-touch-icon"
         sizes="180x180"
         href="/favicons/apple-touch-icon.png"
@@ -42,7 +42,7 @@ export default function CustomHead() {
         type="image/png"
         sizes="512x512"
         href="/favicons/favicon-512x512.png"
-      /> */}
+      />
       <link rel="icon" href="/favicon.ico" />
     </Head>
   );
