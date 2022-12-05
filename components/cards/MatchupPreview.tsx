@@ -105,19 +105,12 @@ export default function MatchupPreview(props: MyProps) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          <RadioGroup onChange={setValue} value={value}>
-      <Stack direction='row'>
-        <Radio value='1'>First</Radio>
-        <Radio value='2'>Second</Radio>
-        <Radio value='3'>Third</Radio>
-      </Stack>
-    </RadioGroup>
             <Text fontWeight={"bold"} fontSize={"1.5em"} color={project_colors.sleeper.text_normal}>Starters</Text>
             {(context as League).settings.roster_positions?.filter(rosPos => rosPos != "BN").map((pos, index) => {
             return <PositionalMatchupContainer key={index} position={pos as LINEUP_POSITION} homePlayer={props.matchup?.homeTeam.starters.at(index)!} awayPlayer={props.matchup?.awayTeam?.starters.at(index)!}/>
             }) as any}
 
-            <Box>
+            <Box mt={8}>
             <Text fontWeight={"bold"} fontSize={"1.5em"} color={project_colors.sleeper.text_normal}>Bench</Text>
             {(context as League).settings.roster_positions?.filter(rosPos => rosPos == "BN").map((pos, index) => {
             return <PositionalMatchupContainer key={index} position={pos as LINEUP_POSITION} homePlayer={props.matchup?.homeTeam.bench.at(index)!} awayPlayer={props.matchup?.awayTeam?.bench.at(index)!}/>
