@@ -96,7 +96,7 @@ export default function MatchupPreview(props: MyProps) {
 
       <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={"#1A202E"} color={"white"}>
+        <ModalContent bg={"#1A202E"} color={"white"} overflowX={"hidden"}>
           <ModalHeader>
             <Center>
               <MatchupHeader matchup={props.matchup!}              
@@ -119,10 +119,9 @@ export default function MatchupPreview(props: MyProps) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button variant="outline" colorScheme={"secondary"} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

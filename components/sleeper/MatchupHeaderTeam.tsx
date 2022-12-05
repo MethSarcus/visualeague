@@ -65,7 +65,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
         >
           {props.member?.stats.wins}-{props.member?.stats.losses} {`[#${props.member?.stats.overall_rank}]`}
         </Text>
-        <Text fontWeight={"semibold"} mt={4} fontSize={".8em"} color={"#A7BAD0"} lineHeight="10px">
+        <Text fontWeight={"semibold"} mt={6} fontSize={".8em"} color={"#A7BAD0"} lineHeight="10px">
           @{props.member?.userDetails.display_name}
         </Text>
         <Text fontWeight={"semibold"} color={"white"}>
