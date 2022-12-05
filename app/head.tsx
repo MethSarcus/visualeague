@@ -4,7 +4,7 @@ export default async function Head() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>VisuaLeague</title>
       <meta name="Visualize your league" content="Created by Seth Marcus" />
-      <meta name="theme-color" content="#1a2232" />
+      <meta name="theme-color" content="#121212" />
       <link
         rel="apple-touch-icon"
         sizes="180x180"
