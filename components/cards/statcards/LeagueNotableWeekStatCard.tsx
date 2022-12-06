@@ -1,36 +1,13 @@
 "use client";
 import {
   Avatar,
-  Box,
-  Center,
-  Container,
-  Flex,
-  Text,
-  SkeletonCircle,
-  SkeletonText,
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
+  Box, Button, Center, Modal, ModalOverlay, Text, useDisclosure
 } from "@chakra-ui/react";
 import { useContext } from "react";
-import League from "../../../classes/custom/League";
 import Matchup from "../../../classes/custom/Matchup";
-import { MatchupSide } from "../../../classes/custom/MatchupSide";
-import { SleeperPlayerDetails } from "../../../classes/custom/Player";
-import SeasonPlayer from "../../../classes/custom/SeasonPlayer";
-import { Week } from "../../../classes/custom/Week";
 import { Context } from "../../../contexts/Context";
 import { project_colors } from "../../../utility/project_colors";
-import { LINEUP_POSITION } from "../../../utility/rosterFunctions";
-import LineupPieChart from "../../charts/LineupPieChart";
-import MatchupHeader from "../../sleeper/MatchupHeader";
-import PositionalMatchupContainer from "../../sleeper/PositionalMatchupContainer";
+import MatchupModalBody from "../../MatchupModalBody";
 
 type MyProps = {
   matchup: Matchup | undefined;
@@ -38,6 +15,7 @@ type MyProps = {
   title: String | undefined;
   mainStat: String | undefined;
   subStat?: String | undefined;
+  subSubStat?: String | undefined;
 
   isLoaded: boolean;
 };
@@ -45,6 +23,24 @@ type MyProps = {
 const LeagueNotableWeekStatCard = (props: MyProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [context, setContext] = useContext(Context);
+  let homeMember;
+  let awayMember;
+
+  if (context?.settings != undefined) {
+    homeMember = context.members.get(props.matchup?.homeTeam.roster_id);
+    awayMember = context.members.get(props.matchup?.awayTeam?.roster_id);
+  }
+  let homeColor = project_colors.statColor.neutral;
+  let awayColor = project_colors.statColor.neutral;
+  if (props.matchup?.homeTeam.roster_id == props.matchup?.winnerRosterId) {
+    homeColor = project_colors.statColor.good;
+    awayColor = project_colors.statColor.bad;
+  } else if (
+    props.matchup?.homeTeam.roster_id != props.matchup?.winnerRosterId
+  ) {
+    homeColor = project_colors.statColor.bad;
+    awayColor = project_colors.statColor.good;
+  }
   return (
     <>
       <Box
@@ -60,7 +56,7 @@ const LeagueNotableWeekStatCard = (props: MyProps) => {
       >
         <Box
           fontWeight="bold"
-          fontSize={"1.2em"}
+          fontSize={"1em"}
           color={"textTheme.highEmphasis"}
         >
           {props.title}
@@ -68,20 +64,43 @@ const LeagueNotableWeekStatCard = (props: MyProps) => {
         <Text
           fontSize={".8em"}
           fontWeight="light"
+          mt={2}
           color={"textTheme.mediumEmphasis"}
         >
-          {props.subStat}
+          Week {props.matchup?.weekNumber}
         </Text>
-        <Text
-          fontSize={".9em"}
-          fontWeight={"medium"}
-          color={"textTheme.highEmphasis"}
-        >
+        <Center>
+          <Avatar
+            borderColor={homeColor}
+            borderWidth={2}
+            size={"md"}
+            src={`https://sleepercdn.com/avatars/thumbs/${homeMember?.avatar}`}
+          />
+          <Text
+            color={project_colors.sleeper.text_normal}
+            fontSize={".7em"}
+            mx={2}
+          >
+            vs
+          </Text>
+          <Avatar
+            borderColor={awayColor}
+            borderWidth={2}
+            size={"md"}
+            src={`https://sleepercdn.com/avatars/thumbs/${awayMember?.avatar}`}
+          />
+        </Center>
+
+        <Text fontSize={".8em"} color={"textTheme.highEmphasis"}>
           {props.mainStat}
+        </Text>
+        <Text fontSize={".7em"} color={"textTheme.highEmphasis"}>
+          {props.subSubStat}
         </Text>
         <Button
           my={2}
-          variant={"outline"}
+          onClick={onOpen}
+          variant={"ghost"}
           colorScheme={"secondary"}
           size={"xs"}
         >
@@ -91,71 +110,7 @@ const LeagueNotableWeekStatCard = (props: MyProps) => {
 
       <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={"#1A202E"} color={"white"} overflowX={"hidden"}>
-          <ModalHeader>
-            <Center>
-              <MatchupHeader matchup={props.matchup!} />
-            </Center>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text
-              fontWeight={"bold"}
-              fontSize={"1.5em"}
-              color={project_colors.sleeper.text_normal}
-            >
-              Starters
-            </Text>
-            {
-              (context as League).settings.roster_positions
-                ?.filter((rosPos) => rosPos != "BN")
-                .map((pos, index) => {
-                  return (
-                    <PositionalMatchupContainer
-                      key={index}
-                      position={pos as LINEUP_POSITION}
-                      homePlayer={props.matchup?.homeTeam.starters.at(index)!}
-                      awayPlayer={props.matchup?.awayTeam?.starters.at(index)!}
-                    />
-                  );
-                }) as any
-            }
-
-            <Box mt={8}>
-              <Text
-                fontWeight={"bold"}
-                fontSize={"1.5em"}
-                color={project_colors.sleeper.text_normal}
-              >
-                Bench
-              </Text>
-              {
-                (context as League).settings.roster_positions
-                  ?.filter((rosPos) => rosPos == "BN")
-                  .map((pos, index) => {
-                    return (
-                      <PositionalMatchupContainer
-                        key={index}
-                        position={pos as LINEUP_POSITION}
-                        homePlayer={props.matchup?.homeTeam.bench.at(index)!}
-                        awayPlayer={props.matchup?.awayTeam?.bench.at(index)!}
-                      />
-                    );
-                  }) as any
-              }
-            </Box>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              variant="outline"
-              colorScheme={"secondary"}
-              onClick={onClose}
-            >
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+        <MatchupModalBody matchup={props.matchup} onClose={onClose} />
       </Modal>
     </>
   );

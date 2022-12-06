@@ -42,6 +42,7 @@ export default function LeaguePage() {
         my={2}
         templateAreas={`  "header header header"
                           "pfStats pfStats pfStats"
+                          "weekStats weekStats weekStats"
                           "pfTable pfTable pfTable"
                           "pfChart pfChart pfChart"`}
         gridTemplateColumns={"1fr 1fr 1fr"}
@@ -70,14 +71,6 @@ export default function LeaguePage() {
           <Collapse startingHeight={"10%"} in={show}>
             <LeagueOverviewDataTable league={context} />
           </Collapse>
-          <GridItem area={"playerStats"} overflowX={"clip"}>
-          <Text mb={2} textColor={"textTheme.mediumEmphasis"}>
-            Week Stats
-          </Text>
-          <Box overflowX={"auto"}>
-            <LeagueNotableWeeksStatGroup league={context}/>
-          </Box>
-        </GridItem>
           <Flex
             dropShadow={"2xl"}
             boxShadow="2xl"
@@ -101,6 +94,14 @@ export default function LeaguePage() {
               <BarChart league={context} />
             </Box>
           )}
+        </GridItem>
+        <GridItem area={"weekStats"} overflowX={"clip"}>
+          <Text mb={2} textColor={"textTheme.mediumEmphasis"}>
+            Week Stats
+          </Text>
+          <Box overflowX={"auto"}>
+            <LeagueNotableWeeksStatGroup league={context} />
+          </Box>
         </GridItem>
         <GridItem area={"pfChart"}></GridItem>
       </Grid>
