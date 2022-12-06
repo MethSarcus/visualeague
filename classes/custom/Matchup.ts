@@ -5,7 +5,9 @@ export default class Matchup {
   homeTeam: MatchupSide;
   awayTeam?: MatchupSide;
   winnerRosterId: number;
+  loserRosterId?: number;
   projectedWinnerRosterId: number;
+  projectedLoserRosterId?: number;
   matchup_id: number;
   isTie: boolean = false;
   isByeWeek: boolean;
@@ -28,8 +30,11 @@ export default class Matchup {
       this.isByeWeek = false;
       this.winnerRosterId =
         homeScore > awayScore ? homeTeam.roster_id : awayTeam.roster_id;
-      this.projectedWinnerRosterId =
-        homeTeam.projectedScore > awayTeam.projectedScore
+      this.loserRosterId =
+        homeScore < awayScore ? homeTeam.roster_id : awayTeam.roster_id;
+      this.projectedWinnerRosterId = homeTeam.projectedScore > awayTeam.projectedScore ? homeTeam.roster_id : awayTeam.roster_id;
+      this.projectedLoserRosterId =
+        homeTeam.projectedScore < awayTeam.projectedScore
           ? homeTeam.roster_id
           : awayTeam.roster_id;
       this.isTie = homeScore == awayScore ? true : false;
@@ -42,6 +47,28 @@ export default class Matchup {
 
   public getMargin() {
     return Math.abs(this.homeTeam.pf - this.awayTeam?.pf!);
+  }
+
+  public getWinner() {
+    let winner = this.homeTeam
+    if (this.homeTeam.roster_id != this.winnerRosterId) {
+      winner = this.awayTeam!
+    }
+
+    return winner
+  }
+
+  public getLoser() {
+    let loser = this.homeTeam
+    if (this.homeTeam.roster_id == this.winnerRosterId) {
+      loser = this.awayTeam!
+    }
+
+    return loser
+  }
+
+  public getCombinedScore() {
+    return this.homeTeam.pf + (this.awayTeam?.pf ?? 0)
   }
 
   public getMemberSide(rosterId: number) {

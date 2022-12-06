@@ -5,23 +5,27 @@ import { MatchupSide } from "../../classes/custom/MatchupSide";
 import { project_colors } from "../../utility/project_colors";
 
 interface MyProps {
-  league: League;
+  league: League | undefined;
 }
 
 const PowerRankingBumpChart = (props: MyProps) => {
-  let data = formatScoresForBumpChart(props.league) as any;
+  let data
+  
+  if (props.league?.settings != undefined) {
+    data = formatScoresForBumpChart(props.league) as any;
+  }
   const theme = {
     background: project_colors.surface[1],
     textColor: "white",
   };
 
-  if (data.length <= 0) return <Spinner />;
+  if (data == undefined || data.length <= 0) return <Spinner />;
 
   return (
     <ResponsiveAreaBump
       data={data}
       theme={theme}
-      margin={{ top: 60, right: 200, bottom: 40, left: 200 }}
+      margin={{ top: 60, right: 20, bottom: 40, left: 20 }}
       spacing={5}
       colors={{ scheme: "nivo" }}
       blendMode="multiply"

@@ -71,6 +71,17 @@ export default class League {
     }
   }
 
+  getRosterIdByName(name: string): LeagueMember | void {
+    let leagueMember;
+    this.members.forEach(member => {
+      if (member.name == name) {
+        leagueMember = member
+      }
+    })
+
+    return leagueMember
+  }
+
   getMemberRank(memberId: number, statType: StatType) {
     let stats: LeagueMember[] = []
     this.members.forEach((member, rosterId) => {
@@ -238,6 +249,65 @@ export default class League {
       );
       this.weeks.set(weekNum, week);
     });
+  }
+
+  getLeagueNotableWeeks() {
+    let matchupForBestTeam: Matchup | undefined = undefined
+    let matchupForWorstTeam: Matchup | undefined = undefined
+    let closestGame: Matchup | undefined = undefined
+    let furthestGame: Matchup | undefined = undefined
+    let biggestShootout: Matchup | undefined = undefined //highest combined score
+    let smallestShootout: Matchup | undefined = undefined
+    this.weeks.forEach((week) => {
+      week.matchups.forEach(matchup => {
+        if (matchup != undefined) {
+          if (matchupForBestTeam == undefined) {
+            matchupForBestTeam = matchup
+            matchupForWorstTeam = matchup
+            closestGame = matchup
+            furthestGame = matchup
+            biggestShootout = matchup
+            smallestShootout = matchup
+          } else {
+            let homeTeam = matchup.homeTeam
+            let awayTeam = matchup.awayTeam
+            if (awayTeam) {
+              let highScore = matchup.getMemberSide(matchup.winnerRosterId)?.pf
+              let lowScore = matchup.getMemberSide(matchup.loserRosterId!)?.pf
+              let margin = matchup.getMargin()
+              let combinedScore = homeTeam.pf + (awayTeam?.pf ?? 0);
+
+              if (highScore! >  matchupForBestTeam?.getWinner()!.pf) {
+                matchupForBestTeam = matchup
+              }
+
+              if (lowScore! <  matchupForBestTeam?.getLoser()!.pf) {
+                matchupForWorstTeam = matchup
+              }
+
+              if (margin <  closestGame?.getMargin()!) {
+                closestGame = matchup
+              }
+      
+              if (margin >  furthestGame?.getMargin()!) {
+                furthestGame = matchup
+              }
+      
+              if (combinedScore >  biggestShootout?.getCombinedScore()!) {
+                biggestShootout = matchup
+              }
+      
+              if (combinedScore <  smallestShootout?.getCombinedScore()! && !matchup.isByeWeek) {
+                smallestShootout = matchup
+              }
+            }
+          }
+        }
+      })
+
+    })
+
+    return {matchupForBestTeam: matchupForBestTeam, matchupForWorstTeam: matchupForWorstTeam, closestGame: closestGame, furthestGame: furthestGame, biggestShootout: biggestShootout, smallestShootout: smallestShootout}
   }
 
   getMemberNotableWeeks(rosterId: number) {
