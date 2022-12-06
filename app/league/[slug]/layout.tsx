@@ -22,9 +22,14 @@ export default function LeagueLayout({
     leagueId = leagueId.replace("/trades", "");
   }
 
+  if (leagueId?.includes("/ranks")) {
+    leagueId = leagueId.replace("/ranks", "");
+  }
+
   if (leagueId?.includes("/team")) {
     leagueId = leagueId.split("/team")[0];
   }
+
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
   const { data: leagueData, error: leagueError } = useSWR(

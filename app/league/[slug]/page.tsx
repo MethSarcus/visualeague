@@ -4,6 +4,7 @@ import {
   Button,
   Collapse,
   Container,
+  Text,
   Flex,
   Grid,
   GridItem,
@@ -24,6 +25,8 @@ import HomeStatGroup from "../../../components/groups/stats/HomeStatGroup";
 import LeagueOverviewDataTable from "../../../components/tables/LeagueOverviewDatatable";
 import { Context } from "../../../contexts/Context";
 import BarChart from "../../../components/charts/PFBarChart";
+import TeamPlayerStatGroup from "../../../components/groups/stats/TeamPlayerStatGroup";
+import LeagueNotableWeeksStatGroup from "../../../components/groups/stats/LeagueWeekGroup";
 
 export default function LeaguePage() {
   const [show, setShow] = useState(false);
@@ -67,6 +70,14 @@ export default function LeaguePage() {
           <Collapse startingHeight={"10%"} in={show}>
             <LeagueOverviewDataTable league={context} />
           </Collapse>
+          <GridItem area={"playerStats"} overflowX={"clip"}>
+          <Text mb={2} textColor={"textTheme.mediumEmphasis"}>
+            Week Stats
+          </Text>
+          <Box overflowX={"auto"}>
+            <LeagueNotableWeeksStatGroup league={context}/>
+          </Box>
+        </GridItem>
           <Flex
             dropShadow={"2xl"}
             boxShadow="2xl"
