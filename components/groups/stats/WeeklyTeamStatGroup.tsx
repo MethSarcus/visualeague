@@ -3,8 +3,8 @@ import { HStack } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
 import Matchup from "../../../classes/custom/Matchup";
 import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
-import WeekStatCard from "../../cards/statcards/WeekStatCard";
-import WeekStatWithLineupChartCard from "../../cards/statcards/WeekStatCard";
+import MemberWeekStatCard from "../../cards/statcards/MemberWeekStatCard";
+import WeekStatWithLineupChartCard from "../../cards/statcards/MemberWeekStatCard";
 
 interface MyProps {
   league?: League;
@@ -41,7 +41,7 @@ export default function TeamStatGroup(props: MyProps) {
         isGoodThing={undefined}
       /> */}
 
-      <WeekStatCard
+      <MemberWeekStatCard
         title={"Best Week"}
         isLoaded={props.league?.settings != undefined}
         matchupSide={bestWeek}
@@ -49,7 +49,7 @@ export default function TeamStatGroup(props: MyProps) {
         mainStat={`${bestWeek?.pf.toFixed(2)} PF`}
         subStat={`Week ${bestWeek?.weekNumber}`}
       />
-      <WeekStatCard
+      <MemberWeekStatCard
         title={"Worst Week"}
         isLoaded={props.league?.settings != undefined}
         matchupSide={worstWeek}
@@ -57,7 +57,7 @@ export default function TeamStatGroup(props: MyProps) {
         mainStat={`${worstWeek?.pf.toFixed(2)} PF`}
         subStat={`Week ${worstWeek?.weekNumber}`}
       />
-      <WeekStatCard
+      <MemberWeekStatCard
         title={"Closest Matchup"}
         isLoaded={props.league?.settings != undefined}
         matchupSide={closestMatchup?.getMemberSide(props.memberId)}
@@ -65,7 +65,7 @@ export default function TeamStatGroup(props: MyProps) {
         mainStat={`${closestMatchup?.getMargin().toFixed(2)} Diff`}
         subStat={`Week ${closestMatchup?.weekNumber}`}
       />
-      <WeekStatCard
+      <MemberWeekStatCard
         title={"Furthest Matchup"}
         isLoaded={props.league?.settings != undefined}
         matchupSide={furthestMatchup?.getMemberSide(props.memberId)}
