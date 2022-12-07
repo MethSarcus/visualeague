@@ -24,7 +24,6 @@ type MyProps = {
 const TeamCard = (props: MyProps) => {
   const { variant, size, ...rest } = props;
   const styles = useMultiStyleConfig("LeagueCard", { variant, size });
-  const router = useRouter();
 
   return (
     <Card boxShadow={"lg"} rounded={"md"} bg="surface.0" textColor={"white"}>

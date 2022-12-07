@@ -35,26 +35,22 @@ export default function MatchupPreview(props: MyProps) {
   }
 
   let shadowColor = project_colors.statColor.neutral;
-  let winningText = "";
   if (props.member != undefined && props.matchup && !props.matchup?.isTie) {
     if (props.matchup?.winnerRosterId == props?.member.roster.roster_id) {
-      winningText = "win";
       shadowColor = project_colors.statColor.good;
     } else {
-      winningText = "loss";
       shadowColor = project_colors.statColor.bad;
     }
   }
 
   return (
     <>
-      <Box fontSize={"xs"} p={0} textAlign={"center"}>
+      <Box fontSize={"xs"} p={0} py={1} textAlign={"center"}>
         <Text color={"textTheme.mediumEmphasis"}>
           Week {props.matchup?.weekNumber}
         </Text>
         <VStack
-          w={"100px"}
-          h={"70px"}
+          w={"125px"}
           spacing={0}
           m={1}
           p={2}
@@ -86,12 +82,14 @@ export default function MatchupPreview(props: MyProps) {
             isLoaded={props.member != undefined}
             noOfLines={1}
           >
-            <Text fontSize={"xx-small"} color={"textTheme.highEmphasis"}>
+            <Text fontSize={"xs"} letterSpacing={"wide"} color={"textTheme.highEmphasis"}>
               {context?.members.get(opponentId).name}
             </Text>
+
           </SkeletonText>
+          <Text pt={1} fontWeight={"semibold"} color={shadowColor} letterSpacing={"wide"}>view</Text>
         </VStack>
-        <Text color={"textTheme.mediumEmphasis"}>{winningText}</Text>
+        
       </Box>
 
       <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>

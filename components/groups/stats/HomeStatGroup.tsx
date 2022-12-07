@@ -12,7 +12,7 @@ interface MyProps {
 export default function HomeStatGroup(props: MyProps) {
     const notableMembers = props.league?.getNotableMembers?.()
     return (
-        <SimpleGrid columns={2} spacing={3}>
+        <SimpleGrid columns={2} spacing={3} height={"full"}>
         <GenericStatCard
           statName={"Best PF"}
           isLoaded = {props.league?.settings != undefined}
