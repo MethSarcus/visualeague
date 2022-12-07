@@ -50,6 +50,7 @@ const LeagueNotableWeekStatCard = (props: MyProps) => {
         textAlign={"center"}
         border={"1px"}
         borderRadius={4}
+        bg={"surface.0"}
         boxShadow={"2xl"}
         minWidth={"150px"}
         minHeight={"125px"}
@@ -63,8 +64,8 @@ const LeagueNotableWeekStatCard = (props: MyProps) => {
         </Box>
         <Text
           fontSize={".8em"}
-          fontWeight="light"
-          mt={2}
+          fontWeight="normal"
+          mt={1}
           color={"textTheme.mediumEmphasis"}
         >
           Week {props.matchup?.weekNumber}

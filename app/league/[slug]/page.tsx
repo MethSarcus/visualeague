@@ -34,18 +34,25 @@ export default function LeaguePage() {
   const [context, setContext] = useContext(Context);
   const leagueId = usePathname()?.replace("/league/", "");
 
+  const desktopGrid = `"header header header"
+                      "pfStats weekStats weekStats"
+                      "pfTable pfTable pfTable"
+                      "pfChart pfChart pfChart"`;
+
+  const mobileGrid = `"header"
+                      "pfStats"
+                      "weekStats"
+                      "pfTable"
+                      "pfChart"`;
+
   return (
     <Box overflowX={"hidden"}>
       <Grid
         gap={3}
         mx={4}
         my={2}
-        templateAreas={`  "header header header"
-                          "pfStats pfStats pfStats"
-                          "weekStats weekStats weekStats"
-                          "pfTable pfTable pfTable"
-                          "pfChart pfChart pfChart"`}
-        gridTemplateColumns={"1fr 1fr 1fr"}
+        templateAreas={[mobileGrid, desktopGrid]}
+        gridTemplateColumns={["1fr", "1fr 1fr 1fr"]}
       >
         <GridItem area={"header"}>
           <Skeleton
@@ -96,82 +103,12 @@ export default function LeaguePage() {
           )}
         </GridItem>
         <GridItem area={"weekStats"} overflowX={"clip"}>
-          <Text mb={2} textColor={"textTheme.mediumEmphasis"}>
-            Week Stats
-          </Text>
           <Box overflowX={"auto"}>
             <LeagueNotableWeeksStatGroup league={context} />
           </Box>
         </GridItem>
         <GridItem area={"pfChart"}></GridItem>
       </Grid>
-
-      {/* {context.settings != undefined && <NumericalAvatarGroup statTitle="Points Scored" avatars={context.getPfOrdinalStats()} />}
-
-      {context.settings != undefined && <GenericStatCard statName={"Best PF"} statValue={"111"} statOwner={"person"}/>} */}
-
-      {/* {context.settings != undefined && (
-        <Tabs
-          overflowX={'hidden'}
-          isFitted
-          variant={"line"}
-          textColor={"white"}
-          maxWidth={"100vw"}
-        >
-          <TabList>
-            <Tab>Basic Stats</Tab>
-            <Tab>Advanced Stats</Tab>
-            <Tab>Trades</Tab>
-          </TabList>
-
-          <TabPanels textColor="black">
-            <TabPanel px={[0, "auto"]} mx={[0.5, "auto"]}>
-              <Container maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
-                <Grid templateRows="12" templateColumns="12" gap={4}>
-                  <GridItem height={"500px"} colSpan={12} textColor="black">
-                    <BarChart league={context} />
-                  </GridItem>
-                  <GridItem
-                    height={"350px"}
-                    colSpan={[12, 6]}
-                    textColor="black"
-                  >
-                    <LineChart league={context} />
-                  </GridItem>
-                  <GridItem
-                    height={"350px"}
-                    colSpan={[12, 6]}
-                    textColor="black"
-                  >
-                    <TeamRadarChart league={context} />
-                  </GridItem>
-                </Grid>
-              </Container>
-            </TabPanel>
-
-            <TabPanel>
-              <Container maxW={"container.xl"}>
-                <Grid templateRows="12" templateColumns="12" gap={4}>
-                  <GridItem colSpan={8} height={"500px"}>
-                    <MemberSkillScatterPlot league={context} />
-                  </GridItem>
-                  <GridItem colSpan={6} height={"500px"}>
-                    <PFRadialBarChart league={context} />
-                  </GridItem>
-                  <GridItem colSpan={3} height={"500px"}>
-                    <LineupPieChart
-                      players={
-                        context.weeks.get(1).matchups.get(1).homeTeam.starters
-                      }
-                      playerDetails={context.playerDetails}
-                    />
-                  </GridItem>
-                </Grid>
-              </Container>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      )} */}
     </Box>
   );
 }

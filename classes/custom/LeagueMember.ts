@@ -34,9 +34,9 @@ export default class LeagueMember {
       if (teamAvatar != undefined && teamAvatar?.split(".").length > 1) {
         teamAvatar = teamAvatar.split(".").at(0)
       }
-      this.teamAvatar = `https://sleepercdn.com/uploads/${teamAvatar}`
+      this.teamAvatar = `https://sleepercdn.com/avatars/thumbs/${teamAvatar}`
     } else {
-      this.teamAvatar = `https://sleepercdn.com/avatars/${userDetails.avatar}`
+      this.teamAvatar = `https://sleepercdn.com/avatars/thumbs/${userDetails.avatar}`
     }
   }
 

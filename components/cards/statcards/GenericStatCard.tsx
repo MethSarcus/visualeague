@@ -25,20 +25,20 @@ const GenericStatCard = (props: MyProps) => {
             <SkeletonText noOfLines={3} spacing={1} isLoaded={props.isLoaded}>
               <Box
                 fontWeight="bold"
-                fontSize={".7em"}
+                fontSize={[".7em", "1em"]}
                 color={"textTheme.highEmphasis"}
               >
                 {props.statName}
               </Box>
               <Box
-                fontSize={".9em"}
+                fontSize={[".9em", "1em"]}
                 fontWeight={"medium"}
                 color={"textTheme.highEmphasis"}
               >
                 {props.statOwner}
               </Box>
               <Box
-                fontSize={".7em"}
+                fontSize={[".7em", ".9em"]}
                 fontWeight="light"
                 color={"textTheme.mediumEmphasis"}
               >

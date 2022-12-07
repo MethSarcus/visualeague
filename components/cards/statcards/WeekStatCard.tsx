@@ -1,8 +1,13 @@
 "use client";
 import {
-    Avatar,
-    Box, Button,
-    Modal, ModalOverlay, Text, useDisclosure
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Modal,
+  ModalOverlay,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import LeagueMember from "../../../classes/custom/LeagueMember";
@@ -31,56 +36,58 @@ const WeekStatCard = (props: MyProps) => {
     leagueMember = context?.members?.get(props.memberId) as LeagueMember;
   }
   return (
-    <Box
-      py={2}
-      px={5}
-      dropShadow="2xl"
-      textAlign={"center"}
+    <Center
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
-      minWidth={"150px"}
-      minHeight={"125px"}
+      minWidth={["150px", "200px"]}
+      minHeight={["125px", "200px"]}
+      py={2}
+      px={5}
+      bg={"surface.0"}
+      dropShadow="2xl"
     >
-      <Box fontWeight="normal" fontSize={"1em"} color={"white"}>
-        {props.title}
+      <Box textAlign={"center"} alignItems={"middle"}>
+        <Box fontWeight="normal" fontSize={"1em"} color={"white"}>
+          {props.title}
+        </Box>
+        <Text
+          fontWeight={"bold"}
+          fontSize={"1.2em"}
+          color={"textTheme.highEmphasis"}
+        >
+          {props.mainStat}
+        </Text>
+
+        <Avatar
+          mt={2}
+          size={"md"}
+          src={`https://sleepercdn.com/avatars/thumbs/${leagueMember?.avatar}`}
+        />
+        <Text
+          fontSize={"1em"}
+          fontWeight="medium"
+          color={"textTheme.highEmphasis"}
+        >
+          {props.subStat}
+        </Text>
+
+        <Button
+          visibility={props.matchup != undefined ? "visible" : "hidden"}
+          mt={2}
+          variant={"ghost"}
+          colorScheme={"secondary"}
+          onClick={onOpen}
+          size={"xs"}
+        >
+          View
+        </Button>
+        <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <MatchupModalBody matchup={props.matchup} onClose={onClose} />
+        </Modal>
       </Box>
-      <Text
-        fontWeight={"bold"}
-        fontSize={"1.2em"}
-        color={"textTheme.highEmphasis"}
-      >
-        {props.mainStat}
-      </Text>
-
-      <Avatar
-        mt={2}
-        size={"md"}
-        src={`https://sleepercdn.com/avatars/thumbs/${leagueMember?.avatar}`}
-      />
-      <Text
-        fontSize={"1em"}
-        fontWeight="medium"
-        color={"textTheme.highEmphasis"}
-      >
-        {props.subStat}
-      </Text>
-
-      <Button
-        visibility={props.matchup != undefined ? "visible" : "hidden"}
-        my={2}
-        variant={"outline"}
-        colorScheme={"secondary"}
-        onClick={onOpen}
-        size={"xs"}
-      >
-        View
-      </Button>
-      <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <MatchupModalBody matchup={props.matchup} onClose={onClose} />
-      </Modal>
-    </Box>
+    </Center>
   );
 };
 

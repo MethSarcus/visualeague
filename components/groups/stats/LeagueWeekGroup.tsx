@@ -32,7 +32,7 @@ export default function LeagueNotableWeeksStatGroup(props: MyProps) {
   }
 
   return (
-    <HStack>
+    <HStack align={"stretch"}>
       <WeekStatCard
         matchupSide={bestWeekTeam}
         memberId={bestWeekTeam?.roster_id}
@@ -61,6 +61,27 @@ export default function LeagueNotableWeeksStatGroup(props: MyProps) {
         mainStat={`${biggestShootout?.getCombinedScore().toFixed(2)}`}
         subSubStat={"Combined Points"}
         isLoaded={biggestShootout != undefined}
+      />
+            <LeagueNotableWeekStatCard
+        matchup={smallestShootout}
+        title={"Smallest Shootout"}
+        mainStat={`${smallestShootout?.getCombinedScore().toFixed(2)}`}
+        subSubStat={"Combined Points"}
+        isLoaded={smallestShootout != undefined}
+      />
+            <LeagueNotableWeekStatCard
+        matchup={closestGame}
+        title={"Closest Match"}
+        mainStat={`${closestGame?.getMargin().toFixed(2)}`}
+        subSubStat={"margin"}
+        isLoaded={closestGame != undefined}
+      />
+            <LeagueNotableWeekStatCard
+        matchup={furthestGame}
+        title={"Biggest Stomp"}
+        mainStat={`${furthestGame?.getMargin().toFixed(2)}`}
+        subSubStat={"margin"}
+        isLoaded={furthestGame != undefined}
       />
     </HStack>
   );

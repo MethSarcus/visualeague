@@ -50,12 +50,14 @@ export default function MatchupHeaderTeam(props: MyProps) {
         borderWidth={2}
         src={props.member?.teamAvatar}
       />
-      <Box pl={1}
-            mt={"auto"}
-            mb={"auto"}
-            fontWeight={"semibold"}
-            color={"#A7BAD0"}
-            mr={2}>
+      <Box
+        pl={1}
+        mt={"auto"}
+        mb={"auto"}
+        fontWeight={"semibold"}
+        color={"#A7BAD0"}
+        mr={2}
+      >
         <Text
           ml={10}
           mt={-2}
@@ -63,9 +65,16 @@ export default function MatchupHeaderTeam(props: MyProps) {
           fontWeight={"semibold"}
           letterSpacing={"tighter"}
         >
-          {props.member?.stats.wins}-{props.member?.stats.losses} {`[#${props.member?.stats.overall_rank}]`}
+          {props.member?.stats.wins}-{props.member?.stats.losses}{" "}
+          {`[#${props.member?.stats.overall_rank}]`}
         </Text>
-        <Text fontWeight={"semibold"} mt={6} fontSize={".8em"} color={"#A7BAD0"} lineHeight="10px">
+        <Text
+          fontWeight={"semibold"}
+          mt={6}
+          fontSize={".8em"}
+          color={"#A7BAD0"}
+          lineHeight="10px"
+        >
           @{props.member?.userDetails.display_name}
         </Text>
         <Text fontWeight={"semibold"} color={"white"}>
@@ -87,11 +96,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
         <Text fontSize={"1.2em"} color={"#FBFBFB"} mt={1}>
           {props.matchupSide.pf.toFixed(2)}
         </Text>
-        <Text
-        color={"#A7BAD0"}
-        fontWeight={"semibold"}
-        fontSize={".7em"}
-        >
+        <Text color={"#A7BAD0"} fontWeight={"semibold"} fontSize={".7em"}>
           {props.matchupSide.projectedScore.toFixed(2)}
         </Text>
       </Flex>
