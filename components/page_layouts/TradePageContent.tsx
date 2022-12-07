@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
-import router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../classes/custom/League";
