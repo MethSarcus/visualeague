@@ -34,7 +34,7 @@ export default function TeamSidebar() {
             <br />
           </DrawerHeader>
           <DrawerBody p={0}>
-          { context != undefined && context.settings && (<MemberList members={context.members} leagueId={context.settings.league_id}/>)}
+          { context != undefined && context.settings && (<MemberList onclick={onClose} members={context.members} leagueId={context.settings.league_id}/>)}
             
           </DrawerBody>
 

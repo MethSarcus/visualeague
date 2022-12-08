@@ -51,3 +51,25 @@ export class MatchupPlayer {
       }
       
 }
+
+export class BlankPlayer implements MatchupPlayer {
+    playerId: string = "0"
+    score: number = 0
+    projectedScore: number = 0
+    stats?: ScoringAct | undefined = undefined
+    projectedStats?: ScoringAct = undefined
+    eligiblePositions: string[] = ["QB",
+    "RB",
+    "WR",
+    "TE",
+    "DEF",
+    "K",
+    "DL",
+    "LB",
+    "DB"]
+    
+    calculatePoints(leagueSettings: ScoringSettings): void {
+        return;
+    }
+    
+}
