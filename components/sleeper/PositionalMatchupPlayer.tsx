@@ -16,8 +16,8 @@ import { SleeperPlayerDetails } from "../../classes/custom/Player";
 import { project_colors } from "../../utility/project_colors";
 
 interface MyProps {
-  player: MatchupPlayer;
-  playerDetails: SleeperPlayerDetails;
+  player: MatchupPlayer | undefined;
+  playerDetails: SleeperPlayerDetails | undefined;
 }
 
 export default function PositionalMatchupPlayer(props: MyProps) {
@@ -32,8 +32,8 @@ export default function PositionalMatchupPlayer(props: MyProps) {
     >
       <Box>
         <Text as={"p"} color={"white"} fontWeight={"bold"} fontSize={"1.1em"}>
-          {props.playerDetails.first_name.charAt(0)}.{" "}
-          {props.playerDetails.last_name}
+          {props.playerDetails?.first_name.charAt(0) ?? "E"}.{" "}
+          {props.playerDetails?.last_name ?? "Slot"}
         </Text>
         <Text
           as={"p"}
@@ -41,13 +41,13 @@ export default function PositionalMatchupPlayer(props: MyProps) {
           color={"white"}
           fontSize={".8em"}
         >
-          {props.playerDetails.fantasy_positions[0]}-{props.playerDetails.team}
+          {props.playerDetails?.fantasy_positions[0] ?? "N/A"}-{props.playerDetails?.team ?? "N/A"}
         </Text>
       </Box>
       <Spacer />
       <Box noOfLines={2} textAlign={"end"}>
         <Text as={"p"} color={"white"} fontWeight={"bold"} fontSize={"1.1em"}>
-          {props.player.score.toFixed(2)}
+          {props.player?.score.toFixed(2)}
         </Text>
         <Text
           as={"p"}
@@ -55,7 +55,7 @@ export default function PositionalMatchupPlayer(props: MyProps) {
           fontWeight={"semibold"}
           fontSize={".8em"}
         >
-          {props.player.projectedScore.toFixed(2)}
+          {props.player?.projectedScore.toFixed(2)}
         </Text>
       </Box>
     </Flex>
@@ -75,8 +75,8 @@ export function InversePositionalMatchupPlayer(props: MyProps) {
     >
       <Box textAlign={"end"}>
         <Text as={"p"} color={"white"} fontWeight={"bold"} fontSize={"1.1em"}>
-          {props.playerDetails.first_name.charAt(0)}.{" "}
-          {props.playerDetails.last_name}
+          {props.playerDetails?.first_name.charAt(0)}.{" "}
+          {props.playerDetails?.last_name}
         </Text>
         <Text
           as={"p"}
@@ -84,13 +84,13 @@ export function InversePositionalMatchupPlayer(props: MyProps) {
           color={"white"}
           fontSize={".8em"}
         >
-          {props.playerDetails.fantasy_positions[0]}-{props.playerDetails.team}
+          {props.playerDetails?.fantasy_positions[0]}-{props.playerDetails?.team}
         </Text>
       </Box>
       <Spacer />
       <Box noOfLines={2} textAlign={"start"}>
         <Text as={"p"} color={"white"} fontWeight={"bold"} fontSize={"1.1em"}>
-          {props.player.score.toFixed(2)}
+          {props.player?.score.toFixed(2)}
         </Text>
         <Text
           as={"p"}
@@ -98,7 +98,7 @@ export function InversePositionalMatchupPlayer(props: MyProps) {
           fontWeight={"semibold"}
           fontSize={".8em"}
         >
-          {props.player.projectedScore.toFixed(2)}
+          {props.player?.projectedScore.toFixed(2)}
         </Text>
       </Box>
     </Flex>

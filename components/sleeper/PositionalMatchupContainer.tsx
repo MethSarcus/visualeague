@@ -9,6 +9,7 @@ import {
   ModalHeader,
   Circle,
   Square,
+  Spinner,
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import LeagueMember from "../../classes/custom/LeagueMember";
@@ -33,13 +34,21 @@ interface MyProps {
 
 export default function PositionalMatchupContainer(props: MyProps) {
   const [context, setContext] = useContext(Context);
+  let homePlayerDetails
+  let awayPlayerDetails
 
-  const homePlayerDetails = context.playerDetails.get(
-    props.homePlayer.playerId
-  );
-  const awayPlayerDetails = context.playerDetails.get(
-    props.awayPlayer.playerId
-  );
+
+  if (context.playerDetails) {
+    homePlayerDetails = context.playerDetails.get(
+      props.homePlayer.playerId
+    );
+  
+    awayPlayerDetails = context.playerDetails.get(
+      props.awayPlayer.playerId
+    );
+  
+  }
+
 
   return (
     <Center borderBottom={"1px"} borderColor={project_colors.sleeper.border_color}>

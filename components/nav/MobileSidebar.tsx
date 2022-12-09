@@ -20,7 +20,6 @@ import TeamsMobileMenuContainer from "./TeamsMobileMenuContainer";
     const [customSettings, setCustomSettings] = React.useState(
       context.modifiedSettings
     );
-  
     return (
       <>
         {context.settings && (
@@ -40,7 +39,7 @@ import TeamsMobileMenuContainer from "./TeamsMobileMenuContainer";
   align='stretch'
 >
   <Box _hover={{ cursor: "pointer"}}>
-    <TeamsMobileMenuContainer/>
+    <TeamsMobileMenuContainer onclose={onClose} />
   </Box>
   { context != undefined && context.settings &&<Link href={`league/${context.settings.league_id}/ranks`}><Button variant={"unstyled"} _hover={{textColor: "grey"}}>Power Ranks</Button></Link>}
   { context != undefined && context.settings &&<Link href={`league/${context.settings.league_id}/trades`}><Button variant={"unstyled"} _hover={{textColor: "grey"}}>Trades</Button></Link>}
