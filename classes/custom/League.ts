@@ -1,4 +1,5 @@
 import produce, { immerable } from "immer";
+import { Transaction } from "mongodb";
 import { LINEUP_POSITION, ordinal_suffix_of, POSITION, standardDeviation } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
@@ -249,6 +250,40 @@ export default class League {
       );
       this.weeks.set(weekNum, week);
     });
+  }
+
+getWorstTrade() {
+  let worstTrade: SleeperTransaction | undefined = undefined
+  let highestDiff = 0
+  this.transactions.forEach(transaction => {
+    let playerTradeSumMap: Map<string, number> = new Map()
+    transaction.consenter_ids.forEach(id => {
+      playerTradeSumMap.set(id, 0)
+    })
+    if (worstTrade == undefined) {
+      worstTrade = transaction
+      highestDiff = transaction.
+    } else {
+      if (transaction.adds) {
+        for (const [playerid, rosterid] of Object.entries(transaction.adds)) {
+          if (rosterPlayerAdds.has(value as any)) {
+            rosterPlayerAdds.get(value as any)?.push(key);
+          } else {
+            rosterPlayerAdds.set(value as any, [key]);
+          }
+        }
+      }
+        transaction.consenter_ids.forEach(id => {
+          transaction.adds.forEach((playerId: string, roster_id: number) => {
+
+          })
+        })
+    }
+  })
+}
+
+  getPointsPlayerScored(playerId: string, roster_id: number) {
+    return this.members.get(roster_id)?.players.get(playerId)?.points_scored
   }
 
   getLeagueNotableWeeks() {
