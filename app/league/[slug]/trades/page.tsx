@@ -11,8 +11,11 @@ import type { NextPage } from "next";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+import League from "../../../../classes/custom/League";
+import Trade from "../../../../classes/custom/Trade";
 import { SleeperTransaction } from "../../../../classes/sleeper/SleeperTransaction";
 import TradeCard from "../../../../components/cards/TradeCard";
+import WorstTradeCard from "../../../../components/cards/WorstTradeCard";
 import TradeChordChart from "../../../../components/charts/TradeChordChart";
 import { Context } from "../../../../contexts/Context";
   
@@ -30,7 +33,7 @@ import { Context } from "../../../../contexts/Context";
     "chart chart chart chart"
     "trades trades trades trades"`
   
-    if (context.transactions == undefined) return <Heading color={"white"}>Loading</Heading>;
+    if ((context as League).trades == undefined) return <Heading color={"white"}>Loading</Heading>;
   
     return (
       <Box maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
@@ -39,11 +42,13 @@ import { Context } from "../../../../contexts/Context";
           gap={0}
         >
       <GridItem height={"500px"} area={'chart'} p={10} m={0}>
-        <TradeChordChart trades={context.transactions} />
+        <TradeChordChart trades={context.trades} />
       </GridItem>
       <GridItem  area="trades" >
+      <WorstTradeCard trade={context.getWorstTrade()}/>
       <Container textColor={"white"} maxH={"50vh"} overflowY={"scroll"} color='white'>
-      {context.transactions.map((trade: SleeperTransaction) => {
+
+      {context.trades.map((trade: Trade) => {
               return <TradeCard key={trade.transaction_id} trade={trade} />;
             })}
     </Container>

@@ -45,7 +45,7 @@ export default function LeagueLayout({
   useEffect(() => {
     if (leagueData && leagueData.league && tradeData.trades) {
       let league = new League(leagueData.league);
-      league.transactions = tradeData.trades
+      league.addTrades(tradeData.trades)
       console.log(league);
       setContext(league);
     }

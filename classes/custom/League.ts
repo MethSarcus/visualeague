@@ -1,6 +1,11 @@
 import produce, { immerable } from "immer";
 import { Transaction } from "mongodb";
-import { LINEUP_POSITION, ordinal_suffix_of, POSITION, standardDeviation } from "../../utility/rosterFunctions";
+import {
+  LINEUP_POSITION,
+  ordinal_suffix_of,
+  POSITION,
+  standardDeviation,
+} from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
 import { SleeperMatchup } from "../sleeper/SleeperMatchup";
@@ -10,19 +15,23 @@ import { SleeperUser } from "../sleeper/SleeperUser";
 import LeagueMember from "./LeagueMember";
 import LeagueStats from "./LeagueStats";
 import Matchup from "./Matchup";
+import { MatchupPlayer } from "./MatchupPlayer";
 import { MatchupSide } from "./MatchupSide";
 import MemberScores from "./MemberStats";
 import { OrdinalStatInfo } from "./OrdinalStatInfo";
 import { SleeperPlayerDetails } from "./Player";
 import SeasonPlayer from "./SeasonPlayer";
+import Trade from "./Trade";
 import { Week } from "./Week";
 
 export default class League {
   //members maps roster ID to leaguemember
+  //Roster_id should always be number
+  //player_id is a string always
   [immerable] = true;
   public members: Map<number, LeagueMember> = new Map();
   public weeks: Map<number, Week> = new Map();
-  public transactions: SleeperTransaction[];
+  public trades: Trade[];
   public allMatchups: SleeperMatchup[][];
   public settings: LeagueSettings;
   public modifiedSettings?: LeagueSettings;
@@ -31,7 +40,7 @@ export default class League {
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
   public memberIdToRosterId: Map<string, number> = new Map();
-  public stats: LeagueStats = new LeagueStats()
+  public stats: LeagueStats = new LeagueStats();
 
   constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
     if (modifiedSettings) {
@@ -53,7 +62,7 @@ export default class League {
     });
 
     this.allMatchups = sleeperLeague.matchups;
-    this.transactions = []; //TODO add api calls for getting this info
+    this.trades = []; //TODO add api calls for getting this info
     this.settings = sleeperLeague.sleeperDetails;
     this.settings = sleeperLeague.sleeperDetails;
     this.setStats(sleeperLeague.player_stats);
@@ -66,110 +75,211 @@ export default class League {
 
   getMember(rosterId: string | number) {
     if (typeof rosterId == "string") {
-      return this.members.get(parseInt(rosterId))
+      return this.members.get(parseInt(rosterId));
     } else {
-      return this.members.get(rosterId)
+      return this.members.get(rosterId);
     }
+  }
+
+  addTrades(transactions: SleeperTransaction[]) {
+
+    let trades = transactions.map((transaction) => {
+      return new Trade(transaction)
+    })
+
+    trades.forEach(trade => {
+      let weeks = this.getWeeksSinceTrade(trade.leg)
+      trade.playersTraded.forEach(playerId => {
+        trade.addPlayerScore(playerId, this.getPlayerPointsForSeasonPortion(playerId, weeks))
+      })
+
+      trade.setMemberPlayerDifferential()
+    })
+
+    this.trades = trades
+
+  }
+
+  //Takes a player_id and array of weeks and returns the total points the player scored during them
+  getPlayerPointsForSeasonPortion(player_id: string, weeks: number[]) {
+    let points = 0
+    weeks.forEach((weekNum) => {
+      let week = this.weeks.get(weekNum);
+      week?.matchups.forEach(matchup => {
+        let player = matchup.homeTeam.starters.find((element: MatchupPlayer) => {
+          return element.playerId == player_id
+        })
+        if (player != undefined) {
+          points += player.score
+        } else {
+          player = matchup.awayTeam?.starters.find((element: MatchupPlayer) => {
+            return element.playerId == player_id
+          })
+          if (player != undefined) {
+            points += player.score
+          }
+        }
+      })
+    });
+
+    return points
+  }
+
+  getWeeksSinceTrade(tradeLeg: number) {
+    let curWeek = this.settings.settings.last_scored_leg
+    let weeks = [];
+    for (let i = tradeLeg; i <= curWeek; i++) {
+        weeks.push(i);
+    }
+    return weeks
   }
 
   getRosterIdByName(name: string): LeagueMember | void {
     let leagueMember;
-    this.members.forEach(member => {
+    this.members.forEach((member) => {
       if (member.name == name) {
-        leagueMember = member
+        leagueMember = member;
       }
-    })
+    });
 
-    return leagueMember
+    return leagueMember;
   }
 
   getMemberRank(memberId: number, statType: StatType) {
-    let stats: LeagueMember[] = []
+    let stats: LeagueMember[] = [];
     this.members.forEach((member, rosterId) => {
-      stats.push(member)
-    })
+      stats.push(member);
+    });
 
-    let sorted = stats.sort((a:LeagueMember, b:LeagueMember) => b.stats[statType] - a.stats[statType]).map((member, index) => {
-      if (member.roster.roster_id == memberId) {
-        let isAboveAverage = null
-        if (index + 1 < stats.length/2) {
-          isAboveAverage = true
-        } else if (index + 1 > stats.length/2) {
-          isAboveAverage = false
+    let sorted = stats
+      .sort(
+        (a: LeagueMember, b: LeagueMember) =>
+          b.stats[statType] - a.stats[statType]
+      )
+      .map((member, index) => {
+        if (member.roster.roster_id == memberId) {
+          let isAboveAverage = null;
+          if (index + 1 < stats.length / 2) {
+            isAboveAverage = true;
+          } else if (index + 1 > stats.length / 2) {
+            isAboveAverage = false;
+          }
+          return { rank: index + 1, aboveAverage: isAboveAverage };
         }
-        return {rank: index + 1, aboveAverage: isAboveAverage}
-      }
-    }).filter(value => value!= undefined)
+      })
+      .filter((value) => value != undefined);
 
-    return sorted[0]
+    return sorted[0];
   }
 
   getPfOrdinalStats(): OrdinalStatInfo[] {
-    let pfStats: LeagueMember[] = []
+    let pfStats: LeagueMember[] = [];
     this.members.forEach((member, rosterId) => {
-      pfStats.push(member)
-    })
+      pfStats.push(member);
+    });
 
-    return pfStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pf - a.stats.pf).map((member, index) => {
-      let isAboveAverage = null
-      if (index + 1 < pfStats.length/2) {
-        isAboveAverage = true
-      } else if (index + 1 > pfStats.length/2) {
-        isAboveAverage = false
-      }
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pf.toFixed(2)}`, member.avatar, isAboveAverage)
-    })
+    return pfStats
+      .sort((a: LeagueMember, b: LeagueMember) => b.stats.pf - a.stats.pf)
+      .map((member, index) => {
+        let isAboveAverage = null;
+        if (index + 1 < pfStats.length / 2) {
+          isAboveAverage = true;
+        } else if (index + 1 > pfStats.length / 2) {
+          isAboveAverage = false;
+        }
+        return new OrdinalStatInfo(
+          member.name,
+          member.roster.roster_id,
+          index + 1,
+          `${member.stats.pf.toFixed(2)}`,
+          member.avatar,
+          isAboveAverage
+        );
+      });
   }
 
   getPaOrdinalStats(): OrdinalStatInfo[] {
-    let paStats: LeagueMember[] = []
+    let paStats: LeagueMember[] = [];
     this.members.forEach((member, rosterId) => {
-      paStats.push(member)
-    })
+      paStats.push(member);
+    });
 
-    return paStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.pa - a.stats.pa).map((member, index) => {
-      let isAboveAverage = null
-      if (index + 1 < paStats.length/2) {
-        isAboveAverage = true
-      } else if (index + 1 > paStats.length/2) {
-        isAboveAverage = false
-      }
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.pa.toFixed(2)}`, member.avatar, isAboveAverage)
-    })
+    return paStats
+      .sort((a: LeagueMember, b: LeagueMember) => b.stats.pa - a.stats.pa)
+      .map((member, index) => {
+        let isAboveAverage = null;
+        if (index + 1 < paStats.length / 2) {
+          isAboveAverage = true;
+        } else if (index + 1 > paStats.length / 2) {
+          isAboveAverage = false;
+        }
+        return new OrdinalStatInfo(
+          member.name,
+          member.roster.roster_id,
+          index + 1,
+          `${member.stats.pa.toFixed(2)}`,
+          member.avatar,
+          isAboveAverage
+        );
+      });
   }
 
   getGpOrdinalStats(): OrdinalStatInfo[] {
-    let gpStats: LeagueMember[] = []
+    let gpStats: LeagueMember[] = [];
     this.members.forEach((member, rosterId) => {
-      gpStats.push(member)
-    })
+      gpStats.push(member);
+    });
 
-    return gpStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.gp - a.stats.gp).map((member, index) => {
-      let isAboveAverage = null
-      if (index + 1 < gpStats.length/2) {
-        isAboveAverage = true
-      } else if (index + 1 > gpStats.length/2) {
-        isAboveAverage = false
-      }
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${member.stats.gp.toFixed(2)}`, member.avatar, isAboveAverage)
-    })
+    return gpStats
+      .sort((a: LeagueMember, b: LeagueMember) => b.stats.gp - a.stats.gp)
+      .map((member, index) => {
+        let isAboveAverage = null;
+        if (index + 1 < gpStats.length / 2) {
+          isAboveAverage = true;
+        } else if (index + 1 > gpStats.length / 2) {
+          isAboveAverage = false;
+        }
+        return new OrdinalStatInfo(
+          member.name,
+          member.roster.roster_id,
+          index + 1,
+          `${member.stats.gp.toFixed(2)}`,
+          member.avatar,
+          isAboveAverage
+        );
+      });
   }
 
   getPowerRankOrdinalStats(): OrdinalStatInfo[] {
-    let powerRankStats: LeagueMember[] = []
+    let powerRankStats: LeagueMember[] = [];
     this.members.forEach((member, rosterId) => {
-      powerRankStats.push(member)
-    })
+      powerRankStats.push(member);
+    });
 
-    return powerRankStats.sort((a:LeagueMember, b:LeagueMember) => b.stats.power_wins - a.stats.power_wins).map((member, index) => {
-      let isAboveAverage = null
-      if (index + 1 < powerRankStats.length/2) {
-        isAboveAverage = true
-      } else if (index + 1 > powerRankStats.length/2) {
-        isAboveAverage = false
-      }
-      return new OrdinalStatInfo(member.name, member.roster.roster_id, index + 1, `${(member.stats.power_wins/(member.stats.power_wins + member.stats.power_losses)).toFixed(3)}`, member.avatar, isAboveAverage)
-    })
+    return powerRankStats
+      .sort(
+        (a: LeagueMember, b: LeagueMember) =>
+          b.stats.power_wins - a.stats.power_wins
+      )
+      .map((member, index) => {
+        let isAboveAverage = null;
+        if (index + 1 < powerRankStats.length / 2) {
+          isAboveAverage = true;
+        } else if (index + 1 > powerRankStats.length / 2) {
+          isAboveAverage = false;
+        }
+        return new OrdinalStatInfo(
+          member.name,
+          member.roster.roster_id,
+          index + 1,
+          `${(
+            member.stats.power_wins /
+            (member.stats.power_wins + member.stats.power_losses)
+          ).toFixed(3)}`,
+          member.avatar,
+          isAboveAverage
+        );
+      });
   }
 
   //Creates a map mapping week number to a map of player id to the players stats
@@ -252,180 +362,184 @@ export default class League {
     });
   }
 
-getWorstTrade() {
-  let worstTrade: SleeperTransaction | undefined = undefined
-  let highestDiff = 0
-  this.transactions.forEach(transaction => {
-    let playerTradeSumMap: Map<string, number> = new Map()
-    transaction.consenter_ids.forEach(id => {
-      playerTradeSumMap.set(id, 0)
-    })
-    if (worstTrade == undefined) {
-      worstTrade = transaction
-      highestDiff = transaction.
-    } else {
-      if (transaction.adds) {
-        for (const [playerid, rosterid] of Object.entries(transaction.adds)) {
-          if (rosterPlayerAdds.has(value as any)) {
-            rosterPlayerAdds.get(value as any)?.push(key);
-          } else {
-            rosterPlayerAdds.set(value as any, [key]);
-          }
+  getWorstTrade() {
+    let worstTrade: undefined | Trade
+    let biggestDiff = 0
+    this.trades.forEach(trade => {
+      if (worstTrade == undefined) {
+        worstTrade = trade
+        biggestDiff = worstTrade.biggestPointDifferential
+      } else {
+        if (biggestDiff < trade.biggestPointDifferential) {
+          worstTrade = trade
+          biggestDiff = worstTrade.biggestPointDifferential
         }
       }
-        transaction.consenter_ids.forEach(id => {
-          transaction.adds.forEach((playerId: string, roster_id: number) => {
+    })
 
-          })
-        })
-    }
-  })
-}
+    return worstTrade;
+  }
 
   getPointsPlayerScored(playerId: string, roster_id: number) {
-    return this.members.get(roster_id)?.players.get(playerId)?.points_scored
+    return this.members.get(roster_id)?.players.get(playerId)?.points_scored;
   }
 
   getLeagueNotableWeeks() {
-    let matchupForBestTeam: Matchup | undefined = undefined
-    let matchupForWorstTeam: Matchup | undefined = undefined
-    let closestGame: Matchup | undefined = undefined
-    let furthestGame: Matchup | undefined = undefined
-    let biggestShootout: Matchup | undefined = undefined //highest combined score
-    let smallestShootout: Matchup | undefined = undefined
+    let matchupForBestTeam: Matchup | undefined = undefined;
+    let matchupForWorstTeam: Matchup | undefined = undefined;
+    let closestGame: Matchup | undefined = undefined;
+    let furthestGame: Matchup | undefined = undefined;
+    let biggestShootout: Matchup | undefined = undefined; //highest combined score
+    let smallestShootout: Matchup | undefined = undefined;
     this.weeks.forEach((week) => {
-      week.matchups.forEach(matchup => {
+      week.matchups.forEach((matchup) => {
         if (matchup != undefined) {
           if (matchupForBestTeam == undefined) {
-            matchupForBestTeam = matchup
-            matchupForWorstTeam = matchup
-            closestGame = matchup
-            furthestGame = matchup
-            biggestShootout = matchup
-            smallestShootout = matchup
+            matchupForBestTeam = matchup;
+            matchupForWorstTeam = matchup;
+            closestGame = matchup;
+            furthestGame = matchup;
+            biggestShootout = matchup;
+            smallestShootout = matchup;
           } else {
-            let homeTeam = matchup.homeTeam
-            let awayTeam = matchup.awayTeam
+            let homeTeam = matchup.homeTeam;
+            let awayTeam = matchup.awayTeam;
             if (awayTeam) {
-              let highScore = matchup.getMemberSide(matchup.winnerRosterId)?.pf
-              let lowScore = matchup.getMemberSide(matchup.loserRosterId!)?.pf
-              let margin = matchup.getMargin()
+              let highScore = matchup.getMemberSide(matchup.winnerRosterId)?.pf;
+              let lowScore = matchup.getMemberSide(matchup.loserRosterId!)?.pf;
+              let margin = matchup.getMargin();
               let combinedScore = homeTeam.pf + (awayTeam?.pf ?? 0);
 
-              if (highScore! >  matchupForBestTeam?.getWinner()!.pf) {
-                matchupForBestTeam = matchup
+              if (highScore! > matchupForBestTeam?.getWinner()!.pf) {
+                matchupForBestTeam = matchup;
               }
 
-              if (lowScore! <  matchupForBestTeam?.getLoser()!.pf) {
-                matchupForWorstTeam = matchup
+              if (lowScore! < matchupForBestTeam?.getLoser()!.pf) {
+                matchupForWorstTeam = matchup;
               }
 
-              if (margin <  closestGame?.getMargin()!) {
-                closestGame = matchup
+              if (margin < closestGame?.getMargin()!) {
+                closestGame = matchup;
               }
-      
-              if (margin >  furthestGame?.getMargin()!) {
-                furthestGame = matchup
+
+              if (margin > furthestGame?.getMargin()!) {
+                furthestGame = matchup;
               }
-      
-              if (combinedScore >  biggestShootout?.getCombinedScore()!) {
-                biggestShootout = matchup
+
+              if (combinedScore > biggestShootout?.getCombinedScore()!) {
+                biggestShootout = matchup;
               }
-      
-              if (combinedScore <  smallestShootout?.getCombinedScore()! && !matchup.isByeWeek) {
-                smallestShootout = matchup
+
+              if (
+                combinedScore < smallestShootout?.getCombinedScore()! &&
+                !matchup.isByeWeek
+              ) {
+                smallestShootout = matchup;
               }
             }
           }
         }
-      })
+      });
+    });
 
-    })
-
-    return {matchupForBestTeam: matchupForBestTeam, matchupForWorstTeam: matchupForWorstTeam, closestGame: closestGame, furthestGame: furthestGame, biggestShootout: biggestShootout, smallestShootout: smallestShootout}
+    return {
+      matchupForBestTeam: matchupForBestTeam,
+      matchupForWorstTeam: matchupForWorstTeam,
+      closestGame: closestGame,
+      furthestGame: furthestGame,
+      biggestShootout: biggestShootout,
+      smallestShootout: smallestShootout,
+    };
   }
 
   getMemberNotableWeeks(rosterId: number) {
-    let bestWeek: Matchup | undefined = undefined
-    let worstWeek: Matchup | undefined = undefined
-    let closestGame: Matchup | undefined = undefined
-    let furthestGame: Matchup | undefined = undefined
+    let bestWeek: Matchup | undefined = undefined;
+    let worstWeek: Matchup | undefined = undefined;
+    let closestGame: Matchup | undefined = undefined;
+    let furthestGame: Matchup | undefined = undefined;
     this.weeks.forEach((week) => {
-      let matchup = week.getMemberMatchup(rosterId)
+      let matchup = week.getMemberMatchup(rosterId);
       if (matchup != undefined) {
         if (bestWeek == undefined) {
-          bestWeek = matchup
-          worstWeek = matchup
-          closestGame = matchup
-          furthestGame = matchup
+          bestWeek = matchup;
+          worstWeek = matchup;
+          closestGame = matchup;
+          furthestGame = matchup;
         } else {
-          if (matchup.getMemberSide(rosterId)!.pf > bestWeek.getMemberSide(rosterId)!.pf) {
-            bestWeek = matchup
+          if (
+            matchup.getMemberSide(rosterId)!.pf >
+            bestWeek.getMemberSide(rosterId)!.pf
+          ) {
+            bestWeek = matchup;
           }
-  
-          if (matchup.getMemberSide(rosterId)!.pf < bestWeek.getMemberSide(rosterId)!.pf) {
-            worstWeek = matchup
+
+          if (
+            matchup.getMemberSide(rosterId)!.pf <
+            bestWeek.getMemberSide(rosterId)!.pf
+          ) {
+            worstWeek = matchup;
           }
-  
+
           if (matchup.getMargin() < closestGame?.getMargin()!) {
-            closestGame = matchup
+            closestGame = matchup;
           }
-  
+
           if (matchup.getMargin() > closestGame?.getMargin()!) {
-            furthestGame = matchup
+            furthestGame = matchup;
           }
-  
         }
       }
-    })
+    });
 
-    return {bestWeek: bestWeek, worstWeek: worstWeek, closestGame: closestGame, furthestGame: furthestGame}
+    return {
+      bestWeek: bestWeek,
+      worstWeek: worstWeek,
+      closestGame: closestGame,
+      furthestGame: furthestGame,
+    };
   }
 
   setLeagueStats() {
-    let pf = 0
-    let pa = 0
-    let pp = 0
-    let opslap = 0
-    let gp = 0
+    let pf = 0;
+    let pa = 0;
+    let pp = 0;
+    let opslap = 0;
+    let gp = 0;
     this.members.forEach((member, rosterId) => {
-      pf += member.stats.pf
-      pa += member.stats.pa
-      pp += member.stats.pp
-      opslap += member.stats.opslap
-      gp += member.stats.gp
-
-    })
-    let positionStarts: Map<POSITION, number> = new Map()
-    let positionScores: Map<POSITION, number> = new Map()
+      pf += member.stats.pf;
+      pa += member.stats.pa;
+      pp += member.stats.pp;
+      opslap += member.stats.opslap;
+      gp += member.stats.gp;
+    });
+    let positionStarts: Map<POSITION, number> = new Map();
+    let positionScores: Map<POSITION, number> = new Map();
     this.members.forEach((member, rosterId) => {
       member.stats.position_starts.forEach((numStarts, pos) => {
         if (positionStarts.has(pos)) {
-          positionStarts.set(pos, positionStarts.get(pos)! + numStarts)
+          positionStarts.set(pos, positionStarts.get(pos)! + numStarts);
         } else {
-          positionStarts.set(pos, numStarts)
+          positionStarts.set(pos, numStarts);
         }
-      })
+      });
 
       member.stats.position_scores.forEach((points, pos) => {
         if (positionScores.has(pos)) {
-          positionScores.set(pos, positionScores.get(pos)! + points)
+          positionScores.set(pos, positionScores.get(pos)! + points);
         } else {
-          positionScores.set(pos, points)
+          positionScores.set(pos, points);
         }
-      })
+      });
+    });
 
-    })
+    this.stats.position_scores = positionScores;
+    this.stats.position_starts = positionStarts;
 
-    this.stats.position_scores = positionScores
-    this.stats.position_starts = positionStarts
-
-    this.stats.avg_pf = (pf/this.members.size)
-    this.stats.avg_pa = (pa/this.members.size)
-    this.stats.avg_pp = (pp/this.members.size)
-    this.stats.avg_opslap = (opslap/this.members.size)
-    this.stats.avg_gp = (gp/this.members.size)
-
+    this.stats.avg_pf = pf / this.members.size;
+    this.stats.avg_pa = pa / this.members.size;
+    this.stats.avg_pp = pp / this.members.size;
+    this.stats.avg_opslap = opslap / this.members.size;
+    this.stats.avg_gp = gp / this.members.size;
   }
 
   getPlayerStat(playerId: number, weekNum: number) {
@@ -447,44 +561,43 @@ getWorstTrade() {
   }
 
   getNotableMembers() {
-    let bestManager: LeagueMember
-    let worstManager: LeagueMember
-    let highestScoring: LeagueMember
-    let lowestScoring: LeagueMember
-    let mostConsistent: LeagueMember
-    let leastConsistent: LeagueMember
-
+    let bestManager: LeagueMember;
+    let worstManager: LeagueMember;
+    let highestScoring: LeagueMember;
+    let lowestScoring: LeagueMember;
+    let mostConsistent: LeagueMember;
+    let leastConsistent: LeagueMember;
 
     this.members.forEach((member, rosterId) => {
       if (!bestManager) {
-        bestManager = member
-        worstManager = member
-        highestScoring = member
-        lowestScoring = member
-        mostConsistent = member
-        leastConsistent = member
+        bestManager = member;
+        worstManager = member;
+        highestScoring = member;
+        lowestScoring = member;
+        mostConsistent = member;
+        leastConsistent = member;
       } else {
         if (member.stats.pf > highestScoring.stats.pf) {
-          highestScoring = member
+          highestScoring = member;
         }
         if (member.stats.pf < lowestScoring.stats.pf) {
-          lowestScoring = member
+          lowestScoring = member;
         }
         if (member.stats.gp > bestManager.stats.gp) {
-          bestManager = member
+          bestManager = member;
         }
         if (member.stats.gp < worstManager.stats.gp) {
-          worstManager = member
+          worstManager = member;
         }
-        
+
         if (member.stats.stdDev < mostConsistent.stats.stdDev) {
-          mostConsistent = member
+          mostConsistent = member;
         }
         if (member.stats.stdDev > leastConsistent.stats.stdDev) {
-          leastConsistent = member
+          leastConsistent = member;
         }
       }
-    })
+    });
 
     return {
       bestManager: bestManager!,
@@ -492,8 +605,8 @@ getWorstTrade() {
       highestScoring: highestScoring!,
       lowestScoring: lowestScoring!,
       mostConsistent: mostConsistent!,
-      leastConsistent: leastConsistent!
-    }
+      leastConsistent: leastConsistent!,
+    };
   }
 
   recalcStats() {
@@ -524,25 +637,59 @@ getWorstTrade() {
             homeMember.stats.custom_points += homeTeam.custom_points;
             homeMember.stats.pa += awayTeam.pf;
 
-            homeTeam.starters.forEach(player => {
+            homeTeam.starters.forEach((player) => {
               if (homeMember!.players.has(player.playerId!)) {
-                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                homeMember!.players
+                  .get(player.playerId!)!
+                  .addWeek(
+                    week.weekNumber,
+                    player.score,
+                    player.projectedScore,
+                    true
+                  );
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
-                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-                homeMember!.players.set(player.playerId!, seasonPlayer)
+                let seasonPlayer = new SeasonPlayer(
+                  player.playerId!,
+                  homeTeam.roster_id,
+                  player.position as LINEUP_POSITION,
+                  player.eligiblePositions as POSITION[]
+                );
+                seasonPlayer.addWeek(
+                  week.weekNumber,
+                  player.score,
+                  player.projectedScore,
+                  true
+                );
+                homeMember!.players.set(player.playerId!, seasonPlayer);
               }
-            })
+            });
 
-            homeTeam.bench.forEach(player => {
+            homeTeam.bench.forEach((player) => {
               if (homeMember!.players.has(player.playerId!)) {
-                homeMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                homeMember!.players
+                  .get(player.playerId!)!
+                  .addWeek(
+                    week.weekNumber,
+                    player.score,
+                    player.projectedScore,
+                    false
+                  );
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
-                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-                homeMember!.players.set(player.playerId!, seasonPlayer)
+                let seasonPlayer = new SeasonPlayer(
+                  player.playerId!,
+                  homeTeam.roster_id,
+                  player.position as LINEUP_POSITION,
+                  player.eligiblePositions as POSITION[]
+                );
+                seasonPlayer.addWeek(
+                  week.weekNumber,
+                  player.score,
+                  player.projectedScore,
+                  false
+                );
+                homeMember!.players.set(player.playerId!, seasonPlayer);
               }
-            })
+            });
             homeTeam.position_starts.forEach((value, key) => {
               if (homeMember?.stats.position_scores.has(key)) {
                 homeMember?.stats.position_starts.set(
@@ -580,25 +727,59 @@ getWorstTrade() {
             awayMember.stats.custom_points += awayTeam.custom_points;
             awayMember.stats.pa += homeTeam.pf;
 
-            awayTeam.starters.forEach(player => {
+            awayTeam.starters.forEach((player) => {
               if (awayMember!.players.has(player.playerId!)) {
-                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, true)
+                awayMember!.players
+                  .get(player.playerId!)!
+                  .addWeek(
+                    week.weekNumber,
+                    player.score,
+                    player.projectedScore,
+                    true
+                  );
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
-                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-                awayMember!.players.set(player.playerId!, seasonPlayer)
+                let seasonPlayer = new SeasonPlayer(
+                  player.playerId!,
+                  homeTeam.roster_id,
+                  player.position as LINEUP_POSITION,
+                  player.eligiblePositions as POSITION[]
+                );
+                seasonPlayer.addWeek(
+                  week.weekNumber,
+                  player.score,
+                  player.projectedScore,
+                  true
+                );
+                awayMember!.players.set(player.playerId!, seasonPlayer);
               }
-            })
+            });
 
-            awayTeam.bench.forEach(player => {
+            awayTeam.bench.forEach((player) => {
               if (awayMember!.players.has(player.playerId!)) {
-                awayMember!.players.get(player.playerId!)!.addWeek(week.weekNumber, player.score, player.projectedScore, false)
+                awayMember!.players
+                  .get(player.playerId!)!
+                  .addWeek(
+                    week.weekNumber,
+                    player.score,
+                    player.projectedScore,
+                    false
+                  );
               } else {
-                let seasonPlayer = new SeasonPlayer(player.playerId!, homeTeam.roster_id, player.position as LINEUP_POSITION, player.eligiblePositions as POSITION[])
-                seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-                awayMember!.players.set(player.playerId!, seasonPlayer)
+                let seasonPlayer = new SeasonPlayer(
+                  player.playerId!,
+                  homeTeam.roster_id,
+                  player.position as LINEUP_POSITION,
+                  player.eligiblePositions as POSITION[]
+                );
+                seasonPlayer.addWeek(
+                  week.weekNumber,
+                  player.score,
+                  player.projectedScore,
+                  false
+                );
+                awayMember!.players.set(player.playerId!, seasonPlayer);
               }
-            })
+            });
 
             awayTeam.position_starts.forEach((value, key) => {
               if (awayMember?.stats.position_scores.has(key)) {
@@ -677,28 +858,33 @@ getWorstTrade() {
       });
     });
 
-    this.members.forEach(member => {
-      let allWeekScores: number[] = []
-      this.getAllWeeksForMember(member.roster.roster_id).forEach(matchup => {
-        allWeekScores.push(matchup.getMemberSide(member.roster.roster_id)?.pf!)
-      })
-      
-      member.stats.stdDev = standardDeviation(allWeekScores);
-      member.stats.win_pct = member.stats.wins / (member.stats.wins + member.stats.losses + member.stats.ties)
-    })
+    this.members.forEach((member) => {
+      let allWeekScores: number[] = [];
+      this.getAllWeeksForMember(member.roster.roster_id).forEach((matchup) => {
+        allWeekScores.push(matchup.getMemberSide(member.roster.roster_id)?.pf!);
+      });
 
-    this.members.forEach(member => {
-      member.stats.overall_rank = this.getMemberRank(member.roster.roster_id, StatType.OVERALL)?.rank!
-    })
+      member.stats.stdDev = standardDeviation(allWeekScores);
+      member.stats.win_pct =
+        member.stats.wins /
+        (member.stats.wins + member.stats.losses + member.stats.ties);
+    });
+
+    this.members.forEach((member) => {
+      member.stats.overall_rank = this.getMemberRank(
+        member.roster.roster_id,
+        StatType.OVERALL
+      )?.rank!;
+    });
   }
 
   getAllWeeksForMember(rosterId: number) {
-    let allWeeks: Matchup[] = []
+    let allWeeks: Matchup[] = [];
     this.weeks.forEach((week, weekNumber) => {
-      allWeeks.push(week.getMemberMatchup(rosterId))
-    })
+      allWeeks.push(week.getMemberMatchup(rosterId));
+    });
 
-    return allWeeks
+    return allWeeks;
   }
 }
 
@@ -709,5 +895,5 @@ export enum StatType {
   GP = "gp",
   OPSLAP = "opslap",
   POWER_RANK = "power_wins",
-  OVERALL = "win_pct"
+  OVERALL = "win_pct",
 }

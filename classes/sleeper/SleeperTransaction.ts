@@ -1,4 +1,4 @@
-interface Settings {
+export interface TradeSettings {
   waiver_bid: number;
   seq: number;
   priority?: number;
@@ -6,11 +6,11 @@ interface Settings {
   expires_at?: number;
 }
 
-interface Metadata {
+export interface TradeMetadata {
   notes: string;
 }
 
-interface DraftPick {
+export interface TradeDraftPick {
   season: string;
   round: number;
   roster_id: number;
@@ -29,17 +29,18 @@ export interface SleeperTransaction {
   transaction_id: string;
   status_updated: any;
   status: string;
-  settings: Settings;
+  settings: TradeSettings;
   roster_ids: number[];
-  metadata: Metadata;
+  metadata: TradeMetadata;
   leg: number;
   drops: Drops;
-  draft_picks: DraftPick[];
+  draft_picks: TradeDraftPick[];
   creator: string;
   created: any;
   consenter_ids: number[];
   adds: Adds;
 }
+
 
 export interface FaabTransfer {
   sender: number
