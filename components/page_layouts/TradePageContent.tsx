@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import League from "../../classes/custom/League";
+import Trade from "../../classes/custom/Trade";
 import { SleeperTransaction } from "../../classes/sleeper/SleeperTransaction";
 import { Context } from "../../contexts/Context";
 import TradeCard from "../cards/TradeCard";
@@ -56,7 +57,7 @@ export default function TradePageContent() {
     </GridItem>
     <GridItem  area="trades" >
     <Container textColor={"white"} maxH={"50vh"} overflowY={"auto"} color='white'>
-    {trades.map((trade: SleeperTransaction) => {
+    {trades.map((trade: Trade) => {
             return <TradeCard key={trade.transaction_id} trade={trade} />;
           })}
   </Container>
