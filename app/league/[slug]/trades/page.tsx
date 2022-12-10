@@ -2,17 +2,23 @@
 import {
   Box,
   Container,
+  Flex,
   Grid,
   GridItem,
-  Heading
+  Heading,
+  Text,
+  VStack
 } from "@chakra-ui/react";
 import axios from "axios";
 import type { NextPage } from "next";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+import League from "../../../../classes/custom/League";
+import Trade from "../../../../classes/custom/Trade";
 import { SleeperTransaction } from "../../../../classes/sleeper/SleeperTransaction";
 import TradeCard from "../../../../components/cards/TradeCard";
+import WorstTradeCard from "../../../../components/cards/WorstTradeCard";
 import TradeChordChart from "../../../../components/charts/TradeChordChart";
 import { Context } from "../../../../contexts/Context";
   
@@ -23,29 +29,38 @@ import { Context } from "../../../../contexts/Context";
     const desktopTemplate = `
     "chart chart trades trades"
     "chart chart trades trades"
-    "chart chart trades trades"
-    "chart chart trades trades"`
+    "imba imba trades trades"`
 
     const mobileTemplate = `
-    "chart chart chart chart"
-    "trades trades trades trades"`
+    "chart"
+    "imba"
+    "trades"`
   
-    if (context.transactions == undefined) return <Heading color={"white"}>Loading</Heading>;
+    if ((context as League).trades == undefined) return <Heading color={"white"}>Loading</Heading>;
   
+    let sortedTrades = context.getSortedTrades()
     return (
       <Box maxW={"container.xl"} p={[0, "auto"]} m={[0, "auto"]}>
         <Grid
           templateAreas={[mobileTemplate, desktopTemplate]}
+          maxH={"full"}
           gap={0}
         >
       <GridItem height={"500px"} area={'chart'} p={10} m={0}>
-        <TradeChordChart trades={context.transactions} />
+        <TradeChordChart trades={sortedTrades} />
       </GridItem>
+      <GridItem mx={4} area="imba" >      <WorstTradeCard trade={sortedTrades[0]} title={"Most Imbalanced Trade"}/>
+      <WorstTradeCard trade={sortedTrades[1]} title={"Second Most Imbalanced Trade"}/></GridItem>
       <GridItem  area="trades" >
-      <Container textColor={"white"} maxH={"50vh"} overflowY={"scroll"} color='white'>
-      {context.transactions.map((trade: SleeperTransaction) => {
+      
+      <Container textColor={"white"} overflowY={"scroll"} color='white'>
+      <Text color={"white"}>Trades</Text>
+      <VStack maxH={"800px"} overflowY={"auto"} align={'stretch'}>
+      {context.trades.map((trade: Trade) => {
               return <TradeCard key={trade.transaction_id} trade={trade} />;
             })}
+      </VStack>
+
     </Container>
   
             </GridItem>

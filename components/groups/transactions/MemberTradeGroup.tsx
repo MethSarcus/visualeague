@@ -20,13 +20,13 @@ const MemberTradeGroup = (props: MyProps) => {
       overflowY={"auto"}
       color="white"
     >
-      {props.league?.transactions &&
-        props.league?.transactions
-          ?.filter((transaction) => {
-            return transaction.consenter_ids.includes(id as number);
+      {props.league?.trades &&
+        props.league?.trades
+          ?.filter((trade) => {
+            return trade.consenter_ids.includes(id as number);
           })
-          .map((transaction, index) => {
-            return <TradeCard key={index} trade={transaction} />;
+          .map((trade, index) => {
+            return <TradeCard key={index} trade={trade} />;
           })}
     </Box>
   );

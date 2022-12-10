@@ -1,6 +1,7 @@
 import { background, Box, Stack } from "@chakra-ui/react";
 import { useContext } from "react";
 import League from "../../classes/custom/League";
+import Trade from "../../classes/custom/Trade";
 import { TradedPick } from "../../classes/sleeper/DraftPick";
 import {
   Adds,
@@ -11,7 +12,7 @@ import TradeSide from "../groups/transactions/TradeSide";
 import Card from "./Card";
 
 interface MyProps {
-  trade: SleeperTransaction;
+  trade: Trade;
 }
 
 export default function TradeCard(props: MyProps) {
