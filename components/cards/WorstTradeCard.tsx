@@ -6,13 +6,14 @@ import TradeCard from "./TradeCard";
 
 interface MyProps {
   trade: Trade | undefined
+  title: string
 }
 
 export default function WorstTradeCard(props: MyProps) {
 
   return (
     <Box color={"white"}>
-      <Text>Most Imbalanced Trade</Text>
+      <Text>{props.title}</Text>
       {props.trade && <TradeCard trade={props.trade} />}
     </Box>
   );

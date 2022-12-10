@@ -380,6 +380,18 @@ export default class League {
     return worstTrade;
   }
 
+  getSortedTrades() {
+    return this.trades.sort((a, b) => {
+      if (a.biggestPointDifferential < b.biggestPointDifferential) {
+        return 1;
+      } else if (a.biggestPointDifferential > b.biggestPointDifferential) {
+        return -1;
+      } else {
+        return 0;
+      }
+    })
+  }
+
   getPointsPlayerScored(playerId: string, roster_id: number) {
     return this.members.get(roster_id)?.players.get(playerId)?.points_scored;
   }

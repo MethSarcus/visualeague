@@ -26,8 +26,10 @@ export default class Trade implements SleeperTransaction {
   consenter_ids: number[];
   adds: Adds;
   biggestPointDifferential = 0
+  biggestTradeScore = 0
 
   memberNetPoints = new Map<number, number>();
+  memberTradeScore = new Map<number, number>();
   playerScoresSinceTrade = new Map<string, number>();
 
   constructor(transaction: SleeperTransaction) {
@@ -49,6 +51,7 @@ export default class Trade implements SleeperTransaction {
 
     this.consenter_ids.forEach((id) => {
       this.memberNetPoints.set(id, 0);
+      
     });
 
     if (transaction.adds != null) {
@@ -75,6 +78,12 @@ export default class Trade implements SleeperTransaction {
         this.memberNetPoints.set(oldOwnerId, oldOwnerScore)
     })
 
+    this.memberNetPoints.forEach((points, memberId) => {
+        let tradeValue = 0
+        let numAllPlayers: number = Object.entries(this.adds).length
+
+        this.memberTradeScore.set(memberId, tradeValue)
+    })
     this.getWorstDifferential()
   }
 
