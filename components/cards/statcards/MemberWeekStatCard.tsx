@@ -1,7 +1,8 @@
 "use client";
 import {
   Box, Button,
-  Modal, ModalOverlay, Text, useDisclosure
+  Flex,
+  Modal, ModalOverlay, Spacer, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
 import Matchup from "../../../classes/custom/Matchup";
 import { MatchupSide } from "../../../classes/custom/MatchupSide";
@@ -12,7 +13,7 @@ type MyProps = {
   memberId: number | undefined
   mainStat: String | undefined;
   subStat?: String | undefined
-  matchup?: Matchup | undefined
+  matchup: Matchup | undefined
   title: String | undefined;
   isLoaded: boolean;
 };
@@ -20,18 +21,19 @@ type MyProps = {
 const MemberWeekStatCard = (props: MyProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box
+    <VStack
       py={2}
       px={5}
+      flexDir={"column"}
       dropShadow="2xl"
       textAlign={"center"}
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
       minWidth={"150px"}
-      minHeight={"125px"}
 
     >
+      <Spacer flex={1}/>
       <Box fontWeight="bold" fontSize={"1.2em"} color={"textTheme.highEmphasis"}>
         {props.title}
       </Box>
@@ -49,12 +51,13 @@ const MemberWeekStatCard = (props: MyProps) => {
       >
         {props.mainStat}
       </Text>
-      <Button visibility={props.matchup != undefined ? "visible" : "hidden"} my={2} variant={"outline"} colorScheme={"secondary"} onClick={onOpen} size={"xs"}>View</Button>
+      <Button my={2} disabled={!props.isLoaded} variant={"outline"} colorScheme={"secondary"} onClick={onOpen} size={"xs"}>View</Button>
+      
       <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
         <MatchupModalBody matchup={props.matchup} onClose={onClose}/>
       </Modal>
-    </Box>
+    </VStack>
   );
 };
 

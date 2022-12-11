@@ -12,6 +12,7 @@ import { PositionColors } from './ChartColors';
 
 interface MyProps {
     league: League
+    roster_id?: number
 }
   const theme = {
     "background": "none",

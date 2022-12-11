@@ -4,8 +4,10 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   Modal,
   ModalOverlay,
+  Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -36,7 +38,8 @@ const WeekStatCard = (props: MyProps) => {
     leagueMember = context?.members?.get(props.memberId) as LeagueMember;
   }
   return (
-    <Center
+    <Flex
+    flexDir={"column"}
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
@@ -47,6 +50,7 @@ const WeekStatCard = (props: MyProps) => {
       bg={"surface.0"}
       dropShadow="2xl"
     >
+      <Spacer/>
       <Box textAlign={"center"} alignItems={"middle"}>
         <Box fontWeight="normal" fontSize={"1em"} color={"white"}>
           {props.title}
@@ -87,7 +91,8 @@ const WeekStatCard = (props: MyProps) => {
           <MatchupModalBody matchup={props.matchup} onClose={onClose} />
         </Modal>
       </Box>
-    </Center>
+      <Spacer/>
+    </Flex>
   );
 };
 

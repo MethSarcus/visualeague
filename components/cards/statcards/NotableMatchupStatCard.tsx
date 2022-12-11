@@ -99,7 +99,7 @@ const NotableMatchupStatCard = (props: MyProps) => {
         >
           Week {props.matchup?.weekNumber}
         </Text>
-        <Center mt={2}>
+        <Center my={.25}>
           <Tooltip label={homeMember?.teamName}>
 
             
@@ -117,7 +117,7 @@ const NotableMatchupStatCard = (props: MyProps) => {
                 fontSize={".45em"}
                 bg={homeBadgeColor}
               >
-                {props.matchup?.homeTeam.pf.toFixed(2)}
+                {props.matchup?.homeTeam.pf.toFixed(2) ?? ""}
               </AvatarBadge>
             </Avatar>
           </Tooltip>
@@ -143,7 +143,7 @@ const NotableMatchupStatCard = (props: MyProps) => {
                 fontSize={".45em"}
                 bg={awayBadgeColor}
               >
-                {props.matchup?.awayTeam?.pf.toFixed(2)}
+                {props.matchup?.awayTeam?.pf.toFixed(2) ?? ""}
               </AvatarBadge>
             </Avatar>
           </Tooltip>
@@ -153,7 +153,7 @@ const NotableMatchupStatCard = (props: MyProps) => {
           {props.mainStat}
         </Text>
         <Text fontSize={".7em"} color={"textTheme.highEmphasis"}>
-        {props.subSubStat}
+        {props.subSubStat ?? ""}
         </Text>
         <Spacer />
         <Button

@@ -81,6 +81,17 @@ export default class League {
     }
   }
 
+  getUserNumberTrades(roster_id: number) {
+    let memberTradeNum = 0
+    this.trades.forEach(trade => {
+      if (trade.consenter_ids.includes(roster_id)) {
+        memberTradeNum += 1
+      }
+    })
+    
+    return memberTradeNum
+  }
+
   addTrades(transactions: SleeperTransaction[]) {
 
     let trades = transactions.map((transaction) => {

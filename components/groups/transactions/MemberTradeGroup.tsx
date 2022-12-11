@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, HStack, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, HStack, Text } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
 import TradeCard from "../../cards/TradeCard";
 
@@ -20,6 +20,7 @@ const MemberTradeGroup = (props: MyProps) => {
       overflowY={"auto"}
       color="white"
     >
+      {(props.league?.getUserNumberTrades(id!) == 0) && <Text color={"white"}>{props.league.members.get(id!)?.name} is allergic to trades</Text>}
       {props.league?.trades &&
         props.league?.trades
           ?.filter((trade) => {
@@ -28,6 +29,7 @@ const MemberTradeGroup = (props: MyProps) => {
           .map((trade, index) => {
             return <TradeCard key={index} trade={trade} />;
           })}
+          
     </Box>
   );
 };

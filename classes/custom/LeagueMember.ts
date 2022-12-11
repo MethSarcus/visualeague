@@ -30,13 +30,7 @@ export default class LeagueMember {
     }
 
     if (userDetails.metadata.avatar != null) {
-      let teamAvatar = userDetails.metadata.avatar.split("/").at(-1)
-      if (teamAvatar != undefined && teamAvatar?.split(".").length > 1) {
-        teamAvatar = teamAvatar.split(".").at(0)
-      }
-      this.teamAvatar = `https://sleepercdn.com/avatars/thumbs/${teamAvatar}`
-    } else {
-      this.teamAvatar = `https://sleepercdn.com/avatars/thumbs/${userDetails.avatar}`
+      this.teamAvatar = userDetails.metadata.avatar
     }
   }
 
@@ -59,6 +53,19 @@ export default class LeagueMember {
     const [firstValue] = this.players.values();
     return firstValue;
   }
+
+  getAvatar() {
+    return `https://sleepercdn.com/avatars/thumbs/${this.avatar}`
+  }
+
+  getTeamAvatar() {
+    if (!this.teamAvatar) {
+      return this.getAvatar()
+    } else {
+      return this.teamAvatar
+    }
+  }
+  
 
 
   getNotablePlayers(filteredPositions: POSITION[] = []) {
