@@ -19,9 +19,9 @@ export interface TradeDraftPick {
   league_id?: any;
 }
 
-export interface Adds { [key: string | number]: string | number }
+export interface Adds { [key: string | number]: number }
 
-export interface Drops { [key: string | number]: string | number }
+export interface Drops { [key: string | number]: number }
 
 export interface SleeperTransaction {
   waiver_budget: FaabTransfer[];

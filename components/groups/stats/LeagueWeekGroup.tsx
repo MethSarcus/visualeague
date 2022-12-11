@@ -1,7 +1,8 @@
+"use client"
 import { HStack } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
 import Matchup from "../../../classes/custom/Matchup";
-import LeagueNotableWeekStatCard from "../../cards/statcards/LeagueNotableWeekStatCard";
+import NotableMatchupStatCard from "../../cards/statcards/NotableMatchupStatCard";
 import WeekStatCard from "../../cards/statcards/WeekStatCard";
 
 interface MyProps {
@@ -55,33 +56,33 @@ export default function LeagueNotableWeeksStatGroup(props: MyProps) {
         }
         isLoaded={bestWeekTeam != undefined}
       />
-      <LeagueNotableWeekStatCard
+      <NotableMatchupStatCard
         matchup={biggestShootout}
         title={"Biggest Shootout"}
         mainStat={`${biggestShootout?.getCombinedScore().toFixed(2)}`}
         subSubStat={"Combined Points"}
-        isLoaded={biggestShootout != undefined}
+        isLoaded={bestWeekTeam != undefined}
       />
-            <LeagueNotableWeekStatCard
+            <NotableMatchupStatCard
         matchup={smallestShootout}
         title={"Smallest Shootout"}
         mainStat={`${smallestShootout?.getCombinedScore().toFixed(2)}`}
         subSubStat={"Combined Points"}
-        isLoaded={smallestShootout != undefined}
+        isLoaded={bestWeekTeam != undefined}
       />
-            <LeagueNotableWeekStatCard
+            <NotableMatchupStatCard
         matchup={closestGame}
         title={"Closest Match"}
         mainStat={`${closestGame?.getMargin().toFixed(2)}`}
         subSubStat={"margin"}
-        isLoaded={closestGame != undefined}
+        isLoaded={bestWeekTeam != undefined}
       />
-            <LeagueNotableWeekStatCard
+            <NotableMatchupStatCard
         matchup={furthestGame}
         title={"Biggest Stomp"}
         mainStat={`${furthestGame?.getMargin().toFixed(2)}`}
         subSubStat={"margin"}
-        isLoaded={furthestGame != undefined}
+        isLoaded={bestWeekTeam != undefined}
       />
     </HStack>
   );
