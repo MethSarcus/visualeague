@@ -12,7 +12,7 @@ import { MatchupSide } from "../../classes/custom/MatchupSide";
 import { project_colors } from "../../utility/project_colors";
 
 interface MyProps {
-  matchupSide: MatchupSide;
+  matchupSide: MatchupSide | undefined;
   member: LeagueMember | undefined;
   isWinner?: boolean | undefined;
   size: string;
@@ -48,7 +48,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
         size={"md"}
         borderColor={ringColor}
         borderWidth={2}
-        src={props.member?.teamAvatar}
+        src={props.member?.getTeamAvatar()}
       />
       <Box
         pl={1}
@@ -94,10 +94,10 @@ export default function MatchupHeaderTeam(props: MyProps) {
         textAlign={"end"}
       >
         <Text fontSize={"1.2em"} color={"#FBFBFB"} mt={1}>
-          {props.matchupSide.pf.toFixed(2)}
+          {props.matchupSide?.pf.toFixed(2) ?? "0.00"}
         </Text>
         <Text color={"#A7BAD0"} fontWeight={"semibold"} fontSize={".7em"}>
-          {props.matchupSide.projectedScore.toFixed(2)}
+          {props.matchupSide?.projectedScore.toFixed(2) ?? "0.00"}
         </Text>
       </Flex>
     </Flex>

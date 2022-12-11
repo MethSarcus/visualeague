@@ -91,7 +91,7 @@ export default function TeamPage() {
         </GridItem>
         <GridItem area={"weekStats"} overflowX={"clip"}>
           <Text mb={2} textColor={"textTheme.mediumEmphasis"}>
-            Team Stats
+            Matchup Stats
           </Text>
           <Box overflowX={"auto"}>
             <WeeklyTeamStatGroup
@@ -104,8 +104,8 @@ export default function TeamPage() {
           <Tabs variant="soft-rounded" colorScheme={"secondary"}>
             <TabList>
               <Tab>Pos Avg</Tab>
-              <Tab>Two</Tab>
               <Tab>Trades</Tab>
+              <Tab>TBD</Tab>
             </TabList>
 
             <TabPanels>
@@ -116,11 +116,12 @@ export default function TeamPage() {
                 />
               </TabPanel>
               <TabPanel>
-                <p>two!</p>
-              </TabPanel>
-              <TabPanel>
                 <MemberTradeGroup league={context} memberId={memberId} />
               </TabPanel>
+              <TabPanel>
+                <p>TBD</p>
+              </TabPanel>
+
             </TabPanels>
           </Tabs>
         </GridItem>

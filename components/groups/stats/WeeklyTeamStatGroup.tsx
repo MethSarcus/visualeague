@@ -5,6 +5,7 @@ import Matchup from "../../../classes/custom/Matchup";
 import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
 import MemberWeekStatCard from "../../cards/statcards/MemberWeekStatCard";
 import WeekStatWithLineupChartCard from "../../cards/statcards/MemberWeekStatCard";
+import NotableMatchupStatCard from "../../cards/statcards/NotableMatchupStatCard";
 
 interface MyProps {
   league?: League;
@@ -32,55 +33,32 @@ export default function TeamStatGroup(props: MyProps) {
 
   return (
     <HStack spacing={3} maxWidth="inherit">
-      {/* <MatchupStatCard
-        isLoaded={props.league?.settings != undefined}
-        player={undefined}
-        playerDetails={undefined}
-        mainStat={undefined}
-        title={undefined}
-        isGoodThing={undefined}
-      /> */}
-
-      <MemberWeekStatCard
+      <NotableMatchupStatCard
         title={"Best Week"}
         isLoaded={props.league?.settings != undefined}
-        matchupSide={bestWeek}
         memberId={props.memberId}
         mainStat={`${bestWeek?.pf.toFixed(2)} PF`}
+        matchup={notableWeeks?.bestWeek as any}
         subStat={`Week ${bestWeek?.weekNumber}`}
       />
-      <MemberWeekStatCard
+      <NotableMatchupStatCard
         title={"Worst Week"}
         isLoaded={props.league?.settings != undefined}
-        matchupSide={worstWeek}
         memberId={props.memberId}
         mainStat={`${worstWeek?.pf.toFixed(2)} PF`}
-        subStat={`Week ${worstWeek?.weekNumber}`}
-      />
-      <MemberWeekStatCard
+        subStat={`Week ${worstWeek?.weekNumber}`} matchup={notableWeeks?.worstWeek}      />
+      <NotableMatchupStatCard
         title={"Closest Matchup"}
         isLoaded={props.league?.settings != undefined}
-        matchupSide={closestMatchup?.getMemberSide(props.memberId)}
         memberId={props.memberId}
         mainStat={`${closestMatchup?.getMargin().toFixed(2)} Diff`}
-        subStat={`Week ${closestMatchup?.weekNumber}`}
-      />
-      <MemberWeekStatCard
+        subStat={`Week ${closestMatchup?.weekNumber}`} matchup={notableWeeks?.closestGame }      />
+      <NotableMatchupStatCard
         title={"Furthest Matchup"}
         isLoaded={props.league?.settings != undefined}
-        matchupSide={furthestMatchup?.getMemberSide(props.memberId)}
         memberId={props.memberId}
         mainStat={`${furthestMatchup?.getMargin().toFixed(2)} Diff`}
-        subStat={`Week ${furthestMatchup?.weekNumber}`}
-      />
-
-      {/* <MatchupSideStatCard
-        statName={"Gut Points"}
-        isLoaded={props.league?.settings != undefined}
-        statRank={ordinal_suffix_of(gutpointRank?.rank!)}
-        statValue={member?.stats.gp.toFixed(2)}
-        isGoodThing={gutpointRank?.aboveAverage}
-      /> */}
+        subStat={`Week ${furthestMatchup?.weekNumber}`} matchup={notableWeeks?.furthestGame}      />
     </HStack>
   );
 }
