@@ -56,7 +56,7 @@ import { Context } from "../../../../contexts/Context";
       <Container textColor={"white"} overflowY={"scroll"} color='white'>
       <Text color={"white"}>Trades</Text>
       <VStack maxH={"800px"} overflowY={"auto"} align={'stretch'}>
-      {context.trades.map((trade: Trade) => {
+      {context.getTradeScoreSortedTrades().map((trade: Trade) => {
               return <TradeCard key={trade.transaction_id} trade={trade} />;
             })}
       </VStack>

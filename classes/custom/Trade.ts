@@ -20,13 +20,14 @@ export default class Trade implements SleeperTransaction {
   leg: number;
   drops: Drops;
   draft_picks: TradeDraftPick[];
-  playersTraded: Set<string> = new Set()
+  playersTraded: Set<string> = new Set();
   creator: string;
   created: any;
   consenter_ids: number[];
   adds: Adds;
-  biggestPointDifferential = 0
-  biggestTradeScore = 0
+  biggestPointDifferential = 0;
+  biggestTradeScoreDifferential = 0;
+  numPlayersTraded: Map<number, number> = new Map();
 
   memberNetPoints = new Map<number, number>();
   memberTradeScore = new Map<number, number>();
@@ -51,47 +52,67 @@ export default class Trade implements SleeperTransaction {
 
     this.consenter_ids.forEach((id) => {
       this.memberNetPoints.set(id, 0);
-      
+      this.numPlayersTraded.set(id, 0);
     });
 
     if (transaction.adds != null) {
-        for (const [playerid, rosterid] of Object.entries(transaction.adds)) {
-            this.playerScoresSinceTrade.set(playerid, 0)
-            this.playersTraded.add(playerid)
-        }
+      for (const [playerid, rosterid] of Object.entries(transaction.adds)) {
+        this.playerScoresSinceTrade.set(playerid, 0);
+        this.playersTraded.add(playerid);
+        let curNumPlayersTraded = this.numPlayersTraded.get(rosterid);
+        this.numPlayersTraded.set(rosterid, (curNumPlayersTraded ?? 0) + 1);
+      }
     }
   }
 
   addPlayerScore(player_id: string, score: number) {
-    let curScore = this.playerScoresSinceTrade.get(player_id) ?? 0
-    this.playerScoresSinceTrade.set(player_id, curScore + score)
+    let curScore = this.playerScoresSinceTrade.get(player_id) ?? 0;
+    this.playerScoresSinceTrade.set(player_id, curScore + score);
   }
 
   setMemberPlayerDifferential() {
     this.playerScoresSinceTrade.forEach((score, player_id) => {
-        let newOwnerId = this.adds[player_id] as number
-        let newOwnerScore = this.memberNetPoints.get(newOwnerId)! + score
-        let oldOwnerId = this.drops[player_id] as number
-        let oldOwnerScore = this.memberNetPoints.get(oldOwnerId)! - score
+      let newOwnerId = this.adds[player_id];
+      let newOwnerScore = this.memberNetPoints.get(newOwnerId)! + score;
+      let oldOwnerId = this.drops[player_id];
+      let oldOwnerScore = this.memberNetPoints.get(oldOwnerId)! - score;
 
-        this.memberNetPoints.set(newOwnerId, newOwnerScore)
-        this.memberNetPoints.set(oldOwnerId, oldOwnerScore)
-    })
+      this.memberNetPoints.set(newOwnerId, newOwnerScore);
+      this.memberNetPoints.set(oldOwnerId, oldOwnerScore);
+    });
 
-    this.memberNetPoints.forEach((points, memberId) => {
-        let tradeValue = 0
-        let numAllPlayers: number = Object.entries(this.adds).length
+    this.memberNetPoints.forEach((points, rosterId) => {
+      let numAllPlayers: number = this.playersTraded.size;
+      let numPlayersTraded = this.numPlayersTraded.get(rosterId);
 
-        this.memberTradeScore.set(memberId, tradeValue)
-    })
-    this.getWorstDifferential()
+      if (numPlayersTraded != undefined) {
+        this.memberTradeScore.set(
+          rosterId,
+          this.calcTradeScore(numAllPlayers, numPlayersTraded, points)
+        );
+      }
+    });
+    this.getWorstDifferential();
+    this.getWorstTradeScoreDifferential()
   }
 
   getWorstDifferential() {
     this.memberNetPoints.forEach((points, id) => {
-        if (Math.abs(points) > this.biggestPointDifferential) {
-            this.biggestPointDifferential = Math.abs(points)
-        }
-    })
+      if (Math.abs(points) > this.biggestPointDifferential) {
+        this.biggestPointDifferential = Math.abs(points);
+      }
+    });
+  }
+
+  getWorstTradeScoreDifferential() {
+    this.memberTradeScore.forEach((points, id) => {
+      if (Math.abs(points) > this.biggestTradeScoreDifferential) {
+        this.biggestTradeScoreDifferential = Math.abs(points);
+      }
+    });
+  }
+
+  calcTradeScore(totalPlayers: number, numTraded: number, pf: number) {
+    return (totalPlayers / numTraded) * pf;
   }
 }

@@ -392,6 +392,18 @@ export default class League {
     })
   }
 
+  getTradeScoreSortedTrades() {
+    return this.trades.sort((a, b) => {
+      if (a.biggestTradeScoreDifferential < b.biggestTradeScoreDifferential) {
+        return 1;
+      } else if (a.biggestTradeScoreDifferential > b.biggestTradeScoreDifferential) {
+        return -1;
+      } else {
+        return 0;
+      }
+    })
+  }
+
   getPointsPlayerScored(playerId: string, roster_id: number) {
     return this.members.get(roster_id)?.players.get(playerId)?.points_scored;
   }

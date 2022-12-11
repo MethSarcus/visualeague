@@ -143,14 +143,14 @@ const customStyles = {
 
         style: {
 			background: project_colors.surface[2],
-			fontSize: ".5em",
+			fontSize: ".6rem",
 			minWidth: "60px!important",
 			color: project_colors.textTheme.highEmphasis,
         },
     },
     cells: {
         style: {
-			fontSize: ".6em",
+			fontSize: ".7rem",
 			minWidth: "60px!important",
 			color: project_colors.textTheme.highEmphasis,
 			background: project_colors.surface[1]
