@@ -1,5 +1,6 @@
 "use client"
 import { Box, Button, Collapse, Container, Fade, Input, ScaleFade, SlideFade, Wrap, WrapItem } from "@chakra-ui/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import LeagueCellGroup from "./LeagueCellGroup";
 
@@ -39,12 +40,13 @@ function UsernameForm() {
   };
 
   return (
-    <Container>
+    <Container data-testid="username_form">
       <form onSubmit={onFormSubmit}>
         <Input
           list={"data"}
           variant="outline"
           placeholder="Username"
+          data-testid="username_input"
           size="lg"
           p={5}
           display="inline-block"
@@ -57,6 +59,7 @@ function UsernameForm() {
             variant="solid"
             size="sm"
             type="submit"
+            data-testid="username_submit"
             p={4}
             backgroundColor="primary.500"
             color="#000000"
@@ -66,6 +69,18 @@ function UsernameForm() {
           >
             Submit
           </Button>
+          <Link href="https://github.com/MethSarcus/visualeague/issues/new/choose" target="_blank" rel="noreferrer">
+          <Button
+            variant="ghost"
+            size="sm"
+            ml={2}
+            p={4}
+            colorScheme='red'
+            mt={4}
+            h={6}
+          >
+            Report Bug
+          </Button></Link>
         </Collapse>
       </form>
 
@@ -78,7 +93,7 @@ function UsernameForm() {
             />
           </Box>
         </Collapse>
-        <Collapse in={!usernameSubmitted && storedUsernames.length > 0}>
+        <Collapse data-testid="saved_username_container" in={!usernameSubmitted && storedUsernames.length > 0}>
             <Box pt={6}>Recent Searches</Box>
             <Wrap pt={2}>
               {storedUsernames.map((item, index) => {
