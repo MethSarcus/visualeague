@@ -1,5 +1,6 @@
 "use client"
 import { Box, Button, Collapse, Container, Fade, Input, ScaleFade, SlideFade, Wrap, WrapItem } from "@chakra-ui/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import LeagueCellGroup from "./LeagueCellGroup";
 
@@ -66,6 +67,18 @@ function UsernameForm() {
           >
             Submit
           </Button>
+          <Link href="https://github.com/MethSarcus/visualeague/issues/new/choose" target="_blank" rel="noreferrer">
+          <Button
+            variant="ghost"
+            size="sm"
+            ml={2}
+            p={4}
+            colorScheme='red'
+            mt={4}
+            h={6}
+          >
+            Report Bug
+          </Button></Link>
         </Collapse>
       </form>
 
