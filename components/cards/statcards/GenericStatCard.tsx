@@ -7,7 +7,7 @@ type MyProps = {
   statOwner?: String | null | undefined;
   isLoaded: boolean;
   isGoodThing: boolean;
-  avatar: string
+  avatar?: string
 };
 
 const GenericStatCard = (props: MyProps) => {
