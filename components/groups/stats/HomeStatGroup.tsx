@@ -18,6 +18,7 @@ export default function HomeStatGroup(props: MyProps) {
           isLoaded = {props.league?.settings != undefined}
           statValue={notableMembers?.highestScoring.stats.pf.toFixed(2)}
           statOwner={notableMembers?.highestScoring.name}
+          avatar={notableMembers?.highestScoring.getAvatar() ?? ""}
           isGoodThing={true} />
 
 
@@ -27,6 +28,7 @@ export default function HomeStatGroup(props: MyProps) {
         statName={"Best Manager"}
         statValue={`${notableMembers?.bestManager.stats.gp.toFixed(2)} Gut Points`}
         statOwner={notableMembers?.bestManager.name}
+        avatar={notableMembers?.bestManager.getAvatar() ?? ""}
         isGoodThing={true}
       
       />
@@ -36,6 +38,7 @@ export default function HomeStatGroup(props: MyProps) {
         isLoaded = {props.league?.settings != undefined}
         statValue={notableMembers?.lowestScoring.stats.pf.toFixed(2)}
         statOwner={notableMembers?.lowestScoring.name}
+        avatar={notableMembers?.lowestScoring.getAvatar() ?? ""}
         isGoodThing={false}
         
       />
@@ -45,6 +48,7 @@ export default function HomeStatGroup(props: MyProps) {
         statName={"Worst Manager"}
         statValue={`${notableMembers?.worstManager.stats.gp.toFixed(2)} Gut Points`}
         statOwner={notableMembers?.worstManager.name}
+        avatar={notableMembers?.worstManager.getAvatar() ?? ""}
         isGoodThing={false}
         
       />

@@ -49,7 +49,7 @@ export default function InvertedMatchupHeaderTeam(props: MyProps) {
         size={"md"}
         borderColor={ringColor}
         borderWidth={2}
-        src={props.member?.teamAvatar}
+        src={props.member?.getTeamAvatar()}
       />
       <Box pr={1}
             mt={"auto"}

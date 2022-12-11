@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, Flex, SkeletonText } from "@chakra-ui/react";
+import { Avatar, Box, Container, Flex, SkeletonText, Spacer } from "@chakra-ui/react";
 
 type MyProps = {
   statName?: String | null | undefined;
@@ -7,12 +7,14 @@ type MyProps = {
   statOwner?: String | null | undefined;
   isLoaded: boolean;
   isGoodThing: boolean;
+  avatar?: string
 };
 
 const GenericStatCard = (props: MyProps) => {
   return (
-    <Box
+    <Flex
       p={2}
+      flexDir={"column"}
       textAlign={"center"}
       bg={"surface.0"}
       border={"1px"}
@@ -21,18 +23,20 @@ const GenericStatCard = (props: MyProps) => {
       borderTop="2px"
       borderTopColor={props.isGoodThing ? "rgb(151,245,143, .8)" : "#B00020"}
     >
-
+        <Spacer/>
             <SkeletonText noOfLines={3} spacing={1} isLoaded={props.isLoaded}>
               <Box
-                fontWeight="bold"
-                fontSize={[".7em", "1em"]}
+                                fontWeight={"medium"}
+                fontSize={[".6em", "1em"]}
                 color={"textTheme.highEmphasis"}
               >
                 {props.statName}
               </Box>
+              <Avatar size={"sm"} my={.25} src={props.avatar}/>
               <Box
+              fontWeight="bold"
                 fontSize={[".9em", "1em"]}
-                fontWeight={"medium"}
+
                 color={"textTheme.highEmphasis"}
               >
                 {props.statOwner}
@@ -45,7 +49,8 @@ const GenericStatCard = (props: MyProps) => {
                 {props.statValue}
               </Box>
             </SkeletonText>
-    </Box>
+            <Spacer/>
+    </Flex>
   );
 };
 
