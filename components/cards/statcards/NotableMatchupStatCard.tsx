@@ -150,10 +150,13 @@ const NotableMatchupStatCard = (props: MyProps) => {
         </Center>
 
         <Text fontSize={".8em"} mt={2} color={"textTheme.highEmphasis"}>
+          <Skeleton>
           {props.mainStat}
+          </Skeleton>
+          
         </Text>
         <Text fontSize={".7em"} color={"textTheme.highEmphasis"}>
-        {props.subSubStat}
+        {props.subSubStat ?? ""}
         </Text>
         <Spacer />
         <Button
