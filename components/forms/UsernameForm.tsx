@@ -40,12 +40,13 @@ function UsernameForm() {
   };
 
   return (
-    <Container>
+    <Container data-testid="username_form">
       <form onSubmit={onFormSubmit}>
         <Input
           list={"data"}
           variant="outline"
           placeholder="Username"
+          data-testid="username_input"
           size="lg"
           p={5}
           display="inline-block"
@@ -58,6 +59,7 @@ function UsernameForm() {
             variant="solid"
             size="sm"
             type="submit"
+            data-testid="username_submit"
             p={4}
             backgroundColor="primary.500"
             color="#000000"
@@ -91,7 +93,7 @@ function UsernameForm() {
             />
           </Box>
         </Collapse>
-        <Collapse in={!usernameSubmitted && storedUsernames.length > 0}>
+        <Collapse data-testid="saved_username_container" in={!usernameSubmitted && storedUsernames.length > 0}>
             <Box pt={6}>Recent Searches</Box>
             <Wrap pt={2}>
               {storedUsernames.map((item, index) => {

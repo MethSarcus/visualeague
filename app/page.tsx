@@ -36,7 +36,6 @@ export default function Page() {
             <GridItem area={"main"} w="100vw">
               <Container
                 className="formContainer"
-                data-testid="username_form"
                 maxW={"2xl"}
                 maxH={"2xl"}
                 bg={"surface"}
