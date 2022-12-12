@@ -15,6 +15,7 @@ export default class LeagueMember {
   public stats: MemberScores = new MemberScores();
   public tradeStats: Map<number, number> = new Map();
   public players: Map<string, SeasonPlayer> = new Map();
+  public division_id: number
 
   constructor(userDetails: SleeperUser, roster: SleeperRoster) {
     this.userDetails = userDetails;
@@ -22,6 +23,7 @@ export default class LeagueMember {
     this.name = userDetails.display_name;
     this.userId = userDetails.user_id;
     this.avatar = userDetails.avatar
+    this.division_id = roster.settings.division
 
     if (userDetails.metadata.team_name != null) {
       this.teamName = userDetails.metadata.team_name

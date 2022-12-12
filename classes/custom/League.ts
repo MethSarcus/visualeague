@@ -848,12 +848,24 @@ export default class League {
             if (homeTeam.pf > awayTeam.pf) {
               homeMember.stats.wins += 1;
               awayMember.stats.losses += 1;
+              if (homeMember.division_id == awayMember.division_id) {
+                homeMember.stats.divisionWins += 1
+                awayMember.stats.divisionLosses += 1
+              }
             } else if (homeTeam.pf < awayTeam.pf) {
               awayMember.stats.wins += 1;
               homeMember.stats.losses += 1;
+              if (homeMember.division_id == awayMember.division_id) {
+                awayMember.stats.divisionWins += 1
+                homeMember.stats.divisionLosses += 1
+              }
             } else {
               homeMember.stats.ties += 1;
               awayMember.stats.ties += 1;
+              if (homeMember.division_id == awayMember.division_id) {
+                homeMember.stats.divisionTies += 1
+                awayMember.stats.divisionTies += 1
+              }
             }
 
             if (homeTeam.projectedScore < awayTeam.projectedScore) {

@@ -10,7 +10,7 @@ export interface LeagueSettings {
     roster_positions?: (string)[] | null;
     previous_league_id: string;
     name: string;
-    metadata?: Metadata | null;
+    metadata?: DivisionMetadata | null;
     loser_bracket_id?: null;
     league_id: string;
     last_transaction_id: number;
@@ -196,7 +196,7 @@ export interface LeagueSettings {
     fgmiss_20_29?: number | null;
     rec_fd?: number | null;
   }
-  export interface Metadata {
+  export interface DivisionMetadata {
     division_2: string;
     division_1: string;
     division_2_avatar?: string | null;
