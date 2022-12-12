@@ -18,8 +18,8 @@ export default function RootLayout({
         {
           <Context.Provider value={[context, setContext]}>
             <ChakraProvider theme={customTheme}>
+            <Analytics />
               {children}
-              <Analytics />
             </ChakraProvider>
           </Context.Provider>
         }
