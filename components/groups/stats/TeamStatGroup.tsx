@@ -20,6 +20,7 @@ export default function TeamStatGroup(props: MyProps) {
   let ppRank;
   let opslapRank;
   let gutpointRank;
+  
 
   if (props.league?.settings != undefined) {
     member = props.league.members.get(props.memberId);

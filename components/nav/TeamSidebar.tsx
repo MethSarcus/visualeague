@@ -20,10 +20,18 @@ export default function TeamSidebar() {
   return (
     <>
       {context.settings && (
-        <Button size={"sm"} colorScheme={"secondary"} textColor="black" variant='ghost' onClick={onOpen}
-        aria-label={"teams"}>
-          Teams
-        </Button>
+                <Button
+                onClick={onOpen}
+                size={"md"}
+                borderRadius={0}
+                fontWeight={"medium"}
+                colorScheme={"primary"}
+                textColor="black"
+                variant="ghost"
+                aria-label={`teams`}
+              >
+                Teams
+              </Button>
       )}
       <Drawer isOpen={isOpen} placement="left"  onClose={onClose}>
         <DrawerOverlay />

@@ -23,5 +23,8 @@ export default class MemberScores {
     public position_scores: Map<POSITION, number> = new Map()
     public projected_position_scores: Map<POSITION, number> = new Map()
     public position_starts: Map<POSITION, number> = new Map()
+    public divisionWins: number = 0
+    public divisionLosses: number = 0
+    public divisionTies: number = 0
   }
   

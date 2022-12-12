@@ -1,4 +1,11 @@
-import { Box, Button, Center, Flex, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  HStack,
+  pseudoPropNames,
+} from "@chakra-ui/react";
 import { useContext } from "react";
 import { Context } from "../../contexts/Context";
 import SettingsSidebar from "./SettingsSidebar";
@@ -8,16 +15,25 @@ import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
 
 interface MyProps {
-  leagueID: string | undefined
+  leagueID: string | undefined;
 }
 
 function Navbar(props: MyProps) {
   const [context, setContext] = useContext(Context);
+  const buttonColor = {
+    50: "#surface.300",
+    500: "#surface.500",
+    900: "surface.800",
+  };
 
   return (
-    <Flex bg={"secondary.600"} maxWidth={"100vw"}>
+    <Flex
+      bg={"secondary.600"}
+      bgGradient="linear(to-r, secondary.600, secondary.700)"
+      maxWidth={"100vw"}
+    >
       <HStack
-        spacing="4px"
+        spacing="0px"
         pl={3}
         paddingY={1}
         flex={1}
@@ -25,61 +41,38 @@ function Navbar(props: MyProps) {
         maxWidth={"100vw"}
         overflow="hidden"
       >
-        <MobileSidebar/>
-        <Box as={"b"} fontSize="lg" mr={2}>
-          
-            <Link href={`league/${props.leagueID}`}>
-              <Button variant={"ghost"}>Visualeague</Button>
-            </Link>
-        </Box>
+        <MobileSidebar />
+        <NavbarButton
+          buttonText="VisuaLeague"
+          disabled={context.settings == undefined}
+          link={`league/${context.settings?.league_id}`}
+        />
       </HStack>
       <HStack
-        spacing="4px"
-        pl={3}
-        paddingY={1}
+
+        py={0}
+        my={0}
         flex={1}
+        gap={0}
+        spacing="0px"
         display={{ sm: "flex", base: "none" }}
         maxWidth={"100vw"}
         overflow="hidden"
       >
-        <Box as={"b"} fontSize="lg" mr={2}>
-          {context != undefined && context.settings && (
-            <Link href={`league/${context.settings.league_id}`}>
-              <Button variant={"ghost"}>Visualeague</Button>
-            </Link>
-          )}
-          {context == undefined && (
-              <Button variant={"ghost"}>Visualeague</Button>
-          )}
-        </Box>
+        
+        <NavbarButton
+          buttonText="VisuaLeague"
+          link={`league/${context.settings?.league_id}`}
+        />
         <TeamSidebar />
-        <Box>
-            <Link href={`league/${context?.settings?.league_id}/ranks`}>
-              <Button
-              disabled={props.leagueID == undefined}
-                size={"sm"}
-                colorScheme={"primary"}
-                textColor="black"
-                variant="ghost"
-                aria-label={"teams"}
-              >
-                Power Rankings
-              </Button>
-            </Link>
-        </Box>
-        <Box>
-            <Link href={`league/${context?.settings?.league_id}/trades`}>
-              <Button
-                size={"sm"}
-                colorScheme={"secondary"}
-                textColor="black"
-                variant="ghost"
-                aria-label={"teams"}
-              >
-                Trading
-              </Button>
-            </Link>
-        </Box>
+        <NavbarButton
+          buttonText="Power Rankings"
+          link={`league/${context?.settings?.league_id}/ranks`}
+        />
+        <NavbarButton
+          buttonText="Trading"
+          link={`league/${context?.settings?.league_id}/trades`}
+        />
       </HStack>
       <Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
     </Flex>
@@ -87,3 +80,47 @@ function Navbar(props: MyProps) {
 }
 
 export default Navbar;
+
+interface NavButtonProps {
+  buttonText: string;
+  link?: string;
+  disabled?: boolean;
+  onclick?: () => void;
+}
+function NavbarButton(props: NavButtonProps) {
+  if (props.link != undefined) {
+    return (
+      <Link href={props.link} >
+        <Button
+          onClick={props.onclick}
+          disabled={props.disabled ?? false}
+          size={"md"}
+          borderRadius={0}
+          fontWeight={"medium"}
+          colorScheme={"primary"}
+          textColor="black"
+          variant="ghost"
+          aria-label={props.buttonText}
+        >
+          {props.buttonText}
+        </Button>
+      </Link>
+    );
+  } else {
+    return (
+      <Button
+        onClick={props.onclick}
+        disabled={props.disabled ?? false}
+        size={"md"}
+        borderRadius={0}
+        fontWeight={"medium"}
+        colorScheme={"primary"}
+        textColor="black"
+        variant="ghost"
+        aria-label={props.buttonText}
+      >
+        {props.buttonText}
+      </Button>
+    );
+  }
+}

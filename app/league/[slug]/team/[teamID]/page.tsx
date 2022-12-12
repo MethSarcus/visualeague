@@ -75,6 +75,7 @@ export default function TeamPage() {
           </Flex>
         </GridItem>
         <GridItem area={"stats"}>
+          {/* <Text color={"white"}>Division Record: {member?.stats?.divisionWins} - {member?.stats?.divisionLosses}</Text> */}
           <TeamStatGroup league={context} memberId={parseInt(memberId!)} />
         </GridItem>
 

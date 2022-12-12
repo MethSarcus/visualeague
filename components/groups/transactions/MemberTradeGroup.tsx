@@ -20,7 +20,7 @@ const MemberTradeGroup = (props: MyProps) => {
       overflowY={"auto"}
       color="white"
     >
-      {(props.league?.getUserNumberTrades(id!) == 0) && <Text color={"white"}>{props.league.members.get(id!)?.name} is allergic to trades</Text>}
+      {((props.league?.getUserNumberTrades?.(id!) ?? 0) == 0) && <Text color={"white"}>{props.league?.members?.get(id!)?.name} is allergic to trades</Text>}
       {props.league?.trades &&
         props.league?.trades
           ?.filter((trade) => {

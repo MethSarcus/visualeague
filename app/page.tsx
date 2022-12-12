@@ -27,7 +27,7 @@ export default function Page() {
           <Grid
             templateAreas={`"empty"
         "main"
-        `}
+        `} 
             templateRows="1fr"
             templateColumns="1fr"
           >
