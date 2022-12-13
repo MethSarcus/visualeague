@@ -70,7 +70,7 @@ function Navbar(props: MyProps) {
             pr={2}
             transition={"all .2s ease-in-out"}
             _hover={{
-              transform: "scale(1.1)",
+              transform: "scale(1.05)",
               backgroundColor: "surface.0",
               cursor: "pointer",
             }}
@@ -79,7 +79,7 @@ function Navbar(props: MyProps) {
           </Box>
         </Link>
         <NavbarButton
-          buttonText="Summary"
+          buttonText="League"
           link={`league/${context.settings?.league_id}`}
         />
         <TeamSidebar />
@@ -112,7 +112,7 @@ function NavbarButton(props: NavButtonProps) {
         <Button
                     transition={"all .2s ease-in-out"}
                     _hover={{
-                      transform: "scale(1.1)",
+                      transform: "scale(1.05)",
                       backgroundColor: "surface.0",
                       cursor: "pointer",
                     }}
@@ -135,7 +135,7 @@ function NavbarButton(props: NavButtonProps) {
       <Button
       transition={"all .2s ease-in-out"}
       _hover={{
-        transform: "scale(1.1)",
+        transform: "scale(1.05)",
         backgroundColor: "surface.0",
         cursor: "pointer",
       }}
