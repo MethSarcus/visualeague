@@ -50,6 +50,7 @@ const TeamPageRadarChart = (props: MyProps) => {
             translateX: -20,
             translateY: -20,
             itemWidth: 80,
+            toggleSerie: true,
             itemHeight: 20,
             itemTextColor: "#999",
             symbolSize: 12,

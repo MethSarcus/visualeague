@@ -26,6 +26,7 @@ import {
   Fade,
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
+import { MdOutlineExpandLess, MdOutlineExpandMore, MdUnfoldLess } from "react-icons/md";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import { Context } from "../../contexts/Context";
 import LeagueMemberButton from "../cards/LeagueMemberButton";
@@ -39,12 +40,11 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <>
+    <Box _hover={{ textColor: "grey", cursor: "pointer" }} aria-label={"Teams"} onClick={onToggle}>
       <Button
-        onClick={onToggle}
         variant={"unstyled"}
-        _hover={{ textColor: "grey" }}
-      >
+        rightIcon={<MdOutlineExpandMore/>}
+              >
         Teams
       </Button>
       <Collapse in={isOpen} animateOpacity>
@@ -64,7 +64,7 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
             );
           })}
       </Collapse>
-    </>
+    </Box>
   );
 }
 
