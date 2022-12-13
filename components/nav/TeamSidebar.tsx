@@ -26,7 +26,7 @@ export default function TeamSidebar() {
                 borderRadius={0}
                 fontWeight={"medium"}
                 colorScheme={"primary"}
-                textColor="black"
+                textColor="white"
                 variant="ghost"
                 aria-label={`teams`}
               >
