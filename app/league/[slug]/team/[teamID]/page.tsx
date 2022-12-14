@@ -21,7 +21,7 @@ import Matchup from "../../../../../classes/custom/Matchup";
 import { MatchupSide } from "../../../../../classes/custom/MatchupSide";
 import { Week } from "../../../../../classes/custom/Week";
 import MatchupPreview from "../../../../../components/cards/MatchupPreview";
-import TeamCardWithTrendingGraph from "../../../../../components/cards/TeamCard";
+import TeamCardWithTrendingGraph from "../../../../../components/cards/TeamCardWithTrendingGraph";
 import TeamPageRadarChart from "../../../../../components/charts/team_charts/TeamPageRadarChart";
 import TeamPlayerStatGroup from "../../../../../components/groups/stats/TeamPlayerStatGroup";
 import TeamStatGroup from "../../../../../components/groups/stats/TeamStatGroup";

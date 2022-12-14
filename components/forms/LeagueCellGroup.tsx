@@ -31,7 +31,7 @@ const LeagueCellGroup = (props: MyProps) => {
   if (!userData || !leaguesData) return <Spinner size={"md"} />
 
   return (
-    <Wrap>
+    <Wrap overflowY={"scroll"} maxH={"400px"}>
       {leaguesData.map((league: LeagueSettings) => {
         return (
           <WrapItem key={league.league_id}>

@@ -5,6 +5,7 @@ import {
   ordinal_suffix_of,
   POSITION,
   standardDeviation,
+  TIE_CONST,
 } from "../../utility/rosterFunctions";
 import { LeagueSettings, ScoringSettings } from "../sleeper/LeagueSettings";
 import SleeperLeague from "../sleeper/SleeperLeague";
@@ -440,16 +441,16 @@ export default class League {
             let homeTeam = matchup.homeTeam;
             let awayTeam = matchup.awayTeam;
             if (awayTeam) {
-              let highScore = matchup.getMemberSide(matchup.winnerRosterId)?.pf;
-              let lowScore = matchup.getMemberSide(matchup.loserRosterId!)?.pf;
+              let highScore = matchup.getMemberSide(matchup.winnerRosterId)?.pf ?? matchup.homeTeam;
+              let lowScore = matchup.getMemberSide(matchup.loserRosterId!)?.pf ?? matchup.awayTeam;
               let margin = matchup.getMargin();
               let combinedScore = homeTeam.pf + (awayTeam?.pf ?? 0);
 
-              if (highScore! > matchupForBestTeam?.getWinner()!.pf) {
+              if (highScore! > (matchupForBestTeam?.getWinner()?.pf ?? matchupForBestTeam.homeTeam.pf)) {
                 matchupForBestTeam = matchup;
               }
 
-              if (lowScore! < matchupForBestTeam?.getLoser()!.pf) {
+              if (lowScore! < (matchupForBestTeam?.getLoser()!.pf ?? matchupForWorstTeam?.homeTeam.pf)) {
                 matchupForWorstTeam = matchup;
               }
 
@@ -845,21 +846,21 @@ export default class League {
               }
             });
 
-            if (homeTeam.pf > awayTeam.pf) {
+            if (matchup.winnerRosterId == homeMember.roster.roster_id) {
               homeMember.stats.wins += 1;
               awayMember.stats.losses += 1;
               if (homeMember.division_id == awayMember.division_id) {
                 homeMember.stats.divisionWins += 1
                 awayMember.stats.divisionLosses += 1
               }
-            } else if (homeTeam.pf < awayTeam.pf) {
+            } else if (awayMember.roster.roster_id == matchup.winnerRosterId) {
               awayMember.stats.wins += 1;
               homeMember.stats.losses += 1;
               if (homeMember.division_id == awayMember.division_id) {
                 awayMember.stats.divisionWins += 1
                 homeMember.stats.divisionLosses += 1
               }
-            } else {
+            } else if (matchup.winnerRosterId == TIE_CONST) {
               homeMember.stats.ties += 1;
               awayMember.stats.ties += 1;
               if (homeMember.division_id == awayMember.division_id) {
@@ -868,15 +869,17 @@ export default class League {
               }
             }
 
-            if (homeTeam.projectedScore < awayTeam.projectedScore) {
-              homeMember.stats.timesUnderdog += 1;
-              if (matchup.winnerRosterId == homeId) {
-                homeMember.stats.upsets += 1;
-              }
-            } else {
+            if (homeMember.roster.roster_id == matchup.projectedWinnerRosterId) {
               awayMember.stats.timesUnderdog += 1;
-              if (matchup.winnerRosterId == awayId) {
+              if (matchup.winnerRosterId != homeId) {
+                homeMember.stats.wasUpset += 1;
                 awayMember.stats.upsets += 1;
+              }
+            } else if (awayMember.roster.roster_id == matchup.projectedWinnerRosterId) {
+              homeMember.stats.timesUnderdog += 1;
+              if (matchup.winnerRosterId != awayId) {
+                awayMember.stats.wasUpset += 1;
+                homeMember.stats.upsets += 1
               }
             }
           }

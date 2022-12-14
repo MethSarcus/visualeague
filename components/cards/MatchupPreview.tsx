@@ -35,12 +35,12 @@ export default function MatchupPreview(props: MyProps) {
     opponentId = props.matchup?.homeTeam?.roster_id;
   }
 
-  let shadowColor = project_colors.statColor.neutral;
+  let shadowColor = `inset 1px 1px 1px 1px ${project_colors.outcomeColor.tie_red}, inset 0px 0px 0px 1px ${project_colors.outcomeColor.tie_green}`;
   if (props.member != undefined && props.matchup && !props.matchup?.isTie) {
     if (props.matchup?.winnerRosterId == props?.member.roster.roster_id) {
-      shadowColor = project_colors.statColor.good;
+      shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.good}`
     } else {
-      shadowColor = project_colors.statColor.bad;
+      shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.bad}`
     }
   }
 
@@ -58,7 +58,7 @@ export default function MatchupPreview(props: MyProps) {
           gap={0}
           onClick={onOpen}
           borderRadius={"md"}
-          boxShadow={`inset 0px 0px 0px 1px ${shadowColor}`}
+          boxShadow={shadowColor}
           transition={"all .2s ease-in-out"}
           _hover={{
             transform: "scale(1.1)",
@@ -88,7 +88,7 @@ export default function MatchupPreview(props: MyProps) {
             </Text>
 
           </SkeletonText>
-          <Text pt={1} fontWeight={"semibold"} color={shadowColor} letterSpacing={"wide"}>view</Text>
+          <Text pt={2} fontWeight={"semibold"} color={props.matchup?.winnerRosterId == props.member?.roster.roster_id ? project_colors.outcomeColor.win : project_colors.outcomeColor.loss} bgGradient={props.matchup?.isTie ? 'linear(to-l, #7928CA, #FF0080)' : undefined} bgClip={props.matchup?.isTie ? 'text' : undefined} letterSpacing={"wide"}>view</Text>
         </VStack>
         
       </Box>

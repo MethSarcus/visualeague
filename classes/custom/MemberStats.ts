@@ -12,6 +12,7 @@ export default class MemberScores {
     public winnableLosses: number = 0
     public timesUnderdog: number = 0
     public upsets: number = 0
+    public wasUpset: number = 0
     public wins: number = 0
     public losses: number = 0
     public ties: number = 0

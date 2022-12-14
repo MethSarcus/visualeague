@@ -67,9 +67,16 @@ export const project_colors = {
    text_dark: "#96A2B6",
    badge_background: "#42495B",
    border_color: "#2F3241"
+  },
+  outcomeColor: {
+    win: "rgb(121,229,172, 1)",
+    loss: "rgb(234,67,111, 1)",
+    tie_color: '#BC14A5',
+    tie_gradient: 'linear(to-l, #7928CA, #FF0080)',
+    tie_green: "#FF0080",
+    tie_red: "#7928CA"
   }
 };
-
 
 export function lerp(colors: number[][], value: number){
   return [

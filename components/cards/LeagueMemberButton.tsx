@@ -12,7 +12,7 @@ type MyProps = {
 
 const LeagueMemberButton = (props: MyProps) => {
   return (
-    <Box my={1} onClick={props.onclose}>
+    <Box onClick={props.onclose}>
     <Link href={`league/${props.leagueId}/team/${props.member.roster.roster_id}`} >
       <Button size={"sm"} p={3} colorScheme="secondary" leftIcon={<Avatar
         src={`https://sleepercdn.com/avatars/thumbs/${props.member.avatar}`}
