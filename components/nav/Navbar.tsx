@@ -66,6 +66,7 @@ function Navbar(props: MyProps) {
       >
         <Link href={`/`}>
           <Box
+            py={2}
             pl={3}
             pr={2}
             transition={"all .2s ease-in-out"}
@@ -112,14 +113,14 @@ function NavbarButton(props: NavButtonProps) {
         <Button
                     transition={"all .2s ease-in-out"}
                     _hover={{
-                      transform: "scale(1.05)",
-                      backgroundColor: "surface.0",
+                      transform: "scale(1.03)",
+                      backgroundColor: "secondary.600",
                       cursor: "pointer",
                     }}
           onClick={props.onclick}
           disabled={props.disabled ?? false}
           size={"md"}
-          borderRadius={0}
+          borderRadius={8}
           fontWeight={"medium"}
           colorScheme={"primary"}
           textColor="white"
@@ -135,14 +136,14 @@ function NavbarButton(props: NavButtonProps) {
       <Button
       transition={"all .2s ease-in-out"}
       _hover={{
-        transform: "scale(1.05)",
-        backgroundColor: "surface.0",
+        transform: "scale(1.03)",
+        backgroundColor: "secondary.600",
         cursor: "pointer",
       }}
         onClick={props.onclick}
         disabled={props.disabled ?? false}
         size={"md"}
-        borderRadius={0}
+        borderRadius={8}
         fontWeight={"medium"}
         colorScheme={"primary"}
         textColor="white"

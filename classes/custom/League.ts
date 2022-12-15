@@ -37,6 +37,7 @@ export default class League {
   public settings: LeagueSettings;
   public modifiedSettings?: LeagueSettings;
   public useModifiedSettings: boolean = false;
+  public taxiIncludedInMaxPf: boolean = false;
   public playerDetails: Map<string, SleeperPlayerDetails> = new Map();
   public playerStatMap: Map<number, any> = new Map();
   public playerProjectionMap: Map<number, any> = new Map();
@@ -69,7 +70,7 @@ export default class League {
     this.setStats(sleeperLeague.player_stats);
     this.initMemberTradeStats();
     this.setProjections(sleeperLeague.player_projections);
-    this.setWeeks(sleeperLeague.matchups);
+    this.setWeeks(sleeperLeague.matchups, this.getTaxiMap())
     this.calcMemberScores();
     this.setLeagueStats();
   }
@@ -316,7 +317,11 @@ export default class League {
     });
   }
 
-  modifyStats(customSettings: ScoringSettings) {
+  setTaxiSquadIncluded(include: boolean) {
+    this.taxiIncludedInMaxPf = include
+  }
+
+  modifyStats(customSettings: ScoringSettings, useTaxiSquad: boolean) {
     this.modifiedSettings = produce(
       this.modifiedSettings,
       (draftState: LeagueSettings) => {
@@ -324,7 +329,7 @@ export default class League {
       }
     );
     this.useModifiedSettings = true;
-    this.recalcStats();
+    this.recalcStats(useTaxiSquad);
   }
 
   disableModifiedStats() {
@@ -347,7 +352,7 @@ export default class League {
     }
   }
 
-  setWeeks(allMatchups: SleeperMatchup[][]) {
+  setWeeks(allMatchups: SleeperMatchup[][], taxiMap?: Map<number, string[]>) {
     allMatchups.forEach((weekMatchups: SleeperMatchup[], index: number) => {
       let weekNum = index + 1;
       let isPlayoffs = false;
@@ -368,7 +373,8 @@ export default class League {
         this.playerProjectionMap,
         this.playerDetails,
         settings,
-        isPlayoffs
+        isPlayoffs,
+        taxiMap
       );
       this.weeks.set(weekNum, week);
     });
@@ -645,12 +651,27 @@ export default class League {
     };
   }
 
-  recalcStats() {
+  recalcStats(useTaxiSquad: boolean) {
+    let taxiMap
     for (let [key, member] of this.members) {
       member.stats = new MemberScores();
     }
-    this.setWeeks(this.allMatchups);
+    if (!useTaxiSquad) {
+      this.taxiIncludedInMaxPf = useTaxiSquad
+      taxiMap = this.getTaxiMap()
+    }
+    this.setWeeks(this.allMatchups, taxiMap);
     this.calcMemberScores();
+  }
+
+  //Returns a map of roster id to list of player ids on taxi squad
+  getTaxiMap() {
+    let taxiMap = new Map()
+    this.members.forEach(member => {
+      taxiMap.set(member.roster.roster_id, member.roster.taxi)
+    })
+
+    return taxiMap
   }
 
   calcMemberScores() {

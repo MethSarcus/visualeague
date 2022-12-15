@@ -174,3 +174,16 @@ a {
   color: #c4c4c4;
   transition: 2s;
 }
+
+
+/* WebKit and Chromiums */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #1A202E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2F3241;
+  border-radius: 5px;
+}

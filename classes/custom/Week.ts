@@ -8,7 +8,7 @@ export class Week {
     matchups: Map<number, Matchup> = new Map()
     weekNumber: number
 
-    constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerStats: any, playerProjections: any, playerDetails: Map<string, SleeperPlayerDetails>, leagueSettings: LeagueSettings, isPlayoffs: boolean) {
+    constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerStats: any, playerProjections: any, playerDetails: Map<string, SleeperPlayerDetails>, leagueSettings: LeagueSettings, isPlayoffs: boolean, taxiMap?: Map<number, string[]>) {
         this.weekNumber = weekNumber
         let matchupIds = new Map()
         sleeperMatchups.forEach((matchup: SleeperMatchup) => {
@@ -21,11 +21,12 @@ export class Week {
     
           matchupIds.forEach((matchupPair: SleeperMatchup[], matchupId: number) => {
             if (matchupPair.length == 2) {
-                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings),
-                isPlayoffs,
-                new MatchupSide(weekNumber, matchupPair[1], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings)))
+                let homeMatchupSide = new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchupPair[0].roster_id) ?? [])
+                let awayMatchupSide = new MatchupSide(weekNumber, matchupPair[1], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchupPair[1].roster_id) ?? [])
+                this.matchups.set(matchupId, new Matchup(weekNumber, homeMatchupSide,
+                isPlayoffs, awayMatchupSide))
             } else {
-                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings), isPlayoffs))
+                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchupPair[0].roster_id) ?? []), isPlayoffs))
             }
         });
     }

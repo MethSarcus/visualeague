@@ -22,13 +22,18 @@ export default function TeamSidebar() {
       {context.settings && (
                 <Button
                 onClick={onOpen}
-                size={"md"}
-                borderRadius={0}
-                fontWeight={"medium"}
-                colorScheme={"primary"}
-                textColor="white"
-                variant="ghost"
-                aria-label={`teams`}
+                transition={"all .2s ease-in-out"}
+                _hover={{
+                  transform: "scale(1.05)",
+                  backgroundColor: "secondary.600",
+                  cursor: "pointer",
+                }}
+                  size={"md"}
+                  borderRadius={8}
+                  fontWeight={"medium"}
+                  colorScheme={"secondary_inverted"}
+                  textColor="white"
+                  variant="ghost"
               >
                 Teams
               </Button>
