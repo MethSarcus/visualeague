@@ -15,6 +15,8 @@ export const getAllLeaguePositions = (leagues: LeagueSettings[]) => {
   return [...new Set(positions.flat())];
 };
 
+export const TIE_CONST = -1
+
 //A function that takes in a sleeper roster slot designation and returns an array of positions that can fill that slot
 export const getRosterSlotPositions = (slotId: string) => {
   switch (slotId) {

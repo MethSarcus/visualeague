@@ -14,18 +14,19 @@ import { project_colors } from "../../utility/project_colors";
 interface MyProps {
   matchupSide: MatchupSide;
   member: LeagueMember | undefined;
-  isWinner?: boolean | undefined;
+  isWinner: boolean
   size: string;
   variant: string;
+  isTie: boolean
 }
 
 export default function InvertedMatchupHeaderTeam(props: MyProps) {
   const { variant, size, ...rest } = props;
 
-  let ringColor = project_colors.statColor.neutral;
-  if (props.isWinner) {
+  let ringColor = project_colors.outcomeColor.tie_color;
+  if (props.isWinner && props.isTie != true) {
     ringColor = project_colors.statColor.good;
-  } else if (props.isWinner == false) {
+  } else if (props.isWinner == false && props.isTie != true) {
     ringColor = project_colors.statColor.bad;
   }
 

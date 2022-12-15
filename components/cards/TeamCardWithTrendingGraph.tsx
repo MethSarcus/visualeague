@@ -6,6 +6,7 @@ import {
   GridItem,
   Image,
   Text,
+  Tooltip,
   useMultiStyleConfig,
   VStack
 } from "@chakra-ui/react";
@@ -21,10 +22,8 @@ type MyProps = {
   size: string;
 };
 
-const TeamCard = (props: MyProps) => {
+const TeamCardWithTrendingGraph = (props: MyProps) => {
   const { variant, size, ...rest } = props;
-  const styles = useMultiStyleConfig("LeagueCard", { variant, size });
-
   return (
     <Card boxShadow={"lg"} rounded={"md"} bg="surface.0" textColor={"white"}>
       <Grid templateAreas={`"member linechart linechart"`} gap="1">
@@ -37,9 +36,13 @@ const TeamCard = (props: MyProps) => {
               alt="Team Image"
             />
             <VStack spacing={0} pl={2} alignItems={"left"} flex={1}>
-              <Text>{props?.member?.name}</Text>
+              <Text maxWidth={["120px"]} noOfLines={1}>{props?.member?.name}</Text>
+              <Tooltip label={`${props.member?.stats.divisionWins} - ${props.member?.stats.divisionLosses} ${props.member?.stats?.divisionTies ?? 0 > 0 ? `-${props.member?.stats?.divisionTies}` : ""} Division Record`}>
               <Text p={0}>
-                ({props.member?.stats.wins} - {props.member?.stats.losses})
+                {props.member?.stats.wins} - {props.member?.stats.losses} {props.member?.stats?.ties ?? 0 > 0 ? `- ${props.member?.stats?.ties}` : ""}
+              </Text>
+              </Tooltip>
+              <Text fontSize={".6em"} p={0} m={0}>
               </Text>
             </VStack>
           </Center>
@@ -51,18 +54,8 @@ const TeamCard = (props: MyProps) => {
           />
         </GridItem>
       </Grid>
-
-      <Box
-        alignItems={"center"}
-        pl={2}
-        as="b"
-        fontSize="lg"
-        __css={styles.league_name}
-      >
-        <Box flex={1}></Box>
-      </Box>
     </Card>
   );
 };
 
-export default TeamCard;
+export default TeamCardWithTrendingGraph;

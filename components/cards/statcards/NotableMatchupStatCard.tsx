@@ -40,27 +40,27 @@ const NotableMatchupStatCard = (props: MyProps) => {
   const [context, setContext] = useContext(Context);
   let homeMember;
   let awayMember;
-  let awayBadgeColor;
-  let homeBadgeColor;
+  let awayBadgeColor = project_colors.outcomeColor.tie_color;
+  let homeBadgeColor = project_colors.outcomeColor.tie_color;
   if (context?.settings != undefined) {
     homeMember = context.members.get(props.matchup?.homeTeam.roster_id);
     awayMember = context.members.get(props.matchup?.awayTeam?.roster_id);
   }
-  let homeColor = project_colors.statColor.neutral;
-  let awayColor = project_colors.statColor.neutral;
+  let homeColor = project_colors.outcomeColor.tie_color;
+  let awayColor = project_colors.outcomeColor.tie_color;
 
   if (props.matchup?.homeTeam.roster_id == props.matchup?.winnerRosterId) {
     homeColor = project_colors.statColor.good;
-    homeBadgeColor = "green.500";
+    homeBadgeColor = project_colors.outcomeColor.win;
     awayColor = project_colors.statColor.bad;
-    awayBadgeColor = "tomato";
+    awayBadgeColor = project_colors.outcomeColor.loss;
   } else if (
-    props.matchup?.homeTeam.roster_id != props.matchup?.winnerRosterId
+    props.matchup?.awayTeam?.roster_id == props.matchup?.winnerRosterId
   ) {
     homeColor = project_colors.statColor.bad;
+    homeBadgeColor = project_colors.outcomeColor.loss;
     awayColor = project_colors.statColor.good;
-    homeBadgeColor = "tomato";
-    awayBadgeColor = "green.500";
+    awayBadgeColor = project_colors.outcomeColor.win;
   }
   return (
     <>

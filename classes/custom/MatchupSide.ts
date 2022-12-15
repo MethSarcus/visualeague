@@ -34,7 +34,8 @@ export class MatchupSide {
     stats: Map<string, any>,
     projections: Map<string, any>,
     playerDetails: Map<string, SleeperPlayerDetails>,
-    settings: LeagueSettings
+    settings: LeagueSettings,
+    filteredPlayers?: string[]
   ) {
     this.weekNumber = weekNumber
     this.roster_id = matchup.roster_id;
@@ -68,10 +69,10 @@ export class MatchupSide {
     if (matchup.custom_points) {
       this.custom_points = matchup.custom_points;
     }
-    this.calcPoints(settings);
+    this.calcPoints(settings, filteredPlayers);
   }
 
-  calcPoints(settings: LeagueSettings) {
+  calcPoints(settings: LeagueSettings, filteredPlayers?: string[]) {
     this.starters.forEach((starter) => {
       this.pf += starter.score;
       this.projectedScore += starter.projectedScore;
@@ -108,12 +109,13 @@ export class MatchupSide {
         });
 
       if (startingLineupSlots != undefined && startingLineupSlots.length > 0) {
+        let eligiblePlayers = [this.starters, this.bench].flat().filter(player => !filteredPlayers?.includes(player?.playerId ?? "-1"))
         let optimalLineup = getOptimalLineup(
-          [this.starters, this.bench].flat(),
+          eligiblePlayers,
           startingLineupSlots
         );
         let optimalProjectedLineup = getOptimalProjectedLineup(
-          [this.starters, this.bench].flat(),
+          eligiblePlayers,
           startingLineupSlots
         );
 

@@ -26,8 +26,8 @@ function UsernameForm() {
   const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setUsernameSubmitted(true);
-    if (!storedUsernames.includes(text) && text != "") {
-      storedUsernames.push(text);
+    if (!storedUsernames.includes(text.toLowerCase()) && text != "") {
+      storedUsernames.push(text.toLowerCase());
       localStorage.setItem("usernames", JSON.stringify(storedUsernames));
     }
   };
@@ -85,7 +85,7 @@ function UsernameForm() {
       </form>
 
       <Collapse in={usernameSubmitted}>
-          <Box pt={6} overflowY={"scroll"}>
+          <Box pt={6}>
             <Box as="h1" mb={1}>Leagues</Box>
             <LeagueCellGroup
               usernameSubmitted={usernameSubmitted}

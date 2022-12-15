@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Flex,
   Avatar,
@@ -23,59 +23,56 @@ interface MyProps {
 
 export default function MatchupHeader(props: MyProps) {
   const [context, setContext] = useContext(Context);
-  if (context.settings == undefined) return <ModalHeader><div>Loading</div></ModalHeader>
+  if (context.settings == undefined)
+    return (
+      <ModalHeader>
+        <div>Loading</div>
+      </ModalHeader>
+    );
   let homeTeam = props.matchup?.homeTeam;
   let awayTeam = props.matchup?.awayTeam;
   let homeTeamWon;
   let homeMember;
   let awayMember;
 
-  
-    homeMember = context.getMember(homeTeam?.roster_id) as LeagueMember;
-    awayMember = context.getMember(awayTeam?.roster_id) as LeagueMember;
-  if (
-    props.matchup?.winnerRosterId != homeMember?.roster.roster_id &&
-    !props.matchup?.isTie
-  ) {
-    homeTeamWon = false;
-  } else if (!props.matchup.isTie) {
-    homeTeamWon = true;
-  }
+  homeMember = context.getMember(homeTeam?.roster_id) as LeagueMember;
+  awayMember = context.getMember(awayTeam?.roster_id) as LeagueMember;
 
   return (
     <ModalHeader>
-      <Center>
-        Week {props.matchup?.weekNumber}
+      <Center>Week {props.matchup?.weekNumber}</Center>
+      <Center mt={2}>
+        <MatchupHeaderTeam
+          matchupSide={props.matchup?.homeTeam}
+          isWinner={
+            props.matchup?.homeTeam.roster_id == props.matchup?.winnerRosterId
+          }
+          isTie={props.matchup?.isTie ?? false}
+          member={homeMember}
+          size={"sm"}
+          variant={"default"}
+        />
+        <Circle
+          zIndex={5}
+          bg={"#1A202E"}
+          color={"#A7BAD0"}
+          size={"30px"}
+          fontSize={".7em"}
+          p={1}
+          mx={-3}
+          fontWeight="semibold"
+        >
+          <Center textAlign={"center"}>VS</Center>
+        </Circle>
+        <InvertedMatchupHeaderTeam
+          variant={"inverted"}
+          matchupSide={props.matchup?.awayTeam!}
+          isWinner={props.matchup?.awayTeam?.roster_id == props.matchup?.winnerRosterId}
+          member={awayMember}
+          size={"lg"}
+          isTie={props.matchup?.isTie ?? false}
+        />
       </Center>
-    <Center mt={2}>
-      <MatchupHeaderTeam
-                  matchupSide={props.matchup?.homeTeam}
-                  isWinner={homeTeamWon}
-                  member={homeMember}
-                  size={"sm"} variant={"default"}      />
-      <Circle
-        zIndex={5}
-        bg={"#1A202E"}
-        color={"#A7BAD0"}
-        size={"30px"}
-        fontSize={".7em"}
-        p={1}
-        mx={-3}
-        fontWeight="semibold"
-      >
-        <Center textAlign={"center"}>
-        VS
-        </Center>
-        
-      </Circle>
-      <InvertedMatchupHeaderTeam
-        variant={"inverted"}
-        matchupSide={props.matchup?.awayTeam!}
-        isWinner={!homeTeamWon}
-        member={awayMember}
-        size={"lg"}
-      />
-    </Center>
     </ModalHeader>
   );
 }

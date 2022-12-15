@@ -17,7 +17,6 @@ export interface Settings {
 export interface Metadata {
   streak: string;
   record: string;
-
   league_name: string;
   league_description: string;
   league_avatar: string;
