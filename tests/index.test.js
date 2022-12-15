@@ -27,6 +27,6 @@ describe("Home", () => {
     fireEvent.click(screen.getByTestId("username_submit"));
 
     expect(localStorage.setItem).toHaveBeenCalled();
-    expect(localStorage.getItem("usernames")).toContain("MethSarcus");
+    expect(localStorage.getItem("usernames")).toContain("methsarcus");
   });
 });
