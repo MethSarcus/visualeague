@@ -21,7 +21,7 @@ import Matchup from "../../../../../classes/custom/Matchup";
 import { MatchupSide } from "../../../../../classes/custom/MatchupSide";
 import { Week } from "../../../../../classes/custom/Week";
 import MatchupPreview from "../../../../../components/cards/MatchupPreview";
-import TeamCard from "../../../../../components/cards/TeamCard";
+import TeamCardWithTrendingGraph from "../../../../../components/cards/TeamCardWithTrendingGraph";
 import TeamPageRadarChart from "../../../../../components/charts/team_charts/TeamPageRadarChart";
 import TeamPlayerStatGroup from "../../../../../components/groups/stats/TeamPlayerStatGroup";
 import TeamStatGroup from "../../../../../components/groups/stats/TeamStatGroup";
@@ -33,15 +33,15 @@ export default function TeamPage() {
   const [context, setContext] = useContext(Context);
   const memberId = usePathname()?.split("/").at(-1);
 
-  let member: undefined | LeagueMember
+  let member: undefined | LeagueMember;
   let matchups: Matchup[] = [];
 
   if (context.settings) {
     member = context.members.get(parseInt(memberId!));
     matchups = [];
     (context as League).weeks.forEach((week: Week) => {
-      matchups.push(week.getMemberMatchup(member?.roster.roster_id!))
-    })
+      matchups.push(week.getMemberMatchup(member?.roster.roster_id!));
+    });
   }
 
   return (
@@ -59,7 +59,7 @@ export default function TeamPage() {
       >
         <GridItem area={"TeamSum"} mt={3}>
           {context?.members != undefined && (
-            <TeamCard
+            <TeamCardWithTrendingGraph
               member={member}
               league={context}
               variant={""}
@@ -122,7 +122,6 @@ export default function TeamPage() {
               <TabPanel>
                 <p>TBD</p>
               </TabPanel>
-
             </TabPanels>
           </Tabs>
         </GridItem>

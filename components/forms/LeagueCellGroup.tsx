@@ -1,4 +1,4 @@
-import { Box, Spinner, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Spinner, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import axios from "axios";
 import useSWR from "swr";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
@@ -31,17 +31,18 @@ const LeagueCellGroup = (props: MyProps) => {
   if (!userData || !leaguesData) return <Spinner size={"md"} />
 
   return (
-    <Wrap>
+    <VStack overflowY={"auto"} maxH={"400px"} align={"flex-start"}>
       {leaguesData.map((league: LeagueSettings) => {
         return (
-          <WrapItem key={league.league_id}>
+
             <UserLeagueCell
+            key={league.league_id}
               league={league}
             />
-          </WrapItem>
+
         );
       })}
-    </Wrap>
+    </VStack>
   );
 };
 

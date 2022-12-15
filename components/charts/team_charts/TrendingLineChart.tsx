@@ -16,12 +16,14 @@ const TrendingLineChart = (props: MyProps) => {
     textColor: "white",
   };
 
+
+
   if (data.length <= 0) return <Spinner />;
 
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+      margin={{ top: 10, right: 25, bottom: 10, left: 5 }}
       yScale={{
         type: "linear",
         min: "auto",
@@ -31,7 +33,6 @@ const TrendingLineChart = (props: MyProps) => {
       }}
       curve="cardinal"
       enableCrosshair={false}
-      axisRight={null}
       axisLeft={null}
       enableGridY={false}
       enableGridX={false}
@@ -40,16 +41,14 @@ const TrendingLineChart = (props: MyProps) => {
       pointColor={{ theme: "background" }}
       pointBorderWidth={1}
       pointBorderColor={{ from: "serieColor" }}
-      pointLabelYOffset={-12}
       useMesh={true}
       legends={[]}
       tooltip={({ point }) => {
         return (
           <div
             style={{
-              background: "grey",
               padding: "1px",
-              color: "black",
+              color: "white",
               fontSize: "12px",
             }}
           >
@@ -57,6 +56,19 @@ const TrendingLineChart = (props: MyProps) => {
           </div>
         );
       }}
+
+      markers = {[
+        {
+          axis: 'y',
+          value: parseFloat((props.league.stats.avg_pf / props.league.weeks.size).toFixed(2)),
+          lineStyle: { stroke: 'lightgray', strokeWidth: 1 },
+          legend: 'League Avg',
+          legendOrientation: 'vertical',
+          legendPosition: "right",
+          textStyle: { fontSize: ".5em", fill: "gray"}
+          
+      }
+    ]}
     />
   );
 };

@@ -1,3 +1,4 @@
+import { TIE_CONST } from "../../utility/rosterFunctions";
 import { MatchupSide } from "./MatchupSide";
 
 export default class Matchup {
@@ -10,6 +11,7 @@ export default class Matchup {
   projectedLoserRosterId?: number;
   matchup_id: number;
   isTie: boolean = false;
+  isProjectedTie: boolean = false;
   isByeWeek: boolean;
   isPlayoffs: boolean;
 
@@ -25,19 +27,37 @@ export default class Matchup {
     this.isPlayoffs = isPlayoffs;
     this.matchup_id = homeTeam.matchup_id;
     if (awayTeam) {
-      let homeScore = homeTeam.pf + homeTeam.custom_points;
-      let awayScore = awayTeam.pf + awayTeam.custom_points;
+      let homeScore = parseFloat(
+        (homeTeam.pf + homeTeam.custom_points).toFixed(2)
+      );
+      let awayScore = parseFloat(
+        (awayTeam.pf + awayTeam.custom_points).toFixed(2)
+      );
       this.isByeWeek = false;
-      this.winnerRosterId =
-        homeScore > awayScore ? homeTeam.roster_id : awayTeam.roster_id;
-      this.loserRosterId =
-        homeScore < awayScore ? homeTeam.roster_id : awayTeam.roster_id;
-      this.projectedWinnerRosterId = homeTeam.projectedScore > awayTeam.projectedScore ? homeTeam.roster_id : awayTeam.roster_id;
+
+      this.isProjectedTie = parseFloat(this.homeTeam.projectedScore.toFixed(2)) == parseFloat(this.awayTeam?.projectedScore?.toFixed(2) ?? "0")
+      if (this.isProjectedTie) {
+        this.projectedWinnerRosterId = TIE_CONST
+      } else {
+        this.projectedWinnerRosterId =
+        homeTeam.projectedScore > awayTeam.projectedScore
+          ? homeTeam.roster_id
+          : awayTeam.roster_id;
       this.projectedLoserRosterId =
         homeTeam.projectedScore < awayTeam.projectedScore
           ? homeTeam.roster_id
           : awayTeam.roster_id;
+      }
+
       this.isTie = homeScore == awayScore ? true : false;
+      if (this.isTie) {
+        this.winnerRosterId = TIE_CONST
+      } else {
+        this.winnerRosterId =
+          homeScore > awayScore ? homeTeam.roster_id : awayTeam.roster_id;
+        this.loserRosterId =
+          homeScore < awayScore ? homeTeam.roster_id : awayTeam.roster_id;
+      }
     } else {
       this.projectedWinnerRosterId = homeTeam.roster_id;
       this.isByeWeek = false;
@@ -49,26 +69,34 @@ export default class Matchup {
     return Math.abs(this.homeTeam.pf - this.awayTeam?.pf!);
   }
 
-  public getWinner() {
-    let winner = this.homeTeam
-    if (this.homeTeam.roster_id != this.winnerRosterId) {
-      winner = this.awayTeam!
+  public getWinner(): MatchupSide | undefined {
+    let winner
+    if (!this.isTie) {
+      if (this.homeTeam.roster_id == this.winnerRosterId) {
+        winner = this.homeTeam;
+      } else {
+        winner = this.awayTeam;
+      }
     }
 
-    return winner
+
+    return winner;
   }
 
-  public getLoser() {
-    let loser = this.homeTeam
+  public getLoser(): MatchupSide |undefined {
+    let loser
+
     if (this.homeTeam.roster_id == this.winnerRosterId) {
-      loser = this.awayTeam!
+      loser = this.awayTeam!;
+    } else if (this.awayTeam?.roster_id == this.winnerRosterId) {
+      loser = this.homeTeam
     }
 
-    return loser
+    return loser;
   }
 
   public getCombinedScore() {
-    return this.homeTeam.pf + (this.awayTeam?.pf ?? 0)
+    return this.homeTeam.pf + (this.awayTeam?.pf ?? 0);
   }
 
   public getMemberSide(rosterId: number) {
