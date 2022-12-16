@@ -115,7 +115,7 @@ function getLeagueRosters(leagueId: string) {
 // -------------------------------------------------------------------
 // Gets all matchups
 // -------------------------------------------------------------------
-function getMatchups(leagueId: string, numWeeks: number) {
+export function getMatchups(leagueId: string, numWeeks: number) {
   const promises = [];
   for (let i = 1; i <= numWeeks; i++) {
     promises.push(
