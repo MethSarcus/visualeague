@@ -70,6 +70,7 @@ export const project_colors = {
 	outcomeColor: {
 		win: 'rgb(121,229,172, 1)',
 		loss: 'rgb(234,67,111, 1)',
+		badge_win: 'rgb(121,190,172, 1)',
 		tie_color: '#BC14A5',
 		tie_gradient: 'linear(to-l, #7928CA, #FF0080)',
 		tie_green: '#FF0080',

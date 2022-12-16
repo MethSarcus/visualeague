@@ -39,29 +39,25 @@ const WeekStatCard = (props: MyProps) => {
   }
   return (
     <Flex
+    minWidth={"150px"}
     flexDir={"column"}
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
-      minWidth={["150px", "200px"]}
-      minHeight={["125px", "200px"]}
       py={2}
       px={5}
       bg={"surface.0"}
       dropShadow="2xl"
     >
       <Spacer/>
-      <Box textAlign={"center"} alignItems={"middle"}>
+      <Box textAlign={"center"}>
+        <Center flexDir={"column"}>
+
+
         <Box fontWeight="normal" fontSize={"1em"} color={"white"}>
           {props.title}
         </Box>
-        <Text
-          fontWeight={"bold"}
-          fontSize={"1.2em"}
-          color={"textTheme.highEmphasis"}
-        >
-          {props.mainStat}
-        </Text>
+
 
         <Avatar
           mt={2}
@@ -69,13 +65,21 @@ const WeekStatCard = (props: MyProps) => {
           src={`https://sleepercdn.com/avatars/thumbs/${leagueMember?.avatar}`}
         />
         <Text
-          fontSize={"1em"}
+          fontSize={".8em"}
           fontWeight="medium"
           color={"textTheme.highEmphasis"}
         >
           {props.subStat}
         </Text>
-
+        <Text
+          fontWeight={"bold"}
+          fontSize={"1.2em"}
+          color={"textTheme.highEmphasis"}
+        >
+          {props.mainStat}
+        </Text>
+        </Center>
+<Spacer/>
         <Button
           visibility={props.matchup != undefined ? "visible" : "hidden"}
           mt={2}
