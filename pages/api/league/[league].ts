@@ -259,15 +259,18 @@ async function getCompleteLeague(leagueId: string) {
     )
   )) as SleeperMatchup[][];
   for (let i = 0; i < matchups.length; i++) {
-    playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
-    playerProjections.push(
-      await getMultiMatchupProjections(matchups[i], db, i + 1)
-    );
+
     matchups.forEach((weekMatchups) => {
       weekMatchups.forEach((curMatch) => {
         allPlayers.push(curMatch.players);
       });
+      
     });
+
+    playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
+    playerProjections.push(
+      await getMultiMatchupProjections(matchups[i], db, i + 1)
+    );
   }
 
   playerDetails.push(

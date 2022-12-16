@@ -1,24 +1,11 @@
 "use client";
 import {
-  Text,
-  Container,
-  Heading,
-  Box,
-  GridItem,
-  Grid,
-  Avatar,
-  HStack,
-  VStack,
-  Spacer,
-  Flex,
+  Box, Container, Grid, GridItem
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import logo from "../public/images/logo.png";
-import LeagueCellGroup from "../components/forms/LeagueCellGroup";
-import UsernameForm from "../components/forms/UsernameForm";
-import styles from "../styles/Home.module.css";
 import Image from "next/image";
-import MatchupPreview from "../components/cards/MatchupPreview";
+import UsernameForm from "../components/forms/UsernameForm";
+import logo from "../public/images/logo.png";
+import styles from "../styles/Home.module.css";
 export default function Page() {
   return (
     <div className={styles.container}>
