@@ -456,7 +456,7 @@ export default class League {
                 matchupForBestTeam = matchup;
               }
 
-              if (lowScore! < (matchupForBestTeam?.getLoser()!.pf ?? matchupForWorstTeam?.homeTeam.pf)) {
+              if (lowScore! < (matchupForWorstTeam?.getLoser()?.pf! ?? matchupForWorstTeam?.homeTeam.pf)) {
                 matchupForWorstTeam = matchup;
               }
 
