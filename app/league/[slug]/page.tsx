@@ -27,6 +27,8 @@ import {Context} from '../../../contexts/Context'
 import BarChart from '../../../components/charts/PFBarChart'
 import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
+import TeamRadarChart from '../../../components/charts/TeamRadarChart'
+import LineChart from '../../../components/charts/LineChart'
 
 export default function LeaguePage() {
 	const [show, setShow] = useState(false)
@@ -36,7 +38,7 @@ export default function LeaguePage() {
 
 	const desktopGrid = `"header header header"
                       "pfStats weekStats weekStats"
-                      "pfTable pfTable pfTable"
+                      "pfTable pfTable radarChart"
                       "pfChart pfChart pfChart"`
 
 	const mobileGrid = `"header"
@@ -103,12 +105,18 @@ export default function LeaguePage() {
 					)}
 				</GridItem>
 				<GridItem area={'weekStats'} overflowX={'auto'}>
-
-						<LeagueNotableWeeksStatGroup league={context} />
-
+					<LeagueNotableWeeksStatGroup league={context} />
 				</GridItem>
-				<GridItem area={'pfChart'}></GridItem>
-				<GridItem area={'radarChart'}></GridItem>
+				<GridItem area={'pfChart'}>
+					<Box height={'500px'} textColor='black'>
+						<LineChart league={context} />
+					</Box>
+				</GridItem>
+				<GridItem area={'radarChart'}>
+					<Box height={'500px'} textColor='black'>
+						<TeamRadarChart league={context} />
+					</Box>
+				</GridItem>
 			</Grid>
 		</Box>
 	)

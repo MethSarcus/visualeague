@@ -5,17 +5,18 @@ import LeagueMember from "../../classes/custom/LeagueMember";
 import { project_colors } from "../../utility/project_colors";
 
 interface MyProps {
-  league: League;
+  league: League | undefined;
 }
 
 const LineChart = (props: MyProps) => {
+  if (props.league?.settings == undefined) return <Spinner />;
   let data = formatScoresForLineChart(props.league) as any;
   const theme = {
     background: project_colors.surface[1],
     textColor: "white",
   };
 
-  if (data.length <= 0) return <Spinner />;
+
 
   return (
     <ResponsiveLine
@@ -79,6 +80,7 @@ const LineChart = (props: MyProps) => {
           anchor: "bottom-right",
           direction: "column",
           justify: false,
+          toggleSerie: true,
           translateX: 100,
           translateY: 0,
           itemsSpacing: 0,
@@ -104,11 +106,11 @@ const LineChart = (props: MyProps) => {
   );
 };
 
-function formatScoresForLineChart(league: League) {
+function formatScoresForLineChart(league: League | undefined) {
   let data: object[] = [];
   let memberWeekScoreMap: Map<number, object[]> = new Map();
 
-  league.weeks.forEach((week) => {
+  league?.weeks?.forEach((week) => {
     week.getAllScores().forEach((team) => {
       if (memberWeekScoreMap.has(team.id)) {
         (memberWeekScoreMap.get(team.id) as object[]).push({
@@ -126,7 +128,7 @@ function formatScoresForLineChart(league: League) {
     });
   });
 
-  league.members.forEach((member: LeagueMember) => {
+  league?.members?.forEach((member: LeagueMember) => {
     if (league.memberIdToRosterId.has(member.userId)) {
       data.push({
         id: member.name,
