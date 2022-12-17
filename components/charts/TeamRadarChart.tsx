@@ -7,19 +7,21 @@ import { POSITION } from '../../utility/rosterFunctions';
 
 
 interface MyProps {
-    league: League
+    league: League | undefined
 }
 
 const TeamRadarChart = (props: MyProps) => {
-    let data = formatScoresForRadarChart(Array.from(props.league.members.values()), props.league.getPositions() as POSITION[]) as any
     const [hiddenMembers, setHiddenMembers] = useState([])
+    if (props.league?.settings == undefined) return <Spinner/>
+    let data = formatScoresForRadarChart(Array.from(props.league?.members.values()), props.league?.getPositions() as POSITION[]) as any
+
     const theme = {
         "background": "none",
         "textColor": "white"
     }
 
-    if (data.length <= 0) return <Spinner/>
-    return (<Box height={"350px"}>
+
+    return (
 
     <ResponsiveRadar
         data={data.chartData}
@@ -36,6 +38,7 @@ const TeamRadarChart = (props: MyProps) => {
         colors={{ scheme: 'nivo' }}
         blendMode="multiply"
         motionConfig="wobbly"
+        
         legends={[
             {
                 anchor: 'right',
@@ -43,6 +46,7 @@ const TeamRadarChart = (props: MyProps) => {
                 translateX: -90,
                 translateY: -40,
                 itemWidth: 80,
+                toggleSerie: true,
                 itemHeight: 20,
                 itemTextColor: '#999',
                 symbolSize: 12,
@@ -57,19 +61,19 @@ const TeamRadarChart = (props: MyProps) => {
                 ]
             }
         ]}
-    /></Box>)
+    />)
 }
 
 
-function formatScoresForRadarChart(members: LeagueMember[], positions: POSITION[]) {
+function formatScoresForRadarChart(members: LeagueMember[] | undefined, positions: POSITION[] | undefined) {
     let data: object[] = []
     let keys: string[] = []
 
-    members.forEach((member: LeagueMember, key: number) => {keys.push(member.name)})
+    members?.forEach((member: LeagueMember, key: number) => {keys.push(member.name)})
 
-    positions.forEach((position) => {
+    positions?.forEach((position) => {
         let positionObj: {[k: string]: any} = {position: position}
-        members.forEach((member: LeagueMember, key: number) => {
+        members?.forEach((member: LeagueMember, key: number) => {
             if (position != undefined && !isNaN(member.stats.position_scores.get(position) as any) && !isNaN(member.stats.position_starts.get(position) as any)) {
                 let positionScore = member.stats.position_scores.get(position)
                 let positionStarts = member.stats.position_starts.get(position)
