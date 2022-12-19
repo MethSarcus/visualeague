@@ -34,22 +34,20 @@ export default function LeagueNotableWeeksStatGroup(props: MyProps) {
 
 	return (
 		<HStack align={'stretch'} height={"full"}>
-			<WeekStatCard
-				matchupSide={bestWeekTeam}
-				memberId={bestWeekTeam?.roster_id}
+			<NotableMatchupStatCard
 				matchup={bestWeek}
-				mainStat={`${bestWeekTeam?.pf?.toFixed(2)} PF`}
+				memberId={bestWeekTeam?.roster_id}
+				score={`${bestWeekTeam?.pf?.toFixed(2)} PF`}
 				title={'Highest Score'}
 				subStat={
 					props.league?.members?.get(bestWeekTeam?.roster_id ?? 0)?.teamName
 				}
 				isLoaded={bestWeekTeam != undefined}
 			/>
-			<WeekStatCard
-				matchupSide={worstWeekTeam}
+			<NotableMatchupStatCard
 				memberId={worstWeekTeam?.roster_id}
 				matchup={worstWeek}
-				mainStat={`${worstWeekTeam?.pf?.toFixed(2)} PF`}
+				score={`${worstWeekTeam?.pf?.toFixed(2)} PF`}
 				title={'Lowest Score'}
 				subStat={
 					props.league?.members?.get(worstWeekTeam?.roster_id ?? 0)?.teamName

@@ -1,9 +1,10 @@
-import { Box, Spinner } from '@chakra-ui/react';
+import { Box, Spinner, useMediaQuery } from '@chakra-ui/react';
 import { ResponsiveRadar } from '@nivo/radar';
 import { useState } from 'react';
 import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { POSITION } from '../../utility/rosterFunctions';
+import { useBreakpointValue } from '@chakra-ui/react'
 
 
 interface MyProps {
@@ -12,38 +13,27 @@ interface MyProps {
 
 const TeamRadarChart = (props: MyProps) => {
     const [hiddenMembers, setHiddenMembers] = useState([])
-    if (props.league?.settings == undefined) return <Spinner/>
-    let data = formatScoresForRadarChart(Array.from(props.league?.members.values()), props.league?.getPositions() as POSITION[]) as any
+    const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
+        ssr: true,
+        fallback: false, // return false on the server, and re-evaluate on the client side
+      })
 
-    const theme = {
-        "background": "none",
-        "textColor": "white"
+    let marginVals = { top: 50, right: 100, bottom: 75, left: 0 }
+    let legendDirection = 'column'
+    let legendAnchor = 'right'
+    let legendsArr = []
+    if (!isLargerThan800) {
+        marginVals = { top: 0, right: 25, bottom: 75, left: 25 }
+        legendDirection = "row"
+        legendAnchor = 'bottom'
     }
 
-
-    return (
-
-    <ResponsiveRadar
-        data={data.chartData}
-        keys={data.keys}
-        theme={theme}
-        indexBy="position"
-        valueFormat=">-.2f"
-        margin={{ top: 50, right: 150, bottom: 50, left: 0 }}
-        borderColor={{ from: 'color' }}
-        gridLabelOffset={20}
-        dotSize={10}
-        dotColor={{ theme: 'background' }}
-        dotBorderWidth={2}
-        colors={{ scheme: 'nivo' }}
-        blendMode="multiply"
-        motionConfig="wobbly"
-        
-        legends={[
+    if (isLargerThan800) {
+        legendsArr.push(
             {
-                anchor: 'right',
-                direction: 'column',
-                translateX: -90,
+                anchor: legendAnchor as any,
+                direction: legendDirection as any,
+                translateX: -20,
                 translateY: -40,
                 itemWidth: 80,
                 toggleSerie: true,
@@ -60,7 +50,38 @@ const TeamRadarChart = (props: MyProps) => {
                     }
                 ]
             }
-        ]}
+        )
+    }
+
+    if (props.league?.settings == undefined) return <Spinner/>
+    let data = formatScoresForRadarChart(Array.from(props.league?.members.values()), props.league?.getPositions() as POSITION[]) as any
+
+    const theme = {
+        "background": "none",
+        "textColor": "white"
+    }
+
+
+    return (
+
+    <ResponsiveRadar
+        data={data.chartData}
+        keys={data.keys}
+        theme={theme}
+        
+        indexBy="position"
+        valueFormat=">-.2f"
+        margin={marginVals}
+        borderColor={{ from: 'color' }}
+        gridLabelOffset={20}
+        dotSize={10}
+        dotColor={{ theme: 'background' }}
+        dotBorderWidth={2}
+        colors={{ scheme: 'nivo' }}
+        blendMode="multiply"
+        motionConfig="wobbly"
+        
+        legends={legendsArr as any}
     />)
 }
 
