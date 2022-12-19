@@ -8,7 +8,10 @@ export class Draft {
 		this.settings = draftSettings
 		if (draftSettings.type == DRAFT_TYPE.AUCTION) {
 			picks.forEach((draftPick) => {
-				this.picks.set(draftPick.player_id, new AuctionDraftPlayer(draftPick))
+				this.picks.set(
+					draftPick.player_id,
+					new AuctionDraftPlayer(draftPick, draftSettings.settings.budget!)
+				)
 			})
 		} else {
 			picks.forEach((draftPick) => {
@@ -18,10 +21,10 @@ export class Draft {
 	}
 
 	calculatePlayerDraftValue(): void {
-        this.picks.forEach(pick => {
-            pick.setDraftValue()
-        })
-    }
+		this.picks.forEach((pick) => {
+			pick.setDraftValue()
+		})
+	}
 }
 
 export enum DRAFT_TYPE {
@@ -33,6 +36,9 @@ export interface DraftPlayer extends DraftPick {
 	gamesPlayed: number
 	pointsScored: number
 	draftValue: number
+	amount?: number
+	ppg: number
+	name: string
 	setDraftValue(): void
 	addGame(points: number): void
 }
@@ -41,11 +47,13 @@ class SnakeDraftPlayer implements DraftPlayer {
 	gamesPlayed: number = 0
 	pointsScored: number = 0
 	draftValue: number = 0
+	ppg: number = 0
 	round: number
 	roster_id: number
 	player_id: string
 	picked_by: string
 	pick_no: number
+	name: string
 	metadata: SnakeMetadata
 	is_keeper?: null | undefined
 	draft_slot: number
@@ -61,16 +69,22 @@ class SnakeDraftPlayer implements DraftPlayer {
 		this.is_keeper = pick.is_keeper
 		this.draft_slot = pick.draft_slot
 		this.draft_id = pick.draft_id
+		this.name =
+			(pick.metadata.first_name ?? '') + ' ' + (pick.metadata.last_name ?? '')
 	}
-	setDraftValue(): void {
-		this.draftValue =
-			this.pointsScored *
-			(this.pointsScored / this.gamesPlayed) *
-			Math.log(this.pick_no)
-	}
+
 	addGame(points: number): void {
 		this.pointsScored += points
 		this.gamesPlayed += 1
+	}
+
+	setDraftValue(): void {
+		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
+		this.ppg = parseFloat((this.pointsScored / this.gamesPlayed).toFixed(2))
+		this.draftValue = parseFloat(
+			(this.pointsScored * this.ppg * Math.log(this.pick_no)).toFixed(2)
+		)
+		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
 	}
 }
 
@@ -78,7 +92,9 @@ class AuctionDraftPlayer implements DraftPlayer {
 	gamesPlayed: number = 0
 	pointsScored: number = 0
 	draftValue: number = 0
+	ppg: number = 0
 	round: number
+	name: string
 	roster_id: number
 	player_id: string
 	picked_by: string
@@ -87,8 +103,10 @@ class AuctionDraftPlayer implements DraftPlayer {
 	is_keeper?: null | undefined
 	draft_slot: number
 	draft_id: string
+	amount?: number
+	budget: number
 
-	constructor(pick: DraftPick) {
+	constructor(pick: DraftPick, budget: number) {
 		this.pick_no = pick.pick_no
 		this.round = pick.round
 		this.roster_id = pick.roster_id
@@ -98,12 +116,21 @@ class AuctionDraftPlayer implements DraftPlayer {
 		this.is_keeper = pick.is_keeper
 		this.draft_slot = pick.draft_slot
 		this.draft_id = pick.draft_id
+		this.budget = budget
+		this.amount = parseInt(pick.metadata.amount)
+		this.name =
+			(pick.metadata.first_name ?? '') + ' ' + (pick.metadata.last_name ?? '')
 	}
 	setDraftValue(): void {
-		this.draftValue =
-			this.pointsScored *
-			(this.pointsScored / this.gamesPlayed) *
-			(1 / parseInt(this.metadata.amount))
+		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
+		this.ppg = parseFloat((this.pointsScored / this.gamesPlayed).toFixed(2))
+		this.draftValue = parseFloat(
+			(
+				this.pointsScored *
+				this.ppg *
+				Math.log10(this.budget / parseInt(this.metadata.amount))
+			).toFixed(2)
+		)
 	}
 	addGame(points: number): void {
 		this.pointsScored += points

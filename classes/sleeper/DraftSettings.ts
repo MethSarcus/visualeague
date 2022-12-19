@@ -18,6 +18,7 @@ export interface DraftSettings {
 	draft_id: string
 	creators?: string[] | null
 	created: number
+	budget?: number
 }
 export interface SlotToRosterId {
 	1: number
@@ -50,6 +51,7 @@ export interface SnakeSettings {
 	enforce_position_limits: number
 	cpu_autopick: number
 	alpha_sort: number
+	budget?: number
 }
 
 export interface AuctionSettings {
