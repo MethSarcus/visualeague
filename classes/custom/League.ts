@@ -7,12 +7,14 @@ import {
 	standardDeviation,
 	TIE_CONST,
 } from '../../utility/rosterFunctions'
+import { DraftPick } from '../sleeper/DraftPick'
 import {LeagueSettings, ScoringSettings} from '../sleeper/LeagueSettings'
 import SleeperLeague from '../sleeper/SleeperLeague'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
 import {SleeperRoster} from '../sleeper/SleeperRoster'
 import {SleeperTransaction} from '../sleeper/SleeperTransaction'
 import {SleeperUser} from '../sleeper/SleeperUser'
+import { Draft } from './Draft'
 import LeagueMember from './LeagueMember'
 import LeagueStats from './LeagueStats'
 import Matchup from './Matchup'
@@ -43,8 +45,9 @@ export default class League {
 	public playerProjectionMap: Map<number, any> = new Map()
 	public memberIdToRosterId: Map<string, number> = new Map()
 	public stats: LeagueStats = new LeagueStats()
+	public draft: Draft
 
-	constructor(sleeperLeague: SleeperLeague, modifiedSettings?: LeagueSettings) {
+	constructor(sleeperLeague: SleeperLeague, draft: Draft, modifiedSettings?: LeagueSettings) {
 		if (modifiedSettings) {
 			this.modifiedSettings = modifiedSettings
 			this.useModifiedSettings = true
@@ -63,6 +66,7 @@ export default class League {
 			})
 		})
 
+		this.draft = draft
 		this.allMatchups = sleeperLeague.matchups
 		this.trades = [] //TODO add api calls for getting this info
 		this.settings = sleeperLeague.sleeperDetails
@@ -73,6 +77,7 @@ export default class League {
 		this.setWeeks(sleeperLeague.matchups, this.getTaxiMap())
 		this.calcMemberScores()
 		this.setLeagueStats()
+		this.setDraftValues()
 	}
 
 	getMember(rosterId: string | number) {
@@ -386,6 +391,27 @@ export default class League {
 			)
 			this.weeks.set(weekNum, week)
 		})
+	}
+
+	setDraftValues() {
+		this.weeks.forEach((week) => {
+			week.matchups.forEach((matchup: Matchup) => {
+				let players = [
+					matchup.homeTeam.starters,
+					matchup.homeTeam.bench,
+					matchup.awayTeam?.starters,
+					matchup.awayTeam?.bench,
+				].flat().filter(player => {return player != undefined})
+                
+                players.forEach(player => {
+                    if (this.draft.picks.has(player?.playerId!)) {
+                        this.draft.picks.get(player?.playerId!)!.addGame(player?.score as number)
+                    }
+                })
+			})
+		})
+
+		this.draft.calculatePlayerDraftValue()
 	}
 
 	getWorstTrade() {

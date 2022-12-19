@@ -78,27 +78,28 @@ const NotableMatchupStatCard = (props: MyProps) => {
 				minWidth={'150px'}
 				minHeight={'150px'}
 			>
-				<Text
-					p={2}
-					fontWeight='bold'
-					fontSize={'1em'}
-					color={'textTheme.highEmphasis'}
-					mb={0}
-				>
-					{props.title}
-				</Text>
-
+				<Skeleton isLoaded={props.isLoaded} p={0}>
+					<Text
+						
+						fontWeight='bold'
+						fontSize={'1em'}
+						color={'textTheme.highEmphasis'}
+						mb={0}
+					>
+						{props.title}
+					</Text>
+				</Skeleton>
 				<Spacer />
 
-				<Text
-					fontSize={'.8em'}
-					fontWeight='normal'
-					mx={7}
-					my={1}
-					color={'textTheme.mediumEmphasis'}
-				>
-					Week {props.matchup?.weekNumber}
-				</Text>
+				<Skeleton isLoaded={props.isLoaded} mx={7} my={1}>
+					<Text
+						fontSize={'.8em'}
+						fontWeight='normal'
+						color={'textTheme.mediumEmphasis'}
+					>
+						Week {props.matchup?.weekNumber}
+					</Text>
+				</Skeleton>
 				<Center my={0.25}>
 					<Tooltip label={homeMember?.teamName}>
 						<Avatar
@@ -119,13 +120,11 @@ const NotableMatchupStatCard = (props: MyProps) => {
 							</AvatarBadge>
 						</Avatar>
 					</Tooltip>
-					<Text
-						color={project_colors.sleeper.text_normal}
-						fontSize={'.8em'}
-						mx={2}
-					>
-						VS
-					</Text>
+					<Skeleton isLoaded={props.isLoaded} mx={2}>
+						<Text color={project_colors.sleeper.text_normal} fontSize={'.8em'}>
+							VS
+						</Text>
+					</Skeleton>
 					<Tooltip label={awayMember?.teamName}>
 						<Avatar
 							borderColor={awayColor}
@@ -147,27 +146,31 @@ const NotableMatchupStatCard = (props: MyProps) => {
 					</Tooltip>
 				</Center>
 				<Skeleton mt={2} isLoaded={props.isLoaded}>
-					<Text fontSize={'.8em'}  color={'textTheme.highEmphasis'}>
+					<Text fontSize={'.8em'} color={'textTheme.highEmphasis'}>
 						{props.score ?? ''}
 					</Text>
 				</Skeleton>
-        <Skeleton mt={.5} isLoaded={props.isLoaded}>
-				<Text fontSize={'.7em'} color={'textTheme.highEmphasis'}>
-					{props.subSubStat ?? ''}
-				</Text>
-        </Skeleton>
+				<Skeleton mt={0.5} isLoaded={props.isLoaded}>
+					<Text fontSize={'.7em'} color={'textTheme.highEmphasis'}>
+						{props.subSubStat ?? ''}
+					</Text>
+				</Skeleton>
 				<Spacer />
-				<Button
+				<Skeleton
+					isLoaded={props.isLoaded}
+					margin={'0 auto'}
 					my={2}
 					width={'50%'}
-					margin={'0 auto'}
-					onClick={onOpen}
-					variant={'ghost'}
-					colorScheme={'secondary'}
-					size={'xs'}
 				>
-					View
-				</Button>
+					<Button
+						onClick={onOpen}
+						variant={'ghost'}
+						colorScheme={'secondary'}
+						size={'xs'}
+					>
+						View
+					</Button>
+				</Skeleton>
 			</Flex>
 
 			<Modal size={'sm'} isOpen={isOpen} onClose={onClose}>

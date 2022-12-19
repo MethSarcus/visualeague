@@ -92,6 +92,13 @@ export default function MobileSidebar() {
 									</Button>
 								</Link>
 							)}
+														{context?.settings && (
+								<Link href={`league/${context.settings.league_id}/draft`}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+										Draft
+									</Button>
+								</Link>
+							)}
 						</VStack>
 					</DrawerBody>
 

@@ -37,15 +37,17 @@ export default function LeaguePage() {
 	const leagueId = usePathname()?.replace('/league/', '')
 
 	const desktopGrid = `"header header header"
-                      "pfStats weekStats weekStats"
-                      "pfTable pfTable radarChart"
-                      "pfChart pfChart pfChart"`
+                      "leagueTable weekStats weekStats"
+                      "pfTable pfBarChart pfBarChart"
+                      "radarChart pfLineChart pfLineChart"`
 
 	const mobileGrid = `"header"
-                      "pfStats"
+                      "leagueTable"
                       "weekStats"
                       "pfTable"
-                      "pfChart"`
+                      "pfBarChart"
+					  "pfLineChart"
+					  "radarChart"`
 
 	return (
 		<Box overflowX={'hidden'}>
@@ -73,45 +75,24 @@ export default function LeaguePage() {
 						</Heading>
 					</Skeleton>
 				</GridItem>
-				<GridItem area={'pfStats'}>
+				<GridItem area={'leagueTable'}>
 					<HomeStatGroup league={context} />
 				</GridItem>
 				<GridItem overflowX={'hidden'} area={'pfTable'} borderRadius={4}>
-					<Collapse startingHeight={'10%'} in={show}>
-						<LeagueOverviewDataTable league={context} />
-					</Collapse>
-					<Flex
-						dropShadow={'2xl'}
-						boxShadow='2xl'
-						alignContent={'flex-end'}
-						position={'relative'}
-					>
-						<Spacer />
-						<IconButton
-							top='-1.7em'
-							icon={show ? <MdExpandLess /> : <MdExpandMore />}
-							borderRadius={'full'}
-							colorScheme='secondary'
-							size='sm'
-							onClick={handleToggle}
-							mt='1rem'
-							aria-label={''}
-						/>
-					</Flex>
-					{context.settings != undefined && (
-						<Box height={'500px'} textColor='black'>
-							<BarChart league={context} />
-						</Box>
-					)}
+					<LeagueOverviewDataTable league={context} />
 				</GridItem>
 				<GridItem area={'weekStats'} overflowX={'auto'}>
 					<LeagueNotableWeeksStatGroup league={context} />
 				</GridItem>
-				<GridItem area={'pfChart'}>
-					<Box height={'500px'} textColor='black'>
+				<GridItem area={'pfLineChart'}>
+					<Box height={'350px'} textColor='black'>
 						<LineChart league={context} />
 					</Box>
 				</GridItem>
+				<GridItem area={'pfBarChart'} minHeight={"350px"}>
+						<BarChart league={context} />
+				</GridItem>
+
 				<GridItem area={'radarChart'}>
 					<Box height={'500px'} textColor='black'>
 						<TeamRadarChart league={context} />

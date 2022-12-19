@@ -33,7 +33,7 @@ const BarChart = (props: MyProps) => {
       keys={keys}
       indexBy="member"
       layout="horizontal"
-      margin={{ top: 0, right: 10, bottom: 80, left: 20 }}
+      margin={{ top: 0, right: 10, bottom: 0, left: 20 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}

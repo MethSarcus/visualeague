@@ -92,6 +92,10 @@ function Navbar(props: MyProps) {
           buttonText="Trading"
           link={`league/${context?.settings?.league_id}/trades`}
         />
+        <NavbarButton
+          buttonText="Draft"
+          link={`league/${context?.settings?.league_id}/draft`}
+        />
       </HStack>
       <Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
     </Flex>

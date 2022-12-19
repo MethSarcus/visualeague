@@ -34,7 +34,7 @@ export default function Page() {
                 borderRadius={10}
               >
                 <Box w={["xs", "md", "lg", "xl", "2xl"]} color={"white"}>
-                  <Image alt="Visualeague" src={logo} />
+                  <Image alt="Visualeague" src={logo} priority={true} />
                   <UsernameForm />
                 </Box>
               </Container>
