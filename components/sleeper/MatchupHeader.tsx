@@ -12,13 +12,14 @@ import {
 import { useContext } from "react";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import Matchup from "../../classes/custom/Matchup";
+import MatchupInterface from "../../classes/custom/MatchupInterface";
 import { Context } from "../../contexts/Context";
 import { project_colors } from "../../utility/project_colors";
 import InvertedMatchupHeaderTeam from "./InvertedMatchupHeaderTeam";
 import MatchupHeaderTeam from "./MatchupHeaderTeam";
 
 interface MyProps {
-  matchup: Matchup | undefined;
+  matchup: MatchupInterface | undefined;
 }
 
 export default function MatchupHeader(props: MyProps) {
@@ -41,7 +42,7 @@ export default function MatchupHeader(props: MyProps) {
   return (
     <ModalHeader>
       <Center>Week {props.matchup?.weekNumber}</Center>
-      <Center mt={2}>
+      <Flex mt={2} align={"stretch"}>
         <MatchupHeaderTeam
           matchupSide={props.matchup?.homeTeam}
           isWinner={
@@ -51,6 +52,7 @@ export default function MatchupHeader(props: MyProps) {
           member={homeMember}
           size={"sm"}
           variant={"default"}
+          isByeWeek={props.matchup?.isByeWeek ?? false}
         />
         <Circle
           zIndex={5}
@@ -66,13 +68,14 @@ export default function MatchupHeader(props: MyProps) {
         </Circle>
         <InvertedMatchupHeaderTeam
           variant={"inverted"}
-          matchupSide={props.matchup?.awayTeam!}
+          matchupSide={props.matchup?.awayTeam}
           isWinner={props.matchup?.awayTeam?.roster_id == props.matchup?.winnerRosterId}
           member={awayMember}
           size={"lg"}
           isTie={props.matchup?.isTie ?? false}
+          isByeWeek={props.matchup?.isByeWeek}
         />
-      </Center>
+      </Flex>
     </ModalHeader>
   );
 }
