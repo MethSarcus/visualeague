@@ -5,7 +5,7 @@ export class MatchupPlayer {
     position?: string
     score: number = 0
     projectedScore: number = 0
-    stats?: ScoringAct
+    stats?: ScoringAct | undefined
     projectedStats?: ScoringAct
     eligiblePositions: string[] = ["QB",
     "RB",
@@ -20,8 +20,8 @@ export class MatchupPlayer {
     constructor(playerId?: string, position?: string, stats?: ScoringSettings, projectedStats?: ScoringSettings, eligiblePositions?: string[], leagueSettings?: ScoringSettings) {
         this.playerId = playerId
         this.position = position
-        this.stats = stats as ScoringAct
-        this.projectedStats = projectedStats as ScoringAct
+        this.stats = stats as unknown as ScoringAct
+        this.projectedStats = projectedStats as unknown as ScoringAct
         if (eligiblePositions) {
             this.eligiblePositions = eligiblePositions
         }
@@ -52,7 +52,7 @@ export class MatchupPlayer {
       
 }
 
-export class BlankPlayer implements MatchupPlayer {
+export class BlankPlayer extends MatchupPlayer {
     playerId: string = "0"
     score: number = 0
     projectedScore: number = 0

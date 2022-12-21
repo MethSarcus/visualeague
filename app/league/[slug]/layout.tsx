@@ -18,6 +18,7 @@ export default function LeagueLayout({
 }) {
 	enableAllPlugins()
 	const [context, setContext] = useContext(Context)
+	const [leagueDataExists, setLeagueDataExists] = useState(false)
 	let leagueId = usePathname()?.replace('/league/', '')
 	if (leagueId?.includes('/trades')) {
 		leagueId = leagueId.replace('/trades', '')
@@ -38,29 +39,36 @@ export default function LeagueLayout({
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 	const {data: leagueData, error: leagueError} = useSWR(
-		leagueId != undefined ? `/api/league/${leagueId}` : null,
+		leagueId != undefined && !leagueDataExists
+			? `/api/league/${leagueId}`
+			: null,
 		fetcher
 	)
 	const {data: tradeData, error: tradeError} = useSWR(
-		leagueId != undefined ? `/api/trades/${leagueId}` : null,
+		leagueId != undefined && !leagueDataExists
+			? `/api/trades/${leagueId}`
+			: null,
 		fetcher
 	)
 
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		leagueData?.league != undefined
+		leagueData?.league != undefined && !leagueDataExists
 			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}`
 			: null,
 		fetcher
 	)
 
 	const {data: draftData, error: draftError} = useSWR(
-		leagueData?.league != undefined
+		leagueData?.league != undefined && !leagueDataExists
 			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}/picks`
 			: null,
 		fetcher
 	)
 
 	useEffect(() => {
+		if (leagueId == context.settings?.league_id) {
+			setLeagueDataExists(true)
+		}
 		if (
 			leagueData &&
 			leagueData.league &&
@@ -76,7 +84,16 @@ export default function LeagueLayout({
 			console.log(league)
 			setContext(league)
 		}
-	}, [leagueData, setContext, tradeData, draftData, draftSettings])
+	}, [
+		leagueData,
+		setContext,
+		tradeData,
+		draftData,
+		draftSettings,
+		leagueDataExists,
+		leagueId,
+		context.settings?.league_id,
+	])
 
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>
@@ -97,7 +114,6 @@ export default function LeagueLayout({
 						<GridItem area={'header'}>
 							<Navbar leagueID={leagueId} />
 						</GridItem>
-
 						<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
 							{children}
 						</GridItem>

@@ -20,7 +20,7 @@ export class MatchupSide {
   roster_id: number;
   starters: MatchupPlayer[];
   bench: MatchupPlayer[];
-  matchup_id: number;
+  matchup_id: number | undefined;
   custom_points: number = 0;
   gut_plays: number = 0;
   position_scores: Map<POSITION, number> = new Map();

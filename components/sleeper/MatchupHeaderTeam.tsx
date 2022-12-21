@@ -18,15 +18,16 @@ interface MyProps {
   size: string;
   variant: string;
   isTie: boolean
+  isByeWeek: boolean
 }
 
 export default function MatchupHeaderTeam(props: MyProps) {
   const { variant, size, ...rest } = props;
 
   let ringColor = project_colors.outcomeColor.tie_color;
-  if (props.isWinner && props.isTie != true) {
+  if (props.isWinner && props.isTie != true && !props.isByeWeek) {
     ringColor = project_colors.statColor.good;
-  } else if (props.isWinner == false && props.isTie != true) {
+  } else if (props.isWinner == false && props.isTie != true && !props.isByeWeek) {
     ringColor = project_colors.statColor.bad;
   }
 

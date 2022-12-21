@@ -18,6 +18,7 @@ import { Draft } from './Draft'
 import LeagueMember from './LeagueMember'
 import LeagueStats from './LeagueStats'
 import Matchup from './Matchup'
+import MatchupInterface from './MatchupInterface'
 import {MatchupPlayer} from './MatchupPlayer'
 import {MatchupSide} from './MatchupSide'
 import MemberScores from './MemberStats'
@@ -543,13 +544,13 @@ export default class League {
 	}
 
 	getMemberNotableWeeks(rosterId: number) {
-		let bestWeek: Matchup | undefined = undefined
-		let worstWeek: Matchup | undefined = undefined
-		let closestGame: Matchup | undefined = undefined
-		let furthestGame: Matchup | undefined = undefined
+		let bestWeek: MatchupInterface | undefined = undefined
+		let worstWeek: MatchupInterface | undefined = undefined
+		let closestGame: MatchupInterface | undefined = undefined
+		let furthestGame: MatchupInterface | undefined = undefined
 		this.weeks.forEach((week) => {
 			let matchup = week.getMemberMatchup(rosterId)
-			if (matchup != undefined) {
+			if (matchup != undefined && !matchup.isByeWeek) {
 				if (bestWeek == undefined) {
 					bestWeek = matchup
 					worstWeek = matchup
@@ -565,16 +566,16 @@ export default class League {
 
 					if (
 						matchup.getMemberSide(rosterId)!.pf <
-						bestWeek.getMemberSide(rosterId)!.pf
+						worstWeek!.getMemberSide(rosterId)!.pf
 					) {
 						worstWeek = matchup
 					}
 
-					if (matchup.getMargin() < closestGame?.getMargin()!) {
+					if (matchup.getMargin()! < closestGame?.getMargin()!) {
 						closestGame = matchup
 					}
 
-					if (matchup.getMargin() > closestGame?.getMargin()!) {
+					if (matchup.getMargin()! > furthestGame?.getMargin()!) {
 						furthestGame = matchup
 					}
 				}
@@ -1002,7 +1003,7 @@ export default class League {
 	}
 
 	getAllWeeksForMember(rosterId: number) {
-		let allWeeks: Matchup[] = []
+		let allWeeks: MatchupInterface[] = []
 		this.weeks.forEach((week, weekNumber) => {
 			allWeeks.push(week.getMemberMatchup(rosterId))
 		})
