@@ -31,7 +31,7 @@ import {MatchupPlayer} from '../../classes/custom/MatchupPlayer'
 import {Context} from '../../contexts/Context'
 import {project_colors} from '../../utility/project_colors'
 import {LINEUP_POSITION} from '../../utility/rosterFunctions'
-import { LINEUP_OPTIONS } from '../sleeper/HorizontalPillSelector'
+import {LINEUP_OPTIONS} from '../sleeper/HorizontalPillSelector'
 import MatchupHeader from '../sleeper/MatchupHeader'
 import PositionalMatchupContainer from '../sleeper/PositionalMatchupContainer'
 
@@ -43,71 +43,80 @@ interface MyProps {
 export default function MatchupPreview(props: MyProps) {
 	const [context, setContext] = useContext(Context)
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [homeStarters, setHomeStarters] = useState(props.matchup?.homeTeam.starters)
-    const [homeBench, setHomeBench] = useState(props.matchup?.homeTeam.bench)
-    const [homeScore, setHomeScore] = useState(props.matchup?.homeTeam.pf)
-    const [homeProjectedScore, setHomeProjectedScore] = useState(props.matchup?.homeTeam.projectedScore)
+	const [homeStarters, setHomeStarters] = useState(
+		props.matchup?.homeTeam.starters
+	)
+	const [homeBench, setHomeBench] = useState(props.matchup?.homeTeam.bench)
+	const [homeScore, setHomeScore] = useState(props.matchup?.homeTeam.pf)
+	const [homeProjectedScore, setHomeProjectedScore] = useState(
+		props.matchup?.homeTeam.projectedScore
+	)
 
-    const [awayStarters, setAwayStarters] = useState(props.matchup?.awayTeam?.starters)
-    const [awayBench, setAwayBench] = useState(props.matchup?.awayTeam?.bench)
-    const [awayScore, setAwayScore] = useState(props.matchup?.awayTeam?.pf)
-    const [awayProjectedScore, setAwayProjectedScore] = useState(props.matchup?.awayTeam?.projectedScore)
+	const [awayStarters, setAwayStarters] = useState(
+		props.matchup?.awayTeam?.starters
+	)
+	const [awayBench, setAwayBench] = useState(props.matchup?.awayTeam?.bench)
+	const [awayScore, setAwayScore] = useState(props.matchup?.awayTeam?.pf)
+	const [awayProjectedScore, setAwayProjectedScore] = useState(
+		props.matchup?.awayTeam?.projectedScore
+	)
 
-    function handleHomeTabChange(selected: string) {
-      switch(selected) {
-        case LINEUP_OPTIONS.ACTUAL: {
-          setHomeStarters(props.matchup?.homeTeam.starters)
-          setHomeBench(props.matchup?.homeTeam.starters)
-          setHomeScore(props.matchup?.homeTeam.pf)
-          setHomeProjectedScore(props.matchup?.homeTeam.projectedScore)
-          break
-        }
-        case LINEUP_OPTIONS.MAX_PF: {
-          let lineup = props.matchup?.homeTeam.getOptimalLineupAndBench()
-          setHomeStarters(lineup?.starters)
-          setHomeBench(lineup?.bench)
-          setHomeScore(lineup?.score)
-          setHomeProjectedScore(lineup?.projected_score)
-          break
-        }
-        case LINEUP_OPTIONS.OPSLAP: {
-          let lineup = props.matchup?.homeTeam.getOptimalProjectedLineupAndBench()
-          setHomeStarters(lineup?.starters)
-          setHomeBench(lineup?.bench)
-          setHomeScore(lineup?.score)
-          setHomeProjectedScore(lineup?.projected_score)
-          break
-        }
-      }
-    }
+	function handleHomeTabChange(selected: string) {
+		switch (selected) {
+			case LINEUP_OPTIONS.ACTUAL: {
+				setHomeStarters(props.matchup?.homeTeam.starters)
+				setHomeBench(props.matchup?.homeTeam.starters)
+				setHomeScore(props.matchup?.homeTeam.pf)
+				setHomeProjectedScore(props.matchup?.homeTeam.projectedScore)
+				break
+			}
+			case LINEUP_OPTIONS.MAX_PF: {
+				let lineup = props.matchup?.homeTeam.getOptimalLineupAndBench()
+				setHomeStarters(lineup?.starters)
+				setHomeBench(lineup?.bench)
+				setHomeScore(lineup?.score)
+				setHomeProjectedScore(lineup?.projected_score)
+				break
+			}
+			case LINEUP_OPTIONS.OPSLAP: {
+				let lineup = props.matchup?.homeTeam.getOptimalProjectedLineupAndBench()
+				setHomeStarters(lineup?.starters)
+				setHomeBench(lineup?.bench)
+				setHomeScore(lineup?.score)
+				setHomeProjectedScore(lineup?.projected_score)
+				break
+			}
+		}
+	}
 
-    function handleAwayTabChange(selected: string) {
-      switch(selected) {
-        case LINEUP_OPTIONS.ACTUAL: {
-          setAwayStarters(props.matchup?.awayTeam?.starters)
-          setAwayBench(props.matchup?.awayTeam?.starters)
-          setAwayScore(props.matchup?.awayTeam?.pf)
-          setAwayProjectedScore(props.matchup?.awayTeam?.projectedScore)
-          break
-        }
-        case LINEUP_OPTIONS.MAX_PF: {
-          let lineup = props.matchup?.awayTeam?.getOptimalLineupAndBench()
-          setAwayStarters(lineup?.starters)
-          setAwayBench(lineup?.bench)
-          setAwayScore(lineup?.score)
-          setAwayProjectedScore(lineup?.projected_score)
-          break
-        }
-        case LINEUP_OPTIONS.OPSLAP: {
-          let lineup = props.matchup?.awayTeam?.getOptimalProjectedLineupAndBench()
-          setAwayStarters(lineup?.starters)
-          setAwayBench(lineup?.bench)
-          setAwayScore(lineup?.score)
-          setAwayProjectedScore(lineup?.projected_score)
-          break
-        }
-      }
-    }
+	function handleAwayTabChange(selected: string) {
+		switch (selected) {
+			case LINEUP_OPTIONS.ACTUAL: {
+				setAwayStarters(props.matchup?.awayTeam?.starters)
+				setAwayBench(props.matchup?.awayTeam?.starters)
+				setAwayScore(props.matchup?.awayTeam?.pf)
+				setAwayProjectedScore(props.matchup?.awayTeam?.projectedScore)
+				break
+			}
+			case LINEUP_OPTIONS.MAX_PF: {
+				let lineup = props.matchup?.awayTeam?.getOptimalLineupAndBench()
+				setAwayStarters(lineup?.starters)
+				setAwayBench(lineup?.bench)
+				setAwayScore(lineup?.score)
+				setAwayProjectedScore(lineup?.projected_score)
+				break
+			}
+			case LINEUP_OPTIONS.OPSLAP: {
+				let lineup =
+					props.matchup?.awayTeam?.getOptimalProjectedLineupAndBench()
+				setAwayStarters(lineup?.starters)
+				setAwayBench(lineup?.bench)
+				setAwayScore(lineup?.score)
+				setAwayProjectedScore(lineup?.projected_score)
+				break
+			}
+		}
+	}
 	const [value, setValue] = useState('1')
 	let opponentId
 
@@ -126,9 +135,9 @@ export default function MatchupPreview(props: MyProps) {
 		}
 	}
 
-  if (props.matchup?.isByeWeek) {
-    shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.neutral}`
-  }
+	if (props.matchup?.isByeWeek) {
+		shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.neutral}`
+	}
 
 	return (
 		<>
@@ -174,7 +183,7 @@ export default function MatchupPreview(props: MyProps) {
 							letterSpacing={'wide'}
 							color={'textTheme.highEmphasis'}
 						>
-							{context?.members.get(opponentId)?.name ?? "Bye Week"}
+							{context?.members.get(opponentId)?.name ?? 'Bye Week'}
 						</Text>
 					</SkeletonText>
 					<Text
@@ -203,7 +212,15 @@ export default function MatchupPreview(props: MyProps) {
 				<ModalContent bg={'#1A202E'} color={'white'} overflowX={'hidden'}>
 					<ModalHeader>
 						<Center>
-							<MatchupHeader matchup={props.matchup!} homeLineupOnclick={handleHomeTabChange} awayLineupOnclick={handleAwayTabChange} homeAlteredScore={homeScore} homeAlteredProjectedScore={homeProjectedScore} awayAlteredScore={awayScore} awayAlteredProjectedScore={awayProjectedScore} />
+							<MatchupHeader
+								matchup={props.matchup!}
+								homeLineupOnclick={handleHomeTabChange}
+								awayLineupOnclick={handleAwayTabChange}
+								homeAlteredScore={homeScore}
+								homeAlteredProjectedScore={homeProjectedScore}
+								awayAlteredScore={awayScore}
+								awayAlteredProjectedScore={awayProjectedScore}
+							/>
 						</Center>
 					</ModalHeader>
 					<ModalCloseButton />
@@ -246,14 +263,8 @@ export default function MatchupPreview(props: MyProps) {
 											<PositionalMatchupContainer
 												key={index}
 												position={pos as LINEUP_POSITION}
-												homePlayer={
-													homeBench?.at(index) ??
-													new MatchupPlayer()
-												}
-												awayPlayer={
-													awayBench?.at(index) ??
-													new MatchupPlayer()
-												}
+												homePlayer={homeBench?.at(index) ?? new MatchupPlayer()}
+												awayPlayer={awayBench?.at(index) ?? new MatchupPlayer()}
 											/>
 										)
 									}) as any
