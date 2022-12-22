@@ -159,32 +159,32 @@ export class MatchupSide {
 	}
 
 	getOptimalLineupAndBench() {
-    let projectedScore = 0
-    this.optimalLineup.forEach(player => {
-      projectedScore += player.projectedScore
-    })
+		let projectedScore = 0
+		this.optimalLineup.forEach((player) => {
+			projectedScore += player.projectedScore
+		})
 		return {
 			starters: this.optimalLineup,
 			bench: this.starters.concat(this.bench).filter((player) => {
 				return !this.optimalLineup.includes(player)
 			}),
-      score: this.pp,
-      projected_score: projectedScore
+			score: this.pp,
+			projected_score: projectedScore,
 		}
 	}
 
-  getOptimalProjectedLineupAndBench() {
-    let projectedScore = 0
-    this.optimalProjectedLineup.forEach(player => {
-      projectedScore += player.projectedScore
-    })
+	getOptimalProjectedLineupAndBench() {
+		let projectedScore = 0
+		this.optimalProjectedLineup.forEach((player) => {
+			projectedScore += player.projectedScore
+		})
 		return {
 			starters: this.optimalProjectedLineup,
 			bench: this.starters.concat(this.bench).filter((player) => {
 				return !this.optimalProjectedLineup.includes(player)
 			}),
-      score: this.opslap,
-      projected_score: projectedScore
+			score: this.opslap,
+			projected_score: projectedScore,
 		}
 	}
 

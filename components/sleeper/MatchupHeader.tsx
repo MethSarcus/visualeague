@@ -45,7 +45,7 @@ export default function MatchupHeader(props: MyProps) {
 	awayMember = context.getMember(awayTeam?.roster_id) as LeagueMember
 
 	return (
-		<ModalHeader fontSize={"md"}>
+		<ModalHeader fontSize={'md'}>
 			<Center>Week {props.matchup?.weekNumber}</Center>
 			<Flex mt={2}>
 				<Box ml={5}>
@@ -57,7 +57,7 @@ export default function MatchupHeader(props: MyProps) {
 						isTie={props.matchup?.isTie ?? false}
 						member={homeMember}
 						size={'sm'}
-						isInverted={true}
+						isHomeTeam={true}
 						variant={'default'}
 						isByeWeek={props.matchup?.isByeWeek ?? false}
 						alteredScore={props.homeAlteredScore}
@@ -77,26 +77,25 @@ export default function MatchupHeader(props: MyProps) {
 				>
 					<Center textAlign={'center'}>VS</Center>
 				</Circle>
-        <Box flex={1} mr={5}>
-				<MatchupHeaderTeam
-					variant={'default'}
-					matchupSide={props.matchup?.awayTeam}
-					isWinner={
-						props.matchup?.awayTeam?.roster_id == props.matchup?.winnerRosterId
-					}
-					member={awayMember}
-					size={'sm'}
-					isTie={props.matchup?.isTie ?? false}
-					isByeWeek={props.matchup?.isByeWeek ?? false}
-					isInverted={false}
-          alteredScore={props.awayAlteredScore}
-          alteredProjectedScore={props.awayAlteredProjectedScore}
-				/>
-        <HorizontalPillSelector onclick={props.awayLineupOnclick}/>
-        </Box>
+				<Box flex={1} mr={5}>
+					<MatchupHeaderTeam
+						variant={'default'}
+						matchupSide={props.matchup?.awayTeam}
+						isWinner={
+							props.matchup?.awayTeam?.roster_id ==
+							props.matchup?.winnerRosterId
+						}
+						member={awayMember}
+						size={'sm'}
+						isTie={props.matchup?.isTie ?? false}
+						isByeWeek={props.matchup?.isByeWeek ?? false}
+						isHomeTeam={false}
+						alteredScore={props.awayAlteredScore}
+						alteredProjectedScore={props.awayAlteredProjectedScore}
+					/>
+					<HorizontalPillSelector onclick={props.awayLineupOnclick} />
+				</Box>
 			</Flex>
-       
-
 		</ModalHeader>
 	)
 }

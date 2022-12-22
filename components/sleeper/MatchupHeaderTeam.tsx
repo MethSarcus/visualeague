@@ -23,7 +23,7 @@ interface MyProps {
   isByeWeek: boolean
   alteredScore?: number
   alteredProjectedScore?: number
-  isInverted: boolean
+  isHomeTeam: boolean
 }
 
 export default function MatchupHeaderTeam(props: MyProps) {
@@ -58,12 +58,12 @@ export default function MatchupHeaderTeam(props: MyProps) {
       fontSize={".7em"}
       minW={"180px"}
       position={"relative"}
-      flexDirection={props.isInverted ? "row" : "row-reverse"}
+      flexDirection={props.isHomeTeam ? "row" : "row-reverse"}
     >
       <Avatar
         position={"absolute"}
-        ml={props.isInverted ? -2 : "auto"}
-        mr={props.isInverted ? "auto" : -2}
+        ml={props.isHomeTeam ? -2 : "auto"}
+        mr={props.isHomeTeam ? "auto" : -2}
         mt={-7}
         size={"md"}
         borderColor={ringColor}
@@ -75,13 +75,13 @@ export default function MatchupHeaderTeam(props: MyProps) {
         mb={"auto"}
         fontWeight={"semibold"}
         color={"#A7BAD0"}
-        mr={props.isInverted ? 2 : 0}
-        ml={props.isInverted ? 0 : 2}
+        mr={props.isHomeTeam ? 2 : 0}
+        ml={props.isHomeTeam ? 0 : 2}
       >
         <Text
-          ml={props.isInverted ? 10 : 0}
-          mr={props.isInverted ? 0 : 10}
-          textAlign={props.isInverted ? "start" : "end"}
+          ml={props.isHomeTeam ? 10 : 0}
+          mr={props.isHomeTeam ? 0 : 10}
+          textAlign={props.isHomeTeam ? "start" : "end"}
           mt={-2}
           fontSize={".8em"}
           fontWeight={"semibold"}
@@ -96,7 +96,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
           fontSize={".8em"}
           color={"#A7BAD0"}
           lineHeight="10px"
-          textAlign={props.isInverted ? 'start' : "end"}
+          textAlign={props.isHomeTeam ? 'start' : "end"}
         >
           @{props.member?.userDetails.display_name}
         </Text>
@@ -105,20 +105,20 @@ export default function MatchupHeaderTeam(props: MyProps) {
         </Text>
       </Box>
       <Spacer />
-      <Text position={"absolute"} mt={-1} right={props.isInverted ? 2.5 : "-moz-initial"} left={!props.isInverted ? 3.5 : "-moz-initial"} mr={1} textAlign={props.isInverted ? "start" : "end"} fontSize={".6em"} display={props.alteredScore == props.matchupSide?.pf ? "none" : "initial"} textColor={lineupDiffTextColor}>{scoreDiffText}</Text>
+      <Text position={"absolute"} mt={-1} right={props.isHomeTeam ? 2.5 : "-moz-initial"} left={!props.isHomeTeam ? 3.5 : "-moz-initial"} mr={1} textAlign={props.isHomeTeam ? "start" : "end"} fontSize={".6em"} display={props.alteredScore == props.matchupSide?.pf ? "none" : "initial"} textColor={lineupDiffTextColor}>{scoreDiffText}</Text>
       <Flex
         fontSize={"1em"}
         fontWeight={"semibold"}
         position={"absolute"}
         noOfLines={2}
         textOverflow={"ellipsis"}
-        mr={props.isInverted ? 3.5 : "-moz-initial"}
-        ml={props.isInverted ? "-moz-initial" : 3.5}
+        mr={props.isHomeTeam ? 3.5 : "-moz-initial"}
+        ml={props.isHomeTeam ? "-moz-initial" : 3.5}
         my={"auto"}
-        right={props.isInverted ? 0 : "-moz-initial" }
-        left={props.isInverted ? "-moz-initial" : 0 }
+        right={props.isHomeTeam ? 0 : "-moz-initial" }
+        left={props.isHomeTeam ? "-moz-initial" : 0 }
         p={0}
-        textAlign={props.isInverted ? "end" : "start"}
+        textAlign={props.isHomeTeam ? "end" : "start"}
       >
         
         <Text fontSize={"1.2em"} color={"#FBFBFB"} mt={1}>

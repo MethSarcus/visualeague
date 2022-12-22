@@ -133,7 +133,7 @@ export default function MatchupModalBody(props: MyProps) {
                       key={index}
                       position={pos as LINEUP_POSITION}
                       homePlayer={homeBench?.at(index)!}
-                      awayPlayer={props.matchup?.awayTeam?.bench.at(index)!}
+                      awayPlayer={awayBench?.at(index)!}
                     />
                   );
                 }) as any
