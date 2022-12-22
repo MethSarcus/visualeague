@@ -3,16 +3,22 @@ import { LeagueSettings } from "../sleeper/LeagueSettings"
 import { SleeperMatchup } from "../sleeper/SleeperMatchup"
 import Matchup from "./Matchup"
 import { MatchupSide } from "./MatchupSide"
+import { Match } from "@testing-library/react"
+import ByeWeekMatchup from "./ByeWeekMatchup"
 
 export class Week {
     matchups: Map<number, Matchup> = new Map()
+    byeWeeks: ByeWeekMatchup[] = []
     weekNumber: number
 
     constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerStats: any, playerProjections: any, playerDetails: Map<string, SleeperPlayerDetails>, leagueSettings: LeagueSettings, isPlayoffs: boolean, taxiMap?: Map<number, string[]>) {
         this.weekNumber = weekNumber
         let matchupIds = new Map()
         sleeperMatchups.forEach((matchup: SleeperMatchup) => {
-            if (!matchupIds.has(matchup.matchup_id)) {
+          if (matchup.matchup_id == undefined) {
+            let homeTeam = new MatchupSide(weekNumber, matchup, playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchup.roster_id) ?? [])
+            this.byeWeeks.push(new ByeWeekMatchup(weekNumber, homeTeam))
+          } else if (!matchupIds.has(matchup.matchup_id)) {
               matchupIds.set(matchup.matchup_id, [matchup])
             } else {
               matchupIds.get(matchup.matchup_id).push(matchup)
@@ -25,8 +31,6 @@ export class Week {
                 let awayMatchupSide = new MatchupSide(weekNumber, matchupPair[1], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchupPair[1].roster_id) ?? [])
                 this.matchups.set(matchupId, new Matchup(weekNumber, homeMatchupSide,
                 isPlayoffs, awayMatchupSide))
-            } else {
-                this.matchups.set(matchupId, new Matchup(weekNumber, new MatchupSide(weekNumber, matchupPair[0], playerStats.get(weekNumber), playerProjections.get(weekNumber), playerDetails, leagueSettings, taxiMap?.get(matchupPair[0].roster_id) ?? []), isPlayoffs))
             }
         });
     }
@@ -47,15 +51,23 @@ export class Week {
       return teams
     }
 
-    getMemberMatchup(rosterId: number): Matchup {
-      let memberMatchup;
+    getMemberMatchup(rosterId: number): Matchup | ByeWeekMatchup {
+      let memberMatchup: Matchup | undefined | ByeWeekMatchup
       this.matchups.forEach(matchup => {
         if (matchup.homeTeam.roster_id == rosterId || matchup.awayTeam?.roster_id == rosterId) {
           memberMatchup = matchup;
         }
       })
 
-      return memberMatchup as unknown as Matchup
+      if (!memberMatchup) {
+        this.byeWeeks.forEach(byeWeek => {
+          if (byeWeek.homeTeam.roster_id == rosterId) {
+            memberMatchup = byeWeek
+          }
+        })
+      }
+
+      return memberMatchup as Matchup | ByeWeekMatchup
     }
 
     getMemberMatchupSide(rosterId: number): MatchupSide {
@@ -67,6 +79,14 @@ export class Week {
           memberMatchupSide = matchup.awayTeam!
         }
       })
+
+      if (!memberMatchupSide) {
+        this.byeWeeks.forEach(byeWeek => {
+          if (byeWeek.homeTeam.roster_id == rosterId) {
+            memberMatchupSide = byeWeek.homeTeam
+          }
+        })
+      }
 
       return memberMatchupSide as unknown as MatchupSide
     }

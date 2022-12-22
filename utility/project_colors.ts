@@ -66,6 +66,13 @@ export const project_colors = {
 		text_dark: '#96A2B6',
 		badge_background: '#42495B',
 		border_color: '#2F3241',
+		dark_component_background: "rgb(32, 38, 53)",
+		horizontal_pill_group: {
+			background: "rgb(32, 38, 53)",
+			text_selected_color: "rgb(2, 32, 71)",
+			selected_item_background: 'rgb(199 213 228)',
+			text_color: 'rgb(185, 196, 212)'
+		}
 	},
 	outcomeColor: {
 		win: 'rgb(121,229,172, 1)',
