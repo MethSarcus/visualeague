@@ -6,6 +6,8 @@ import {
   Box,
   Text,
   useMultiStyleConfig,
+  defineStyleConfig,
+  ResponsiveValue,
 } from "@chakra-ui/react";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import { MatchupSide } from "../../classes/custom/MatchupSide";
@@ -19,6 +21,9 @@ interface MyProps {
   variant: string;
   isTie: boolean
   isByeWeek: boolean
+  alteredScore?: number
+  alteredProjectedScore?: number
+  isInverted: boolean
 }
 
 export default function MatchupHeaderTeam(props: MyProps) {
@@ -29,6 +34,17 @@ export default function MatchupHeaderTeam(props: MyProps) {
     ringColor = project_colors.statColor.good;
   } else if (props.isWinner == false && props.isTie != true && !props.isByeWeek) {
     ringColor = project_colors.statColor.bad;
+  }
+
+  let lineupDiffTextColor = project_colors.outcomeColor.win
+
+  if (props.alteredScore && props.matchupSide?.pf && props.alteredScore < props.matchupSide?.pf) {
+    lineupDiffTextColor = project_colors.outcomeColor.loss
+  }
+
+  let scoreDiffText = ((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)).toFixed(2)
+  if (((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)) > 0) {
+    scoreDiffText = "+" + ((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)).toFixed(2)
   }
 
   return (
@@ -42,10 +58,12 @@ export default function MatchupHeaderTeam(props: MyProps) {
       fontSize={".7em"}
       minW={"180px"}
       position={"relative"}
+      flexDirection={props.isInverted ? "row" : "row-reverse"}
     >
       <Avatar
         position={"absolute"}
-        ml={-2}
+        ml={props.isInverted ? -2 : "auto"}
+        mr={props.isInverted ? "auto" : -2}
         mt={-7}
         size={"md"}
         borderColor={ringColor}
@@ -53,15 +71,17 @@ export default function MatchupHeaderTeam(props: MyProps) {
         src={props.member?.getTeamAvatar()}
       />
       <Box
-        pl={1}
         mt={"auto"}
         mb={"auto"}
         fontWeight={"semibold"}
         color={"#A7BAD0"}
-        mr={2}
+        mr={props.isInverted ? 2 : 0}
+        ml={props.isInverted ? 0 : 2}
       >
         <Text
-          ml={10}
+          ml={props.isInverted ? 10 : 0}
+          mr={props.isInverted ? 0 : 10}
+          textAlign={props.isInverted ? "start" : "end"}
           mt={-2}
           fontSize={".8em"}
           fontWeight={"semibold"}
@@ -76,30 +96,36 @@ export default function MatchupHeaderTeam(props: MyProps) {
           fontSize={".8em"}
           color={"#A7BAD0"}
           lineHeight="10px"
+          textAlign={props.isInverted ? 'start' : "end"}
         >
           @{props.member?.userDetails.display_name}
         </Text>
-        <Text fontWeight={"semibold"} color={"white"}>
+        <Text fontWeight={"semibold"} color={"white"} textAlign={"end"}>
           {props.member?.teamName}
         </Text>
       </Box>
       <Spacer />
+      <Text position={"absolute"} mt={-1} right={props.isInverted ? 2.5 : "-moz-initial"} left={!props.isInverted ? 3.5 : "-moz-initial"} mr={1} textAlign={props.isInverted ? "start" : "end"} fontSize={".6em"} display={props.alteredScore == props.matchupSide?.pf ? "none" : "initial"} textColor={lineupDiffTextColor}>{scoreDiffText}</Text>
       <Flex
         fontSize={"1em"}
         fontWeight={"semibold"}
         position={"absolute"}
         noOfLines={2}
-        mr={3.5}
+        textOverflow={"ellipsis"}
+        mr={props.isInverted ? 3.5 : "-moz-initial"}
+        ml={props.isInverted ? "-moz-initial" : 3.5}
         my={"auto"}
-        right={0}
+        right={props.isInverted ? 0 : "-moz-initial" }
+        left={props.isInverted ? "-moz-initial" : 0 }
         p={0}
-        textAlign={"end"}
+        textAlign={props.isInverted ? "end" : "start"}
       >
+        
         <Text fontSize={"1.2em"} color={"#FBFBFB"} mt={1}>
-          {props.matchupSide?.pf.toFixed(2) ?? "0.00"}
+          {props.alteredScore?.toFixed(2) ?? props.matchupSide?.pf.toFixed(2) ?? "0.00"}
         </Text>
         <Text color={"#A7BAD0"} fontWeight={"semibold"} fontSize={".7em"}>
-          {props.matchupSide?.projectedScore.toFixed(2) ?? "0.00"}
+          {props.alteredProjectedScore?.toFixed(2) ?? props.matchupSide?.projectedScore.toFixed(2) ?? "0.00"}
         </Text>
       </Flex>
     </Flex>
