@@ -48,7 +48,7 @@ export default class League {
 	public stats: LeagueStats = new LeagueStats()
 	public draft: Draft
 
-	constructor(sleeperLeague: SleeperLeague, draft: Draft, modifiedSettings?: LeagueSettings) {
+	constructor(sleeperLeague: SleeperLeague, draft: Draft, modifiedSettings?: LeagueSettings, trades?: SleeperTransaction[]) {
 		if (modifiedSettings) {
 			this.modifiedSettings = modifiedSettings
 			this.useModifiedSettings = true
@@ -69,9 +69,10 @@ export default class League {
 
 		this.draft = draft
 		this.allMatchups = sleeperLeague.matchups
-		this.trades = [] //TODO add api calls for getting this info
+
 		this.settings = sleeperLeague.sleeperDetails
-		this.settings = sleeperLeague.sleeperDetails
+
+
 		this.setStats(sleeperLeague.player_stats)
 		this.initMemberTradeStats()
 		this.setProjections(sleeperLeague.player_projections)
@@ -79,6 +80,15 @@ export default class League {
 		this.calcMemberScores()
 		this.setLeagueStats()
 		this.setDraftValues()
+
+		if (trades) {
+			this.trades = trades?.map((trade) => {
+				return new Trade(trade)
+			})
+		} else {
+			this.trades = []
+		}
+		this.calcTradeStats()
 	}
 
 	getMember(rosterId: string | number) {
@@ -100,12 +110,14 @@ export default class League {
 		return memberTradeNum
 	}
 
-	addTrades(transactions: SleeperTransaction[]) {
-		let trades = transactions.map((transaction) => {
-			return new Trade(transaction)
+	calcTradeStats() {
+		this.trades.forEach((trade) => {
+			trade.playersTraded.forEach(player => {
+				trade.resetPlayerScore(player)
+			})
 		})
 
-		trades.forEach((trade) => {
+		this.trades.forEach((trade) => {
 			let weeks = this.getWeeksSinceTrade(trade.leg)
 			trade.playersTraded.forEach((playerId) => {
 				trade.addPlayerScore(
@@ -116,8 +128,6 @@ export default class League {
 
 			trade.setMemberPlayerDifferential()
 		})
-
-		this.trades = trades
 	}
 
 	//Takes a player_id and array of weeks and returns the total points the player scored during them
@@ -446,7 +456,7 @@ export default class League {
 	}
 
 	getTradeScoreSortedTrades() {
-		return this.trades.sort((a, b) => {
+		return [...this.trades].sort((a, b) => {
 			if (a.biggestTradeScoreDifferential < b.biggestTradeScoreDifferential) {
 				return 1
 			} else if (
@@ -711,6 +721,7 @@ export default class League {
 		}
 		this.setWeeks(this.allMatchups, taxiMap)
 		this.calcMemberScores()
+		this.calcTradeStats()
 	}
 
 	//Returns a map of roster id to list of player ids on taxi squad

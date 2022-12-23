@@ -24,8 +24,6 @@ import {Context} from '../../../../contexts/Context'
 
 export default function Page() {
 	const [context, setContext] = useContext(Context)
-	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-	const leagueId = usePathname()?.replace('/league/', '').replace('/trades', '')
 	const desktopTemplate = `
     "imba imba trades trades"
     "imba imba trades trades"
@@ -36,10 +34,19 @@ export default function Page() {
     "imba"
     "trades"`
 
-	if ((context as League).trades == undefined)
+	const [trades, setTrades] = useState([] as Trade[])
+
+	useEffect(() => {
+		if (context.settings) {
+			let sortedTrades = (context as League).getTradeScoreSortedTrades() as Trade[]
+			setTrades(sortedTrades)
+		}
+
+	}, [context])
+
+	if (!(context as League)?.trades || !context?.settings)
 		return <Heading color={'white'}>Loading</Heading>
 
-	let sortedTrades = context.getSortedTrades()
 	return (
 		<Box maxW={'container.xl'} p={[0, 'auto']} m={[0, 'auto']}>
 			<Grid
@@ -48,16 +55,16 @@ export default function Page() {
 				gap={0}
 			>
 				<GridItem height={'500px'} area={'chart'} p={10} m={0}>
-					<TradeChordChart trades={sortedTrades} />
+					<TradeChordChart trades={(context as League).getTradeScoreSortedTrades()} />
 				</GridItem>
 				<GridItem mx={4} area='imba'>
 					<WorstTradeCard
-						trade={sortedTrades[0]}
+						trade={trades.at(0)}
 						title={'Most Imbalanced Trade'}
 					/>
 					<Box mt={4}>
 						<WorstTradeCard
-							trade={sortedTrades[1]}
+							trade={trades.at(1)}
 							title={'Second Most Imbalanced Trade'}
 						/>
 					</Box>
@@ -66,20 +73,12 @@ export default function Page() {
 					<Container textColor={'white'} overflowY={'scroll'} color='white'>
 						<Text color={'white'}>Trades</Text>
 						<VStack maxH={'800px'} overflowY={'auto'} align={'stretch'}>
-							{context.getTradeScoreSortedTrades().map((trade: Trade) => {
+							{trades.map((trade: Trade) => {
 								return <TradeCard key={trade.transaction_id} trade={trade} />
 							})}
 						</VStack>
 					</Container>
 				</GridItem>
-				{/* <GridItem color={"black"} area="chart">
-              <TradeChordChart trades={trades} />
-            </GridItem>
-            <GridItem textColor={"white"} colSpan={2} rowSpan={1} area="trades">
-            {trades.map((trade: SleeperTransaction) => {
-              return <TradeCard key={trade.transaction_id} trade={trade} />;
-            })}
-            </GridItem> */}
 			</Grid>
 		</Box>
 	)

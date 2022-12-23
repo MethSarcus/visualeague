@@ -78,9 +78,10 @@ export default function LeagueLayout({
 		) {
 			let league = new League(
 				leagueData.league,
-				new Draft(draftData, draftSettings)
+				new Draft(draftData, draftSettings),
+				undefined,
+				tradeData.trades
 			)
-			league.addTrades(tradeData.trades)
 			console.log(league)
 			setContext(league)
 		}

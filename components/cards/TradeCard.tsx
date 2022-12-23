@@ -12,7 +12,7 @@ import TradeSide from '../groups/transactions/TradeSide'
 import Card from './Card'
 
 interface MyProps {
-	trade: Trade
+	trade: Trade | undefined
 }
 
 export default function TradeCard(props: MyProps) {
@@ -27,7 +27,7 @@ export default function TradeCard(props: MyProps) {
 
 	const faabLedger = new Map<number, number>()
 
-	if (props.trade.adds) {
+	if (props.trade?.adds) {
 		for (const [key, value] of Object.entries(props.trade.adds)) {
 			if (rosterPlayerAdds.has(value as any)) {
 				rosterPlayerAdds.get(value as any)?.push(key)
@@ -37,7 +37,7 @@ export default function TradeCard(props: MyProps) {
 		}
 	}
 
-	if (props.trade.drops) {
+	if (props.trade?.drops) {
 		for (const [key, value] of Object.entries(props.trade.drops)) {
 			if (rosterPlayerDrops.has(value as any)) {
 				rosterPlayerDrops.get(value as any)?.push(key)
@@ -47,7 +47,7 @@ export default function TradeCard(props: MyProps) {
 		}
 	}
 
-	props.trade.draft_picks.forEach((pick) => {
+	props.trade?.draft_picks.forEach((pick) => {
 		if (draftPickAdds.has(pick.owner_id)) {
 			draftPickAdds.get(pick.owner_id)?.push(pick)
 		} else {
@@ -61,7 +61,7 @@ export default function TradeCard(props: MyProps) {
 		}
 	})
 
-	props.trade.waiver_budget.forEach((faabTransaction) => {
+	props.trade?.waiver_budget.forEach((faabTransaction) => {
 		if (faabLedger.has(faabTransaction.sender)) {
 			let senderBalance = faabLedger.get(faabTransaction.sender)
 			faabLedger.set(
@@ -104,7 +104,7 @@ export default function TradeCard(props: MyProps) {
 				transitionDuration: '.5s',
 			}}
 		>
-			{props.trade.consenter_ids.map((id: number) => {
+			{props.trade?.consenter_ids.map((id: number) => {
 				return (
 					<TradeSide
 						key={id}
