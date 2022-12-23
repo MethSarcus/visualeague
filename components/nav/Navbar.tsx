@@ -1,22 +1,16 @@
 import {
-	Box,
-	Button,
-	Center,
-	Flex,
-	HStack,
-	Icon,
-	IconButton,
-	pseudoPropNames,
+  Button,
+  Center,
+  Flex,
+  HStack
 } from '@chakra-ui/react'
-import {useContext} from 'react'
-import {Context} from '../../contexts/Context'
+import Link from 'next/link'
+import { useContext } from 'react'
+import { Context } from '../../contexts/Context'
+import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
+import MobileSidebar from './MobileSidebar'
 import SettingsSidebar from './SettingsSidebar'
 import TeamSidebar from './TeamSidebar'
-import {useRouter, usePathname} from 'next/navigation'
-import logo from '../../public/images/logo.png'
-import Link from 'next/link'
-import MobileSidebar from './MobileSidebar'
-import Image from 'next/image'
 
 interface MyProps {
 	leagueID: string | undefined
@@ -64,21 +58,6 @@ function Navbar(props: MyProps) {
 				maxWidth={'100vw'}
 				overflow='hidden'
 			>
-				<Link href={`/`}>
-					<Box
-						py={2}
-						pl={3}
-						pr={2}
-						transition={'all .2s ease-in-out'}
-						_hover={{
-							transform: 'scale(1.05)',
-							backgroundColor: 'surface.0',
-							cursor: 'pointer',
-						}}
-					>
-						<Image alt='Visualeague' height={40} src={logo} />
-					</Box>
-				</Link>
 				<NavbarButton
 					buttonText='League'
 					link={`league/${context.settings?.league_id}`}
@@ -96,6 +75,7 @@ function Navbar(props: MyProps) {
 					buttonText='Draft'
 					link={`league/${context?.settings?.league_id}/draft`}
 				/>
+        <ExpandableLeagueSearch/>
 			</HStack>
 			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>
@@ -115,17 +95,16 @@ function NavbarButton(props: NavButtonProps) {
 		return (
 			<Link href={props.link}>
 				<Button
-					transition={'all .2s ease-in-out'}
+					transition={'all .2s ease'}
 					_hover={{
-						transform: 'scale(1.03)',
 						backgroundColor: 'secondary.600',
 						cursor: 'pointer',
 					}}
 					onClick={props.onclick}
 					disabled={props.disabled ?? false}
 					size={'md'}
-					borderRadius={8}
-					fontWeight={'medium'}
+					fontWeight={'semibold'}
+          borderRadius={0}
 					colorScheme={'primary'}
 					textColor='white'
 					variant='ghost'
@@ -138,16 +117,15 @@ function NavbarButton(props: NavButtonProps) {
 	} else {
 		return (
 			<Button
-				transition={'all .2s ease-in-out'}
+				transition={'all .2s ease'}
 				_hover={{
-					transform: 'scale(1.03)',
 					backgroundColor: 'secondary.600',
 					cursor: 'pointer',
 				}}
 				onClick={props.onclick}
 				disabled={props.disabled ?? false}
 				size={'md'}
-				borderRadius={8}
+				borderRadius={0}
 				fontWeight={'medium'}
 				colorScheme={'primary'}
 				textColor='white'

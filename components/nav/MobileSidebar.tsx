@@ -22,6 +22,7 @@ import {
 import Link from 'next/link'
 import React, {useContext} from 'react'
 import {Context} from '../../contexts/Context'
+import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MemberList from '../groups/MemberList'
 import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
 
@@ -99,7 +100,9 @@ export default function MobileSidebar() {
 									</Button>
 								</Link>
 							)}
+							
 						</VStack>
+						<Box mt={"auto"}><ExpandableLeagueSearch/></Box>
 					</DrawerBody>
 
 					<DrawerFooter></DrawerFooter>
