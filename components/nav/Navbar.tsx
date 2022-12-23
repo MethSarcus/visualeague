@@ -1,12 +1,7 @@
-import {
-  Button,
-  Center,
-  Flex,
-  HStack
-} from '@chakra-ui/react'
+import {Button, Center, Flex, HStack} from '@chakra-ui/react'
 import Link from 'next/link'
-import { useContext } from 'react'
-import { Context } from '../../contexts/Context'
+import {useContext} from 'react'
+import {Context} from '../../contexts/Context'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
 import SettingsSidebar from './SettingsSidebar'
@@ -18,11 +13,6 @@ interface MyProps {
 
 function Navbar(props: MyProps) {
 	const [context, setContext] = useContext(Context)
-	const buttonColor = {
-		50: '#surface.300',
-		500: '#surface.500',
-		900: 'surface.800',
-	}
 
 	return (
 		<Flex
@@ -75,7 +65,11 @@ function Navbar(props: MyProps) {
 					buttonText='Draft'
 					link={`league/${context?.settings?.league_id}/draft`}
 				/>
-        <ExpandableLeagueSearch/>
+				<NavbarButton
+					buttonText='Rosters'
+					link={`league/${context?.settings?.league_id}/rosters`}
+				/>
+				<ExpandableLeagueSearch />
 			</HStack>
 			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>
@@ -104,7 +98,7 @@ function NavbarButton(props: NavButtonProps) {
 					disabled={props.disabled ?? false}
 					size={'md'}
 					fontWeight={'semibold'}
-          borderRadius={0}
+					borderRadius={0}
 					colorScheme={'primary'}
 					textColor='white'
 					variant='ghost'

@@ -6,9 +6,7 @@ import {Context} from '../../contexts/Context'
 import {project_colors} from '../../utility/project_colors'
 import {LINEUP_POSITION} from '../../utility/rosterFunctions'
 import SleeperLineupBadge from '../PositionBadges/SleeperLineupBadge'
-import PositionalMatchupPlayer, {
-	InversePositionalMatchupPlayer,
-} from './PositionalMatchupPlayer'
+import PositionalMatchupPlayer from './PositionalMatchupPlayer'
 
 interface MyProps {
 	position: LINEUP_POSITION
@@ -42,9 +40,10 @@ export default function PositionalMatchupContainer(props: MyProps) {
 				<SleeperLineupBadge slotPosition={props.position} />
 			</Box>
 
-			<InversePositionalMatchupPlayer
+			<PositionalMatchupPlayer
 				player={props.awayPlayer ?? new BlankPlayer()}
 				playerDetails={awayPlayerDetails}
+				isInverted={true}
 			/>
 		</Center>
 	)

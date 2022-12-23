@@ -1,37 +1,31 @@
 import {HamburgerIcon} from '@chakra-ui/icons'
 import {
+	Avatar,
+	Box,
 	Button,
+	Center,
+	Divider,
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
 	DrawerFooter,
-	Box,
 	DrawerHeader,
 	DrawerOverlay,
-	Icon,
+	Heading,
 	IconButton,
 	useDisclosure,
-	Avatar,
-	Center,
-	Heading,
 	VStack,
-	StackDivider,
-	Divider,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import React, {useContext} from 'react'
 import {Context} from '../../contexts/Context'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
-import MemberList from '../groups/MemberList'
 import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
 
 export default function MobileSidebar() {
 	const [context, setContext] = useContext(Context)
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [customSettings, setCustomSettings] = React.useState(
-		context.modifiedSettings
-	)
 	return (
 		<>
 			{context.settings && (
@@ -93,16 +87,25 @@ export default function MobileSidebar() {
 									</Button>
 								</Link>
 							)}
-														{context?.settings && (
+							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/draft`}>
 									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
 										Draft
 									</Button>
 								</Link>
 							)}
-							
+
+							{context?.settings && (
+								<Link href={`league/${context.settings.league_id}/rosters`}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+										Rosters
+									</Button>
+								</Link>
+							)}
 						</VStack>
-						<Box mt={"auto"}><ExpandableLeagueSearch/></Box>
+						<Box mt={'auto'}>
+							<ExpandableLeagueSearch />
+						</Box>
 					</DrawerBody>
 
 					<DrawerFooter></DrawerFooter>
@@ -110,8 +113,4 @@ export default function MobileSidebar() {
 			</Drawer>
 		</>
 	)
-}
-
-function formatScoreKey(key: string) {
-	return key.replaceAll('_', ' ')
 }
