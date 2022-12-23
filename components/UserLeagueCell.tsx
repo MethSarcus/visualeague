@@ -1,12 +1,19 @@
 'use client'
 import {Avatar, Box, Button, Center, Link, ScaleFade} from '@chakra-ui/react'
 import {useRouter} from 'next/navigation'
+import {useState} from 'react'
 import {LeagueSettings} from '../classes/sleeper/LeagueSettings'
 
 type MyProps = {
 	league: LeagueSettings
 }
 const UserLeagueCell = (props: MyProps) => {
+	const [leagueSelected, setLeagueSelected] = useState(false)
+
+	function onclick() {
+		setLeagueSelected(true)
+	}
+
 	return (
 		<ScaleFade initialScale={0.01} in={true}>
 			<Center borderRadius='6' bg={'surface.1'} p={2} px={3}>
@@ -28,6 +35,8 @@ const UserLeagueCell = (props: MyProps) => {
 							variant='outline'
 							size='xs'
 							colorScheme={'secondary_inverted'}
+							isLoading={leagueSelected}
+							onClick={onclick}
 						>
 							View
 						</Button>
