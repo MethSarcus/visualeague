@@ -450,3 +450,60 @@ export function standardDeviation(arr: number[], usePopulation = false) {
       (arr.length - (usePopulation ? 0 : 1))
   );
 };
+
+//Written by chatGPT takes in a scoring key and returns the readable string
+export function getReadableScoringKey(key: string): string {
+  console.log(key)
+  let readableKey = key;
+  // Expand shorthand in key
+  readableKey = readableKey.replace("_allow_", " Allowed ");
+  readableKey = readableKey.replace("_int", " Interception");
+  readableKey = readableKey.replace("_2pt", " Two Point Conversion");
+  readableKey = readableKey.replaceAll("_td", " Touchdown");
+  readableKey = readableKey.replace("_sack", " Sack");
+  readableKey = readableKey.replaceAll("_ff", " Forced Fumble");
+  readableKey = readableKey.replace("_fum_rec", " Fumble Recovery");
+  readableKey = readableKey.replace("_fum_lost", " Fumble Lost");
+  readableKey = readableKey.replace("_kr_td", " Kick Return Touchdown");
+  readableKey = readableKey.replace("_pr_td", " Punt Return Touchdown");
+  readableKey = readableKey.replace("_st_", " Special Teams ");
+  readableKey = readableKey.replace("_def_", " Defense ");
+  readableKey = readableKey.replace("ff", "Forced Fumble");
+  readableKey = readableKey.replace("yds", "Yards");
+  readableKey = readableKey.replace("pts", "Points");
+  readableKey = readableKey.replace("rec", "Reception");
+  readableKey = readableKey.replace("yd", "Yard");
+  readableKey = readableKey.replace("fg", "Field Goal");
+  
+
+
+  //Not written by chatbot
+  readableKey = readableKey.replaceAll("ret", "return");
+  
+  readableKey = readableKey.replaceAll("blk", "block");
+  readableKey = readableKey.replaceAll("Kr", "Kick return");
+  readableKey = readableKey.replaceAll("Pr", "Punt return");
+  readableKey = readableKey.replace("Goalmiss", "Goal miss");
+  readableKey = readableKey.replace("Goalm", "Goal made");
+  
+  readableKey = readableKey.replace("Pass_def", "Pass defended");
+
+
+  //Remove underscores
+  readableKey = readableKey.replaceAll("_", " ");
+  
+  
+  // Add hyphen between two numbers
+  
+  readableKey = readableKey.replace(/([0-9]+)([^\s0-9]+)([0-9]+)/, "$1-$3");
+  // Convert p at end of number to +
+  readableKey = readableKey.replace(/([0-9]+)p/, "$1+");
+  // Capitalize each word
+  readableKey = readableKey.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+  // Add colon at end of key
+  readableKey += ":";
+  
+  console.log(readableKey)
+  return readableKey;
+}
+

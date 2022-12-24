@@ -28,7 +28,7 @@ export default function RosterPlayer(props: MyProps) {
 		<Box
 			bg={project_colors.sleeper.background_dark}
 			borderRadius={2}
-			minW={'155px'}
+			minW={'175px'}
 			my={1}
 			onClick={onToggle}
 		>
@@ -98,7 +98,7 @@ export default function RosterPlayer(props: MyProps) {
                         <Text fontSize={'.6em'}>{props.playerSeasonDetails?.starter_points.toFixed(2)}</Text>
                         </Center>
 					</HStack>
-                    <Box w={"155px"} h={"60px"} p={1}>
+                    <Box w={"155px"} h={"60px"}>
                             <RosterPlayerTrendingLineChart player={props.playerSeasonDetails} positionAverage={props.leaguePositionAverage}/>
                         </Box>
 				</Box>

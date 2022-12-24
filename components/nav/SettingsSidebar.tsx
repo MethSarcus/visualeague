@@ -31,6 +31,7 @@ import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
 import {Context} from '../../contexts/Context'
+import { getReadableScoringKey } from '../../utility/rosterFunctions'
 
 export default function SettingsSidebar() {
 	const [context, setContext] = useContext(Context)
@@ -152,7 +153,7 @@ export default function SettingsSidebar() {
 									.map((setting) => {
 										return (
 											<Center key={setting} visibility={'visible'}>
-												{formatScoreKey(setting)}:{' '}
+												{getReadableScoringKey(setting)}{' '}
 												<NumberInput
 													ml={2}
 													isInvalid={

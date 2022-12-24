@@ -16,10 +16,11 @@ export default function Page() {
 		<Grid
 			templateAreas={[mobileGrid, desktopGrid]}
 			gridTemplateColumns={['1fr', '1fr 1fr 1fr']}
+			mx={5}
 			
 		>
 			<GridItem area={'rosters'}>
-				<HStack align={"top"} gap={4}>
+				<HStack align={"top"} gap={3}>
                     {Array.from((context as League)?.members.values()).map((leagueMember, index) => {
 						return <MemberRoster key={index} member={leagueMember}/>
 					})}

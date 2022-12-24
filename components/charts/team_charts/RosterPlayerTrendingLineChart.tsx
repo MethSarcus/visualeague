@@ -77,10 +77,6 @@ function formatScoresForLineChart(player: SeasonPlayer) {
 		.concat(player.weeks_benched)
 		.flat()
 		.sort((a, b) => a - b)
-	if (player.id == '6828') {
-		console.log(allWeeks)
-		console.log(player)
-	}
 	allWeeks.forEach((weekNum) => {
 		let weekScore = player.playerScores.get(weekNum)
 		if (player.weeks_played.includes(weekNum)) {
