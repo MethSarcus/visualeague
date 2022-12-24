@@ -1,4 +1,4 @@
-import {Button, Center, Flex, HStack} from '@chakra-ui/react'
+import {Box, Button, Center, Flex, HStack} from '@chakra-ui/react'
 import Link from 'next/link'
 import {useContext} from 'react'
 import {Context} from '../../contexts/Context'
@@ -69,7 +69,10 @@ function Navbar(props: MyProps) {
 					buttonText='Rosters'
 					link={`league/${context?.settings?.league_id}/rosters`}
 				/>
+				<Box pl={3}>
 				<ExpandableLeagueSearch />
+				</Box>
+				
 			</HStack>
 			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>

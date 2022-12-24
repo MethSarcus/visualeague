@@ -36,6 +36,10 @@ export default function LeagueLayout({
 		leagueId = leagueId.replace('/draft', '')
 	}
 
+	if (leagueId?.includes('/rosters')) {
+		leagueId = leagueId.replace('/rosters', '')
+	}
+
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 	const {data: leagueData, error: leagueError} = useSWR(
