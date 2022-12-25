@@ -453,7 +453,6 @@ export function standardDeviation(arr: number[], usePopulation = false) {
 
 //Written by chatGPT takes in a scoring key and returns the readable string
 export function getReadableScoringKey(key: string): string {
-  console.log(key)
   let readableKey = key;
   // Expand shorthand in key
   readableKey = readableKey.replace("_allow_", " Allowed ");
