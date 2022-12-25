@@ -18,7 +18,7 @@ import PositionBadge from '../../PositionBadges/PositionBadge'
 interface MyProps {
 	playerDetails: SleeperPlayerDetails | undefined
 	playerSeasonDetails: SeasonPlayer | undefined
-    leaguePositionAverage: number
+	leaguePositionAverage: number
 	isBenched?: boolean
 }
 
@@ -80,27 +80,48 @@ export default function RosterPlayer(props: MyProps) {
 						{props.playerDetails?.team}
 					</Text>
 				</Box>
+				<Text textAlign={'end'}>
+					{(props.playerDetails?.fantasy_positions[0] ?? 'UN') +
+						props.playerSeasonDetails?.teamPositionRank}
+				</Text>
 			</HStack>
 			<Collapse in={isOpen} animateOpacity>
-				<Box
-					p='5px'
-					zIndex={1}
-					fontSize={'.8em'}
-					color='white'
-				>
+				<Box p='5px' zIndex={1} fontSize={'.8em'} color='white'>
 					<HStack>
-                        <Center noOfLines={2}>
-                        <Text fontSize={'.6em'}>Avg</Text>
-                        <Text fontSize={'.6em'}>{props.playerSeasonDetails?.avgPointsPerStart.toFixed(2)}</Text>
-                        </Center>
-                        <Center noOfLines={2}>
-                        <Text fontSize={'.6em'}>Starter Points</Text>
-                        <Text fontSize={'.6em'}>{props.playerSeasonDetails?.starter_points.toFixed(2)}</Text>
-                        </Center>
+						<Center noOfLines={2}>
+							<Text fontSize={'.6em'}>Avg</Text>
+							<Text fontSize={'.6em'}>
+								{props.playerSeasonDetails?.avgPointsPerStart.toFixed(2)}
+							</Text>
+							<Text fontWeight={'thin'} fontSize={'.5em'}>
+								PPS
+							</Text>
+						</Center>
+						<Center noOfLines={3}>
+							<Text fontSize={'.6em'}>Starter Points</Text>
+							<Text fontSize={'.6em'}>
+								{props.playerSeasonDetails?.starter_points.toFixed(2)}
+							</Text>
+							<Text fontWeight={'thin'} fontSize={'.5em'}>
+								PF
+							</Text>
+						</Center>
+						<Center noOfLines={3}>
+							<Text fontSize={'.6em'}>Consistency</Text>
+							<Text fontSize={'.6em'}>
+								{props.playerSeasonDetails?.stdDev.toFixed(2)}
+							</Text>
+							<Text fontWeight={'thin'} fontSize={'.5em'}>
+								Std Dev
+							</Text>
+						</Center>
 					</HStack>
-                    <Box w={"155px"} h={"60px"}>
-                            <RosterPlayerTrendingLineChart player={props.playerSeasonDetails} positionAverage={props.leaguePositionAverage}/>
-                        </Box>
+					<Box w={'155px'} h={'60px'}>
+						<RosterPlayerTrendingLineChart
+							player={props.playerSeasonDetails}
+							positionAverage={props.leaguePositionAverage}
+						/>
+					</Box>
 				</Box>
 			</Collapse>
 		</Box>

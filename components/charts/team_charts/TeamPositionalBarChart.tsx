@@ -40,7 +40,7 @@ const TeamPositionalBarChart = (props: MyProps) => {
 			data={data.chartData}
 			keys={data.keys}
 			indexBy='user'
-			margin={{top: 5, right: 0, bottom: 0, left: 0}}
+			margin={{top: 0, right: 0, bottom: 0, left: 0}}
 			groupMode='grouped'
 			valueScale={{type: 'linear'}}
 			indexScale={{type: 'band', round: true}}
