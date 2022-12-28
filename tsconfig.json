@@ -32,7 +32,7 @@
     "lib/mongodb.js",
     "app/league/layout.tsx",
     ".next/types/**/*.ts"
-, "utility/project_colors", "tests/index.test.js", "tests/statcard.test.js"  ],
+, "utility/project_colors"  ],
   "exclude": [
     "node_modules"
   ]

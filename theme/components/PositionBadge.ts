@@ -5,6 +5,13 @@ const PositionBadge: ComponentStyleConfig = {
   // The styles all Cards have in common
   baseStyle: {},
   sizes: {
+    xs: {
+      fontSize: ".8em",
+      w: "24px",
+      h: "22px",
+      borderRadius: "8px",
+      overflow: "hidden"
+    },
     sm: {
         fontSize: "sm",
         w: "34px",
@@ -32,6 +39,7 @@ const PositionBadge: ComponentStyleConfig = {
     DL: { bg: "position.DL" },
     LB: { bg: "position.LB" },
     DB: { bg: "position.DB" },
+    BN: { bg: project_colors.sleeper.badge_background},
     SLEEPER: { bg: project_colors.sleeper.badge_background}
   },
   // The default variant value

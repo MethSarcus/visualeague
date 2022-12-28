@@ -22,15 +22,14 @@ export default function TeamSidebar() {
       {context.settings && (
                 <Button
                 onClick={onOpen}
-                transition={"all .2s ease-in-out"}
+                transition={"all .2s ease"}
                 _hover={{
-                  transform: "scale(1.05)",
                   backgroundColor: "secondary.600",
                   cursor: "pointer",
                 }}
                   size={"md"}
-                  borderRadius={8}
-                  fontWeight={"medium"}
+                  borderRadius={0}
+                  fontWeight={"semibold"}
                   colorScheme={"secondary_inverted"}
                   textColor="white"
                   variant="ghost"

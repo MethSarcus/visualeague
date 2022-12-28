@@ -13,7 +13,7 @@ export default function WorstTradeCard(props: MyProps) {
 
   return (
     <Box color={"white"}>
-      <Text>{props.title}</Text>
+      <Text data-testid="card_title">{props.title}</Text>
       {props.trade && <TradeCard trade={props.trade} />}
     </Box>
   );

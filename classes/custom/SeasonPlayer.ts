@@ -17,6 +17,7 @@ export default class SeasonPlayer {
   public weeks_played: number[] = [];
   public weeks_benched: number[] = [];
   public id: string;
+  public teamPositionRank: number = 0
 
   //These are subject to change
   public projected_points: number = 0;
