@@ -6,6 +6,6 @@ export const PositionColors: Record<string, string> = {
     DL: "rgba(250, 153, 97, 0.95)",
     DB: "rgba(254, 160, 202, 0.95)",
     LB: "rgba(174, 182, 252, 0.95)",
-    K: "#7988a1",
-    DEF: "#bd66ff",
+    K: "rgba(121, 136, 161, .95)",
+    DEF: "rgba(189, 102, 255, .95)",
   };

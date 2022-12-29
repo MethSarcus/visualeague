@@ -70,6 +70,10 @@ export default class Trade implements SleeperTransaction {
     this.playerScoresSinceTrade.set(player_id, curScore + score);
   }
 
+  resetPlayerScore(player_id: string) {
+    this.playerScoresSinceTrade.set(player_id, 0);
+  }
+
   setMemberPlayerDifferential() {
     this.playerScoresSinceTrade.forEach((score, player_id) => {
       let newOwnerId = this.adds[player_id];

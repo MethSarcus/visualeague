@@ -3,7 +3,7 @@ import { SleeperPlayerDetails } from "../../../classes/custom/Player";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
 interface MyProps {
-  player: SleeperPlayerDetails;
+  player: SleeperPlayerDetails | undefined;
   added: boolean;
 }
 
@@ -18,9 +18,9 @@ export default function PlayerTransaction(props: MyProps) {
     iconColor = "red";
   }
 
-  const name = `${props.player.first_name} ${props.player.last_name}`
+  const name = `${props.player?.first_name} ${props.player?.last_name}`
 
-  const position = `${props.player.position} - ${props.player.team}`
+  const position = `${props.player?.position} - ${props.player?.team}`
 
   return (
     <HStack>
@@ -29,7 +29,7 @@ export default function PlayerTransaction(props: MyProps) {
         name={name}
         size={"sm"}
         backgroundColor="rgb(239, 239, 239)"
-        src={isNaN(+props.player?.player_id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player.player_id.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.player_id}.jpg`}
+        src={isNaN(+props.player?.player_id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.player_id.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.player_id}.jpg`}
 
       />
       <Box>
