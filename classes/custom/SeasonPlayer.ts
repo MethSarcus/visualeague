@@ -17,7 +17,7 @@ export default class SeasonPlayer {
   public weeks_played: number[] = [];
   public weeks_benched: number[] = [];
   public id: string;
-  public teamPositionRank: number = 0
+  public teamPositionRank: number = 0 //What positional rank the player is on the team it plays for
 
   //These are subject to change
   public projected_points: number = 0;
@@ -53,10 +53,8 @@ export default class SeasonPlayer {
 
     if (wasStarted) {
       this.weeks_played.push(weekNumber);
-      this.starter_points += pointsScored
     } else {
       this.weeks_benched.push(weekNumber);
-      this.bench_points += pointsScored
     }
   }
 
@@ -65,6 +63,8 @@ export default class SeasonPlayer {
     this.rootMeanSquareError = 0
     this.avgPointsPerStart = 0
     this.avgPointsPerBench = 0
+    this.starter_points = 0
+    this.bench_points = 0
   }
 
   calcStats() {
@@ -90,6 +90,8 @@ export default class SeasonPlayer {
       this.playerScores.get(value)
     ) as number[];
 
+    this.starter_points = pointValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
     this.avgPointsPerStart = pointValues.reduce((a, b) => a + b, 0) / pointValues.length;
   }
 
@@ -107,7 +109,7 @@ export default class SeasonPlayer {
     let pointValues = benchWeeks.map((value) =>
       this.playerScores.get(value)
     ) as number[];
-
+    this.bench_points = pointValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     this.avgPointsPerBench =
       pointValues.reduce((a, b) => a + b, 0) / pointValues.length;
   }
