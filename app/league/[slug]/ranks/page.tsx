@@ -13,7 +13,7 @@ import {
 import { useContext } from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import WeeklyRankingBumpChart from "../../../../components/charts/BumpChart";
-import BarChart from "../../../../components/charts/PFBarChart";
+import BarChart from "../../../../components/charts/bar/PFBarChart";
 import PowerRankingBumpChart from "../../../../components/charts/PowerRankingBumpChart";
 import HomeStatGroup from "../../../../components/groups/stats/HomeStatGroup";
 import LeagueOverviewDataTable from "../../../../components/tables/LeagueOverviewDatatable";

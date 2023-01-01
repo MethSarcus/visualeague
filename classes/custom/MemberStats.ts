@@ -27,5 +27,11 @@ export default class MemberScores {
     public divisionWins: number = 0
     public divisionLosses: number = 0
     public divisionTies: number = 0
+    public draftValue: number = 0
+
+    addDraftValue(value: number) {
+      if (!isNaN(+value))
+      this.draftValue += value
+    }
   }
   

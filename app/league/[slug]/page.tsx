@@ -24,7 +24,7 @@ import GenericStatCard from '../../../components/cards/statcards/GenericStatCard
 import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
 import LeagueOverviewDataTable from '../../../components/tables/LeagueOverviewDatatable'
 import {Context} from '../../../contexts/Context'
-import BarChart from '../../../components/charts/PFBarChart'
+import BarChart from '../../../components/charts/bar/PFBarChart'
 import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'

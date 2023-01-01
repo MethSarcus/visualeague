@@ -433,6 +433,10 @@ export default class League {
 		})
 
 		this.draft.calculatePlayerDraftValue()
+
+		this.draft.picks.forEach(pick => {
+			this.members.get(pick.roster_id)?.stats?.addDraftValue(pick.draftValue)
+		})
 	}
 
 	getWorstTrade() {

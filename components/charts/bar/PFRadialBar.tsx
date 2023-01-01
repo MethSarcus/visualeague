@@ -2,12 +2,12 @@ import { Spinner } from '@chakra-ui/react';
 import { BarDatum, ResponsiveBar } from '@nivo/bar'
 import { ResponsiveRadialBar } from '@nivo/radial-bar';
 import { useContext, useEffect, useState } from 'react';
-import League from '../../classes/custom/League';
-import LeagueMember from '../../classes/custom/LeagueMember';
-import { Context } from '../../contexts/Context';
-import { getPositionColor, POSITION } from '../../utility/rosterFunctions';
-import { project_colors } from "../../utility/project_colors";
-import { PositionColors } from './ChartColors';
+import League from '../../../classes/custom/League';
+import LeagueMember from '../../../classes/custom/LeagueMember';
+import { Context } from '../../../contexts/Context';
+import { getPositionColor, POSITION } from '../../../utility/rosterFunctions';
+import { project_colors } from "../../../utility/project_colors";
+import { PositionColors } from '../ChartColors';
 
 
 interface MyProps {

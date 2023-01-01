@@ -505,6 +505,5 @@ export function getReadableScoringKey(key: string): string {
 	// Add colon at end of key
 	readableKey += ':'
 
-	console.log(readableKey)
 	return readableKey
 }
