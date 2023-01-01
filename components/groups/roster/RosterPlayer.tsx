@@ -30,18 +30,26 @@ export default function RosterPlayer(props: MyProps) {
 			borderRadius={2}
 			minW={'175px'}
 			my={1}
+			_hover={{
+				cursor: 'pointer',
+				boxShadow: '2xl',
+				dropShadow: '2xl',
+				shadow: `inset 0px 0px 10px ${project_colors.sleeper.border_color}`
+			}}
 			onClick={onToggle}
+			transition={'all .2s ease-in-out'}
+
 		>
 			<HStack
 				py={2}
 				px={2}
-				bg={project_colors.sleeper.background_dark}
 				shadow={'dark'}
 				fontSize={'.7em'}
 				position={'relative'}
 				verticalAlign={'middle'}
 				lineHeight={1.3}
 				flexDirection={'row'}
+
 			>
 				<PositionBadge
 					variant={
@@ -61,11 +69,11 @@ export default function RosterPlayer(props: MyProps) {
 				/>
 				<Box textAlign={'start'}>
 					<Text
-						as={'p'}
 						color={'white'}
 						fontWeight={'semibold'}
-						fontSize={'1.1em'}
+						fontSize={'.9em'}
 						noOfLines={1}
+						textOverflow={"clip"}
 					>
 						{props.playerDetails?.first_name.charAt(0)}.{' '}
 						{props.playerDetails?.last_name}
@@ -74,21 +82,23 @@ export default function RosterPlayer(props: MyProps) {
 						as={'p'}
 						fontWeight={'semibold'}
 						color={'white'}
-						fontSize={'.8em'}
+						fontSize={'.6em'}
 					>
 						{props.playerDetails?.fantasy_positions[0]}-
 						{props.playerDetails?.team}
 					</Text>
 				</Box>
-				<Text textAlign={'end'}>
+				<Spacer/>
+				<Text color={project_colors.sleeper.text_normal} fontSize={".65em"} >
 					{(props.playerDetails?.fantasy_positions[0] ?? 'UN') +
 						props.playerSeasonDetails?.teamPositionRank}
 				</Text>
 			</HStack>
 			<Collapse in={isOpen} animateOpacity>
 				<Box p='5px' zIndex={1} fontSize={'.8em'} color='white'>
-					<HStack>
-						<Center noOfLines={2}>
+					<Flex textAlign={"center"} flexDirection={"row"} align={"center"}>
+					<Spacer/>
+						<Center noOfLines={3} textAlign={"center"}>
 							<Text fontSize={'.6em'}>Avg</Text>
 							<Text fontSize={'.6em'}>
 								{props.playerSeasonDetails?.avgPointsPerStart.toFixed(2)}
@@ -97,6 +107,7 @@ export default function RosterPlayer(props: MyProps) {
 								PPS
 							</Text>
 						</Center>
+						<Spacer/>
 						<Center noOfLines={3}>
 							<Text fontSize={'.6em'}>Starter Points</Text>
 							<Text fontSize={'.6em'}>
@@ -106,6 +117,7 @@ export default function RosterPlayer(props: MyProps) {
 								PF
 							</Text>
 						</Center>
+						<Spacer/>
 						<Center noOfLines={3}>
 							<Text fontSize={'.6em'}>Consistency</Text>
 							<Text fontSize={'.6em'}>
@@ -115,7 +127,8 @@ export default function RosterPlayer(props: MyProps) {
 								Std Dev
 							</Text>
 						</Center>
-					</HStack>
+						<Spacer/>
+					</Flex>
 					<Box w={'155px'} h={'60px'}>
 						<RosterPlayerTrendingLineChart
 							player={props.playerSeasonDetails}

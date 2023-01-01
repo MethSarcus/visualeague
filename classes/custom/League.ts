@@ -433,6 +433,10 @@ export default class League {
 		})
 
 		this.draft.calculatePlayerDraftValue()
+
+		this.draft.picks.forEach(pick => {
+			this.members.get(pick.roster_id)?.stats?.addDraftValue(pick.draftValue)
+		})
 	}
 
 	getWorstTrade() {
@@ -1109,6 +1113,20 @@ export default class League {
 			member.players.forEach((player) => {
 				player.calcStats()
 			})
+
+			this.getPositions().forEach(position => {
+				if (position) {
+					Array.from(member.players.values()).filter(player => player.positions.includes(position) && member.roster.players.includes(player.id)).sort(
+						(a: SeasonPlayer, b: SeasonPlayer) =>
+							b.points_scored - a.points_scored
+					).forEach((player, index) => {
+						player.teamPositionRank = index + 1
+					})
+				}
+
+			})
+
+
 		})
 	}
 
