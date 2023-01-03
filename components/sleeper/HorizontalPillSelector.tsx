@@ -10,7 +10,7 @@ export default function HorizontalPillSelector(props: MyProps) {
     const options = [LINEUP_OPTIONS.ACTUAL, LINEUP_OPTIONS.MAX_PF, LINEUP_OPTIONS.OPSLAP]
   
     const { getRootProps, getRadioProps } = useRadioGroup({
-      name: 'starters',
+      name: 'lineup_players',
       defaultValue: 'Actual',
       onChange: props.onclick,
     })
