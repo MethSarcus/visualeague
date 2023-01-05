@@ -13,9 +13,6 @@ import MemberList from "../groups/MemberList";
 export default function TeamSidebar() {
   const [context, setContext] = useContext(Context);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [customSettings, setCustomSettings] = React.useState(
-    context.modifiedSettings
-  );
 
   return (
     <>
