@@ -9,7 +9,8 @@ export default function Page() {
 	const [context, setContext] = useContext(Context)
 	const desktopGrid = `"draft_table draft_chart"`
 
-	const mobileGrid = `"draft_table""draft_chart"`
+	const mobileGrid = `"draft_chart"
+						"draft_table"`
 	if (!context.settings) return <Spinner />
 	return (
 		<Grid
