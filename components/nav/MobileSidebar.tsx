@@ -64,7 +64,7 @@ export default function MobileSidebar() {
 						>
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
 										League Summary
 									</Button>
 								</Link>
@@ -75,21 +75,21 @@ export default function MobileSidebar() {
 
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/ranks`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
 										Power Ranks
 									</Button>
 								</Link>
 							)}
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/trades`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+								<Link href={`league/${context.settings.league_id}/trades`} >
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
 										Trades
 									</Button>
 								</Link>
 							)}
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/draft`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
 										Draft
 									</Button>
 								</Link>
@@ -97,7 +97,7 @@ export default function MobileSidebar() {
 
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/rosters`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}}>
+									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
 										Rosters
 									</Button>
 								</Link>
