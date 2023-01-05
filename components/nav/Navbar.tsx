@@ -4,6 +4,7 @@ import {useContext} from 'react'
 import {Context} from '../../contexts/Context'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
+import SeasonPortionSelector from './SeasonPortionSelector'
 import SettingsSidebar from './SettingsSidebar'
 import TeamSidebar from './TeamSidebar'
 
@@ -74,6 +75,7 @@ function Navbar(props: MyProps) {
 				</Box>
 				
 			</HStack>
+			<SeasonPortionSelector onclick={() => {}} />
 			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>
 	)

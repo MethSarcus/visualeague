@@ -34,6 +34,7 @@ export default class League {
 	//player_id is a string always
 	[immerable] = true
 	public members: Map<number, LeagueMember> = new Map()
+	public seasonPortion: SeasonPortion = SeasonPortion.ALL
 	public weeks: Map<number, Week> = new Map()
 	public trades: Trade[]
 	public allMatchups: SleeperMatchup[][]
@@ -112,6 +113,11 @@ export default class League {
 		})
 
 		return memberTradeNum
+	}
+
+	setSeasonPortion(portion: SeasonPortion) {
+		this.seasonPortion = portion
+		this.recalcStats()
 	}
 
 	calcTradeStats() {
@@ -1148,4 +1154,10 @@ export enum StatType {
 	OPSLAP = 'opslap',
 	POWER_RANK = 'power_wins',
 	OVERALL = 'win_pct',
+}
+
+export enum SeasonPortion {
+	REGULAR = 'Regular',
+	POST = 'Post',
+	ALL = 'All',
 }
