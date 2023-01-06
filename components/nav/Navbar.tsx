@@ -84,7 +84,7 @@ function Navbar(props: MyProps) {
 				</Box>
 			</HStack>
 			<SeasonPortionSelector onclick={setSeasonPortion} />
-			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
+			<Center pr={3} my={2}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>
 	)
 }

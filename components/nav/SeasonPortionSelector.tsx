@@ -22,7 +22,7 @@ export default function HorizontalPillSelector(props: MyProps) {
       
 
 	return (
-		<Center textAlign={'center'}>
+		<Center textAlign={'center'} mx={[1, 2, 4]}>
 			<HStack
 				{...group}
 				bg={project_colors.secondary[800]}
