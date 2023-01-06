@@ -1,6 +1,8 @@
 import {Box, Button, Center, Flex, HStack} from '@chakra-ui/react'
+import produce from 'immer'
 import Link from 'next/link'
 import {useContext} from 'react'
+import League, {SeasonPortion} from '../../classes/custom/League'
 import {Context} from '../../contexts/Context'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
@@ -15,6 +17,13 @@ interface MyProps {
 function Navbar(props: MyProps) {
 	const [context, setContext] = useContext(Context)
 
+	function setSeasonPortion(selected: String) {
+
+		const nextState = produce(context, (draftState: League) => {
+			draftState.setSeasonPortion(selected as SeasonPortion)
+		})
+		setContext(nextState)
+	}
 	return (
 		<Flex
 			bg={'secondary.600'}
@@ -71,11 +80,10 @@ function Navbar(props: MyProps) {
 					link={`league/${context?.settings?.league_id}/rosters`}
 				/>
 				<Box pl={3}>
-				<ExpandableLeagueSearch />
+					<ExpandableLeagueSearch />
 				</Box>
-				
 			</HStack>
-			<SeasonPortionSelector onclick={() => {}} />
+			<SeasonPortionSelector onclick={setSeasonPortion} />
 			<Center pr={3}>{context.modifiedSettings && <SettingsSidebar />}</Center>
 		</Flex>
 	)

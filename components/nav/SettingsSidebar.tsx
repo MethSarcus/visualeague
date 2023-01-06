@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import {
 	Box,
 	Button,
@@ -29,15 +29,17 @@ import produce from 'immer'
 import React, {useContext, useEffect} from 'react'
 import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'
+import LeagueMember from '../../classes/custom/LeagueMember'
+import MemberScores from '../../classes/custom/MemberStats'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
 import {Context} from '../../contexts/Context'
-import { getReadableScoringKey } from '../../utility/rosterFunctions'
+import {getReadableScoringKey} from '../../utility/rosterFunctions'
 
 export default function SettingsSidebar() {
 	const [context, setContext] = useContext(Context)
-  
+
 	const {isOpen, onOpen, onClose} = useDisclosure()
-  
+
 	const [customSettings, setCustomSettings] = React.useState(
 		context.modifiedSettings
 	)
@@ -45,15 +47,14 @@ export default function SettingsSidebar() {
 		context.settings.useModifiedSettings
 	)
 
-  const [taxiIncludedMaxPfChecked, setTaxiIncludedMaxPfChecked] = React.useState(
-		context.settings.taxiIncludedInMaxPf
-	)
+	const [taxiIncludedMaxPfChecked, setTaxiIncludedMaxPfChecked] =
+		React.useState(context.settings.taxiIncludedInMaxPf)
 
 	function onCheckboxClick(e: any) {
 		setCustomScoringChecked(e.target.checked)
 	}
 
-  function onTaxiCheckboxChanged(e: any) {
+	function onTaxiCheckboxChanged(e: any) {
 		setTaxiIncludedMaxPfChecked(e.target.checked)
 	}
 
@@ -74,18 +75,18 @@ export default function SettingsSidebar() {
     if (context.settings != undefined) {
       setTaxiIncludedMaxPfChecked(context.taxiIncludedInMaxPf)
     }
-  }, [context.settings, context.taxiIncludedInMaxPf]);
+	}, [context.settings, context.taxiIncludedInMaxPf])
 
 	const onApplyPressed = () => {
 		let settings = context.settings.scoring_settings
 		if (customScoringChecked) {
 			settings = customSettings.scoring_settings
 		}
-    
+
 		const nextState = produce(context, (draftState: League) => {
-      draftState.setTaxiSquadIncluded(taxiIncludedMaxPfChecked)
-      draftState.modifyStats(settings, taxiIncludedMaxPfChecked)
-      draftState.useModifiedSettings = customScoringChecked
+			draftState.setTaxiSquadIncluded(taxiIncludedMaxPfChecked)
+			draftState.modifyStats(settings, taxiIncludedMaxPfChecked)
+			draftState.useModifiedSettings = customScoringChecked
 		})
 		setContext(nextState)
 	}
@@ -115,7 +116,15 @@ export default function SettingsSidebar() {
 								flexDirection={'column'}
 								alignItems='stretch'
 							>
-                <Flex mt={2} visibility={((context as League)?.settings?.settings.taxi_slots ?? 0) > 0 ? "visible" : 'collapse'}>
+								<Flex
+									mt={2}
+									visibility={
+										((context as League)?.settings?.settings.taxi_slots ?? 0) >
+										0
+											? 'visible'
+											: 'collapse'
+									}
+								>
 									<FormLabel htmlFor='taxiMaxPf' mb='0'>
 										Taxi squad in MaxPF
 									</FormLabel>
@@ -137,8 +146,6 @@ export default function SettingsSidebar() {
 										onChange={onCheckboxClick}
 									/>
 								</Flex>
-
-
 							</FormControl>
 						)}
 					</DrawerHeader>

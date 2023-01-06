@@ -77,11 +77,10 @@ export default class League {
 		this.allMatchups = sleeperLeague.matchups
 
 		this.settings = sleeperLeague.sleeperDetails
-
-		this.setStats(sleeperLeague.player_stats)
+		this.createPlayerStatsMap(sleeperLeague.player_stats)
+		this.initPlayerProjectionsMap(sleeperLeague.player_projections)
 		this.initMemberTradeStats()
-		this.setProjections(sleeperLeague.player_projections)
-		this.setWeeks(sleeperLeague.matchups, this.getTaxiMap())
+		this.initLeagueWeeks(sleeperLeague.matchups, this.getTaxiMap())
 		this.calcMemberScores()
 		this.setLeagueStats()
 		this.setDraftValues()
@@ -117,7 +116,7 @@ export default class League {
 
 	setSeasonPortion(portion: SeasonPortion) {
 		this.seasonPortion = portion
-		this.recalcStats()
+		this.recalcStats(this.taxiIncludedInMaxPf)
 	}
 
 	calcTradeStats() {
@@ -326,7 +325,7 @@ export default class League {
 
 	//Creates a map mapping week number to a map of player id to the players stats
 	//The incoming array contains an array of stats objects
-	setStats(stats: object[][]) {
+	createPlayerStatsMap(stats: object[][]) {
 		try {
 			stats?.forEach((statList: any, index: number) => {
 				let weekNum = index + 1
@@ -341,7 +340,7 @@ export default class League {
 	}
 
 	//Creates a map mapping week number to a map of player id to the players projections
-	setProjections(projections: object[][]) {
+	initPlayerProjectionsMap(projections: object[][]) {
 		projections.forEach((projectionList: any, index: number) => {
 			let weekNum = index + 1
 			this.playerProjectionMap.set(weekNum, new Map())
@@ -386,9 +385,32 @@ export default class League {
 		}
 	}
 
-	setWeeks(allMatchups: SleeperMatchup[][], taxiMap?: Map<number, string[]>) {
-		allMatchups.forEach((weekMatchups: SleeperMatchup[], index: number) => {
-			let weekNum = index + 1
+	//Takes in an array filled with sleeper matchup arrays
+	initLeagueWeeks(
+		allMatchups: SleeperMatchup[][],
+		taxiMap?: Map<number, string[]>
+	) {
+		this.weeks = new Map()
+		let enabledWeeks = [...Array(this.allMatchups.length).keys()]
+
+		switch (this.seasonPortion) {
+			case SeasonPortion.REGULAR: {
+				enabledWeeks = enabledWeeks.slice(
+					0,
+					this.settings.playoff_week_start ?? 14
+				)
+				break
+			}
+			case SeasonPortion.POST: {
+				enabledWeeks = enabledWeeks.slice(
+					this.settings.playoff_week_start ?? 14,
+					enabledWeeks.length
+				)
+				break
+			}
+		}
+		enabledWeeks.forEach((weekPos) => {
+			let weekNum = weekPos + 1
 			let isPlayoffs = false
 			if (
 				this.settings.playoff_week_start &&
@@ -402,7 +424,7 @@ export default class League {
 			}
 			let week = new Week(
 				weekNum,
-				weekMatchups,
+				allMatchups.at(weekPos) ?? [],
 				this.playerStatMap,
 				this.playerProjectionMap,
 				this.playerDetails,
@@ -440,7 +462,7 @@ export default class League {
 
 		this.draft.calculatePlayerDraftValue()
 
-		this.draft.picks.forEach(pick => {
+		this.draft.picks.forEach((pick) => {
 			this.members.get(pick.roster_id)?.stats?.addDraftValue(pick.draftValue)
 		})
 	}
@@ -671,10 +693,7 @@ export default class League {
 		return this.playerProjectionMap.get(weekNum).get(playerId.toString())
 	}
 
-	changeName(name: string) {
-		this.settings.name = name
-	}
-
+	//Creates a map for each member that maps their roster id to number of trades done
 	initMemberTradeStats() {
 		this.members.forEach((member: LeagueMember, rosterId: number) => {
 			for (let i = 1; i <= this.members.size; i++) member.tradeStats.set(i, 0)
@@ -739,9 +758,11 @@ export default class League {
 			this.taxiIncludedInMaxPf = useTaxiSquad
 			taxiMap = this.getTaxiMap()
 		}
-		this.setWeeks(this.allMatchups, taxiMap)
+		this.initLeagueWeeks(this.allMatchups, taxiMap)
 		this.calcMemberScores()
 		this.calcTradeStats()
+		this.setLeagueStats()
+		this.setDraftValues()
 	}
 
 	//Returns a map of roster id to list of player ids on taxi squad
@@ -1120,26 +1141,54 @@ export default class League {
 				player.calcStats()
 			})
 
-			this.getPositions().forEach(position => {
+			this.getPositions().forEach((position) => {
 				if (position) {
-					Array.from(member.players.values()).filter(player => player.positions.includes(position) && member.roster.players.includes(player.id)).sort(
-						(a: SeasonPlayer, b: SeasonPlayer) =>
-							b.points_scored - a.points_scored
-					).forEach((player, index) => {
-						player.teamPositionRank = index + 1
-					})
+					Array.from(member.players.values())
+						.filter(
+							(player) =>
+								player.positions.includes(position) &&
+								member.roster.players.includes(player.id)
+						)
+						.sort(
+							(a: SeasonPlayer, b: SeasonPlayer) =>
+								b.points_scored - a.points_scored
+						)
+						.forEach((player, index) => {
+							player.teamPositionRank = index + 1
+						})
 				}
-
 			})
-
-
 		})
+	}
+
+	getEnabledWeeks() {
+		let enabledWeeks = [...Array(this.allMatchups.length).keys()]
+
+		switch (this.seasonPortion) {
+			case SeasonPortion.REGULAR: {
+				enabledWeeks = enabledWeeks.slice(
+					0,
+					this.settings.playoff_week_start ?? 14
+				)
+				break
+			}
+			case SeasonPortion.POST: {
+				enabledWeeks = enabledWeeks.slice(
+					this.settings.playoff_week_start ?? 14,
+					enabledWeeks.length
+				)
+				break
+			}
+		}
+
+		return enabledWeeks
 	}
 
 	getAllWeeksForMember(rosterId: number) {
 		let allWeeks: MatchupInterface[] = []
-		this.weeks.forEach((week, weekNumber) => {
-			allWeeks.push(week.getMemberMatchup(rosterId))
+		
+		this.getEnabledWeeks().forEach((weekNumber) => {
+			allWeeks.push(this.weeks.get(weekNumber + 1)!.getMemberMatchup(rosterId))
 		})
 
 		return allWeeks
