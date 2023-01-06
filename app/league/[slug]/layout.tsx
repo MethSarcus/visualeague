@@ -3,7 +3,7 @@ import {Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
 import {enableAllPlugins} from 'immer'
 import {usePathname} from 'next/navigation'
-import {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useMemo, useState} from 'react'
 import useSWR from 'swr'
 import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
@@ -69,7 +69,7 @@ export default function LeagueLayout({
 		fetcher
 	)
 
-	useEffect(() => {
+	useMemo(() => {
 		if (leagueId == context.settings?.league_id) {
 			setLeagueDataExists(true)
 		}
@@ -89,16 +89,7 @@ export default function LeagueLayout({
 			console.log(league)
 			setContext(league)
 		}
-	}, [
-		leagueData,
-		setContext,
-		tradeData,
-		draftData,
-		draftSettings,
-		leagueDataExists,
-		leagueId,
-		context.settings?.league_id,
-	])
+	}, [context.settings?.league_id, draftData, draftSettings, leagueData, leagueId, setContext, tradeData?.trades])
 
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>

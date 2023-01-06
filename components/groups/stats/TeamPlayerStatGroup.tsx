@@ -35,7 +35,7 @@ export default function TeamPlayerStatGroup(props: MyProps) {
     mostPredictionError = notablePlayers.leastAccuratePredictions;
   }
   return (
-    <HStack spacing={3} maxWidth="inherit">
+    <HStack spacing={3} maxWidth="inherit" align={"stretch"}>
       <TeamPlayerStatCard
         title={"MVP"}
         player={bestPlayer}

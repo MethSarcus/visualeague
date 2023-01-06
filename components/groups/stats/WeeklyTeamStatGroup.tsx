@@ -32,7 +32,7 @@ export default function TeamStatGroup(props: MyProps) {
 	}
 
 	return (
-		<HStack spacing={3} maxWidth='inherit'>
+		<HStack spacing={3} maxWidth='inherit' align={"stretch"}>
 			<NotableMatchupStatCard
 				title={'Best Week'}
 				isLoaded={props.league?.settings != undefined}

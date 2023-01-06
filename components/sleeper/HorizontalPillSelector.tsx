@@ -10,7 +10,7 @@ export default function HorizontalPillSelector(props: MyProps) {
     const options = [LINEUP_OPTIONS.ACTUAL, LINEUP_OPTIONS.MAX_PF, LINEUP_OPTIONS.OPSLAP]
   
     const { getRootProps, getRadioProps } = useRadioGroup({
-      name: 'starters',
+      name: 'lineup_players',
       defaultValue: 'Actual',
       onChange: props.onclick,
     })
@@ -34,7 +34,7 @@ export default function HorizontalPillSelector(props: MyProps) {
   }
 
 
-function RadioCard(props: any) {
+export function RadioCard(props: any) {
     const { getInputProps, getCheckboxProps } = useRadio(props)
   
     const input = getInputProps()

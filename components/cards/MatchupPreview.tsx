@@ -65,7 +65,7 @@ export default function MatchupPreview(props: MyProps) {
 		switch (selected) {
 			case LINEUP_OPTIONS.ACTUAL: {
 				setHomeStarters(props.matchup?.homeTeam.starters)
-				setHomeBench(props.matchup?.homeTeam.starters)
+				setHomeBench(props.matchup?.homeTeam.bench)
 				setHomeScore(props.matchup?.homeTeam.pf)
 				setHomeProjectedScore(props.matchup?.homeTeam.projectedScore)
 				break
@@ -93,7 +93,7 @@ export default function MatchupPreview(props: MyProps) {
 		switch (selected) {
 			case LINEUP_OPTIONS.ACTUAL: {
 				setAwayStarters(props.matchup?.awayTeam?.starters)
-				setAwayBench(props.matchup?.awayTeam?.starters)
+				setAwayBench(props.matchup?.awayTeam?.bench)
 				setAwayScore(props.matchup?.awayTeam?.pf)
 				setAwayProjectedScore(props.matchup?.awayTeam?.projectedScore)
 				break

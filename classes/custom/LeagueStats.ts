@@ -23,4 +23,18 @@ export default class LeagueStats {
 			(this.position_starts.get(position) ?? 0)
 		)
 	}
+
+	reset() {
+		this.avg_pf = 0
+		this.avg_pa = 0
+		this.avg_pp = 0
+		this.avg_opslap = 0
+		this.avg_gp = 0
+		this.best_team = undefined
+		this.worst_team = undefined
+		this.highest_scoring_matchup = undefined
+		this.biggest_upset = undefined
+		this.position_scores = new Map()
+		this.position_starts = new Map()
+	}
 }

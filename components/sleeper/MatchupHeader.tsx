@@ -71,6 +71,7 @@ export default function MatchupHeader(props: MyProps) {
 					color={'#A7BAD0'}
 					size={'30px'}
 					fontSize={'.7em'}
+					shadow={"lg"}
 					p={1}
 					mx={-3}
 					fontWeight='semibold'
