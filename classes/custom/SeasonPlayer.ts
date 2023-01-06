@@ -39,6 +39,21 @@ export default class SeasonPlayer {
     this.positions = eligiblePositions;
   }
 
+  resetStats() {
+    this.stdDev = 0
+    this.rootMeanSquareError = 0
+    this.avgPointsPerStart = 0
+    this.avgPointsPerBench = 0
+    this.starter_points = 0
+    this.bench_points = 0
+    this.points_scored = 0
+    this.weeks_played = []
+    this.weeks_benched = []
+    this.teamPositionRank = 0
+    this.playerScores = new Map()
+    this.playerProjectedScores = new Map()
+  }
+
   addWeek(
     weekNumber: number,
     pointsScored: number,
@@ -58,17 +73,7 @@ export default class SeasonPlayer {
     }
   }
 
-  clearStats() {
-    this.stdDev = 0
-    this.rootMeanSquareError = 0
-    this.avgPointsPerStart = 0
-    this.avgPointsPerBench = 0
-    this.starter_points = 0
-    this.bench_points = 0
-  }
-
   calcStats() {
-    this.clearStats()
     this.calcStarterStats()
     this.calcBenchStats()
     this.calcCombinedStats()

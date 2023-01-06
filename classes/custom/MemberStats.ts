@@ -33,5 +33,35 @@ export default class MemberScores {
       if (!isNaN(+value))
       this.draftValue += value
     }
+
+    resetStats() {
+      this.pf = 0
+       this.pa = 0
+       this.pp = 0
+       this.stdDev = 0
+       this.opslap = 0
+       this.custom_points = 0
+       this.gp = 0
+        this.gutPlays = 0
+       this.winnableLosses = 0
+       this.timesUnderdog = 0
+       this.upsets = 0
+       this.wasUpset = 0
+       this.wins = 0
+       this.losses = 0
+       this.ties = 0
+       this.win_pct = 0
+       this.overall_rank = 0
+       this.power_wins  = 0
+       this.power_losses  = 0
+       this.power_ties = 0
+       this.position_scores = new Map<POSITION, number>()
+       this.projected_position_scores = new Map<POSITION, number>()
+       this.position_starts = new Map<POSITION, number>()
+       this.divisionWins = 0
+       this.divisionLosses  = 0
+       this.divisionTies = 0
+       this.draftValue = 0
+    }
   }
   

@@ -79,12 +79,8 @@ export default class League {
 		this.settings = sleeperLeague.sleeperDetails
 		this.createPlayerStatsMap(sleeperLeague.player_stats)
 		this.initPlayerProjectionsMap(sleeperLeague.player_projections)
-		this.initMemberTradeStats()
-		this.initLeagueWeeks(sleeperLeague.matchups, this.getTaxiMap())
-		this.calcMemberScores()
-		this.setLeagueStats()
-		this.setDraftValues()
-
+		this.initMemberTradeMap()
+		this.calcStats(false)
 		if (trades) {
 			this.trades = trades?.map((trade) => {
 				return new Trade(trade)
@@ -116,7 +112,7 @@ export default class League {
 
 	setSeasonPortion(portion: SeasonPortion) {
 		this.seasonPortion = portion
-		this.recalcStats(this.taxiIncludedInMaxPf)
+		this.reCalcStats(this.taxiIncludedInMaxPf)
 	}
 
 	calcTradeStats() {
@@ -361,8 +357,9 @@ export default class League {
 				draftState.scoring_settings = customSettings
 			}
 		)
+		
 		this.useModifiedSettings = true
-		this.recalcStats(useTaxiSquad)
+		this.reCalcStats(useTaxiSquad)
 	}
 
 	disableModifiedStats() {
@@ -386,31 +383,11 @@ export default class League {
 	}
 
 	//Takes in an array filled with sleeper matchup arrays
-	initLeagueWeeks(
-		allMatchups: SleeperMatchup[][],
-		taxiMap?: Map<number, string[]>
-	) {
+	calcLeagueWeeks(taxiMap?: Map<number, string[]>) {
 		this.weeks = new Map()
-		let enabledWeeks = [...Array(this.allMatchups.length).keys()]
-
-		switch (this.seasonPortion) {
-			case SeasonPortion.REGULAR: {
-				enabledWeeks = enabledWeeks.slice(
-					0,
-					this.settings.playoff_week_start ?? 14
-				)
-				break
-			}
-			case SeasonPortion.POST: {
-				enabledWeeks = enabledWeeks.slice(
-					this.settings.playoff_week_start ?? 14,
-					enabledWeeks.length
-				)
-				break
-			}
-		}
-		enabledWeeks.forEach((weekPos) => {
-			let weekNum = weekPos + 1
+		let matchups = this.getEligibleMatchups() 
+		matchups.forEach((week) => {
+			let weekNum = week.weekNumber
 			let isPlayoffs = false
 			if (
 				this.settings.playoff_week_start &&
@@ -422,9 +399,9 @@ export default class League {
 			if (this.useModifiedSettings && this.modifiedSettings) {
 				settings = this.modifiedSettings
 			}
-			let week = new Week(
+			let weekObj = new Week(
 				weekNum,
-				allMatchups.at(weekPos) ?? [],
+				week.matchups ?? [],
 				this.playerStatMap,
 				this.playerProjectionMap,
 				this.playerDetails,
@@ -432,11 +409,11 @@ export default class League {
 				isPlayoffs,
 				taxiMap
 			)
-			this.weeks.set(weekNum, week)
+			this.weeks.set(weekNum, weekObj)
 		})
 	}
 
-	setDraftValues() {
+	calcDraftValues() {
 		this.weeks.forEach((week) => {
 			week.matchups.forEach((matchup: Matchup) => {
 				let players = [
@@ -642,7 +619,8 @@ export default class League {
 		}
 	}
 
-	setLeagueStats() {
+	//Needs members to have scores
+	calcLeagueStats() {
 		let pf = 0
 		let pa = 0
 		let pp = 0
@@ -694,9 +672,9 @@ export default class League {
 	}
 
 	//Creates a map for each member that maps their roster id to number of trades done
-	initMemberTradeStats() {
+	initMemberTradeMap() {
 		this.members.forEach((member: LeagueMember, rosterId: number) => {
-			for (let i = 1; i <= this.members.size; i++) member.tradeStats.set(i, 0)
+			for (let i = 1; i <= this.members.size; i++) member.tradePartnerMap.set(i, 0)
 		})
 	}
 
@@ -749,25 +727,77 @@ export default class League {
 		}
 	}
 
-	recalcStats(useTaxiSquad: boolean) {
-		let taxiMap
-		for (let [key, member] of this.members) {
-			member.stats = new MemberScores()
+	getEligibleMatchups() {
+		let eligibleWeeks = [...Array(this.allMatchups.length).keys()]
+
+		switch (this.seasonPortion) {
+			case SeasonPortion.REGULAR: {
+				eligibleWeeks = eligibleWeeks.slice(
+					0,
+					this.settings.playoff_week_start ?? 14
+				)
+				break
+			}
+			case SeasonPortion.POST: {
+				eligibleWeeks = eligibleWeeks.slice(
+					this.settings.playoff_week_start ?? 14,
+					eligibleWeeks.length
+				)
+				break
+			}
 		}
+		
+		return eligibleWeeks.map(weekNum => {
+			return {matchups: this.allMatchups.at(weekNum), weekNumber: weekNum + 1}
+		})
+		
+	}
+	reCalcStats(useTaxiSquad: boolean) {
+		this.resetAllStats()
+		this.calcStats(useTaxiSquad)
+	}
+
+	calcStats(useTaxiSquad: boolean) {
+		let taxiMap
 		if (!useTaxiSquad) {
 			this.taxiIncludedInMaxPf = useTaxiSquad
 			taxiMap = this.getTaxiMap()
 		}
-		this.initLeagueWeeks(this.allMatchups, taxiMap)
+		this.calcLeagueWeeks(taxiMap ?? new Map())
 		this.calcMemberScores()
-		this.calcTradeStats()
-		this.setLeagueStats()
-		this.setDraftValues()
+		this.calcDraftValues()
+		this.calcLeagueStats()	
+	}
+
+	getSettings() {
+		if (this.useModifiedSettings) {
+			return this.modifiedSettings
+		} else {
+			return this.settings
+		}
+	}
+
+	resetSeasonPlayers() {
+		this.members.forEach(member => {
+			member.players.forEach(player => {
+				player.resetStats()
+			})
+		})
+	}
+
+
+
+	resetAllStats() {
+		this.stats.reset()
+		this.resetSeasonPlayers()
+		this.members.forEach(member => {
+			member.stats.resetStats()
+		})
 	}
 
 	//Returns a map of roster id to list of player ids on taxi squad
 	getTaxiMap() {
-		let taxiMap = new Map()
+		let taxiMap = new Map<number, string[] | undefined>()
 		this.members.forEach((member) => {
 			taxiMap.set(member.roster.roster_id, member.roster.taxi)
 		})
@@ -775,6 +805,7 @@ export default class League {
 		return taxiMap
 	}
 
+	//Needs weeks to be set
 	calcMemberScores() {
 		this.weeks.forEach((week) => {
 			week.matchups.forEach((matchup) => {

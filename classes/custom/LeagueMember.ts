@@ -13,7 +13,7 @@ export default class LeagueMember {
 	public teamAvatar?: string | undefined
 	public teamName: string
 	public stats: MemberScores = new MemberScores()
-	public tradeStats: Map<number, number> = new Map()
+	public tradePartnerMap: Map<number, number> = new Map()
 	public players: Map<string, SeasonPlayer> = new Map()
 	public division_id: number
 
