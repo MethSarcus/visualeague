@@ -23,7 +23,8 @@ export default function DraftValueTable(props: MyProps) {
 
 	const gridStyle = {minHeight: 550}
 
-	if (props.draft.settings.type == DRAFT_TYPE.SNAKE) {
+	console.log(props.draft)
+	if (props.draft.settings.type != DRAFT_TYPE.AUCTION ) {
 		columns.push({name: 'pick_no', header: 'Pick', type: 'number'})
 	} else {
 		columns.push({name: 'amount', header: 'Price', type: 'number'})

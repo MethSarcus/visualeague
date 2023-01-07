@@ -12,7 +12,6 @@ interface MyProps {
 const WeeklyTradesLineChart = (props: MyProps) => {
   if (props.trades == undefined) return <Spinner />;
   let data = formatScoresForLineChart(props.trades) as any;
-  console.log(data)
   const theme = {
     background: project_colors.surface[1],
     textColor: "white",

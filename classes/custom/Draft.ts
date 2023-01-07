@@ -30,6 +30,7 @@ export class Draft {
 export enum DRAFT_TYPE {
 	SNAKE = 'snake',
 	AUCTION = 'auction',
+	LINEAR = 'linear'
 }
 
 export interface DraftPlayer extends DraftPick {
