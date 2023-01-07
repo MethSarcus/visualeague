@@ -28,7 +28,7 @@ import BarChart from '../../../components/charts/bar/PFBarChart'
 import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
-import LineChart from '../../../components/charts/LineChart'
+import LineChart from '../../../components/charts/line/LineChart'
 
 export default function LeaguePage() {
 	const [show, setShow] = useState(false)
