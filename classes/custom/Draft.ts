@@ -25,6 +25,12 @@ export class Draft {
 			pick.setDraftValue()
 		})
 	}
+
+	resetAllDraftPlayers() {
+		this.picks.forEach(pick => {
+			pick.reset()
+		})
+	}
 }
 
 export enum DRAFT_TYPE {
@@ -42,6 +48,7 @@ export interface DraftPlayer extends DraftPick {
 	name: string
 	setDraftValue(): void
 	addGame(points: number): void
+	reset(): void
 }
 
 class SnakeDraftPlayer implements DraftPlayer {
@@ -86,6 +93,13 @@ class SnakeDraftPlayer implements DraftPlayer {
 			(this.pointsScored * this.ppg * Math.log(this.pick_no)).toFixed(2)
 		)
 		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
+	}
+
+	reset(): void {
+		this.gamesPlayed = 0
+		this.pointsScored = 0
+		this.draftValue = 0
+		this.ppg = 0
 	}
 }
 
@@ -136,5 +150,12 @@ class AuctionDraftPlayer implements DraftPlayer {
 	addGame(points: number): void {
 		this.pointsScored += points
 		this.gamesPlayed += 1
+	}
+
+	reset(): void {
+		this.gamesPlayed = 0
+		this.pointsScored = 0
+		this.draftValue = 0
+		this.ppg = 0
 	}
 }
