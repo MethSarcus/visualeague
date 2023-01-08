@@ -8,7 +8,8 @@ export default function ExpandableLeagueSearch() {
 		<>
 			<IconButton
 				size={'xs'}
-				variant={'outline'}
+				variant={'ghost'}
+        _hover={{background: 'secondary.600'}}
 				icon={<HiOutlineSearch />}
 				aria-label={'search'}
                 onClick={onOpen}
