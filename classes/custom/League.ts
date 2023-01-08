@@ -790,6 +790,7 @@ export default class League {
 	resetAllStats() {
 		this.stats.reset()
 		this.resetSeasonPlayers()
+		this.draft.resetAllDraftPlayers()
 		this.members.forEach(member => {
 			member.stats.resetStats()
 		})

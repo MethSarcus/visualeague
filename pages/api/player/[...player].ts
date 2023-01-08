@@ -176,6 +176,7 @@ export async function getMultiPlayerDetails(
         "details.first_name": 1,
         "details.player_id": 1,
         "details.team": 1,
+        "details.age": 1,
       },
     };
     let detail = await details.find(query, projectionQuery).toArray();

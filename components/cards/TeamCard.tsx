@@ -4,17 +4,21 @@ import {
 	Box,
 	Card,
 	Center,
+	Collapse,
 	Grid,
 	GridItem,
 	Image,
 	Text,
 	Tooltip,
+	useDisclosure,
 	useMultiStyleConfig,
 	VStack,
 } from '@chakra-ui/react'
 import {useRouter} from 'next/router'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
+import { SleeperPlayerDetails } from '../../classes/custom/Player'
+import AgeBarChart from '../charts/bar/AgeBarChart'
 import TrendingLineChart from '../charts/team_charts/TrendingLineChart'
 
 type MyProps = {
@@ -26,6 +30,8 @@ type MyProps = {
 
 const TeamCardWithTrendingGraph = (props: MyProps) => {
 	const {variant, size, ...rest} = props
+	const { isOpen, onToggle } = useDisclosure()
+	
 	return (
 		<Card
 			boxShadow={'lg'}
@@ -35,7 +41,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 			fontSize={'.8em'}
 		>
 			<Grid templateAreas={`"member linechart linechart"`} gap='1'>
-				<GridItem area={'member'}>
+				<GridItem area={'member'} onClick={onToggle}>
 					<Center>
 						<Avatar
 							objectFit='cover'
@@ -70,6 +76,19 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 					</Center>
 				</GridItem>
 			</Grid>
+			<Collapse in={isOpen}>
+				Additional Stats
+				<Box>
+					Player Age
+
+					<Box>
+						<AgeBarChart playerDetails={props.member?.roster.players.map(playerId => {
+							return props.league.playerDetails.get(playerId) as SleeperPlayerDetails
+						})}/>
+
+					</Box>
+				</Box>
+			</Collapse>
 		</Card>
 	)
 }

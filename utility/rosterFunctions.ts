@@ -507,3 +507,6 @@ export function getReadableScoringKey(key: string): string {
 
 	return readableKey
 }
+
+export const createRangeArray = (start: number, end: number) => Array.from({length: (end - start)}, (v, k) => k + start);
+
