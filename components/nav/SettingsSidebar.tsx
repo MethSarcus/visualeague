@@ -69,12 +69,12 @@ export default function SettingsSidebar() {
 			})
 		)
 	}
-  useEffect(() => {
-    // call an API and in the success or failure fill the data buy using setData function
-    // it could be like below
-    if (context.settings != undefined) {
-      setTaxiIncludedMaxPfChecked(context.taxiIncludedInMaxPf)
-    }
+	useEffect(() => {
+		// call an API and in the success or failure fill the data buy using setData function
+		// it could be like below
+		if (context.settings != undefined) {
+			setTaxiIncludedMaxPfChecked(context.taxiIncludedInMaxPf)
+		}
 	}, [context.settings, context.taxiIncludedInMaxPf])
 
 	const onApplyPressed = () => {
@@ -93,15 +93,16 @@ export default function SettingsSidebar() {
 
 	return (
 		<>
-			{context.settings && (
-				<IconButton
-					bg={'none'}
-					_hover={{background: 'primary.100'}}
-					icon={<GoGear />}
-					onClick={onOpen}
-					aria-label={'settings'}
-				/>
-			)}
+			<IconButton
+			size={"xs"}
+				disabled={context.settings == undefined}
+				bg={'none'}
+				_hover={{background: 'secondary.600'}}
+				icon={<GoGear />}
+				onClick={onOpen}
+				aria-label={'settings'}
+			/>
+
 			<Drawer isOpen={isOpen} placement='right' onClose={onClose}>
 				<DrawerOverlay />
 				<DrawerContent bg={'surface.1'} textColor='white'>

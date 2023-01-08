@@ -1,8 +1,8 @@
 import { Spinner } from "@chakra-ui/react";
 import { ResponsiveLine } from "@nivo/line";
-import League from "../../classes/custom/League";
-import LeagueMember from "../../classes/custom/LeagueMember";
-import { project_colors } from "../../utility/project_colors";
+import League from "../../../classes/custom/League";
+import LeagueMember from "../../../classes/custom/LeagueMember";
+import { project_colors } from "../../../utility/project_colors";
 
 interface MyProps {
   league: League | undefined;

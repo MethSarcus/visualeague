@@ -1,4 +1,4 @@
-import {Box, Spinner, Text} from '@chakra-ui/react'
+import {Box, Button, Collapse, Text, useDisclosure} from '@chakra-ui/react'
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
@@ -38,8 +38,10 @@ export default function MemberRoster(props: MyProps) {
 								starter_id
 							)}
 							leaguePositionAverage={(
-                                context as League
-                            )?.stats.getPositionAvgPPG(props.member.players.get(starter_id)?.positions[0] ?? POSITION.K)}
+								context as League
+							)?.stats.getPositionAvgPPG(
+								props.member.players.get(starter_id)?.positions[0] ?? POSITION.K
+							)}
 							playerSeasonDetails={props.member.players.get(starter_id)}
 						/>
 					)
@@ -60,9 +62,11 @@ export default function MemberRoster(props: MyProps) {
 								playerDetails={(context as League)?.playerDetails?.get(
 									bench_id
 								)}
-                                leaguePositionAverage={(
-                                    context as League
-                                )?.stats.getPositionAvgPPG(props.member.players.get(bench_id)?.positions[0] ?? POSITION.K)}
+								leaguePositionAverage={(
+									context as League
+								)?.stats.getPositionAvgPPG(
+									props.member.players.get(bench_id)?.positions[0] ?? POSITION.K
+								)}
 								playerSeasonDetails={props.member.players.get(bench_id)}
 							/>
 						)

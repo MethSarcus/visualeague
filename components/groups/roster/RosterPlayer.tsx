@@ -130,10 +130,10 @@ export default function RosterPlayer(props: MyProps) {
 						<Spacer/>
 					</Flex>
 					<Box w={'155px'} h={'60px'}>
-						<RosterPlayerTrendingLineChart
+						{isOpen && <RosterPlayerTrendingLineChart
 							player={props.playerSeasonDetails}
 							positionAverage={props.leaguePositionAverage}
-						/>
+						/>}
 					</Box>
 				</Box>
 			</Collapse>

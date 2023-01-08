@@ -32,6 +32,7 @@ export default function MobileSidebar() {
 				<IconButton
 					variant={'ghost'}
 					icon={<HamburgerIcon />}
+					_hover={{background: 'secondary.600'}}
 					onClick={onOpen}
 					aria-label={'menu'}
 				/>

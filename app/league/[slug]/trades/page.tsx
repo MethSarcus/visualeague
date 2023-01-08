@@ -1,6 +1,7 @@
 'use client'
 import {
 	Box,
+	Center,
 	Container,
 	Flex,
 	Grid,
@@ -19,6 +20,7 @@ import Trade from '../../../../classes/custom/Trade'
 import {SleeperTransaction} from '../../../../classes/sleeper/SleeperTransaction'
 import TradeCard from '../../../../components/cards/TradeCard'
 import WorstTradeCard from '../../../../components/cards/WorstTradeCard'
+import WeeklyTradesLineChart from '../../../../components/charts/line/WeeklyTradesLineChart'
 import TradeChordChart from '../../../../components/charts/TradeChordChart'
 import {Context} from '../../../../contexts/Context'
 
@@ -27,12 +29,15 @@ export default function Page() {
 	const desktopTemplate = `
     "imba imba trades trades"
     "imba imba trades trades"
-    "chart chart trades trades"`
+    "chart chart trades trades"
+	"weeklyTradesChart weeklyTradesChart tradeBarGraph tradeBarGraph"`
 
 	const mobileTemplate = `
     "chart"
     "imba"
-    "trades"`
+	"tradeBarGraph"
+    "trades"
+	"weeklyTradesChart"`
 
 	const [trades, setTrades] = useState([] as Trade[])
 
@@ -78,6 +83,10 @@ export default function Page() {
 							})}
 						</VStack>
 					</Container>
+				</GridItem>
+				<GridItem area='weeklyTradesChart' height={"300px"}>
+					<Center color={"white"} p={3}>Weekly Trades</Center>
+					<WeeklyTradesLineChart trades={(context as League).trades}/>
 				</GridItem>
 			</Grid>
 		</Box>
