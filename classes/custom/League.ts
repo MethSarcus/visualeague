@@ -814,12 +814,17 @@ export default class League {
 				let homeMember = this.members.get(homeId)
 				let homeTeam = matchup.homeTeam
 				if (homeMember) {
-					homeMember.stats.pf += homeTeam.pf
+					if (homeTeam.custom_points > 0) {
+						homeMember.stats.pf += homeTeam.custom_points
+					} else {
+						homeMember.stats.pf += homeTeam.pf
+					}
+					
 					homeMember.stats.pp += homeTeam.pp
 					homeMember.stats.opslap += homeTeam.opslap
 					homeMember.stats.gp += homeTeam.gp
 					homeMember.stats.gutPlays += homeTeam.gut_plays
-					homeMember.stats.custom_points += homeTeam.custom_points
+					
 
 					homeTeam.starters.forEach((player) => {
 						if (homeMember!.players.has(player.playerId!)) {
@@ -906,15 +911,25 @@ export default class League {
 					let awayMember = this.members.get(matchup.awayTeam?.roster_id ?? 0)
 					if (awayTeam && awayMember) {
 						let awayId = matchup.awayTeam?.roster_id
+						if (awayTeam.custom_points > 0) {
+							awayMember.stats.pf += awayTeam.custom_points
+							homeMember.stats.pa += awayTeam.custom_points
+						} else {
+							awayMember.stats.pf += awayTeam.pf
+							homeMember.stats.pa += awayTeam.pf
+						}
 
-						homeMember.stats.pa += awayTeam.pf
-						awayMember.stats.pf += awayTeam.pf
+						if (homeTeam.custom_points > 0) {
+							awayMember.stats.pa += homeTeam.custom_points
+						} else {
+							awayMember.stats.pa += homeTeam.pf
+						}
+						
 						awayMember.stats.pp += awayTeam.pp
 						awayMember.stats.opslap += awayTeam.opslap
 						awayMember.stats.gp += awayTeam.gp
 						awayMember.stats.gutPlays += awayTeam.gut_plays
-						awayMember.stats.custom_points += awayTeam.custom_points
-						awayMember.stats.pa += homeTeam.pf
+						
 
 						awayTeam.starters.forEach((player) => {
 							if (awayMember!.players.has(player.playerId!)) {

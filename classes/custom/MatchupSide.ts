@@ -112,7 +112,9 @@ export class MatchupSide {
 				}
 			}
 		})
-		this.pf += this.custom_points
+		if (this.custom_points > 0) {
+			this.pf = this.custom_points
+		}
 
 		if (settings.roster_positions) {
 			let startingLineupSlots = settings.roster_positions
