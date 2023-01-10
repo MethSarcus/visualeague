@@ -1,4 +1,4 @@
-import {Spinner} from '@chakra-ui/react'
+import {Spinner, useMediaQuery} from '@chakra-ui/react'
 import {AreaBumpSerieExtraProps, ResponsiveAreaBump} from '@nivo/bump'
 import League from '../../classes/custom/League'
 import {MatchupSide} from '../../classes/custom/MatchupSide'
@@ -9,6 +9,7 @@ interface MyProps {
 }
 
 const PowerRankingBumpChart = (props: MyProps) => {
+	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 	let data
 
 	if (props.league?.settings != undefined) {
@@ -17,6 +18,9 @@ const PowerRankingBumpChart = (props: MyProps) => {
 	const theme = {
 		textColor: 'white',
 	}
+	let margins = isLargerThan800
+		? {top: 10, right: 120, bottom: 50, left: 120}
+		: {top: 50, right: 30, bottom: 50, left: 30}
 
 	if (data == undefined || data.length <= 0) return <Spinner />
 
@@ -24,10 +28,11 @@ const PowerRankingBumpChart = (props: MyProps) => {
 		<ResponsiveAreaBump
 			data={data}
 			theme={theme}
-			margin={{top: 10, right: 120, bottom: 50, left: 120}}
+			margin={margins}
 			spacing={10}
 			colors={{scheme: 'nivo'}}
 			startLabel={'id' as any}
+			interpolation={"linear"}
 			endLabel={'id' as any}
 			// interpolation='linear'
 			axisBottom={{
@@ -62,7 +67,8 @@ const PowerRankingBumpChart = (props: MyProps) => {
 					>
 						<strong>
 							{(serie as any).id as string}: {wins}-{losses}
-						</strong><br/>
+						</strong>
+						<br />
 						<small>{winPercent}% Power Win Rate</small>
 					</div>
 				)
