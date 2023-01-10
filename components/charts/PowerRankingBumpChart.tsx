@@ -2,7 +2,6 @@ import {Spinner, useMediaQuery} from '@chakra-ui/react'
 import {AreaBumpSerieExtraProps, ResponsiveAreaBump} from '@nivo/bump'
 import League from '../../classes/custom/League'
 import {MatchupSide} from '../../classes/custom/MatchupSide'
-import {project_colors} from '../../utility/project_colors'
 
 interface MyProps {
 	league: League | undefined
@@ -32,7 +31,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 			spacing={10}
 			colors={{scheme: 'nivo'}}
 			startLabel={'id' as any}
-			interpolation={"linear"}
+			interpolation={'linear'}
 			endLabel={'id' as any}
 			// interpolation='linear'
 			axisBottom={{

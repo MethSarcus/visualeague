@@ -1,16 +1,10 @@
 'use client'
-import {
-	Box, Grid,
-	GridItem,
-	Heading, Skeleton
-} from '@chakra-ui/react'
-import { useContext } from 'react'
+import {Box, Grid, GridItem, Heading, Skeleton} from '@chakra-ui/react'
+import {useContext} from 'react'
 import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
-import AllplayTable from '../../../../components/tables/AllplayTable'
-import GlideAllPlayTable from '../../../../components/tables/GlideAllplayTable'
-import { Context } from '../../../../contexts/Context'
+import {Context} from '../../../../contexts/Context'
 
 export default function RankPage() {
 	const [context, setContext] = useContext(Context)
@@ -51,16 +45,19 @@ export default function RankPage() {
 						</Heading>
 					</Skeleton>
 				</GridItem>
-        <GridItem area={"allplay_table"} overflowX={"auto"} overflowY={"hidden"}>
-						<AllPlayRankGroup league={context} />
+				<GridItem
+					area={'allplay_table'}
+					overflowX={'auto'}
+					overflowY={'hidden'}
+				>
+					<AllPlayRankGroup league={context} />
 				</GridItem>
-        <GridItem area={"cumulative_ranks"}>
-						<PowerRankingBumpChart league={context} />
+				<GridItem area={'cumulative_ranks'}>
+					<PowerRankingBumpChart league={context} />
 				</GridItem>
 				<GridItem area={'bump_chart'} height={'500px'}>
 					<WeeklyRankingBumpChart league={context} />
 				</GridItem>
-
 			</Grid>
 		</Box>
 	)
