@@ -1,39 +1,31 @@
 'use client'
-import {
-	Box,
-	Collapse,
-	Flex,
-	Grid,
-	GridItem,
-	Heading,
-	IconButton,
-	Skeleton,
-	Spacer,
-} from '@chakra-ui/react'
+import {Box, Grid, GridItem, Heading, Skeleton} from '@chakra-ui/react'
 import {useContext} from 'react'
-import {MdExpandLess, MdExpandMore} from 'react-icons/md'
 import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
-import BarChart from '../../../../components/charts/bar/PFBarChart'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
-import HomeStatGroup from '../../../../components/groups/stats/HomeStatGroup'
-import LeagueOverviewDataTable from '../../../../components/tables/LeagueOverviewDatatable'
+import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
 import {Context} from '../../../../contexts/Context'
-import AllplayTable from '../../../../components/tables/AllplayTable'
 
 export default function RankPage() {
 	const [context, setContext] = useContext(Context)
+	const desktopTemplate = `  
+	"header header"
+	"allplay_table cumulative_ranks"
+	"bump_chart bump_chart"`
+
+	const mobileTemplate = `  
+	"header"
+	"cumulative_ranks"
+	"allplay_table"
+	"bump_chart"`
 	return (
 		<Box overflowX={'hidden'} w={'full'} height={'full'}>
 			<Grid
 				gap={3}
 				mx={4}
 				my={2}
-				templateAreas={`  
-        "header header"
-        "allplay_table cumulative_ranks"
-        
-        "bump_chart bump_chart"`}
-				gridTemplateColumns={'1fr 1fr'}
+				templateAreas={[mobileTemplate, desktopTemplate]}
+				gridTemplateColumns={['1fr', '1fr 1fr']}
 				gridTemplateRows={'60px 1fr 1fr'}
 			>
 				<GridItem area={'header'}>
@@ -53,16 +45,19 @@ export default function RankPage() {
 						</Heading>
 					</Skeleton>
 				</GridItem>
-        <GridItem area={"allplay_table"}>
-						<AllplayTable league={context} />
+				<GridItem
+					area={'allplay_table'}
+					overflowX={'auto'}
+					overflowY={'hidden'}
+				>
+					<AllPlayRankGroup league={context} />
 				</GridItem>
-        <GridItem area={"cumulative_ranks"}>
-						<PowerRankingBumpChart league={context} />
+				<GridItem area={'cumulative_ranks'}>
+					<PowerRankingBumpChart league={context} />
 				</GridItem>
 				<GridItem area={'bump_chart'} height={'500px'}>
 					<WeeklyRankingBumpChart league={context} />
 				</GridItem>
-
 			</Grid>
 		</Box>
 	)
