@@ -69,9 +69,9 @@ const WeeklyRankingBumpChart = (props: MyProps) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "Week",
+        legend: "Weekly Power Rankings",
         legendPosition: "middle",
-        legendOffset: -36,
+        legendOffset: -30,
       }}
       axisBottom={{
         tickSize: 5,
@@ -89,7 +89,7 @@ const WeeklyRankingBumpChart = (props: MyProps) => {
         legendPosition: "middle",
         legendOffset: -40,
       }}
-      margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+      margin={{ top: 40, right: 20, bottom: 20, left: 20 }}
       axisRight={null}
     />
   );

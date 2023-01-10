@@ -14,6 +14,10 @@ export default class LeagueStats {
 	public highest_scoring_matchup?: Matchup = undefined
 	public biggest_upset?: Matchup = undefined
 
+	//Maps a week to a map of member power rankings that are cumulative that week
+	public powerWinsMap: Map<number, Map<number, number>> = new Map()
+	public powerRankMap: Map<number, Map<number, number>> = new Map()
+
 	public position_scores: Map<POSITION, number> = new Map()
 	public position_starts: Map<POSITION, number> = new Map()
 
@@ -36,5 +40,7 @@ export default class LeagueStats {
 		this.biggest_upset = undefined
 		this.position_scores = new Map()
 		this.position_starts = new Map()
+		this.powerRankMap = new Map()
+		this.powerWinsMap = new Map()
 	}
 }
