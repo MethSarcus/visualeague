@@ -69,7 +69,7 @@ export default function LeagueLayout({
 		fetcher
 	)
 
-	useMemo(() => {
+	useEffect(() => {
 		if (leagueId == context.settings?.league_id) {
 			setLeagueDataExists(true)
 		}
@@ -88,6 +88,7 @@ export default function LeagueLayout({
 			)
 			console.log(league)
 			setContext(league)
+			return 
 		}
 	}, [context.settings?.league_id, draftData, draftSettings, leagueData, leagueId, setContext, tradeData?.trades])
 

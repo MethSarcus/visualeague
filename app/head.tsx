@@ -5,7 +5,7 @@ export default async function Head() {
         <title>VisuaLeague</title>
       <meta name="Visualize your league" content="Created by Seth Marcus" />
       <meta name="theme-color" content="#121212" />
-      <meta name="description" content="Visualize the stats for your fantasy football leagues and find insights to help you improve"></meta>
+      <meta name="description" content="Visualize your fantasy football leagues and find insights to help you improve. Gauge the strengths and weaknesses for each team at a glance to Learn from past mistakes and prevent future ones"></meta>
       <link
         rel="apple-touch-icon"
         sizes="180x180"

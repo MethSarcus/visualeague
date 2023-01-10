@@ -60,6 +60,18 @@ export default class LeagueMember {
 		return `https://sleepercdn.com/avatars/thumbs/${this.avatar}`
 	}
 
+	getRecord() {
+		return `${this.stats.wins}-${this.stats.losses}${
+			this.stats.ties > 0 ? '-' + this.stats.ties : ''
+		}`
+	}
+
+	getPowerRecord() {
+		return `${this.stats.power_wins}-${this.stats.power_losses}${
+			this.stats.power_ties > 0 ? '-' + this.stats.power_ties : ''
+		}`
+	}
+
 	getTeamAvatar() {
 		if (!this.teamAvatar) {
 			return this.getAvatar()
@@ -135,6 +147,4 @@ export default class LeagueMember {
 
 		return notablePlayers
 	}
-
-
 }

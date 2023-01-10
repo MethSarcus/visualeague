@@ -33,11 +33,7 @@ export class Week {
                 isPlayoffs, awayMatchupSide))
             }
         });
-    }
-
-    getHighestScorer() {
-
-    }
+      }
 
     getAllTeams() {
       let teams: MatchupSide[] = []
@@ -46,6 +42,10 @@ export class Week {
           teams.push(matchup.homeTeam)
           teams.push(matchup.awayTeam)
         }
+      })
+
+      this.byeWeeks.forEach((byeWeek) => {
+        teams.push(byeWeek.homeTeam)
       })
 
       return teams

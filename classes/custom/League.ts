@@ -663,6 +663,49 @@ export default class League {
 		this.stats.avg_gp = gp / this.members.size
 	}
 
+	calcAllPlayStats() {
+		this.weeks.forEach(week => {
+			let scores = week.getAllScores()
+			
+			this.members.forEach(member => {
+				let memberWeekScore = week.getMemberMatchupSide(member.roster.roster_id).pf
+				scores.forEach(scoreObj => {
+					if (member.roster.roster_id != scoreObj.id) {
+						let opponent = this.members.get(scoreObj.id)!
+						if (memberWeekScore > scoreObj.score) {
+							if (!member.stats.allPlayWinMap.has(scoreObj.id)) {
+								member.stats.allPlayWinMap.set(scoreObj.id, 1)
+							} else {
+								member.stats.allPlayWinMap.set(scoreObj.id, member.stats.allPlayWinMap.get(scoreObj.id)! + 1)
+							}
+
+							if (!opponent.stats.allPlayLossMap.has(member.roster.roster_id)) {
+								opponent.stats.allPlayLossMap.set(member.roster.roster_id, 1)
+							} else {
+								opponent.stats.allPlayLossMap.set(member.roster.roster_id, opponent.stats.allPlayLossMap.get(member.roster.roster_id)! + 1)
+							}
+							
+						} else if (memberWeekScore == scoreObj.score) {
+							if (!member.stats.allPlayTieMap.has(scoreObj.id)) {
+								member.stats.allPlayTieMap.set(scoreObj.id, 1)
+							} else {
+								member.stats.allPlayTieMap.set(scoreObj.id, member.stats.allPlayTieMap.get(scoreObj.id)! + 1)
+							}
+
+							if (!opponent.stats.allPlayTieMap.has(member.roster.roster_id)) {
+								opponent.stats.allPlayTieMap.set(member.roster.roster_id, 1)
+							} else {
+								opponent.stats.allPlayTieMap.set(member.roster.roster_id, opponent.stats.allPlayTieMap.get(member.roster.roster_id)! + 1)
+							}
+							
+						}
+					}
+
+				})
+			})
+		})
+	}
+
 	getPlayerStat(playerId: number, weekNum: number) {
 		return this.playerStatMap.get(weekNum).get(playerId.toString())
 	}
@@ -767,6 +810,7 @@ export default class League {
 		this.calcMemberScores()
 		this.calcDraftValues()
 		this.calcLeagueStats()	
+		this.calcAllPlayStats()
 	}
 
 	getSettings() {
