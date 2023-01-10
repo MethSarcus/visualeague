@@ -1,5 +1,6 @@
 'use client'
-import {Avatar, Box, Button, Center, Link, ScaleFade} from '@chakra-ui/react'
+import {Avatar, Box, Button, Center, ScaleFade} from '@chakra-ui/react'
+import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import {LeagueSettings} from '../classes/sleeper/LeagueSettings'
