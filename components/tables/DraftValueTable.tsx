@@ -4,7 +4,6 @@ import {Box} from '@chakra-ui/react'
 import {Draft, DraftPlayer, DRAFT_TYPE} from '../../classes/custom/Draft'
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/index.css'
-import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
 
 interface MyProps {
@@ -23,7 +22,6 @@ export default function DraftValueTable(props: MyProps) {
 
 	const gridStyle = {minHeight: 550}
 
-	console.log(props.draft)
 	if (props.draft.settings.type != DRAFT_TYPE.AUCTION ) {
 		columns.push({name: 'pick_no', header: 'Pick', type: 'number'})
 	} else {
