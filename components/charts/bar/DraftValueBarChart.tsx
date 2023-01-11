@@ -1,4 +1,4 @@
-import {Spinner} from '@chakra-ui/react'
+import {Spinner, useMediaQuery} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
@@ -20,6 +20,7 @@ const theme = {
 }
 
 const DraftValueBarChart = (props: MyProps) => {
+	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
 	if (props.league?.settings == undefined) return <Spinner />
 	let formattedData = formatScoresForBarChart(props.league)
 	let keys = formattedData.chartKeys
@@ -50,7 +51,7 @@ const DraftValueBarChart = (props: MyProps) => {
         )}
 			indexBy='member'
 			layout='horizontal'
-			margin={{top: 0, right: 10, bottom: 0, left: 100}}
+			margin={{top: 15, right: 0, bottom: 0, left: 100}}
 			padding={0.3}
 			indexScale={{type: 'band', round: true}}
 			theme={theme}
@@ -58,7 +59,7 @@ const DraftValueBarChart = (props: MyProps) => {
 				from: 'color',
 				modifiers: [['darker', 1.6]],
 			}}
-			axisTop={null}
+			axisTop={{legend: "Draft Value Found", legendPosition: "start", legendOffset: isOnMobile ? 0 : 0, format: () => '', tickSize: 0}}
 			axisRight={null}
       enableLabel={false}
 			colors={getColor as any}

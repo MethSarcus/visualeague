@@ -99,7 +99,7 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			defaultSortFieldId={3}
 			defaultSortAsc={false}
 			data={formattedMembers}
-			customStyles={customStyles}
+			customStyles={customDatatableStyles}
 			conditionalRowStyles={conditionalRowStyles}
 			progressPending={props.league.settings == undefined}
 			progressComponent={<Spinner />}
@@ -128,7 +128,7 @@ interface DataRow {
 
 
 
-const customStyles = {
+export const customDatatableStyles = {
     rows: {
         style: {
             minHeight: '72px', // override the row height

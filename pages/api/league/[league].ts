@@ -278,9 +278,9 @@ async function getCompleteLeague(leagueId: string) {
       
     });
 
-    playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
+    playerStats.push(await getMultiPlayerStats(db, allPlayers.flat(), i + 1));
     playerProjections.push(
-      await getMultiMatchupProjections(matchups[i], db, i + 1)
+      await getMultiPlayerProjections(db, allPlayers.flat(), i + 1)
     );
   }
 

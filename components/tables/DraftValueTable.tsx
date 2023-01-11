@@ -1,42 +1,108 @@
 'use client'
 import React from 'react'
-import {Box} from '@chakra-ui/react'
-import {Draft, DraftPlayer, DRAFT_TYPE} from '../../classes/custom/Draft'
+import {Box, Skeleton, Spinner} from '@chakra-ui/react'
+import {AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE, SnakeDraftPlayer} from '../../classes/custom/Draft'
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
+import DataTable, { TableColumn } from 'react-data-table-component'
+import e from 'cors'
+import { customDatatableStyles } from './LeagueOverviewDatatable'
 
 interface MyProps {
-	draft: Draft
+	draft: Draft | undefined
+}
+
+interface DataRow {
+	name: string
+	ppg: number
+	pf: number
+	pick_no?: number
+	amount?: number
+	value: number
 }
 
 export default function DraftValueTable(props: MyProps) {
-	const data = [...props.draft.picks.values()].sort(
+	const data = [...props.draft?.picks.values() ?? []].sort(
 		(a: DraftPlayer, b: DraftPlayer) => b.draftValue - a.draftValue
-	)
-	const columns = [
-		{name: 'name', header: 'Name', type: 'string'},
-		{name: 'ppg', header: 'PPG', type: 'number'},
-		{name: 'pointsScored', header: 'PF', type: 'number'},
-	]
+	).map(player => {return formatMemberDataForTable(player)})
 
-	const gridStyle = {minHeight: 550}
-
-	if (props.draft.settings.type != DRAFT_TYPE.AUCTION ) {
-		columns.push({name: 'pick_no', header: 'Pick', type: 'number'})
+	const cols: TableColumn<DataRow>[] = [{
+		name: "name",
+		selector: (row) => row.name,
+		sortable: true,
+		grow: 1
+	}, {
+		name: "ppg",
+		selector: (row) => row.ppg,
+		sortable: true,
+		grow: 1
+	}, {
+		name: "pf",
+		selector: (row) => row.pf,
+		sortable: true,
+		grow: 1
+	}]
+	
+	if (props.draft?.settings.type != DRAFT_TYPE.AUCTION ) {
+		cols.push({name: 'pick_no', selector: (row) => row.pick_no ?? 0,
+		sortable: true,
+		grow: 1})
 	} else {
-		columns.push({name: 'amount', header: 'Price', type: 'number'})
+		cols.push({name: 'amount', selector: (row) => row.amount ?? 0,
+		sortable: true,
+		grow: 1})
 	}
 
-	columns.push({name: 'draftValue', header: 'Value', type: 'number'})
+	cols.push({name: 'value', selector: (row) => row.value,
+		sortable: true,
+		grow: 1})
+
+	const conditionalRowStyles = [
+		{
+			when: (row: any) => true,
+			style: {
+				backgroundColor: "green",
+				color: "white",
+				"&:hover": {
+					cursor: "pointer",
+				},
+			},
+		},
+	]
 
 	return (
-			<ReactDataGrid
-				idProperty='pick_no'
-				columns={columns}
-				dataSource={data}
-				style={gridStyle}
-                theme={"default-dark"}
-			/>
+		<Skeleton isLoaded={props.draft != undefined}>
+		<DataTable
+		theme="dark"
+			columns={cols}
+			defaultSortFieldId={2}
+			defaultSortAsc={false}
+			data={data}
+			customStyles={customDatatableStyles}
+			conditionalRowStyles={conditionalRowStyles}
+			progressPending={props.draft == undefined}
+			progressComponent={<Spinner />}
+			responsive={true}
+			dense={true}
+		/>
+		</Skeleton>
 	)
+}
+
+function formatMemberDataForTable(player: DraftPlayer): DataRow {
+	let playerObj = {
+		name: player.name,
+		ppg: parseFloat(player.ppg.toFixed(2)),
+		pf: parseFloat(player.pointsScored.toFixed(2)),
+		value: parseFloat(player.draftValue.toFixed(2))
+	} as DataRow
+
+	if (player instanceof AuctionDraftPlayer) {
+		playerObj.amount = player.amount
+	} else {
+		playerObj.pick_no = player.pick_no
+	}
+
+	return playerObj
 }
