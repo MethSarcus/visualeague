@@ -216,6 +216,11 @@ async function getMultiMatchupStats(
     matchup.players.forEach((player) => {
       players.push(player);
     });
+
+    matchup.starters.forEach(starter => {
+      if (!players.includes(starter))
+      players.push(starter);
+    })
   });
 
   let stats: any = getMultiPlayerStats(db, players, weekNum);
@@ -233,6 +238,11 @@ async function getMultiMatchupProjections(
     matchup.players.forEach((player) => {
       players.push(player);
     });
+
+    matchup.starters.forEach(starter => {
+      if (!players.includes(starter))
+      players.push(starter);
+    })
   });
 
   let stats: any = getMultiPlayerProjections(db, players, weekNum);
@@ -263,6 +273,7 @@ async function getCompleteLeague(leagueId: string) {
     matchups.forEach((weekMatchups) => {
       weekMatchups.forEach((curMatch) => {
         allPlayers.push(curMatch.players);
+        allPlayers.push(curMatch.starters.filter(starter => {return !curMatch.players.includes(starter)}));
       });
       
     });
