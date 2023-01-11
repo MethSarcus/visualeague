@@ -51,7 +51,7 @@ export class MatchupSide {
 					settings.roster_positions?.at(index),
 					stats.get(playerId),
 					projections.get(playerId),
-					playerDetails.get(playerId)!.fantasy_positions,
+					playerDetails.get(playerId)?.fantasy_positions,
 					settings.scoring_settings
 				)
 			}
