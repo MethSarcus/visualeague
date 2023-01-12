@@ -34,6 +34,7 @@ export default function MemberRoster(props: MyProps) {
 					return (
 						<RosterPlayer
 							key={starter_id}
+							league={context}
 							playerDetails={(context as League)?.playerDetails?.get(
 								starter_id
 							)}
@@ -57,6 +58,7 @@ export default function MemberRoster(props: MyProps) {
 					.map((bench_id) => {
 						return (
 							<RosterPlayer
+							league={context}
 								key={bench_id}
 								isBenched={true}
 								playerDetails={(context as League)?.playerDetails?.get(
