@@ -77,8 +77,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 			<Collapse in={isOpen} >
 				
 				<Box p={3}>
-				<Text fontSize={'xs'} mt={2}>Additional Stats</Text>
-					<Text fontSize={'2xs'} my={1}>Player Age</Text>
+				<Text fontSize={'xs'} mt={2} mb={1}>Additional Stats</Text>
 					<Box>
 						<AgeBarChart
 							playerDetails={props.member?.roster.players.map((playerId) => {

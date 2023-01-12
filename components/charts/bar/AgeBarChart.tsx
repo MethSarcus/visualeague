@@ -37,16 +37,18 @@ const AgeBarChart = (props: MyProps) => {
 		BarElement,
 		Title,
 		Tooltip,
-		Legend,
+		Legend
 	)
+
+  ChartJS.defaults.color = project_colors.textTheme.highEmphasis;
 
 	const options = {
 		layout: {
 			// padding: {
 			// 	left: 5,
 			// 	right: 5,
-      //   top: 5,
-      //   bottom: 5
+			//   top: 5,
+			//   bottom: 5
 			// },
 		},
 
@@ -55,16 +57,19 @@ const AgeBarChart = (props: MyProps) => {
 			legend: {
 				display: false,
 				position: 'top' as const,
-        labels: {
-          // This more specific font property overrides the global property
-          font: {
-              size: 7
-          }
-      }
+				labels: {
+					// This more specific font property overrides the global property
+					font: {
+						size: 7,
+					},
+				},
 			},
 			title: {
-				display: false,
-				text: 'Ages',
+				display: true,
+				text: 'Player Age Dist',
+        font: {
+          size: 9
+        },
 			},
 		},
 	}
