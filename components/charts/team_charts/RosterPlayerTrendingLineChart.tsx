@@ -15,7 +15,6 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 	if (!props.player || !props.league) return <Spinner />
 	let data = formatScoresForLineChart(props.player, props.league) as any
 	const theme = {
-		background: project_colors.surface[1],
 		textColor: 'white',
 	}
 
@@ -35,11 +34,12 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 			curve='cardinal'
 			enableCrosshair={false}
 			axisLeft={null}
+			theme={theme}
 			enableGridY={false}
 			enableGridX={false}
 			colors={{scheme: 'dark2'}}
 			pointSize={3}
-			pointColor={{theme: 'background'}}
+			pointColor={"white"}
 			pointBorderWidth={1}
 			pointBorderColor={{from: 'serieColor'}}
 			useMesh={true}

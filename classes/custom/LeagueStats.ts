@@ -13,6 +13,7 @@ export default class LeagueStats {
 	public worst_team?: MatchupSide = undefined
 	public highest_scoring_matchup?: Matchup = undefined
 	public biggest_upset?: Matchup = undefined
+	public ageRange: [number, number] = [0, 0]
 
 	//Maps a week to a map of member power rankings that are cumulative that week
 	public powerWinsMap: Map<number, Map<number, number>> = new Map()
