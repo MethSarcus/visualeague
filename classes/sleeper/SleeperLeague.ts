@@ -8,8 +8,6 @@ export default class SleeperLeague {
   public sleeperDetails: LeagueSettings;
   public matchups: SleeperMatchup[][];
   public rosters: SleeperRoster[];
-  public player_stats: [];
-  public player_projections: [];
   public player_details: object[];
 
   constructor(
@@ -25,8 +23,6 @@ export default class SleeperLeague {
     this.sleeperDetails = leagueSettings;
     this.matchups = matchups;
     this.rosters = rosters;
-    this.player_stats = stats
-    this.player_projections = projections
     this.player_details = playerDetails
   }
 }
