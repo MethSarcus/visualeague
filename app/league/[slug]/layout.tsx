@@ -10,6 +10,7 @@ import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import {Context} from '../../../contexts/Context'
+import { StatsContext } from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
 export default function LeagueLayout({
 	children, // will be a page or nested layout
@@ -18,6 +19,7 @@ export default function LeagueLayout({
 }) {
 	enableAllPlugins()
 	const [context, setContext] = useContext(Context)
+	const [leagueContext, setLeagueContext] = useContext(StatsContext)
 	const [leagueDataExists, setLeagueDataExists] = useState(false)
 	let leagueId = usePathname()?.replace('/league/', '')
 	if (leagueId?.includes('/trades')) {
@@ -76,21 +78,27 @@ export default function LeagueLayout({
 		if (
 			leagueData &&
 			leagueData.league &&
-			tradeData.trades &&
+			tradeData &&
+			tradeData?.trades &&
 			draftData &&
 			draftSettings
+			&& leagueContext?.stats
 		) {
+			console.log(leagueContext)
 			let league = new League(
 				leagueData.league,
+				leagueContext.stats,
+				leagueContext.projections,
 				new Draft(draftData, draftSettings),
 				undefined,
-				tradeData.trades
+				tradeData?.trades
 			)
 			console.log(league)
+			console.log(leagueContext)
 			setContext(league)
 			return 
 		}
-	}, [context.settings?.league_id, draftData, draftSettings, leagueData, leagueId, setContext, tradeData?.trades])
+	}, [context.settings?.league_id, draftData, draftSettings, leagueData, leagueId, setContext, tradeData, tradeData?.trades, leagueContext, leagueContext?.stats])
 
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>

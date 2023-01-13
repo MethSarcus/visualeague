@@ -9,6 +9,7 @@ import {
 	Text,
 	useDisclosure,
 } from '@chakra-ui/react'
+import League from '../../../classes/custom/League'
 import {SleeperPlayerDetails} from '../../../classes/custom/Player'
 import SeasonPlayer from '../../../classes/custom/SeasonPlayer'
 import {project_colors} from '../../../utility/project_colors'
@@ -20,6 +21,7 @@ interface MyProps {
 	playerSeasonDetails: SeasonPlayer | undefined
 	leaguePositionAverage: number
 	isBenched?: boolean
+	league: League | undefined
 }
 
 export default function RosterPlayer(props: MyProps) {
@@ -129,12 +131,13 @@ export default function RosterPlayer(props: MyProps) {
 						</Center>
 						<Spacer/>
 					</Flex>
-					<Box w={'155px'} h={'60px'}>
+					<Flex minW={'155px'} h={'80px'}>
 						{isOpen && <RosterPlayerTrendingLineChart
+						league={props.league}
 							player={props.playerSeasonDetails}
 							positionAverage={props.leaguePositionAverage}
 						/>}
-					</Box>
+					</Flex>
 				</Box>
 			</Collapse>
 		</Box>

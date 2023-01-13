@@ -1,6 +1,6 @@
 'use client'
 import {
-    Avatar,
+	Avatar,
 	Box,
 	Card,
 	Center,
@@ -17,7 +17,7 @@ import {
 import {useRouter} from 'next/router'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import { SleeperPlayerDetails } from '../../classes/custom/Player'
+import {SleeperPlayerDetails} from '../../classes/custom/Player'
 import AgeBarChart from '../charts/bar/AgeBarChart'
 import TrendingLineChart from '../charts/team_charts/TrendingLineChart'
 
@@ -30,8 +30,8 @@ type MyProps = {
 
 const TeamCardWithTrendingGraph = (props: MyProps) => {
 	const {variant, size, ...rest} = props
-	const { isOpen, onToggle } = useDisclosure()
-	
+	const {isOpen, onToggle} = useDisclosure()
+
 	return (
 		<Card
 			boxShadow={'lg'}
@@ -46,10 +46,8 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 						<Avatar
 							objectFit='cover'
 							maxW={'40px'}
-                            borderRadius={0}
-							src={`https://sleepercdn.com/avatars/thumbs/${props.member?.avatar}`
-									
-							}
+							borderRadius={0}
+							src={`https://sleepercdn.com/avatars/thumbs/${props.member?.avatar}`}
 						/>
 						<VStack spacing={0} pl={2} alignItems={'left'} flex={1}>
 							<Text maxWidth={['120px']} noOfLines={1}>
@@ -76,16 +74,18 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 					</Center>
 				</GridItem>
 			</Grid>
-			<Collapse in={isOpen}>
-				Additional Stats
-				<Box>
-					Player Age
-
+			<Collapse in={isOpen} >
+				
+				<Box p={3}>
+				<Text fontSize={'xs'} mt={2} mb={1}>Additional Stats</Text>
 					<Box>
-						<AgeBarChart playerDetails={props.member?.roster.players.map(playerId => {
-							return props.league.playerDetails.get(playerId) as SleeperPlayerDetails
-						})}/>
-
+						<AgeBarChart
+							playerDetails={props.member?.roster.players.map((playerId) => {
+								return props.league.playerDetails.get(
+									playerId
+								) as SleeperPlayerDetails
+							})}
+						/>
 					</Box>
 				</Box>
 			</Collapse>

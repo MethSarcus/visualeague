@@ -28,7 +28,7 @@ import BarChart from '../../../components/charts/bar/PFBarChart'
 import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
-import LineChart from '../../../components/charts/line/LineChart'
+import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
 
 export default function LeaguePage() {
 	const [show, setShow] = useState(false)
@@ -86,7 +86,7 @@ export default function LeaguePage() {
 				</GridItem>
 				<GridItem area={'pfLineChart'}>
 					<Box height={'350px'} textColor='black'>
-						<LineChart league={context} />
+						<LeagueWeeklyPointsLineChart league={context} />
 					</Box>
 				</GridItem>
 				<GridItem area={'pfBarChart'} minHeight={"350px"}>

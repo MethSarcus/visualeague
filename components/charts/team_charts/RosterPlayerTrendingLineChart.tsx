@@ -8,13 +8,13 @@ import {project_colors} from '../../../utility/project_colors'
 interface MyProps {
 	player: SeasonPlayer | undefined
 	positionAverage: number
+	league: League | undefined
 }
 
 const RosterPlayerTrendingLineChart = (props: MyProps) => {
-	if (!props.player) return <Spinner />
-	let data = formatScoresForLineChart(props.player) as any
+	if (!props.player || !props.league) return <Spinner />
+	let data = formatScoresForLineChart(props.player, props.league) as any
 	const theme = {
-		background: project_colors.surface[1],
 		textColor: 'white',
 	}
 
@@ -34,11 +34,12 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 			curve='cardinal'
 			enableCrosshair={false}
 			axisLeft={null}
+			theme={theme}
 			enableGridY={false}
 			enableGridX={false}
 			colors={{scheme: 'dark2'}}
 			pointSize={3}
-			pointColor={{theme: 'background'}}
+			pointColor={"white"}
 			pointBorderWidth={1}
 			pointBorderColor={{from: 'serieColor'}}
 			useMesh={true}
@@ -71,25 +72,30 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 	)
 }
 
-function formatScoresForLineChart(player: SeasonPlayer) {
-	let weekScores: {x: string; y: string | undefined; started: boolean}[] = []
-	let allWeeks = player.weeks_played
-		.concat(player.weeks_benched)
-		.flat()
-		.sort((a, b) => a - b)
-	allWeeks.forEach((weekNum) => {
-		let weekScore = player.playerScores.get(weekNum)
-		if (player.weeks_played.includes(weekNum)) {
+function formatScoresForLineChart(player: SeasonPlayer, league: League) {
+	let weekScores: {x: string; y: string | undefined | null; started: boolean; wasActive: boolean}[] = []
+	let allWeekStats = league.getAllWeekScoresForPlayer(player.id)
+	allWeekStats.scores.forEach((score, weekNum) => {
+		if (player.weeks_played.includes(weekNum) && allWeekStats.projectedScores.get(weekNum) > 0) {
 			weekScores.push({
 				x: 'Week ' + weekNum,
-				y: weekScore?.toFixed(2),
+				y: score?.toFixed(2),
 				started: true,
+				wasActive: true
+			})
+		} else if (allWeekStats.projectedScores.get(weekNum) > 0) {
+			weekScores.push({
+				x: 'Week ' + weekNum,
+				y: score?.toFixed(2),
+				started: false,
+				wasActive: true
 			})
 		} else {
 			weekScores.push({
 				x: 'Week ' + weekNum,
-				y: weekScore?.toFixed(2),
+				y: null,
 				started: false,
+				wasActive: false
 			})
 		}
 	})

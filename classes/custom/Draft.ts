@@ -51,7 +51,7 @@ export interface DraftPlayer extends DraftPick {
 	reset(): void
 }
 
-class SnakeDraftPlayer implements DraftPlayer {
+export class SnakeDraftPlayer implements DraftPlayer {
 	gamesPlayed: number = 0
 	pointsScored: number = 0
 	draftValue: number = 0
@@ -103,7 +103,7 @@ class SnakeDraftPlayer implements DraftPlayer {
 	}
 }
 
-class AuctionDraftPlayer implements DraftPlayer {
+export class AuctionDraftPlayer implements DraftPlayer {
 	gamesPlayed: number = 0
 	pointsScored: number = 0
 	draftValue: number = 0

@@ -1,20 +1,20 @@
 import { createContext, useContext } from "react";
 import League from "../classes/custom/League";
 
-export const LeagueContext = createContext();
+export const StatsContext = createContext();
 
 // Export Provider.
 export function LeagueProvider(props) {
 	const {value, children} = props
 	
 	return (
-	   <LeagueContext.Provider value={value}>
+	   <StatsContext.Provider value={value}>
 		{children}
-	   </LeagueContext.Provider>
+	   </StatsContext.Provider>
 	)
 }
 
 // Export useContext Hook.
 export function useLeagueContext() {
-	return useContext(LeagueContext);
+	return useContext(StatsContext);
 }

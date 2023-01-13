@@ -43,14 +43,16 @@ export default class League {
 	public useModifiedSettings: boolean = false
 	public taxiIncludedInMaxPf: boolean = false
 	public playerDetails: Map<string, SleeperPlayerDetails> = new Map()
-	public playerStatMap: Map<number, any> = new Map()
-	public playerProjectionMap: Map<number, any> = new Map()
+	public playerStatMap: Map<number, Map<string, ScoringSettings>> = new Map()
+	public playerProjectionMap: Map<number, Map<string, ScoringSettings>> = new Map()
 	public memberIdToRosterId: Map<string, number> = new Map()
 	public stats: LeagueStats = new LeagueStats()
 	public draft: Draft
 
 	constructor(
 		sleeperLeague: SleeperLeague,
+		playerStats: object[],
+		playerProjections: object[],
 		draft: Draft,
 		modifiedSettings?: LeagueSettings,
 		trades?: SleeperTransaction[]
@@ -77,8 +79,8 @@ export default class League {
 		this.allMatchups = sleeperLeague.matchups
 
 		this.settings = sleeperLeague.sleeperDetails
-		this.createPlayerStatsMap(sleeperLeague.player_stats)
-		this.initPlayerProjectionsMap(sleeperLeague.player_projections)
+		this.createPlayerStatsMap(playerStats)
+		this.initPlayerProjectionsMap(playerProjections)
 		this.initMemberTradeMap()
 		this.calcStats(false)
 		if (trades) {
@@ -321,13 +323,13 @@ export default class League {
 
 	//Creates a map mapping week number to a map of player id to the players stats
 	//The incoming array contains an array of stats objects
-	createPlayerStatsMap(stats: object[][]) {
+	createPlayerStatsMap(stats: object[]) {
 		try {
 			stats?.forEach((statList: any, index: number) => {
 				let weekNum = index + 1
 				this.playerStatMap.set(weekNum, new Map())
-				statList?.forEach((stat: any) => {
-					this.playerStatMap.get(weekNum).set(stat._id, stat.stats)
+				Object.keys(statList).forEach((key: any) => {
+					this.playerStatMap.get(weekNum)?.set(key, statList[key])
 				})
 			})
 		} catch (error) {
@@ -336,12 +338,12 @@ export default class League {
 	}
 
 	//Creates a map mapping week number to a map of player id to the players projections
-	initPlayerProjectionsMap(projections: object[][]) {
+	initPlayerProjectionsMap(projections: object[]) {
 		projections.forEach((projectionList: any, index: number) => {
 			let weekNum = index + 1
 			this.playerProjectionMap.set(weekNum, new Map())
-			projectionList.forEach((stat: any) => {
-				this.playerProjectionMap.get(weekNum).set(stat._id, stat.stats)
+			Object.keys(projectionList).forEach((key: any) => {
+				this.playerProjectionMap.get(weekNum)?.set(key, projectionList[key])
 			})
 		})
 	}
@@ -707,11 +709,11 @@ export default class League {
 	}
 
 	getPlayerStat(playerId: number, weekNum: number) {
-		return this.playerStatMap.get(weekNum).get(playerId.toString())
+		return this.playerStatMap.get(weekNum)?.get(playerId.toString())
 	}
 
 	getPlayerProjection(playerId: number, weekNum: number) {
-		return this.playerProjectionMap.get(weekNum).get(playerId.toString())
+		return this.playerProjectionMap.get(weekNum)?.get(playerId.toString())
 	}
 
 	//Creates a map for each member that maps their roster id to number of trades done
@@ -1250,6 +1252,37 @@ export default class League {
 				}
 			})
 		})
+	}
+
+	getAllWeekScoresForPlayer(playerId: string) {
+		let weekScores = new Map()
+		let projectedWeekScores = new Map()
+		let settings = this.getSettings()?.scoring_settings
+		this.playerStatMap.forEach((weekStats, weekNum) => {
+			let playerStats = weekStats.get(playerId)
+			let playerProjections = this.playerProjectionMap.get(weekNum)?.get(playerId)
+			let weekPoints = 0
+			let weekProjectedPoints = 0
+			if (playerStats != undefined && settings && playerProjections) {
+				for (const [key, value] of Object.entries(playerStats)) {
+				  let points = value * (settings[key as keyof ScoringSettings] as number)
+				  if (!isNaN(points)) {
+					  weekPoints += points
+				  }
+				}
+
+				for (const [key, value] of Object.entries(playerProjections)) {
+					let points = value * (settings[key as keyof ScoringSettings] as number)
+					if (!isNaN(points)) {
+						weekProjectedPoints += points
+					}
+				  }
+			  }
+			  weekScores.set(weekNum, weekPoints)
+			  projectedWeekScores.set(weekNum, weekProjectedPoints)
+		})
+
+		return {scores: weekScores, projectedScores: projectedWeekScores, details: this.playerDetails.get(playerId)}
 	}
 
 	getEnabledWeeks() {

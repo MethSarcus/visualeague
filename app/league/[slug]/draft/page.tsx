@@ -15,16 +15,14 @@ export default function Page() {
 	return (
 		<Grid
 			templateAreas={[mobileGrid, desktopGrid]}
-			gridTemplateColumns={['1fr', '1fr 1fr 1fr']}
+			gridTemplateColumns={['1fr', '1fr 1fr']}
 			mx={5}
 		>
 			<GridItem area={'draft_table'}>
 				<DraftValueTable draft={context.draft} />
 			</GridItem>
-			<GridItem area={'draft_chart'}>
-				<Box width={'500px'} height={'500px'}>
+			<GridItem area={'draft_chart'} minHeight={"300px"}>
 					<DraftValueBarChart league={context} />
-				</Box>
 			</GridItem>
 		</Grid>
 	)

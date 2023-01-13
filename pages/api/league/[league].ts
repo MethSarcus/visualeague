@@ -254,9 +254,6 @@ async function getCompleteLeague(leagueId: string) {
   const leagueSettings = await getLeague(leagueId);
   const leagueUsers = await getLeagueMembers(leagueId);
   const leagueRosters = await getLeagueRosters(leagueId);
-
-  let playerStats = [];
-  let playerProjections = [];
   let playerDetails = [];
   let allPlayers: string[][] = [];
   let db = connectToDatabase();
@@ -277,11 +274,6 @@ async function getCompleteLeague(leagueId: string) {
       });
       
     });
-
-    playerStats.push(await getMultiMatchupStats(matchups[i], db, i + 1));
-    playerProjections.push(
-      await getMultiMatchupProjections(matchups[i], db, i + 1)
-    );
   }
 
   playerDetails.push(
@@ -293,8 +285,8 @@ async function getCompleteLeague(leagueId: string) {
     leagueSettings as LeagueSettings,
     matchups as SleeperMatchup[][],
     leagueRosters as SleeperRoster[],
-    playerStats,
-    playerProjections,
+    [],
+    [],
     playerDetails[0]
   );
 }
