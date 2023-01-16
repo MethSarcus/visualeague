@@ -35,6 +35,7 @@ import LeagueMember from '../../classes/custom/LeagueMember'
 import {Context} from '../../contexts/Context'
 import LeagueMemberButton from '../cards/LeagueMemberButton'
 import MemberList from '../groups/MemberList'
+import { RiGroupLine } from "react-icons/ri";
 
 interface MyProps {
 	onclose: () => void
@@ -49,7 +50,7 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
 			aria-label={'Teams'}
 			onClick={onToggle}
 		>
-			<Button variant={'unstyled'} rightIcon={<MdOutlineExpandMore />}>
+			<Button variant={'unstyled'} rightIcon={<MdOutlineExpandMore />} color={"white"} leftIcon={<RiGroupLine/>}>
 				Teams
 			</Button>
 			<Collapse in={isOpen} animateOpacity>
