@@ -1,7 +1,8 @@
 'use client'
-import {Grid, GridItem, Heading} from '@chakra-ui/react'
+import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
 import {enableAllPlugins} from 'immer'
+import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {useContext, useEffect, useMemo, useState} from 'react'
 import useSWR from 'swr'
@@ -10,7 +11,7 @@ import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import {Context} from '../../../contexts/Context'
-import { StatsContext } from '../../../contexts/LeagueContext'
+import {StatsContext} from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
 export default function LeagueLayout({
 	children, // will be a page or nested layout
@@ -44,28 +45,44 @@ export default function LeagueLayout({
 
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
+	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
+		leagueId != undefined
+			? `https://api.sleeper.app/v1/league/${leagueId}`
+			: null,
+		fetcher
+	)
+
 	const {data: leagueData, error: leagueError} = useSWR(
-		leagueId != undefined && !leagueDataExists
+		leagueId != undefined &&
+			!leagueDataExists &&
+			sleeperLeagueError == undefined &&
+			sleeperLeagueData
 			? `/api/league/${leagueId}`
 			: null,
 		fetcher
 	)
 	const {data: tradeData, error: tradeError} = useSWR(
-		leagueId != undefined && !leagueDataExists
+		leagueId != undefined &&
+			!leagueDataExists &&
+			sleeperLeagueData
 			? `/api/trades/${leagueId}`
 			: null,
 		fetcher
 	)
 
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		leagueData?.league != undefined && !leagueDataExists
+		leagueData?.league != undefined &&
+			!leagueDataExists &&
+			leagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}`
 			: null,
 		fetcher
 	)
 
 	const {data: draftData, error: draftError} = useSWR(
-		leagueData?.league != undefined && !leagueDataExists
+		leagueData?.league != undefined &&
+			!leagueDataExists &&
+			leagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}/picks`
 			: null,
 		fetcher
@@ -81,10 +98,10 @@ export default function LeagueLayout({
 			tradeData &&
 			tradeData?.trades &&
 			draftData &&
-			draftSettings
-			&& leagueContext?.stats
+			draftSettings &&
+			leagueContext?.stats &&
+			sleeperLeagueError == undefined
 		) {
-			console.log(leagueContext)
 			let league = new League(
 				leagueData.league,
 				leagueContext.stats,
@@ -94,11 +111,53 @@ export default function LeagueLayout({
 				tradeData?.trades
 			)
 			console.log(league)
-			console.log(leagueContext)
 			setContext(league)
-			return 
+			return
 		}
-	}, [context.settings?.league_id, draftData, draftSettings, leagueData, leagueId, setContext, tradeData, tradeData?.trades, leagueContext, leagueContext?.stats])
+	}, [
+		context.settings?.league_id,
+		draftData,
+		draftSettings,
+		leagueData,
+		leagueId,
+		setContext,
+		tradeData,
+		tradeData?.trades,
+		leagueContext,
+		leagueContext.stats,
+		sleeperLeagueError,
+	])
+
+	if (sleeperLeagueError) {
+		return (
+			<section>
+				<main className={styles.main}>
+					<div className='App'>
+						<Center pt={10}>
+							<Box>
+								<Heading color={'white'} my={2}>
+									Error Finding League
+								</Heading>
+
+								<Link href={'/'}>
+									<Button>Return to homepage</Button>
+								</Link>
+								<Link
+									href={
+										'https://github.com/MethSarcus/visualeague/issues/new?assignees=MethSarcus&labels=&template=bug_report.md&title='
+									}
+								>
+									<Button mx={5} variant={'outline'} colorScheme={'red'}>
+										Report bug
+									</Button>
+								</Link>
+							</Box>
+						</Center>
+					</div>
+				</main>
+			</section>
+		)
+	}
 
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>
