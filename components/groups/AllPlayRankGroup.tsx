@@ -1,18 +1,25 @@
 import {
-	Text,
+	Avatar,
 	Box,
-	SimpleGrid,
-	Card,
+	Button,
 	Center,
 	Grid,
-	Avatar,
-	Spinner,
 	GridItem,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
+	Spinner,
+	Tooltip,
+	useDisclosure,
 } from '@chakra-ui/react'
 import League from '../../classes/custom/League'
-import LeagueMember from '../../classes/custom/LeagueMember'
+import {MatchupSide} from '../../classes/custom/MatchupSide'
+import {Week} from '../../classes/custom/Week'
 import {project_colors} from '../../utility/project_colors'
-import LeagueMemberButton from '../cards/LeagueMemberButton'
 
 interface MyProps {
 	league: League | undefined
@@ -37,12 +44,14 @@ const AllPlayRankGroup = (props: MyProps) => {
 						member.stats.allPlayWinMap.get(oppRosterId) ?? 0,
 						member.stats.allPlayLossMap.get(oppRosterId) ?? 0,
 						member.stats.allPlayTieMap.get(oppRosterId) ?? 0,
+						oppRosterId,
+						member.roster.roster_id,
 						false
 					)
 				)
 			} else {
 				//If detects own member push a statbox thats disabled
-				bodyRows.push(new StatBoxProps(0, 0, 0, true))
+				bodyRows.push(new StatBoxProps(0, 0, 0, -1, -1, true))
 			}
 		})
 	})
@@ -51,15 +60,14 @@ const AllPlayRankGroup = (props: MyProps) => {
 			gap='5px'
 			templateColumns={`repeat(${props.league.members.size + 1}, 1fr)`}
 			templateRows={`repeat(${props.league.members.size + 1}, 1fr)`}
-            textAlign={'center'}
+			textAlign={'center'}
 		>
 			<GridItem
 				my={'auto'}
 				width={'50px'}
-                height={"50px"}
+				height={'50px'}
 				color='textTheme.highEmphasis'
 				fontSize={'.9em'}
-				
 				noOfLines={1}
 			>
 				User
@@ -79,14 +87,21 @@ const AllPlayRankGroup = (props: MyProps) => {
 								wins={cell.wins}
 								losses={cell.losses}
 								ties={cell.ties}
+								homeId={cell.homeId}
 								disabled={cell.disabled}
+								opponentId={cell.opponentId}
+								league={props.league}
 							/>
 						</GridItem>
 					)
 				} else {
 					return (
 						<GridItem key={index}>
-							<MemberNameHeader name={cell.name} imageSrc={cell.imageSrc} isRotated={true} />
+							<MemberNameHeader
+								name={cell.name}
+								imageSrc={cell.imageSrc}
+								isRotated={true}
+							/>
 						</GridItem>
 					)
 				}
@@ -98,18 +113,17 @@ const AllPlayRankGroup = (props: MyProps) => {
 interface MemberNameProps {
 	name: string
 	imageSrc: string
-    isRotated?: boolean
+	isRotated?: boolean
 }
 
 function MemberNameHeader(props: MemberNameProps) {
 	return (
 		<Center
 			width={'50px'}
-            height={'50px'}
+			height={'50px'}
 			color='textTheme.highEmphasis'
 			fontSize={'.7em'}
-            px={1}
-            
+			px={1}
 			textAlign={'center'}
 			noOfLines={2}
 		>
@@ -123,21 +137,40 @@ class StatBoxProps {
 	wins: number
 	losses: number
 	ties: number
+	homeId: number
 	disabled?: boolean
+	opponentId: number
+	league?: League
 
 	constructor(
 		wins: number,
 		losses: number,
 		ties: number,
+		opponentId: number,
+		homeId: number,
 		disabled?: boolean | undefined
 	) {
 		this.wins = wins
 		this.losses = losses
 		this.ties = ties
 		this.disabled = disabled
+		this.homeId = homeId
+		this.opponentId = opponentId
 	}
 }
+
+interface ModalObject {
+	home: MatchupSide
+	away: MatchupSide
+	weekNumber: number
+}
+
 function AllPlayStatBox(props: StatBoxProps) {
+	const {isOpen, onOpen, onClose} = useDisclosure()
+	if (props.homeId == -1) return <Box />
+	if (!props.league?.members) return <Spinner />
+
+	const weekPreviews: ModalObject[] = []
 	let cardOutlineColor =
 		props.wins > props.losses
 			? project_colors.statColor.good
@@ -145,26 +178,84 @@ function AllPlayStatBox(props: StatBoxProps) {
 	if (props.wins == props.losses) {
 		cardOutlineColor = project_colors.statColor.neutral
 	}
+
+	let homeMember = props.league?.members?.get(props.homeId)
+	let awayMember = props.league?.members?.get(props.opponentId)
+
+	props.league?.weeks?.forEach((week: Week) => {
+		let homeSide = week.getMemberMatchupSide(props.homeId)
+		let awaySide = week.getMemberMatchupSide(props.opponentId)
+		weekPreviews.push({
+			home: homeSide,
+			away: awaySide,
+			weekNumber: week.weekNumber,
+		})
+	})
 	return (
-		<Box
-			borderRadius={'4px'}
-			width={'auto'}
-			height={'50px'}
-            p=".5em"
-			bg={props.disabled ? 'surface' : 'surface.0'}
-			color='textTheme.mediumEmphasis'
-			fontSize={'.9em'}
-			dropShadow={'dark-lg'}
-			borderColor={
-				props.disabled ? project_colors.statColor.neutral : cardOutlineColor
-			}
-			borderWidth={'thin'}
-		>
-			<Center h={'100%'} visibility={props.disabled ? 'collapse' : 'visible'}>
-				{props.wins}-{props.losses}
-				{props.ties > 0 ? `-${props.ties}` : ''}
-			</Center>
-		</Box>
+		<>
+			<Tooltip
+				placement='right'
+				isDisabled={props.disabled}
+				label={
+					(props.wins / (props.wins + props.losses + props.ties))
+						.toFixed(3)
+						.slice(1) +
+					'% Win Rate vs ' +
+					awayMember?.name
+				}
+			>
+				<Box
+					borderRadius={'4px'}
+					width={'auto'}
+					onClick={onOpen}
+					height={'50px'}
+					p='.5em'
+					bg={props.disabled ? 'surface' : 'surface.0'}
+					color='textTheme.mediumEmphasis'
+					fontSize={'.9em'}
+					transition={'all .2s ease-in-out'}
+					dropShadow={'dark-lg'}
+					_hover={
+						!props.disabled
+							? {
+									transform: 'scale(1.1)',
+									backgroundColor: 'surface.1',
+									cursor: 'pointer',
+							  }
+							: {}
+					}
+					borderColor={
+						props.disabled ? project_colors.statColor.neutral : cardOutlineColor
+					}
+					borderWidth={'thin'}
+				>
+					<Center
+						h={'100%'}
+						visibility={props.disabled ? 'collapse' : 'visible'}
+					>
+						{props.wins}-{props.losses}
+						{props.ties > 0 ? `-${props.ties}` : ''}
+					</Center>
+				</Box>
+			</Tooltip>
+
+			<Modal isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg={'surface.1'} color={'white'}>
+					<ModalHeader mt={3}>
+						{homeMember?.name} vs {awayMember?.name}
+					</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody></ModalBody>
+
+					<ModalFooter>
+						<Button colorScheme='blue' mr={3} onClick={onClose}>
+							Close
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+		</>
 	)
 }
 

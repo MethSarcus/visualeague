@@ -7,7 +7,7 @@ export default function ExpandableLeagueSearch() {
 	return (
 		<>
 			<IconButton
-				size={'xs'}
+				size={['sm', 'xs']}
 				variant={'ghost'}
         _hover={{background: 'secondary.600'}}
 				icon={<HiOutlineSearch />}

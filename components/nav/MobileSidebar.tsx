@@ -5,6 +5,7 @@ import {
 	Button,
 	Center,
 	Divider,
+	Text,
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
@@ -13,12 +14,18 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Heading,
+	HStack,
+	Icon,
 	IconButton,
 	useDisclosure,
 	VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import React, {useContext} from 'react'
+import {RxLoop} from 'react-icons/rx'
+import {GiStrong} from 'react-icons/gi'
+import {BsGrid3X2, BsBarChart} from 'react-icons/bs'
+import {VscListTree} from 'react-icons/vsc'
 import {Context} from '../../contexts/Context'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
@@ -65,7 +72,12 @@ export default function MobileSidebar() {
 						>
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
+									<Button
+										variant={'unstyled'}
+										leftIcon={<BsBarChart/>}
+										_hover={{textColor: 'grey'}}
+										onClick={onClose}
+									>
 										League Summary
 									</Button>
 								</Link>
@@ -76,35 +88,60 @@ export default function MobileSidebar() {
 
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/ranks`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
+									<Button
+										leftIcon={<GiStrong />}
+										variant={'unstyled'}
+										_hover={{textColor: 'grey'}}
+										onClick={onClose}
+									>
 										Power Ranks
 									</Button>
 								</Link>
 							)}
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/trades`} >
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
+								<Link href={`league/${context.settings.league_id}/trades`}>
+									<Button
+										leftIcon={<RxLoop />}
+										variant={'unstyled'}
+										_hover={{textColor: 'grey'}}
+										onClick={onClose}
+									>
 										Trades
 									</Button>
 								</Link>
 							)}
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/draft`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
-										Draft
+									<Button
+										variant={'unstyled'}
+										_hover={{textColor: 'grey'}}
+										onClick={onClose}
+									>
+										<HStack>
+											<BsGrid3X2 />
+											<Text>Draft</Text>
+										</HStack>
 									</Button>
 								</Link>
 							)}
 
 							{context?.settings && (
 								<Link href={`league/${context.settings.league_id}/rosters`}>
-									<Button variant={'unstyled'} _hover={{textColor: 'grey'}} onClick={onClose}>
-										Rosters
+									<Button
+										variant={'unstyled'}
+										_hover={{textColor: 'grey'}}
+										onClick={onClose}
+									>
+										<HStack>
+										<VscListTree/>
+										<Text>Rosters</Text>
+										</HStack>
+										
 									</Button>
 								</Link>
 							)}
 						</VStack>
-						<Box mt={'auto'}>
+						<Box mt={'5'} ml={-1}>
 							<ExpandableLeagueSearch />
 						</Box>
 					</DrawerBody>
