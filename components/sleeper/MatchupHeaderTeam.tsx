@@ -50,13 +50,10 @@ export default function MatchupHeaderTeam(props: MyProps) {
 		lineupDiffTextColor = project_colors.outcomeColor.loss
 	}
 
-	let scoreDiffText = (
-		(props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)
-	).toFixed(2)
+	let scoreDiffText = ((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)).toFixed(2)
+	
 	if ((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0) > 0) {
-		scoreDiffText =
-			'+' +
-			((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)).toFixed(2)
+		scoreDiffText = '+' + ((props.alteredScore ?? 0) - (props.matchupSide?.pf ?? 0)).toFixed(2)
 	}
 
 	return (
@@ -66,7 +63,11 @@ export default function MatchupHeaderTeam(props: MyProps) {
 			borderRadius={'15px'}
 			border={'solid'}
 			borderWidth={'thin'}
-			borderColor={'rgb(56,62,80)'}
+			borderColor={
+				props.isWinner
+					? project_colors.statColor.good
+					: project_colors.statColor.bad
+			}
 			fontSize={'.7em'}
 			minW={'180px'}
 			position={'relative'}
@@ -91,11 +92,11 @@ export default function MatchupHeaderTeam(props: MyProps) {
 				ml={props.isHomeTeam ? 0 : 2}
 			>
 				<Text
-					ml={props.isHomeTeam ? "5em" : 0}
-					mr={props.isHomeTeam ? 0 : "5em"}
+					ml={props.isHomeTeam ? '4em' : 0}
+					mr={props.isHomeTeam ? 0 : '4em'}
 					textAlign={props.isHomeTeam ? 'start' : 'end'}
-					mt={-2}
-					fontSize={'.8em'}
+					mt={-1.5}
+					fontSize={'1em'}
 					fontWeight={'semibold'}
 					letterSpacing={'tighter'}
 				>
@@ -104,7 +105,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 				</Text>
 				<Text
 					fontWeight={'semibold'}
-					mt={6}
+					mt={4}
 					fontSize={'.8em'}
 					color={'#A7BAD0'}
 					lineHeight='10px'
@@ -112,19 +113,24 @@ export default function MatchupHeaderTeam(props: MyProps) {
 				>
 					@{props.member?.userDetails.display_name}
 				</Text>
-				<Text fontWeight={'semibold'} color={'white'} textAlign={props.isHomeTeam ? 'start' : 'end'}>
+				<Text
+					fontWeight={'semibold'}
+					color={'white'}
+					textAlign={props.isHomeTeam ? 'start' : 'end'}
+				>
 					{props.member?.teamName}
 				</Text>
 			</Box>
 			<Spacer />
 			<Text
 				position={'absolute'}
-				mt={-1}
+				mt={-1.5}
 				right={props.isHomeTeam ? 2.5 : '-moz-initial'}
 				left={!props.isHomeTeam ? 3.5 : '-moz-initial'}
 				mr={1}
 				textAlign={props.isHomeTeam ? 'start' : 'end'}
-				fontSize={'.6em'}
+				fontSize={'1em'}
+				fontWeight={'regular'}
 				display={
 					props.alteredScore == props.matchupSide?.pf ? 'none' : 'initial'
 				}
@@ -134,7 +140,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 			</Text>
 			<Flex
 				fontSize={'1em'}
-				fontWeight={'semibold'}
+				fontWeight={'bold'}
 				position={'absolute'}
 				noOfLines={2}
 				textOverflow={'ellipsis'}
@@ -151,7 +157,12 @@ export default function MatchupHeaderTeam(props: MyProps) {
 						props.matchupSide?.pf.toFixed(2) ??
 						'0.00'}
 				</Text>
-				<Text color={'#A7BAD0'} fontWeight={'semibold'} fontSize={'.7em'}>
+				<Text
+					mt={-1}
+					color={'#A7BAD0'}
+					fontWeight={'semibold'}
+					fontSize={'.9em'}
+				>
 					{props.alteredProjectedScore?.toFixed(2) ??
 						props.matchupSide?.projectedScore.toFixed(2) ??
 						'0.00'}
