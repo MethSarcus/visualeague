@@ -26,6 +26,8 @@ interface MyProps {
 	homeAlteredProjectedScore?: number
 	awayAlteredScore?: number
 	awayAlteredProjectedScore?: number
+
+	
 }
 
 export default function MatchupHeader(props: MyProps) {
@@ -52,7 +54,7 @@ export default function MatchupHeader(props: MyProps) {
 					<MatchupHeaderTeam
 						matchupSide={props.matchup?.homeTeam}
 						isWinner={
-							props.matchup?.homeTeam.roster_id == props.matchup?.winnerRosterId
+							((props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) > (props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0))
 						}
 						isTie={props.matchup?.isTie ?? false}
 						member={homeMember}
@@ -83,8 +85,7 @@ export default function MatchupHeader(props: MyProps) {
 						variant={'default'}
 						matchupSide={props.matchup?.awayTeam}
 						isWinner={
-							props.matchup?.awayTeam?.roster_id ==
-							props.matchup?.winnerRosterId
+							((props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) < (props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0))
 						}
 						member={awayMember}
 						size={'sm'}
