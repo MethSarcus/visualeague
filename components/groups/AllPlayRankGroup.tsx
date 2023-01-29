@@ -24,6 +24,7 @@ import AllPlayStatBox, { StatBoxProps } from './AllPlayStatBox'
 
 interface MyProps {
 	league: League | undefined
+	onHover: (rosterIds: number[]) => void
 }
 
 const AllPlayRankGroup = (props: MyProps) => {
@@ -47,12 +48,13 @@ const AllPlayRankGroup = (props: MyProps) => {
 						member.stats.allPlayTieMap.get(oppRosterId) ?? 0,
 						oppRosterId,
 						member.roster.roster_id,
+						props.onHover,
 						false
 					)
 				)
 			} else {
 				//If detects own member push a statbox thats disabled
-				bodyRows.push(new StatBoxProps(0, 0, 0, -1, -1, true))
+				bodyRows.push(new StatBoxProps(0, 0, 0, -1, -1, undefined, true))
 			}
 		})
 	})
@@ -85,6 +87,7 @@ const AllPlayRankGroup = (props: MyProps) => {
 					return (
 						<GridItem key={index}>
 							<AllPlayStatBox
+								onHover={props.onHover}
 								wins={cell.wins}
 								losses={cell.losses}
 								ties={cell.ties}
