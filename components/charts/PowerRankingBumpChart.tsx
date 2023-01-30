@@ -56,6 +56,13 @@ const PowerRankingBumpChart = (props: MyProps) => {
 	}
 	const theme = {
 		textColor: 'white',
+		grid: {
+			line: {
+			  stroke: "grey",
+			  strokeWidth: 1,
+			  opacity: .2
+			}
+		  }
 	}
 	let margins = isLargerThan800
 		? {top: 10, right: 120, bottom: 50, left: 120}
@@ -73,15 +80,13 @@ const PowerRankingBumpChart = (props: MyProps) => {
 			colors={{scheme: 'paired'}}
 			defs={[
 				linearGradientDef('gradientA', [
-					{offset: 0, color: 'inherit', opacity: 0},
+					{offset: 0, color: 'inherit', opacity: .1},
 				]),
 			]}
 			fill={chartSeriesFill}
 			startLabel={'id' as any}
 			interpolation={'smooth'}
-			enableGridX={!chartIsFiltered}
 			endLabel={'id' as any}
-			// interpolation='linear'
 			axisBottom={{
 				tickSize: 5,
 				tickPadding: 5,
@@ -110,6 +115,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 							padding: 12,
 							background: '#222222',
 							color: 'white',
+							marginBottom: "3em"
 						}}
 					>
 						<strong>
