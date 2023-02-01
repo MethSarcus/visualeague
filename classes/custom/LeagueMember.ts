@@ -1,21 +1,23 @@
 import {LINEUP_POSITION, POSITION} from '../../utility/rosterFunctions'
 import {SleeperRoster} from '../sleeper/SleeperRoster'
 import {SleeperUser} from '../sleeper/SleeperUser'
+import MemberBadge from './MemberBadge'
 import MemberScores from './MemberStats'
 import SeasonPlayer from './SeasonPlayer'
 
 export default class LeagueMember {
-	public userDetails: SleeperUser
-	public roster: SleeperRoster
-	public name: string
-	public userId: string
-	public avatar: string
-	public teamAvatar?: string | undefined
-	public teamName: string
-	public stats: MemberScores = new MemberScores()
-	public tradePartnerMap: Map<number, number> = new Map()
-	public players: Map<string, SeasonPlayer> = new Map()
-	public division_id: number
+	userDetails: SleeperUser
+	roster: SleeperRoster
+	name: string
+	userId: string
+	avatar: string
+	teamAvatar?: string | undefined
+	teamName: string
+	stats: MemberScores = new MemberScores()
+	tradePartnerMap: Map<number, number> = new Map()
+	players: Map<string, SeasonPlayer> = new Map()
+	division_id: number
+	badges: MemberBadge[] = []
 
 	constructor(userDetails: SleeperUser, roster: SleeperRoster) {
 		this.userDetails = userDetails
