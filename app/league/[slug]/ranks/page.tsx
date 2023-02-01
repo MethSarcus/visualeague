@@ -1,6 +1,6 @@
 'use client'
 import {Box, Grid, GridItem, Heading, Skeleton} from '@chakra-ui/react'
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
@@ -8,6 +8,12 @@ import {Context} from '../../../../contexts/Context'
 
 export default function RankPage() {
 	const [context, setContext] = useContext(Context)
+	const [filteredIds, setFilteredIds] = useState([] as number[])
+
+
+	const onHover: (rosterIds: number[]) => void = (rosterIds: number[]) => {
+		setFilteredIds(rosterIds)
+	}
 	const desktopTemplate = `  
 	"header header"
 	"allplay_table cumulative_ranks"
@@ -50,10 +56,10 @@ export default function RankPage() {
 					overflowX={'auto'}
 					overflowY={'hidden'}
 				>
-					<AllPlayRankGroup league={context} />
+					<AllPlayRankGroup league={context} onHover={onHover} />
 				</GridItem>
 				<GridItem area={'cumulative_ranks'}>
-					<PowerRankingBumpChart league={context} />
+					<PowerRankingBumpChart league={context} displayIds={filteredIds} />
 				</GridItem>
 				<GridItem area={'bump_chart'} height={'500px'}>
 					<WeeklyRankingBumpChart league={context} />
