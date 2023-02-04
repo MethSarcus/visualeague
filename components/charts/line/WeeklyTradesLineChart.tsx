@@ -55,10 +55,13 @@ function formatScoresForLineChart(trades: Trade[]) {
     color: "#61cdbb",
     data: [] as object[]
   }
-
+  let latestWeek = 1
   let tradeMap = new Map<number, number>()
 
   trades.forEach(trade => {
+    if (trade.leg > latestWeek) {
+      latestWeek = trade.leg
+    }
     if (tradeMap.has(trade.leg)) {
         let curNumTrades = tradeMap.get(trade.leg) as number
         tradeMap.set(trade.leg, curNumTrades + 1)
@@ -67,7 +70,14 @@ function formatScoresForLineChart(trades: Trade[]) {
     }
   })
 
-  Array.from([...tradeMap.keys()]).forEach((weekNum) => {
+  let weekKeys = Array.from({length: latestWeek}, (_, i) => i + 1)
+  weekKeys.forEach(weekNum => {
+    if (!tradeMap.has(weekNum)) {
+      tradeMap.set(weekNum, 0)
+    }
+  })
+
+  Array.from(weekKeys).forEach((weekNum) => {
     if (weekNum == 1) {
         tradeData.data.push({x: ` Week ${weekNum} <`, y: tradeMap.get(weekNum)})
     } else {

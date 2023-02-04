@@ -28,8 +28,8 @@ const DraftValueBarChart = (props: MyProps) => {
 	if (data.length <= 0) return <Spinner />
 	const getColor = (bar: BarDatum) => {
 		return getPositionColor(
-			props.league?.playerDetails.get(bar.id as any)
-				?.fantasy_positions[0] as any
+			props.league?.draft.picks.get(bar.id as any)
+				?.metadata.position as any
 		)
 	}
 	return (
@@ -45,13 +45,16 @@ const DraftValueBarChart = (props: MyProps) => {
                 }}
             >
                 <strong>
-                {props.league?.playerDetails.get(id as string)?.first_name + " " + props.league?.playerDetails.get(id as string)?.last_name ?? ""}: {value}
+                {props.league?.draft.picks.get(id as string)?.name}: {value}
             </strong>
             </div>
         )}
 			indexBy='member'
 			layout='horizontal'
-			margin={{top: 15, right: 0, bottom: 0, left: 100}}
+			innerPadding={2}
+			borderRadius={1}
+			enableGridY={false}
+			margin={{top: 15, right: 0, bottom: 0, left: 30}}
 			padding={0.3}
 			indexScale={{type: 'band', round: true}}
 			theme={theme}
@@ -61,7 +64,14 @@ const DraftValueBarChart = (props: MyProps) => {
 			}}
 			axisTop={{legend: "Draft Value Found", legendPosition: "start", legendOffset: isOnMobile ? 0 : 0, format: () => '', tickSize: 0}}
 			axisRight={null}
-      enableLabel={false}
+			axisLeft={
+				{tickSize: 0,
+				tickPadding: 2,
+				tickRotation: -30,
+				format: v => `${v.slice(0,4)}` ,
+				legendPosition: 'middle',
+				legendOffset: 0}}
+      		enableLabel={false}
 			colors={getColor as any}
 
 			legends={[
