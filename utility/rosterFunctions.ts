@@ -395,6 +395,22 @@ function getEligiblePlayersForSlot(
 	return eligiblePlayers
 }
 
+export function calcPlayerPoints(stats: ScoringSettings | undefined,  leagueSettings: ScoringSettings): number | undefined {
+	let score: number | undefined = 0
+	if (stats != undefined) {
+	  for (const [key, value] of Object.entries(stats)) {
+		let points = value * (leagueSettings[key as keyof ScoringSettings] as number)
+		if (!isNaN(points)) {
+			score += points
+		}
+	  }
+	} else {
+		score = undefined
+	}
+
+	return score
+  }
+
 export function getPositionColor(position: POSITION) {
 	switch (position) {
 		case POSITION.QB: {

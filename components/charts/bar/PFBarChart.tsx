@@ -23,8 +23,16 @@ const BarChart = (props: MyProps) => {
   if (props.league?.settings == undefined) return <Spinner />;
   let formattedData = formatScoresForBarChart(props.league);
   let keys = formattedData.chartKeys;
-  let data = formattedData.chartData as BarDatum[];
-
+  
+  let data = formattedData.chartData.sort((a: any, b: any) => {
+    if (a.pf > b.pf) {
+      return 1;
+    } else if (a.pf < b.pf) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }) as BarDatum[];
   if (data.length <= 0) return <Spinner />;
 
   return (
@@ -111,18 +119,8 @@ function formatScoresForBarChart(league: League, statType?: MemberStat) {
 
     data.push(memberData);
   });
-  data.sort((a: any, b: any) => {
-    if (a.pf > b.pf) {
-      return 1;
-    } else if (a.pf < b.pf) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
 
   let formattedData = { chartKeys: Array.from(keys), chartData: data };
-
   return formattedData;
 }
 
