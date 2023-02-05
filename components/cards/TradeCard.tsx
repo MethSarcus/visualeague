@@ -90,10 +90,10 @@ export default function TradeCard(props: MyProps) {
 		<Stack
 			bg={'surface.0'}
 			maxW={['container.sm', 'container.md']}
-			borderColor={'surface.0'}
 			direction={['column', 'row']}
 			shadow={'lg'}
 			spacing={6}
+			borderColor={'surface.0'}
 			borderWidth='thin'
 			borderStyle={'solid'}
 			borderRadius={4}

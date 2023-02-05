@@ -31,6 +31,8 @@ export default class MemberScores {
     public divisionLosses: number = 0
     public divisionTies: number = 0
     public draftValue: number = 0
+    //Percent of total draft value member drafted
+    public draftPercentage: number = 0
 
     addDraftValue(value: number) {
       if (!isNaN(+value))
