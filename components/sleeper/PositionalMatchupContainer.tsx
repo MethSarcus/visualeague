@@ -12,6 +12,7 @@ interface MyProps {
 	position: LINEUP_POSITION
 	homePlayer: MatchupPlayer | BlankPlayer
 	awayPlayer: MatchupPlayer | undefined | BlankPlayer
+	isByeWeek?: boolean
 }
 
 export default function PositionalMatchupContainer(props: MyProps) {
@@ -40,11 +41,11 @@ export default function PositionalMatchupContainer(props: MyProps) {
 				<SleeperLineupBadge slotPosition={props.position} />
 			</Box>
 
-			<PositionalMatchupPlayer
+			{!(props.isByeWeek ?? false) && <PositionalMatchupPlayer
 				player={props.awayPlayer ?? new BlankPlayer()}
 				playerDetails={awayPlayerDetails}
 				isInverted={true}
-			/>
+			/>}
 		</Center>
 	)
 }

@@ -26,8 +26,6 @@ interface MyProps {
 	homeAlteredProjectedScore?: number
 	awayAlteredScore?: number
 	awayAlteredProjectedScore?: number
-
-	
 }
 
 export default function MatchupHeader(props: MyProps) {
@@ -54,7 +52,8 @@ export default function MatchupHeader(props: MyProps) {
 					<MatchupHeaderTeam
 						matchupSide={props.matchup?.homeTeam}
 						isWinner={
-							((props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) > (props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0))
+							(props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) >
+							(props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0)
 						}
 						isTie={props.matchup?.isTie ?? false}
 						member={homeMember}
@@ -67,35 +66,42 @@ export default function MatchupHeader(props: MyProps) {
 					/>
 					<HorizontalPillSelector onclick={props.homeLineupOnclick} />
 				</Box>
-				<Circle
-					zIndex={5}
-					bg={'#1A202E'}
-					color={'#A7BAD0'}
-					size={'30px'}
-					fontSize={'.7em'}
-					shadow={"lg"}
-					p={1}
-					mx={-3}
-					fontWeight='semibold'
-				>
-					<Center textAlign={'center'}>VS</Center>
-				</Circle>
+				{!props.matchup?.isByeWeek && (
+					<Circle
+						zIndex={5}
+						bg={'#1A202E'}
+						color={'#A7BAD0'}
+						size={'30px'}
+						fontSize={'.7em'}
+						shadow={'lg'}
+						p={1}
+						mx={-3}
+						fontWeight='semibold'
+					>
+						<Center textAlign={'center'}>VS</Center>
+					</Circle>
+				)}
 				<Box flex={1} mr={5}>
-					<MatchupHeaderTeam
-						variant={'default'}
-						matchupSide={props.matchup?.awayTeam}
-						isWinner={
-							((props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) < (props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0))
-						}
-						member={awayMember}
-						size={'sm'}
-						isTie={props.matchup?.isTie ?? false}
-						isByeWeek={props.matchup?.isByeWeek ?? false}
-						isHomeTeam={false}
-						alteredScore={props.awayAlteredScore}
-						alteredProjectedScore={props.awayAlteredProjectedScore}
-					/>
-					<HorizontalPillSelector onclick={props.awayLineupOnclick} />
+					{!props.matchup?.isByeWeek && (
+						<MatchupHeaderTeam
+							variant={'default'}
+							matchupSide={props.matchup?.awayTeam}
+							isWinner={
+								(props.homeAlteredScore ?? props.matchup?.homeTeam.pf ?? 0) <
+								(props.awayAlteredScore ?? props.matchup?.awayTeam?.pf ?? 0)
+							}
+							member={awayMember}
+							size={'sm'}
+							isTie={props.matchup?.isTie ?? false}
+							isByeWeek={props.matchup?.isByeWeek ?? false}
+							isHomeTeam={false}
+							alteredScore={props.awayAlteredScore}
+							alteredProjectedScore={props.awayAlteredProjectedScore}
+						/>
+					)}{' '}
+					{!props.matchup?.isByeWeek && (
+						<HorizontalPillSelector onclick={props.awayLineupOnclick} />
+					)}
 				</Box>
 			</Flex>
 		</ModalHeader>

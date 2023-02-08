@@ -64,7 +64,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 			border={'solid'}
 			borderWidth={'thin'}
 			borderColor={
-				props.isWinner
+				props.isWinner && !props.isByeWeek
 					? project_colors.statColor.good
 					: project_colors.statColor.neutral
 			}
@@ -79,7 +79,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 				mr={props.isHomeTeam ? 'auto' : -2}
 				mt={-7}
 				size={'md'}
-				borderColor={ringColor}
+				borderColor={!props.isByeWeek ? ringColor : project_colors.statColor.neutral}
 				borderWidth={2}
 				src={props.member?.getTeamAvatar()}
 			/>
