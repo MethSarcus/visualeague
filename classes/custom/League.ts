@@ -419,6 +419,7 @@ export default class League {
 	}
 
 	calcDraftValues() {
+		let totalDraftValue = 0
 		this.draft.picks.forEach((pick, player_id) => {
 			this.getEnabledWeeks().forEach((weekNum) => {
 				if (this.playerProjectionMap.get(weekNum)?.has(pick.player_id)) {
@@ -437,6 +438,14 @@ export default class League {
 		})
 		
 		this.draft.calcNotableDraftStats()
+
+		this.members.forEach(member => {
+			totalDraftValue += member.stats.draftValue
+		})
+
+		this.members.forEach(mem => {
+			mem.stats.draftPercentage = parseFloat(((mem.stats.draftValue / totalDraftValue) * 100).toFixed(2))
+		})
 	}
 
 	getWorstTrade() {

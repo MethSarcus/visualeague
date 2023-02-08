@@ -11,10 +11,10 @@ interface MyProps {
 
 export default function DraftPickPositionalGroup(props: MyProps) {
 	return (
-		<HStack overflowX={"auto"} w={"full"} my={2}>
+		<HStack overflowX={"auto"} w={"full"}>
 			{[...(props.positionalMap?.keys() ?? [])].map((pos) => {
 				return (
-					<VStack key={pos} color={project_colors.textTheme.highEmphasis} spacing={1}>
+					<VStack key={pos} color={project_colors.textTheme.highEmphasis} spacing={1}  py={3}>
                         <Text fontSize='xs'>{`${props.title} ${pos} Drafted`}</Text>
 						<DraftPickCard pick={props.positionalMap?.get(pos)} />
 					</VStack>

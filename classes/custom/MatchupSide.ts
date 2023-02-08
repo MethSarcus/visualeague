@@ -3,7 +3,6 @@ import {LeagueSettings} from '../sleeper/LeagueSettings'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
 import {
 	getOptimalLineup,
-	getOptimalProjectedLineup,
 	getRosterSlotPositions,
 	LINEUP_POSITION,
 	POSITION,
@@ -133,12 +132,14 @@ export class MatchupSide {
 					)
 				let optimalLineup = getOptimalLineup(
 					eligiblePlayers,
-					startingLineupSlots
+					startingLineupSlots,
+					false
 				)
 				this.optimalLineup = optimalLineup
-				let optimalProjectedLineup = getOptimalProjectedLineup(
+				let optimalProjectedLineup = getOptimalLineup(
 					eligiblePlayers,
-					startingLineupSlots
+					startingLineupSlots,
+					true
 				)
 
 				this.optimalProjectedLineup = optimalProjectedLineup

@@ -10,7 +10,7 @@ import {
 	GridItem,
 } from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
-import { project_colors } from '../../../utility/project_colors'
+import {project_colors} from '../../../utility/project_colors'
 import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import DraftPickPositionalGroup from './DraftPickPositionalGroup'
 
@@ -45,37 +45,38 @@ export default function DraftPageStatGroup(props: MyProps) {
 			gap={3}
 		>
 			<GridItem area={'card_grid'}>
-				<SimpleGrid columns={2} spacing={3} py={[3, 0]} >
+				<SimpleGrid columns={2} spacing={3} py={[3, 0]}>
 					<GenericStatCard
 						statName={'Best Drafter'}
 						isLoaded={bestDrafter != null}
-						statValue={bestDrafter?.stats.draftValue.toFixed(2)}
+						statValue={bestDrafter.stats.draftPercentage + '% Value Drafted'}
 						statOwner={bestDrafter?.name}
 						avatar={bestDrafter?.getAvatar() ?? ''}
 						isGoodThing={true}
-					/>
-					<GenericStatCard
-						statName={'Worst Drafter'}
-						isLoaded={worstDrafter != null}
-						statValue={worstDrafter?.stats.draftValue.toFixed(2)}
-						statOwner={worstDrafter?.name}
-						avatar={worstDrafter?.getAvatar() ?? ''}
-						isGoodThing={false}
 					/>
 
 					<GenericStatCard
 						statName={'Best Pick'}
 						isLoaded={bestPick != undefined}
-						statValue={bestPick?.draftValue.toFixed(2)}
+						statValue={`Round ${bestPick?.round}, Pick ${bestPick?.draft_slot}`}
 						statOwner={bestPick?.name}
 						avatar={`https://sleepercdn.com/content/nfl/players/${bestPick?.player_id}.jpg`}
 						isGoodThing={true}
 					/>
 
 					<GenericStatCard
+						statName={'Worst Drafter'}
+						isLoaded={worstDrafter != null}
+						statValue={worstDrafter.stats.draftPercentage + '% Value Drafted'}
+						statOwner={worstDrafter?.name}
+						avatar={worstDrafter?.getAvatar() ?? ''}
+						isGoodThing={false}
+					/>
+
+					<GenericStatCard
 						statName={'Worst Pick'}
 						isLoaded={worstPick != undefined}
-						statValue={worstPick?.draftValue.toFixed(2)}
+						statValue={`Round ${worstPick?.round}, Pick ${worstPick?.draft_slot}`}
 						statOwner={worstPick?.name}
 						avatar={`https://sleepercdn.com/content/nfl/players/${worstPick?.player_id}.jpg`}
 						isGoodThing={false}
@@ -83,15 +84,38 @@ export default function DraftPageStatGroup(props: MyProps) {
 				</SimpleGrid>
 			</GridItem>
 
-			<GridItem overflowX={'auto'} area={'best_picks'} alignSelf={"stretch"} pl={[0, 5]}>
-				<Text as={"h3"} color={project_colors.textTheme.highEmphasis}>Best Draft Picks</Text>
+			<GridItem
+				overflowX={'auto'}
+				area={'best_picks'}
+				pl={[0, 3]}
+				minH={'100px'}
+				borderColor={'surface.0'}
+				borderWidth='thin'
+				borderStyle={['none', 'solid']}
+
+				borderRadius={2}
+			>
+				<Text as={'h3'} color={project_colors.textTheme.highEmphasis} mt={2}>
+					Best Draft Picks
+				</Text>
 				<DraftPickPositionalGroup
 					title={'Best'}
 					positionalMap={bestPositionalPicks}
 				/>
 			</GridItem>
-			<GridItem area={'worst_picks'} overflowX={'auto'} pl={[0, 5]}>
-			<Text as={"h3"} color={project_colors.textTheme.highEmphasis} >Worst Draft Picks</Text>
+			<GridItem
+				area={'worst_picks'}
+				overflowX={'auto'}
+				pl={[0, 3]}
+				minH={'100px'}
+				borderColor={'surface.0'}
+				borderWidth='thin'
+				borderStyle={['none', 'solid']}
+				borderRadius={4}
+			>
+				<Text as={'h3'} color={project_colors.textTheme.highEmphasis} mt={2}>
+					Worst Draft Picks
+				</Text>
 				<DraftPickPositionalGroup
 					title={'Worst'}
 					positionalMap={worstPositionalPicks}
