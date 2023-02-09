@@ -49,7 +49,7 @@ export default function DraftPageStatGroup(props: MyProps) {
 					<GenericStatCard
 						statName={'Best Drafter'}
 						isLoaded={bestDrafter != null}
-						statValue={bestDrafter.stats.draftPercentage + '% Value Drafted'}
+						statValue={bestDrafter?.stats.draftPercentage + '% Value Drafted'}
 						statOwner={bestDrafter?.name}
 						avatar={bestDrafter?.getAvatar() ?? ''}
 						isGoodThing={true}

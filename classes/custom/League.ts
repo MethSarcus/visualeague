@@ -420,6 +420,13 @@ export default class League {
 
 	calcDraftValues() {
 		let totalDraftValue = 0
+		let posScoreMap = new Map()
+		this.getPositions().forEach(position => {
+			if (position != undefined) {
+				posScoreMap.set(position, this.stats.getPositionAvgPPG(position))
+			}
+			
+		})
 		this.draft.picks.forEach((pick, player_id) => {
 			this.getEnabledWeeks().forEach((weekNum) => {
 				if (this.playerProjectionMap.get(weekNum)?.has(pick.player_id)) {
@@ -433,7 +440,7 @@ export default class League {
 				}
 			})
 
-			pick.setDraftValue()
+			pick.setDraftValue(posScoreMap.get(pick.metadata.position as POSITION))
 			this.members.get(pick.roster_id)?.stats?.addDraftValue(pick.draftValue)
 		})
 		
@@ -894,8 +901,8 @@ export default class League {
 		}
 		this.calcLeagueWeeks(taxiMap ?? new Map())
 		this.calcMemberScores()
-		this.calcDraftValues()
 		this.calcLeagueStats()
+		this.calcDraftValues()
 		this.calcAllPlayStats()
 	}
 

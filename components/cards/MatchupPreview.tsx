@@ -242,6 +242,7 @@ export default function MatchupPreview(props: MyProps) {
 											position={pos as LINEUP_POSITION}
 											homePlayer={homeStarters?.at(index)!}
 											awayPlayer={awayStarters?.at(index)!}
+											isByeWeek={props.matchup?.isByeWeek}
 										/>
 									)
 								}) as any
@@ -265,6 +266,7 @@ export default function MatchupPreview(props: MyProps) {
 												position={pos as LINEUP_POSITION}
 												homePlayer={homeBench?.at(index) ?? new MatchupPlayer()}
 												awayPlayer={awayBench?.at(index) ?? new MatchupPlayer()}
+												isByeWeek={props.matchup?.isByeWeek}
 											/>
 										)
 									}) as any
