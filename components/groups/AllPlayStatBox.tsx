@@ -19,6 +19,7 @@ export class StatBoxProps {
 	disabled?: boolean
 	opponentId: number
 	league?: League
+	onHover?: (rosterIds: number[]) => void
 
 	constructor(
 		wins: number,
@@ -26,7 +27,9 @@ export class StatBoxProps {
 		ties: number,
 		opponentId: number,
 		homeId: number,
+		onHover?: (rosterIds: number[]) => void,
 		disabled?: boolean | undefined
+		
 	) {
 		this.wins = wins
 		this.losses = losses
@@ -34,6 +37,7 @@ export class StatBoxProps {
 		this.disabled = disabled
 		this.homeId = homeId
 		this.opponentId = opponentId
+		this.onHover = onHover
 	}
 }
 
@@ -81,12 +85,15 @@ export default function AllPlayStatBox(props: StatBoxProps) {
 					width={'auto'}
 					onClick={onOpen}
 					height={'50px'}
+					
 					p='.5em'
 					bg={props.disabled ? 'surface' : 'surface.0'}
 					color='textTheme.mediumEmphasis'
 					fontSize={'.9em'}
 					transition={'all .2s ease-in-out'}
 					dropShadow={'dark-lg'}
+					onMouseEnter={() => props.onHover?.([props.homeId, props.opponentId])}
+					onMouseLeave={() => props.onHover?.([])}
 					_hover={
 						!props.disabled
 							? {

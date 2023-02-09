@@ -1,4 +1,5 @@
 import {BlankPlayer, MatchupPlayer} from '../classes/custom/MatchupPlayer'
+import Player from '../classes/custom/Player'
 import {
 	LeagueSettings,
 	ScoringSettings,
@@ -307,15 +308,19 @@ export const hasVariablePPR = (scoring_settings: ScoringSettings) => {
 	}
 }
 
+//Modified to accept boolean useProjections which determines if retrieving the optimal projected lineup or the actual optimal lineup
 export function getOptimalLineup(
 	players: MatchupPlayer[],
-	starterPositions: LINEUP_POSITION[]
+	starterPositions: LINEUP_POSITION[],
+	useProjections: boolean
 ) {
 	let optimalLineup: MatchupPlayer[] = []
 	players = players.sort((a: MatchupPlayer, b: MatchupPlayer) => {
-		if (a.score < b.score) {
+		let aScore = useProjections ? a.projectedScore : a.score
+		let bScore = useProjections ? b.projectedScore : b.score
+		if (aScore < bScore) {
 			return 1
-		} else if (a.score > b.score) {
+		} else if (aScore > bScore) {
 			return -1
 		} else {
 			return 0
@@ -325,45 +330,7 @@ export function getOptimalLineup(
 	starterPositions.forEach((position) => {
 		let eligiblePlayers = players.filter((player) => {
 			if (
-				player.score < 0 ||
-				optimalLineup.includes(player) ||
-				!getPositionRosterSlots(
-					player.eligiblePositions?.at(0) as LINEUP_POSITION
-				).includes(position)
-			) {
-				return false
-			} else {
-				return true
-			}
-		})
-		if (eligiblePlayers.length == 0) {
-			optimalLineup.push(new BlankPlayer())
-		} else {
-			optimalLineup.push(eligiblePlayers[0])
-		}
-	})
-
-	return optimalLineup
-}
-
-export function getOptimalProjectedLineup(
-	players: MatchupPlayer[],
-	starterPositions: LINEUP_POSITION[]
-) {
-	let optimalLineup: MatchupPlayer[] = []
-	players = players.sort((a: MatchupPlayer, b: MatchupPlayer) => {
-		if (a.projectedScore < b.projectedScore) {
-			return 1
-		} else if (a.projectedScore > b.projectedScore) {
-			return -1
-		} else {
-			return 0
-		}
-	})
-
-	starterPositions.forEach((position) => {
-		let eligiblePlayers = players.filter((player) => {
-			if (
+				(useProjections ? player.projectedScore : player.score) < 0 ||
 				optimalLineup.includes(player) ||
 				!getPositionRosterSlots(
 					player.eligiblePositions?.at(0) as LINEUP_POSITION
@@ -375,7 +342,7 @@ export function getOptimalProjectedLineup(
 			}
 		})
 
-		optimalLineup.push(eligiblePlayers[0])
+		eligiblePlayers.length == 0 ? optimalLineup.push(new BlankPlayer()) : optimalLineup.push(eligiblePlayers[0])
 	})
 
 	return optimalLineup
@@ -394,6 +361,22 @@ function getEligiblePlayersForSlot(
 
 	return eligiblePlayers
 }
+
+export function calcPlayerPoints(stats: ScoringSettings | undefined,  leagueSettings: ScoringSettings): number | undefined {
+	let score: number | undefined = 0
+	if (stats != undefined) {
+	  for (const [key, value] of Object.entries(stats)) {
+		let points = value * (leagueSettings[key as keyof ScoringSettings] as number)
+		if (!isNaN(points)) {
+			score += points
+		}
+	  }
+	} else {
+		score = undefined
+	}
+
+	return score
+  }
 
 export function getPositionColor(position: POSITION) {
 	switch (position) {

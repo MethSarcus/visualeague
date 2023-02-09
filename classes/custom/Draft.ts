@@ -1,9 +1,14 @@
+import {POSITION} from '../../utility/rosterFunctions'
 import {AuctionMetadata, DraftPick, SnakeMetadata} from '../sleeper/DraftPick'
 import {DraftSettings} from '../sleeper/DraftSettings'
 
 export class Draft {
 	picks: Map<string, DraftPlayer> = new Map()
 	settings: DraftSettings
+	bestValuePick: DraftPlayer | undefined = undefined
+	worstValuePick: DraftPlayer | undefined = undefined
+	bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
+	worstPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
 	constructor(picks: DraftPick[], draftSettings: DraftSettings) {
 		this.settings = draftSettings
 		if (draftSettings.type == DRAFT_TYPE.AUCTION) {
@@ -26,17 +31,84 @@ export class Draft {
 		})
 	}
 
+	calcNotableDraftStats() {
+		let bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
+		let worstPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
+		this.picks.forEach((pick) => {
+			let pickPosition = pick.metadata.position as POSITION
+			if (this.bestValuePick == undefined) {
+				this.bestValuePick = pick
+			} else {
+				if (pick.draftValue > this.bestValuePick.draftValue) {
+					this.bestValuePick = pick
+				} else if (
+					pick.draftValue == this.bestValuePick.draftValue &&
+					pick.player_id != this.bestValuePick.player_id &&
+					pick.pick_no > this.bestValuePick.pick_no
+				) {
+					this.bestValuePick = pick
+				} else if (
+					pick.draftValue == this.bestValuePick.draftValue &&
+					pick.pick_no > this.bestValuePick.pick_no
+				) {
+					this.bestValuePick = pick
+				}
+			}
+
+			if (this.worstValuePick == undefined) {
+				this.worstValuePick = pick
+			} else {
+				if (pick.draftValue < this.worstValuePick.draftValue) {
+					this.worstValuePick = pick
+				} else if (
+					pick.draftValue == this.worstValuePick.draftValue &&
+					pick.player_id != this.worstValuePick.player_id &&
+					pick.pick_no < this.worstValuePick.pick_no
+				) {
+					this.worstValuePick = pick
+				} else if (
+					pick.draftValue == this.worstValuePick.draftValue &&
+					pick.pick_no < this.worstValuePick.pick_no
+				) {
+					this.worstValuePick = pick
+				}
+			}
+			
+			if (bestPositionalPicks.has(pickPosition)) {
+				if ( pick.draftValue > (bestPositionalPicks.get(pickPosition)?.draftValue ?? 0)) {
+					bestPositionalPicks.set(pickPosition, pick)
+				}
+			} else {
+				bestPositionalPicks.set(pickPosition, pick)
+			}
+
+			if (worstPositionalPicks.has(pickPosition)) {
+				if ( pick.draftValue < (worstPositionalPicks.get(pickPosition)?.draftValue ?? 1000000000)) {
+					worstPositionalPicks.set(pickPosition, pick)
+				}
+			} else {
+				worstPositionalPicks.set(pickPosition, pick)
+			}
+		})
+		this.bestPositionalPicks = bestPositionalPicks
+		this.worstPositionalPicks = worstPositionalPicks
+	}
+
 	resetAllDraftPlayers() {
-		this.picks.forEach(pick => {
+		this.picks.forEach((pick) => {
 			pick.reset()
 		})
+		this.bestValuePick = undefined
+		this.worstValuePick = undefined
+		this.bestPositionalPicks = new Map()
+		this.worstPositionalPicks = new Map()
 	}
 }
 
 export enum DRAFT_TYPE {
 	SNAKE = 'snake',
 	AUCTION = 'auction',
-	LINEAR = 'linear'
+	LINEAR = 'linear',
 }
 
 export interface DraftPlayer extends DraftPick {

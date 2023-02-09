@@ -66,7 +66,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 			borderColor={
 				props.isWinner
 					? project_colors.statColor.good
-					: project_colors.statColor.bad
+					: project_colors.statColor.neutral
 			}
 			fontSize={'.7em'}
 			minW={'180px'}

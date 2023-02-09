@@ -6,13 +6,14 @@ import { project_colors } from "../../utility/project_colors";
 
 interface MyProps {
   league: League | undefined;
+  filteredIds?: number[] | undefined
 }
 
 
 
 const WeeklyRankingBumpChart = (props: MyProps) => {
   if (props.league?.settings == undefined) return <Spinner />;
-  let data = formatScoresForBumpChart(props.league) as any;
+  let data = formatScoresForBumpChart(props.league, props.filteredIds) as any;
   const theme = {
     textColor: "white",
   };
@@ -95,9 +96,14 @@ const WeeklyRankingBumpChart = (props: MyProps) => {
   );
 };
 
-function formatScoresForBumpChart(league: League) {
+function formatScoresForBumpChart(league: League, filteredIds: number[] = []) {
   let data: object[] = [];
   let memberPowerRankMap: Map<number, object[]> = new Map();
+  if (filteredIds.length < 1) {
+    league.members.forEach(member => {
+      filteredIds.push(member.roster.roster_id)
+    })
+  }
 
   league.weeks.forEach((week) => {
     week.getAllScores().forEach((team) => {
@@ -118,7 +124,7 @@ function formatScoresForBumpChart(league: League) {
   });
 
   league.members.forEach((member: LeagueMember) => {
-    if (league.memberIdToRosterId.has(member.userId)) {
+    if (league.memberIdToRosterId.has(member.userId) && filteredIds.includes(member.roster.roster_id)) {
       data.push({
         id: member.name,
         data: memberPowerRankMap.get(

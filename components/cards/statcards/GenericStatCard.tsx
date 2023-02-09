@@ -26,13 +26,13 @@ const GenericStatCard = (props: MyProps) => {
         <Spacer/>
             <SkeletonText noOfLines={3} spacing={1} isLoaded={props.isLoaded}>
               <Box
-                                fontWeight={"medium"}
+                fontWeight={"medium"}
                 fontSize={[".6em", "1em"]}
                 color={"textTheme.highEmphasis"}
               >
                 {props.statName}
               </Box>
-              <Avatar size={"sm"} my={.25} src={props.avatar}/>
+              <Avatar size={["sm", "md"]} my={1} src={props.avatar} />
               <Box
               fontWeight="bold"
                 fontSize={[".9em", "1em"]}

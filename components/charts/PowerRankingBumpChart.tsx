@@ -1,21 +1,68 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {AreaBumpSerieExtraProps, ResponsiveAreaBump} from '@nivo/bump'
+import {
+	AreaBumpComputedSerie,
+	AreaBumpSerieExtraProps,
+	DefaultAreaBumpDatum,
+	ResponsiveAreaBump,
+} from '@nivo/bump'
+import {linearGradientDef, SvgFillMatcher} from '@nivo/core'
+import {Serie} from '@nivo/line'
 import League from '../../classes/custom/League'
 import {MatchupSide} from '../../classes/custom/MatchupSide'
+import {project_colors} from '../../utility/project_colors'
 
 interface MyProps {
 	league: League | undefined
+	displayIds?: number[] | undefined
 }
 
 const PowerRankingBumpChart = (props: MyProps) => {
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
+	const chartIsFiltered = (props.displayIds?.length ?? 0) > 0
 	let data
+	let chartSeriesFill:
+		| {
+				id: string
+				match:
+					| Record<string, unknown>
+					| '*'
+					| SvgFillMatcher<
+							AreaBumpComputedSerie<
+								DefaultAreaBumpDatum,
+								Record<string, unknown>
+							>
+					  >
+		  }[]
+		| undefined = []
+	if (chartIsFiltered) {
+		//Creates an array of numbers the size of the league then removes the filtered roster IDs
+		chartSeriesFill = Array.from(
+			{length: props.league?.members.size ?? 0},
+			(_, i) => i + 1
+		)
+			.filter((num) => !props.displayIds?.includes(num))
+			.map((id) => {
+				return {
+					match: {
+						id: props.league?.members.get(id)?.name,
+					},
+					id: 'gradientA',
+				}
+			})
+	}
 
 	if (props.league?.settings != undefined) {
-		data = formatScoresForBumpChart(props.league) as any
+		data = formatScoresForBumpChart(props.league, props.displayIds) as any
 	}
 	const theme = {
 		textColor: 'white',
+		grid: {
+			line: {
+			  stroke: "grey",
+			  strokeWidth: 1,
+			  opacity: .2
+			}
+		  }
 	}
 	let margins = isLargerThan800
 		? {top: 10, right: 120, bottom: 50, left: 120}
@@ -29,11 +76,17 @@ const PowerRankingBumpChart = (props: MyProps) => {
 			theme={theme}
 			margin={margins}
 			spacing={10}
-			colors={{scheme: 'nivo'}}
+			borderWidth={0}
+			colors={{scheme: 'paired'}}
+			defs={[
+				linearGradientDef('gradientA', [
+					{offset: 0, color: 'inherit', opacity: .1},
+				]),
+			]}
+			fill={chartSeriesFill}
 			startLabel={'id' as any}
-			interpolation={'linear'}
+			interpolation={'smooth'}
 			endLabel={'id' as any}
-			// interpolation='linear'
 			axisBottom={{
 				tickSize: 5,
 				tickPadding: 5,
@@ -62,6 +115,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 							padding: 12,
 							background: '#222222',
 							color: 'white',
+							marginBottom: "3em"
 						}}
 					>
 						<strong>
@@ -76,7 +130,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 	)
 }
 
-function formatScoresForBumpChart(league: League) {
+function formatScoresForBumpChart(league: League, filteredIds: number[] = []) {
 	let data: object[] = []
 
 	//Roster ID to array of power wins each week
@@ -120,6 +174,7 @@ function formatScoresForBumpChart(league: League) {
 			})
 			data.push({
 				id: leagueMember.name,
+				roster_id: leagueMember.roster.roster_id,
 				totalWins: totalWins,
 				totalLosses: totalLosses,
 				data: memberWins.map((wins, index) => {
