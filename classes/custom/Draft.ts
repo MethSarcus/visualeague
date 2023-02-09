@@ -25,11 +25,11 @@ export class Draft {
 		}
 	}
 
-	calculatePlayerDraftValue(): void {
-		this.picks.forEach((pick) => {
-			pick.setDraftValue()
-		})
-	}
+	// calculatePlayerDraftValue(positionAverages: Map<POSITION, number>): void {
+	// 	this.picks.forEach((pick) => {
+	// 		pick.setDraftValue(positionAverages.get(pick.metadata.position as POSITION) ?? 1)
+	// 	})
+	// }
 
 	calcNotableDraftStats() {
 		let bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
@@ -118,7 +118,8 @@ export interface DraftPlayer extends DraftPick {
 	amount?: number
 	ppg: number
 	name: string
-	setDraftValue(): void
+	ppgDiff: number
+	setDraftValue(positionAveragePPG: number): void
 	addGame(points: number): void
 	reset(): void
 }
@@ -138,6 +139,7 @@ export class SnakeDraftPlayer implements DraftPlayer {
 	is_keeper?: null | undefined
 	draft_slot: number
 	draft_id: string
+	ppgDiff: number = 0
 
 	constructor(pick: DraftPick) {
 		this.pick_no = pick.pick_no
@@ -158,11 +160,13 @@ export class SnakeDraftPlayer implements DraftPlayer {
 		this.gamesPlayed += 1
 	}
 
-	setDraftValue(): void {
+	setDraftValue(positionAveragePPG: number): void {
 		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
 		this.ppg = parseFloat((this.pointsScored / this.gamesPlayed).toFixed(2))
+		this.ppgDiff = this.ppg - positionAveragePPG
+		//The addition of .01 is necessary since ln(1) = 0 so the first pick would be unfairly nerfed
 		this.draftValue = parseFloat(
-			(this.pointsScored * this.ppg * Math.log(this.pick_no)).toFixed(2)
+			((this.ppg * this.ppgDiff * 2) + (Math.log(Math.pow(this.pick_no + .01, 3)) * this.pointsScored)).toFixed(2)
 		)
 		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
 	}
@@ -172,6 +176,7 @@ export class SnakeDraftPlayer implements DraftPlayer {
 		this.pointsScored = 0
 		this.draftValue = 0
 		this.ppg = 0
+		this.ppgDiff = 0
 	}
 }
 
@@ -192,6 +197,7 @@ export class AuctionDraftPlayer implements DraftPlayer {
 	draft_id: string
 	amount?: number
 	budget: number
+	ppgDiff: number = 0
 
 	constructor(pick: DraftPick, budget: number) {
 		this.pick_no = pick.pick_no
@@ -208,7 +214,7 @@ export class AuctionDraftPlayer implements DraftPlayer {
 		this.name =
 			(pick.metadata.first_name ?? '') + ' ' + (pick.metadata.last_name ?? '')
 	}
-	setDraftValue(): void {
+	setDraftValue(positionAveragePPG: number): void {
 		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
 		this.ppg = parseFloat((this.pointsScored / this.gamesPlayed).toFixed(2))
 		this.draftValue = parseFloat(
