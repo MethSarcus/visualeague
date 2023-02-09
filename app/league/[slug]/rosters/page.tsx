@@ -1,24 +1,13 @@
 'use client'
 import {
-	Box,
-	Card,
-	Checkbox,
-	CheckboxGroup,
-	Fade,
-	Flex,
 	Grid,
 	GridItem,
-	HStack,
-	SimpleGrid,
-	Spinner,
-	Stack,
+	HStack, Spinner
 } from '@chakra-ui/react'
-import {useContext, useMemo, useState} from 'react'
+import { useContext, useState } from 'react'
 import League from '../../../../classes/custom/League'
-import LeagueMember from '../../../../classes/custom/LeagueMember'
 import MemberRoster from '../../../../components/groups/roster/MemberRoster'
-import DraftValueTable from '../../../../components/tables/DraftValueTable'
-import {Context} from '../../../../contexts/Context'
+import { Context } from '../../../../contexts/Context'
 
 export default function Page() {
 	const [context, setContext] = useContext(Context)
