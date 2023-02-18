@@ -14,6 +14,7 @@ interface MyProps {
 }
 
 interface DataRow {
+	ppd?: number
 	name: string
 	ppg: number
 	pf: number
@@ -50,6 +51,9 @@ export default function DraftValueTable(props: MyProps) {
 		grow: 1})
 	} else {
 		cols.push({name: 'amount', selector: (row) => row.amount ?? 0,
+		sortable: true,
+		grow: 1})
+		cols.push({name: 'ppd', selector: (row) => row.ppd ?? 0,
 		sortable: true,
 		grow: 1})
 	}
@@ -95,7 +99,8 @@ function formatMemberDataForTable(player: DraftPlayer): DataRow {
 		name: player.name,
 		ppg: parseFloat(player.ppg.toFixed(2)),
 		pf: parseFloat(player.pointsScored.toFixed(2)),
-		value: parseFloat(player.draftValue.toFixed(2))
+		value: parseFloat(player.draftValue.toFixed(2)),
+		ppd: parseFloat((player.pointsScored / (player.amount ?? 1)).toFixed(2))
 	} as DataRow
 
 	if (player instanceof AuctionDraftPlayer) {

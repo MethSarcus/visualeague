@@ -60,23 +60,28 @@ function Navbar(props: MyProps) {
 			>
 				<NavbarButton
 					buttonText='League'
+					disabled={context.settings == undefined}
 					link={`league/${context.settings?.league_id}`}
 				/>
 				<TeamSidebar />
 				<NavbarButton
 					buttonText='Power Rankings'
+					disabled={context.settings == undefined}
 					link={`league/${context?.settings?.league_id}/ranks`}
 				/>
 				<NavbarButton
 					buttonText='Trading'
+					disabled={context.settings == undefined}
 					link={`league/${context?.settings?.league_id}/trades`}
 				/>
 				<NavbarButton
 					buttonText='Draft'
+					disabled={context.settings == undefined}
 					link={`league/${context?.settings?.league_id}/draft`}
 				/>
 				<NavbarButton
 					buttonText='Rosters'
+					disabled={context.settings == undefined}
 					link={`league/${context?.settings?.league_id}/rosters`}
 				/>
 				<Box pl={3}>
@@ -98,7 +103,7 @@ interface NavButtonProps {
 	onclick?: () => void
 }
 function NavbarButton(props: NavButtonProps) {
-	if (props.link != undefined) {
+	if (props.link != undefined && props.disabled != true) {
 		return (
 			<Link href={props.link}>
 				<Button
