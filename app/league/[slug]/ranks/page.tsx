@@ -61,9 +61,6 @@ export default function RankPage() {
 				<GridItem area={'cumulative_ranks'}>
 					<PowerRankingBumpChart league={context} displayIds={filteredIds} />
 				</GridItem>
-				<GridItem area={'bump_chart'} height={'500px'}>
-					<WeeklyRankingBumpChart league={context} />
-				</GridItem>
 			</Grid>
 		</Box>
 	)
