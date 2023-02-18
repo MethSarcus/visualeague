@@ -58,7 +58,7 @@ export default function DraftPageStatGroup(props: MyProps) {
 					<GenericStatCard
 						statName={'Best Pick'}
 						isLoaded={bestPick != undefined}
-						statValue={`Round ${bestPick?.round}, Pick ${bestPick?.draft_slot}`}
+						statValue={bestPick?.amount == null ? `Round ${bestPick?.round}, Pick ${bestPick?.draft_slot}` : `$${bestPick?.amount}`}
 						statOwner={bestPick?.name}
 						avatar={`https://sleepercdn.com/content/nfl/players/${bestPick?.player_id}.jpg`}
 						isGoodThing={true}
@@ -76,7 +76,7 @@ export default function DraftPageStatGroup(props: MyProps) {
 					<GenericStatCard
 						statName={'Worst Pick'}
 						isLoaded={worstPick != undefined}
-						statValue={`Round ${worstPick?.round}, Pick ${worstPick?.draft_slot}`}
+						statValue={worstPick?.amount == null ? `Round ${worstPick?.round}, Pick ${worstPick?.draft_slot}` : `$${worstPick?.amount}`}
 						statOwner={worstPick?.name}
 						avatar={`https://sleepercdn.com/content/nfl/players/${worstPick?.player_id}.jpg`}
 						isGoodThing={false}

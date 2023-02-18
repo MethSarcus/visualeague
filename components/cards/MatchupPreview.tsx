@@ -155,6 +155,7 @@ export default function MatchupPreview(props: MyProps) {
 					borderRadius={'md'}
 					boxShadow={shadowColor}
 					transition={'all .2s ease-in-out'}
+					textOverflow={""}
 					_hover={{
 						transform: 'scale(1.1)',
 						backgroundColor: 'surface.0',

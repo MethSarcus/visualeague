@@ -1,5 +1,14 @@
 import React, {useContext} from 'react'
-import {Avatar, Box, Center, Grid, GridItem, HStack, Image, Text} from '@chakra-ui/react'
+import {
+	Avatar,
+	Box,
+	Center,
+	Grid,
+	GridItem,
+	HStack,
+	Image,
+	Text,
+} from '@chakra-ui/react'
 import {DraftPick} from '../../classes/sleeper/DraftPick'
 import {DraftPlayer} from '../../classes/custom/Draft'
 import {project_colors} from '../../utility/project_colors'
@@ -7,7 +16,7 @@ import {POSITION} from '../../utility/rosterFunctions'
 import {Context} from '../../contexts/Context'
 import League from '../../classes/custom/League'
 
-type MyProps = {pick: DraftPick | DraftPlayer | undefined}
+type MyProps = {pick: DraftPlayer | undefined}
 
 export default function DraftPickCard(props: MyProps) {
 	const [context, setContext] = useContext(Context)
@@ -19,7 +28,7 @@ export default function DraftPickCard(props: MyProps) {
 			height={'50px'}
 			filter={'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))'}
 			templateAreas={template}
-      overflow={"hidden"}
+			overflow={'hidden'}
 			gridTemplateColumns={'1fr 1fr 1fr'}
 			background={
 				project_colors.position[props.pick?.metadata.position as POSITION]
@@ -42,21 +51,27 @@ export default function DraftPickCard(props: MyProps) {
 					}`}
 				</Text>
 
-				<Text fontSize={'.5em'} fontWeight={'normal'} color={'rgba(0, 0, 0, 0.6)'}>
+				<Text
+					fontSize={'.5em'}
+					fontWeight={'normal'}
+					color={'rgba(0, 0, 0, 0.6)'}
+				>
 					{props.pick?.metadata.position} - {props.pick?.metadata.team} (
 					{props.pick?.metadata.number})
 				</Text>
 			</GridItem>
 			<GridItem area={'pick_no'} textAlign={'end'} pt={1} pr={2}>
 				<Text fontSize={'10px'} color={'rgba(0, 0, 0, 0.6)'}>
-					{props.pick?.round}.{props.pick?.draft_slot}
+					{props.pick?.amount != null
+						? `$${props.pick.amount}`
+						: `${props.pick?.round}.${props.pick?.draft_slot}`}
 				</Text>
 			</GridItem>
 
 			<GridItem area={'drafted_by'}>
 				<Text
 					fontSize={'.6em'}
-          fontWeight={'light'}
+					fontWeight={'light'}
 					pl={2}
 					pt={1}
 					color={'rgba(0, 0, 0, 0.6)'}
@@ -64,10 +79,10 @@ export default function DraftPickCard(props: MyProps) {
 					whiteSpace={'nowrap'}
 					textOverflow={'ellipsis'}
 				>
-					@{(context as League)?.members?.get(props.pick?.roster_id ?? -1)
+					@
+					{(context as League)?.members?.get(props.pick?.roster_id ?? -1)
 						?.name ?? ''}
 				</Text>
-
 			</GridItem>
 
 			<GridItem area={'thumbnail'} mt={-2} mx={0}>

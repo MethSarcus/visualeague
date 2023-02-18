@@ -25,12 +25,6 @@ export class Draft {
 		}
 	}
 
-	// calculatePlayerDraftValue(positionAverages: Map<POSITION, number>): void {
-	// 	this.picks.forEach((pick) => {
-	// 		pick.setDraftValue(positionAverages.get(pick.metadata.position as POSITION) ?? 1)
-	// 	})
-	// }
-
 	calcNotableDraftStats() {
 		let bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
 		let worstPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
@@ -195,9 +189,10 @@ export class AuctionDraftPlayer implements DraftPlayer {
 	is_keeper?: null | undefined
 	draft_slot: number
 	draft_id: string
-	amount?: number
+	amount: number
 	budget: number
 	ppgDiff: number = 0
+	ppd: number = 0 //Points per dollar spent
 
 	constructor(pick: DraftPick, budget: number) {
 		this.pick_no = pick.pick_no
@@ -217,13 +212,10 @@ export class AuctionDraftPlayer implements DraftPlayer {
 	setDraftValue(positionAveragePPG: number): void {
 		this.pointsScored = parseFloat(this.pointsScored.toFixed(2))
 		this.ppg = parseFloat((this.pointsScored / this.gamesPlayed).toFixed(2))
-		this.draftValue = parseFloat(
-			(
-				this.pointsScored *
-				this.ppg *
-				Math.log10(this.budget / parseInt(this.metadata.amount))
-			).toFixed(2)
-		)
+		this.ppgDiff = this.ppg - positionAveragePPG
+		this.ppd = parseFloat((this.pointsScored / this.amount).toFixed(2))
+		this.draftValue = (this.pointsScored * (this.ppg/Math.log(this.amount + 1))) + (this.pointsScored * this.ppgDiff * Math.log10(this.amount)) - Math.sqrt(this.pointsScored * this.ppg * Math.log10(this.amount + 1))
+		//(this.pointsScored * (this.ppg/Math.log(this.amount + 1))) + (this.pointsScored * (this.ppgDiff * (3/Math.log(this.amount + 1)))) (this.pointsScored * this.ppgDiff / this.ppg * (1/Math.log(this.amount + 1)))
 	}
 	addGame(points: number): void {
 		this.pointsScored += points
@@ -235,5 +227,7 @@ export class AuctionDraftPlayer implements DraftPlayer {
 		this.pointsScored = 0
 		this.draftValue = 0
 		this.ppg = 0
+		this.ppgDiff = 0
+		this.ppd = 0
 	}
 }
