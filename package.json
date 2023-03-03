@@ -27,7 +27,7 @@
     "@nivo/tooltip": "^0.80.0",
     "@vercel/analytics": "^0.1.8",
     "axios": "^0.27.2",
-    "chart.js": "^4.2.0",
+    "chart.js": "^4.2.1",
     "cors": "^2.8.5",
     "framer-motion": "^6.5.1",
     "immer": "^9.0.17",
