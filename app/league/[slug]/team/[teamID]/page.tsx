@@ -3,24 +3,19 @@ import {
 	Box,
 	Flex,
 	Grid,
-	GridItem,
-	HStack,
-	Tab,
+	GridItem, Tab,
 	TabList,
 	TabPanel,
 	TabPanels,
 	Tabs,
-	Text,
+	Text
 } from '@chakra-ui/react'
-import e from 'cors'
-import {usePathname} from 'next/navigation'
-import {useContext} from 'react'
+import { usePathname } from 'next/navigation'
+import { useContext } from 'react'
 import League from '../../../../../classes/custom/League'
 import LeagueMember from '../../../../../classes/custom/LeagueMember'
-import Matchup from '../../../../../classes/custom/Matchup'
 import MatchupInterface from '../../../../../classes/custom/MatchupInterface'
-import {MatchupSide} from '../../../../../classes/custom/MatchupSide'
-import {Week} from '../../../../../classes/custom/Week'
+import { Week } from '../../../../../classes/custom/Week'
 import MatchupPreview from '../../../../../components/cards/MatchupPreview'
 import TeamCardWithTrendingGraph from '../../../../../components/cards/TeamCardWithTrendingGraph'
 import TeamPageRadarChart from '../../../../../components/charts/team_charts/TeamPageRadarChart'
@@ -28,7 +23,7 @@ import TeamPlayerStatGroup from '../../../../../components/groups/stats/TeamPlay
 import TeamStatGroup from '../../../../../components/groups/stats/TeamStatGroup'
 import WeeklyTeamStatGroup from '../../../../../components/groups/stats/WeeklyTeamStatGroup'
 import MemberTradeGroup from '../../../../../components/groups/transactions/MemberTradeGroup'
-import {Context} from '../../../../../contexts/Context'
+import { Context } from '../../../../../contexts/Context'
 
 export default function TeamPage() {
 	const [context, setContext] = useContext(Context)
