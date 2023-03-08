@@ -1,13 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import Cors from "cors";
+const cors = Cors({
+    methods: ["POST", "HEAD"],
+  });
+  
+  // Helper method to wait for a middleware to execute before continuing
+  // And to throw an error when an error happens in a middleware
+  function runMiddleware(
+    req: NextApiRequest,
+    res: NextApiResponse,
+    fn: Function
+  ) {
+    return new Promise((resolve, reject) => {
+      fn(req, res, (result: any) => {
+        if (result instanceof Error) {
+          return reject(result);
+        }
+  
+        return resolve(result);
+      });
+    });
+  }
 type Data = {
   message: string
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+    await runMiddleware(req, res, cors);
     if (req.method !== 'POST') {
         res.status(405).send({ message: 'Only POST requests allowed' })
         return
