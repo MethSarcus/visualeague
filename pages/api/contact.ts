@@ -40,8 +40,12 @@ export default async function handler(
           to: 'sethie74@gmail.com', // Change to your recipient
           from: 'seth@sethmarc.us', // Change to your verified sender
           subject: req.body.subject,
-          html: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`,
-          text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`
+          html: `Name: ${req.body.name}
+          \nEmail: ${req.body.email}
+          \nMessage: ${req.body.message}`,
+          text: `Name: ${req.body.name}
+                \nEmail: ${req.body.email}
+                \nMessage: ${req.body.message}`
         }
         sgMail
           .send(msg)
