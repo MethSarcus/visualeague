@@ -41,16 +41,18 @@ export default async function handler(
           from: 'seth@sethmarc.us', // Change to your verified sender
           subject: req.body.subject,
           html: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`,
+          text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`
         }
         sgMail
           .send(msg)
           .then(() => {
-            console.log('Email sent')
+            res.status(200).json({ message: 'Email Sent' })
           })
           .catch((error: any) => {
             console.error(error)
+            res.status(400).json({ message: error })
           })
-        res.status(200).json({ message: 'Success' })
+        
       }
   
 }
