@@ -1,15 +1,13 @@
-import {Spinner, useMediaQuery} from '@chakra-ui/react'
+import { Spinner, useMediaQuery } from '@chakra-ui/react'
 import {
 	AreaBumpComputedSerie,
 	AreaBumpSerieExtraProps,
 	DefaultAreaBumpDatum,
-	ResponsiveAreaBump,
+	ResponsiveAreaBump
 } from '@nivo/bump'
-import {linearGradientDef, SvgFillMatcher} from '@nivo/core'
-import {Serie} from '@nivo/line'
+import { linearGradientDef, SvgFillMatcher } from '@nivo/core'
 import League from '../../classes/custom/League'
-import {MatchupSide} from '../../classes/custom/MatchupSide'
-import {project_colors} from '../../utility/project_colors'
+import { MatchupSide } from '../../classes/custom/MatchupSide'
 
 interface MyProps {
 	league: League | undefined
@@ -58,11 +56,11 @@ const PowerRankingBumpChart = (props: MyProps) => {
 		textColor: 'white',
 		grid: {
 			line: {
-			  stroke: "grey",
-			  strokeWidth: 1,
-			  opacity: .2
-			}
-		  }
+				stroke: 'grey',
+				strokeWidth: 1,
+				opacity: 0.2,
+			},
+		},
 	}
 	let margins = isLargerThan800
 		? {top: 10, right: 120, bottom: 50, left: 120}
@@ -80,7 +78,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 			colors={{scheme: 'paired'}}
 			defs={[
 				linearGradientDef('gradientA', [
-					{offset: 0, color: 'inherit', opacity: .1},
+					{offset: 0, color: 'inherit', opacity: 0.1},
 				]),
 			]}
 			fill={chartSeriesFill}
@@ -115,7 +113,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 							padding: 12,
 							background: '#222222',
 							color: 'white',
-							marginBottom: "3em"
+							marginBottom: '3em',
 						}}
 					>
 						<strong>
