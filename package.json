@@ -13,7 +13,7 @@
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.4.5",
     "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/styled": "^11.10.6",
     "@inovua/reactdatagrid-community": "^5.8.2",
     "@nivo/bar": "^0.80.0",
     "@nivo/bump": "^0.80.0",
