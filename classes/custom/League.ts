@@ -104,6 +104,16 @@ export default class League {
 		}
 	}
 
+	getMemberByName(name: string | number): LeagueMember | undefined {
+		let member = undefined
+		this.members.forEach(mem => {
+			if (name == mem.name) {
+				member = mem
+			}
+		})
+		return member
+	}
+
 	getUserNumberTrades(roster_id: number) {
 		let memberTradeNum = 0
 		this.trades.forEach((trade) => {
