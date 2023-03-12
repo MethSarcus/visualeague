@@ -1,5 +1,6 @@
 'use client'
 import {Box, Grid, GridItem, Heading, Skeleton} from '@chakra-ui/react'
+import React from 'react'
 import {useContext, useState} from 'react'
 import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
@@ -43,12 +44,11 @@ export default function RankPage() {
 					>
 						<Heading
 							textAlign={'center'}
-							py={2}
-							size={'md'}
+							size={'lg'}
 							m={2}
 							color={'white'}
 						>
-							Power Ranks
+							League Power Ranks
 						</Heading>
 					</Skeleton>
 				</GridItem>

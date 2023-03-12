@@ -16,6 +16,7 @@ import {
 	Tooltip,
 	useDisclosure,
 } from '@chakra-ui/react'
+import React from 'react'
 import League from '../../classes/custom/League'
 import {MatchupSide} from '../../classes/custom/MatchupSide'
 import {Week} from '../../classes/custom/Week'

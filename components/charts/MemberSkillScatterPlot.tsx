@@ -10,6 +10,7 @@ import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import {project_colors} from '../../utility/project_colors'
 import {animated} from '@react-spring/web'
+import React from 'react'
 
 interface MyProps {
 	league: League | undefined
@@ -17,12 +18,12 @@ interface MyProps {
 
 const interpolateRadius = (size: number) => size / 2
 
-const MemberSkillScatterPlot = (props: MyProps) => {
+export default function MemberSkillScatterPlot (props: MyProps) {
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 	if (props.league?.members == undefined) return <Spinner />
 	let data = formatScoresForScatterPlot(props.league) as any
-	let gridYValues = []
-	let gridXValues = []
+	let gridYValues: number[] = []
+	let gridXValues: number[] = []
 	let gpBounds = 0
 	let maxPfBounds = 0
 	let minPfBounds = 9999999
@@ -47,6 +48,8 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 			avatar =
 				'https://sleepercdn.com/images/v2/avatars/avatar_default_blue.webp'
 		}
+		let mobileMultiplyer = [.5, 1]
+		let desktopMultiplyer = [1, 2]
 		return (
 			<g
 				transform={`translate(${node.x}, ${node.y})`}
@@ -54,15 +57,15 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 			>
 				<defs>
 					<clipPath id='clipCircle'>
-						<circle r={node.size * 1} x={node.size * -1} y={node.size * -1} />
+						<circle r={node.size * (isLargerThan800 ? desktopMultiplyer[0] : mobileMultiplyer[0])} x={node.size * -1 * (isLargerThan800 ? desktopMultiplyer[0] : mobileMultiplyer[0])} y={node.size * -1 * (isLargerThan800 ? desktopMultiplyer[0] : mobileMultiplyer[0])} />
 					</clipPath>
 				</defs>
 				<image
 					clipPath='url(#clipCircle)'
-					x={node.size * -1}
-					y={node.size * -1}
-					width={node.size * 2}
-					height={node.size * 2}
+					x={node.size * -1 * (isLargerThan800 ? desktopMultiplyer[0] : mobileMultiplyer[0])}
+					y={node.size * -1 * (isLargerThan800 ? desktopMultiplyer[0] : mobileMultiplyer[0])}
+					width={node.size * (isLargerThan800 ? desktopMultiplyer[1] : mobileMultiplyer[1])}
+					height={node.size * (isLargerThan800 ? desktopMultiplyer[1] : mobileMultiplyer[1])}
 					href={avatar}
 				></image>
 			</g>
@@ -70,7 +73,7 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 	}
 
 	if (props.league?.members) {
-		gridYValues.push(props.league?.stats.avg_pp)
+		gridYValues.push(props.league?.stats?.avg_pp)
 		gridXValues.push(0)
 		props.league.members.forEach((mem) => {
 			if (Math.abs(mem.stats.gp) > gpBounds) {
@@ -87,7 +90,7 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 		})
 	}
 	const theme = {
-		background: project_colors.surface[1],
+		background: isLargerThan800 ? project_colors.surface[1] : "",
 		textColor: 'white',
 	}
 
@@ -128,7 +131,7 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 			tooltip={({node}) => (
 				<div
 					style={{
-						color: node.color,
+						color: "white",
 						background: '#333',
 						padding: '12px 16px',
 					}}
@@ -171,5 +174,3 @@ function formatScoresForScatterPlot(league: League | undefined) {
 	})
 	return data
 }
-
-export default MemberSkillScatterPlot

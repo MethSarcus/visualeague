@@ -11,6 +11,7 @@ import {
 	TabPanels,
 	Tabs,
 } from '@chakra-ui/react'
+import React from 'react'
 import {useContext} from 'react'
 import League from '../../../../classes/custom/League'
 import DraftPickCard from '../../../../components/cards/DraftPickCard'

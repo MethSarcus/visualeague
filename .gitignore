@@ -35,4 +35,3 @@ yarn-error.log*
 *.tsbuildinfo
 
 /taxi_stats
-next-env.d.ts

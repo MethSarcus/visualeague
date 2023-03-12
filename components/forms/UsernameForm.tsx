@@ -12,6 +12,7 @@ import {
 	WrapItem,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import React from 'react'
 import {useEffect, useState} from 'react'
 import LeagueCellGroup from './LeagueCellGroup'
 
@@ -56,7 +57,7 @@ function UsernameForm() {
 				<Input
 					list={'data'}
 					variant='outline'
-					placeholder='Username'
+					placeholder='Sleeper Username'
 					data-testid='username_input'
 					size='lg'
 					p={5}

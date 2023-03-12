@@ -1,3 +1,4 @@
+"use client"
 import {
   Button, Drawer,
   DrawerBody,
@@ -7,12 +8,15 @@ import {
   DrawerHeader, DrawerOverlay, useDisclosure
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
+import { usePathname } from 'next/navigation'
 import { Context } from "../../contexts/Context";
 import MemberList from "../groups/MemberList";
+import { project_colors } from "../../utility/project_colors";
 
 export default function TeamSidebar() {
   const [context, setContext] = useContext(Context);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const pathName = usePathname();
 
   return (
     <>
@@ -20,6 +24,10 @@ export default function TeamSidebar() {
                 <Button
                 onClick={onOpen}
                 transition={"all .2s ease"}
+                isActive={pathName.includes("/team")}
+                _active={
+                  { bg: project_colors.secondary[500]}
+                }
                 _hover={{
                   backgroundColor: "secondary.600",
                   cursor: "pointer",

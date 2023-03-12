@@ -1,6 +1,6 @@
 
 
-export default class MemberBadge {
+export default class MemberBadgeData {
     title: string
     description: string
     icon: string
