@@ -135,11 +135,17 @@ const MemberSkillScatterPlot = (props: MyProps) => {
 				>
 					<b>{node.serieId}</b>
 					<br />
-					<small>
+					<small style={{
+						color: node.xValue > 0 ? project_colors.statColor.good : project_colors.statColor.bad,
+					}}>
 						{`${node.xValue > 0 ? 'Good Manager' : 'Bad Manager'} ${
 							node.formattedX
 						} Gut Points`}
+						</small>
 						<br />
+						<small style={{
+						color: node.yValue > (props.league?.stats.avg_pp ?? 0) ? project_colors.statColor.good : project_colors.statColor.bad,
+					}}>
 						{`${
 							node.yValue > (props.league?.stats.avg_pp ?? 0)
 								? 'Good Roster'
