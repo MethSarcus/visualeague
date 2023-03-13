@@ -1,9 +1,13 @@
+"use client"
 import {Box, Button, Center, Flex, HStack} from '@chakra-ui/react'
 import produce from 'immer'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
 import {Context} from '../../contexts/Context'
+import { project_colors } from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
 import SeasonPortionSelector from './SeasonPortionSelector'
@@ -102,10 +106,13 @@ interface NavButtonProps {
 	disabled?: boolean
 	onclick?: () => void
 }
-function NavbarButton(props: NavButtonProps) {
+function NavbarButton(props: NavButtonProps) {;
+	const pathName = usePathname();
+
 	if (props.link != undefined && props.disabled != true) {
 		return (
-			<Link href={props.link}>
+			<Link href={props.link} 
+			>
 				<Button
 					transition={'all .2s ease'}
 					_hover={{
@@ -119,7 +126,11 @@ function NavbarButton(props: NavButtonProps) {
 					borderRadius={0}
 					colorScheme={'primary'}
 					textColor='white'
-					variant='ghost'
+					isActive={pathName == "/" + props.link}
+					_active={
+						{ bg: project_colors.secondary[500]}
+					}
+					variant={"ghost"}
 					aria-label={props.buttonText}
 				>
 					{props.buttonText}
@@ -141,6 +152,10 @@ function NavbarButton(props: NavButtonProps) {
 				fontWeight={'medium'}
 				colorScheme={'primary'}
 				textColor='white'
+				isActive={pathName?.includes("/" + props.link)}
+				_active={
+					{ bg: project_colors.secondary[500]}
+				}
 				variant='ghost'
 				aria-label={props.buttonText}
 			>

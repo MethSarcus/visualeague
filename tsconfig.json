@@ -31,8 +31,9 @@
     "**/*.tsx",
     "lib/mongodb.js",
     "app/league/layout.tsx",
-    ".next/types/**/*.ts"
-, "utility/project_colors"  ],
+    ".next/types/**/*.ts",
+    "utility/project_colors"
+  ],
   "exclude": [
     "node_modules"
   ]
