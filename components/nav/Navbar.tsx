@@ -152,7 +152,7 @@ function NavbarButton(props: NavButtonProps) {;
 				fontWeight={'medium'}
 				colorScheme={'primary'}
 				textColor='white'
-				isActive={pathName.includes("/" + props.link)}
+				isActive={pathName?.includes("/" + props.link)}
 				_active={
 					{ bg: project_colors.secondary[500]}
 				}
