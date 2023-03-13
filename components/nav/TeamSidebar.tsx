@@ -24,7 +24,7 @@ export default function TeamSidebar() {
                 <Button
                 onClick={onOpen}
                 transition={"all .2s ease"}
-                isActive={pathName.includes("/team")}
+                isActive={pathName?.includes("/team")}
                 _active={
                   { bg: project_colors.secondary[500]}
                 }
