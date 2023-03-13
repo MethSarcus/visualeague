@@ -132,7 +132,7 @@ export default function MemberSkillScatterPlot (props: MyProps) {
 				<div
 					style={{
 						color: "white",
-						background: '#333',
+						background: project_colors.surface[0],
 						padding: '12px 16px',
 					}}
 				>
