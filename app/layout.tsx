@@ -17,16 +17,17 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 		return Promise.all(urls.map((url) => fetcher(url)))
 	}
 	const weeks = Array.from({length: 18}, (_, i) => i + 1)
+	const season = 2022
 	const {data: leagueStats, error: leagueStatsError} = useSWR(
 		weeks.map((weekNum) => {
-			return `/api/stats/${weekNum}`
+			return `/api/stats/${season}/${weekNum}`
 		}),
 		multiFetcher
 	)
 
 	const {data: leagueProjections, error: leagueProjectionsError} = useSWR(
 		weeks.map((weekNum) => {
-			return `/api/projections/${weekNum}`
+			return `/api/projections/${season}/${weekNum}`
 		}),
 		multiFetcher
 	)
