@@ -16,7 +16,7 @@ export default function DraftPickPositionalGroup(props: MyProps) {
 				return (
 					<VStack key={pos} color={project_colors.textTheme.highEmphasis} spacing={1}  py={3}>
                         <Text fontSize='xs'>{`${props.title} ${pos} Drafted`}</Text>
-						<DraftPickCard pick={props.positionalMap?.get(pos)} />
+						<DraftPickCard pick={props.positionalMap?.get(pos)} focusedRosterId={-1} />
 					</VStack>
 				)
 			})}

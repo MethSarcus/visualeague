@@ -10,6 +10,7 @@ import {
 	TIE_CONST,
 } from '../../utility/rosterFunctions'
 import {DraftPick} from '../sleeper/DraftPick'
+import { DraftOrder } from '../sleeper/DraftSettings'
 import {LeagueSettings, ScoringSettings} from '../sleeper/LeagueSettings'
 import SleeperLeague from '../sleeper/SleeperLeague'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
@@ -72,7 +73,9 @@ export default class League {
 		sleeperLeague.users.forEach((user: SleeperUser) => {
 			sleeperLeague.rosters.forEach((roster: SleeperRoster) => {
 				if (roster.owner_id == user.user_id) {
-					this.members.set(roster.roster_id, new LeagueMember(user, roster))
+					let order = draft.settings.draft_order
+					let draftPos = order[user.user_id as unknown as keyof DraftOrder]
+					this.members.set(roster.roster_id, new LeagueMember(user, roster, draftPos))
 					this.memberIdToRosterId.set(user.user_id, roster.roster_id)
 				}
 			})

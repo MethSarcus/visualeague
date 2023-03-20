@@ -16,20 +16,46 @@ import {POSITION} from '../../utility/rosterFunctions'
 import {Context} from '../../contexts/Context'
 import League from '../../classes/custom/League'
 
-type MyProps = {pick: DraftPlayer | undefined}
+type MyProps = {
+	pick: DraftPlayer | undefined
+	focusedRosterId?: number
+	numMembers?: number
+	isSnakeDraft?: boolean
+}
 
 export default function DraftPickCard(props: MyProps) {
 	const [context, setContext] = useContext(Context)
 	const template = `"player_name player_name pick_no"
                     "drafted_by drafted_by thumbnail"`
+	let opacity = 1
+	if (props.focusedRosterId != -1 && props.focusedRosterId != props.pick?.roster_id) {
+		opacity= .25
+	} else {
+		opacity = 1
+	}
+
+	let pickNumber = props.pick?.draft_slot ?? 1
+	if (props.isSnakeDraft && (props.pick?.round ?? 2) % 2 == 0) {
+		pickNumber = Math.abs(pickNumber - (props.numMembers ?? 0)) + 1
+	}
+	// pickNumber = (props.pick?.pick_no ?? 1) % (props.numMembers ?? 1)
+	// if (pickNumber == 0) {
+	// 	pickNumber = 10
+	// }
+
+	if (props.numMembers == undefined) {
+		pickNumber = props.pick?.draft_slot ?? 1
+	}
 	return (
 		<Grid
-			width={'120px'}
+			width={'auto'}
 			height={'50px'}
+			minW={"120px"}
+			opacity={opacity}
 			filter={'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))'}
 			templateAreas={template}
 			overflow={'hidden'}
-			gridTemplateColumns={'1fr 1fr 1fr'}
+			gridTemplateColumns={'1fr 1fr .75fr'}
 			background={
 				project_colors.position[props.pick?.metadata.position as POSITION]
 			}
@@ -64,7 +90,7 @@ export default function DraftPickCard(props: MyProps) {
 				<Text fontSize={'10px'} color={'rgba(0, 0, 0, 0.6)'}>
 					{props.pick?.amount != null
 						? `$${props.pick.amount}`
-						: `${props.pick?.round}.${props.pick?.draft_slot}`}
+						: `${props.pick?.round}.${pickNumber}`}
 				</Text>
 			</GridItem>
 
