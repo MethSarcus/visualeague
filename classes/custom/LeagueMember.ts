@@ -18,14 +18,16 @@ export default class LeagueMember {
 	players: Map<string, SeasonPlayer> = new Map()
 	division_id: number
 	badges: MemberBadgeData[] = []
+	draft_pos: number
 
-	constructor(userDetails: SleeperUser, roster: SleeperRoster) {
+	constructor(userDetails: SleeperUser, roster: SleeperRoster, draft_pos: number) {
 		this.userDetails = userDetails
 		this.roster = roster
 		this.name = userDetails.display_name
 		this.userId = userDetails.user_id
 		this.avatar = userDetails.avatar
 		this.division_id = roster.settings.division
+		this.draft_pos = draft_pos
 
 		if (userDetails.metadata.team_name != null) {
 			this.teamName = userDetails.metadata.team_name
