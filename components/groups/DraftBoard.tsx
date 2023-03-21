@@ -63,8 +63,8 @@ export default function DraftBoard(props: MyProps) {
 						<GridItem key={mem.userId}>
 							<LeagueMemberDraftCard
 								user={mem}
-								setFocusFunction={setFocusOnclick as any}
-							/>
+								setFocusFunction={setFocusOnclick as any} 
+								focusedRosterId={focusedRosterId}							/>
 						</GridItem>
 					)
 				})}
