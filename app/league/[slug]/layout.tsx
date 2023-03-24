@@ -11,8 +11,9 @@ import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
-import {LeagueContext} from '../../../contexts/LeagueContext'
-import {StatsContext} from '../../../contexts/StatsContext'
+import { LeagueContext } from '../../../contexts/LeagueContext'
+import { SeasonContext } from '../../../contexts/SeasonContext'
+import { StatsContext } from '../../../contexts/StatsContext'
 import styles from '../../../styles/Home.module.css'
 export default function LeagueLayout({
 	children, // will be a page or nested layout
@@ -20,9 +21,12 @@ export default function LeagueLayout({
 	children: React.ReactNode
 }) {
 	enableAllPlugins()
-	const [context, setContext] = useContext(LeagueContext)
-	const [leagueContext, setLeagueContext] = useContext(StatsContext)
+	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
+	const [statsContext, setStatsContext] = useContext(StatsContext)
+	const [seasonContext, setSeasonContext] = useContext(SeasonContext)
 	const [leagueDataExists, setLeagueDataExists] = useState(false)
+
+	
 	let leagueId = usePathname()?.replace('/league/', '')
 	if (leagueId?.includes('/trades')) {
 		leagueId = leagueId.replace('/trades', '')
@@ -90,8 +94,11 @@ export default function LeagueLayout({
 	)
 
 	useEffect(() => {
-		if (leagueId == context.settings?.league_id) {
+		if (leagueId == leagueContext.settings?.league_id) {
 			setLeagueDataExists(true)
+		}
+		if (seasonContext != parseInt(sleeperLeagueData?.season)) {
+			setSeasonContext(parseInt(sleeperLeagueData?.season))
 		}
 		if (
 			leagueData &&
@@ -100,33 +107,36 @@ export default function LeagueLayout({
 			tradeData?.trades &&
 			draftData &&
 			draftSettings &&
-			leagueContext?.stats &&
+			statsContext?.stats &&
 			sleeperLeagueError == undefined
 		) {
 			let league = new League(
 				leagueData.league,
-				leagueContext.stats,
-				leagueContext.projections,
+				statsContext.stats,
+				statsContext.projections,
 				new Draft(draftData, draftSettings),
 				undefined,
 				tradeData?.trades
 			)
 			console.log(league)
-			setContext(league)
+			setLeagueContext(league)
 			return
 		}
 	}, [
-		context.settings?.league_id,
+		leagueContext.settings?.league_id,
 		draftData,
 		draftSettings,
 		leagueData,
 		leagueId,
-		setContext,
+		setLeagueContext,
 		tradeData,
 		tradeData?.trades,
-		leagueContext,
-		leagueContext.stats,
+		statsContext,
+		statsContext.stats,
 		sleeperLeagueError,
+		seasonContext,
+		setSeasonContext,
+		sleeperLeagueData?.season
 	])
 
 	if (sleeperLeagueError) {
