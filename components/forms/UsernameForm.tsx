@@ -15,7 +15,7 @@ import {
 import Link from 'next/link'
 import React from 'react'
 import {useEffect, useState} from 'react'
-import { project_colors } from '../../utility/project_colors'
+import {project_colors} from '../../utility/project_colors'
 import LeagueCellGroup from './LeagueCellGroup'
 
 function UsernameForm() {
@@ -85,7 +85,7 @@ function UsernameForm() {
 						Submit
 					</Button>
 
-<Spacer/>
+					<Spacer />
 
 					<Link
 						href='https://github.com/MethSarcus/visualeague/issues/new/choose'
@@ -95,7 +95,6 @@ function UsernameForm() {
 						<Button
 							variant='outline'
 							size='xs'
-							
 							textColor={project_colors.textTheme.highEmphasis}
 							borderColor={project_colors.statColor.bad}
 							_hover={{background: project_colors.statColor.bad}}
@@ -108,25 +107,24 @@ function UsernameForm() {
 						</Button>
 					</Link>
 					<Link
-					href={`/league/842160100956274688`}
-					style={{textDecoration: 'none'}}
-				>
-					<Button
-						variant='outline'
-						size='xs'
-						ml={2}
-						data-testid='demo'
-						p={3}
-						_hover={{background: project_colors.primary[800]}}
-						borderColor='primary.500'
-						color='#000000'
-						textColor={project_colors.textTheme.highEmphasis}
-						mt={6}
+						href={`/league/842160100956274688`}
+						style={{textDecoration: 'none'}}
 					>
-						Demo
-					</Button>
+						<Button
+							variant='outline'
+							size='xs'
+							ml={2}
+							data-testid='demo'
+							p={3}
+							_hover={{background: project_colors.primary[800]}}
+							borderColor='primary.500'
+							color='#000000'
+							textColor={project_colors.textTheme.highEmphasis}
+							mt={6}
+						>
+							Demo
+						</Button>
 					</Link>
-
 				</Collapse>
 			</form>
 
@@ -145,18 +143,22 @@ function UsernameForm() {
 				data-testid='saved_username_container'
 				in={!usernameSubmitted && storedUsernames.length > 0}
 			>
-				<Box textColor={project_colors.textTheme.mediumEmphasis} pt={6}>Recent Searches</Box>
+				<Box textColor={project_colors.textTheme.mediumEmphasis} pt={6}>
+					Recent Searches
+				</Box>
 				<Wrap pt={2}>
 					{storedUsernames.map((item, index) => {
 						return (
 							<WrapItem onClick={() => setText(item)} key={item}>
 								<ScaleFade in={true} initialScale={0.01}>
-									<Button 
-									textColor={project_colors.textTheme.highEmphasis}
-									borderColor='secondary.800'
-									backgroundColor={project_colors.secondary[800]}
-									colorScheme={'secondary'}
-									 variant={"solid"} size={'xs'}>
+									<Button
+										textColor={project_colors.textTheme.highEmphasis}
+										borderColor='secondary.800'
+										backgroundColor={project_colors.secondary[800]}
+										colorScheme={'secondary'}
+										variant={'solid'}
+										size={'xs'}
+									>
 										{item}
 									</Button>
 								</ScaleFade>
@@ -169,8 +171,10 @@ function UsernameForm() {
 					colorScheme={'primary'}
 					textColor={project_colors.textTheme.mediumEmphasis}
 					borderColor='secondary.800'
-					_hover={{background: project_colors.secondary[900], textColor: project_colors.textTheme.highEmphasis}}
-					
+					_hover={{
+						background: project_colors.secondary[900],
+						textColor: project_colors.textTheme.highEmphasis,
+					}}
 					mt={3}
 					size={'xs'}
 					onClick={onStorageCleared}

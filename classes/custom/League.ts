@@ -700,7 +700,7 @@ export default class League {
 				).pf
 				scores.forEach((scoreObj) => {
 					if (member.roster.roster_id != scoreObj.id) {
-						let opponent = this.members.get(scoreObj.id)!
+						let opponent = this.members.get(scoreObj.id)
 						if (memberWeekScore > scoreObj.score) {
 							if (!member.stats.allPlayWinMap.has(scoreObj.id)) {
 								member.stats.allPlayWinMap.set(scoreObj.id, 1)
@@ -711,8 +711,8 @@ export default class League {
 								)
 							}
 
-							if (!opponent.stats.allPlayLossMap.has(member.roster.roster_id)) {
-								opponent.stats.allPlayLossMap.set(member.roster.roster_id, 1)
+							if (!opponent?.stats.allPlayLossMap.has(member.roster.roster_id)) {
+								opponent?.stats.allPlayLossMap.set(member.roster.roster_id, 1)
 							} else {
 								opponent.stats.allPlayLossMap.set(
 									member.roster.roster_id,
@@ -730,8 +730,8 @@ export default class League {
 								)
 							}
 
-							if (!opponent.stats.allPlayTieMap.has(member.roster.roster_id)) {
-								opponent.stats.allPlayTieMap.set(member.roster.roster_id, 1)
+							if (!opponent?.stats.allPlayTieMap.has(member.roster.roster_id)) {
+								opponent?.stats.allPlayTieMap.set(member.roster.roster_id, 1)
 							} else {
 								opponent.stats.allPlayTieMap.set(
 									member.roster.roster_id,

@@ -34,7 +34,7 @@ export default function Page() {
 	if (!context.settings) return <Spinner />
 
 	return (
-			<Tabs isFitted variant='enclosed' colorScheme={"secondary"} >
+			<Tabs isFitted variant='enclosed' colorScheme={"secondary"} mt={4} mx={2} isLazy>
 				<TabList mb='1em' color={"white"}>
 					<Tab>Stats</Tab>
 					<Tab>Draftboard</Tab>
@@ -42,6 +42,7 @@ export default function Page() {
 				<TabPanels>
 					<TabPanel>
 						<Grid
+						
 							templateAreas={[mobileGrid, desktopGrid]}
 							gridTemplateColumns={['1fr', '1fr 1fr']}
 							mx={5}
