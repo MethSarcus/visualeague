@@ -7,7 +7,7 @@ import {
 	Adds,
 	SleeperTransaction,
 } from '../../classes/sleeper/SleeperTransaction'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import TradeSide from '../groups/transactions/TradeSide'
 import Card from './Card'
 
@@ -16,7 +16,7 @@ interface MyProps {
 }
 
 export default function TradeCard(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 
 	//Gotta reverse the order of the roster add/drops and make them easily accessable
 	const rosterPlayerAdds = new Map<number, (number | string)[]>()

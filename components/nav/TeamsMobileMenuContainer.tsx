@@ -32,7 +32,7 @@ import {
 	MdUnfoldLess,
 } from 'react-icons/md'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import LeagueMemberButton from '../cards/LeagueMemberButton'
 import MemberList from '../groups/MemberList'
 import { RiGroupLine } from "react-icons/ri";
@@ -41,7 +41,7 @@ interface MyProps {
 	onclose: () => void
 }
 export default function TeamsMobileMenuContainer(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const {isOpen, onToggle} = useDisclosure()
 
 	return (

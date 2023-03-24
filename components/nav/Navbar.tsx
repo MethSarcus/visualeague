@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import { project_colors } from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
@@ -19,7 +19,7 @@ interface MyProps {
 }
 
 function Navbar(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 
 	function setSeasonPortion(selected: String) {
 

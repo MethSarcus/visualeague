@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import {useContext} from 'react'
 import Matchup from '../../../classes/custom/Matchup'
-import {Context} from '../../../contexts/Context'
+import {LeagueContext} from '../../../contexts/LeagueContext'
 import {project_colors} from '../../../utility/project_colors'
 import MatchupModalBody from '../../MatchupModalBody'
 
@@ -37,7 +37,7 @@ type MyProps = {
 
 const NotableMatchupStatCard = (props: MyProps) => {
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	let homeMember
 	let awayMember
 	let awayBadgeColor = project_colors.outcomeColor.tie_color

@@ -7,10 +7,10 @@ import {
 import { useContext, useState } from 'react'
 import League from '../../../../classes/custom/League'
 import MemberRoster from '../../../../components/groups/roster/MemberRoster'
-import { Context } from '../../../../contexts/Context'
+import { LeagueContext } from '../../../../contexts/LeagueContext'
 
 export default function Page() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const [shownMembers, setShownMembers] = useState([] as string[])
 	const desktopGrid = `"controls"
 	"rosters"`

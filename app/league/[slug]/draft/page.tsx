@@ -20,10 +20,10 @@ import DraftValueBarChart from '../../../../components/charts/bar/DraftValueBarC
 import DraftBoard from '../../../../components/groups/DraftBoard'
 import DraftPageStatGroup from '../../../../components/groups/stats/DraftPageStatGroup'
 import DraftValueTable from '../../../../components/tables/DraftValueTable'
-import {Context} from '../../../../contexts/Context'
+import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 export default function Page() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const desktopGrid = `
 	"draft_cards draft_cards"
 	"draft_table draft_chart"`

@@ -18,7 +18,7 @@ import {useContext} from 'react'
 import LeagueMember from '../../../classes/custom/LeagueMember'
 import Matchup from '../../../classes/custom/Matchup'
 import {MatchupSide} from '../../../classes/custom/MatchupSide'
-import {Context} from '../../../contexts/Context'
+import {LeagueContext} from '../../../contexts/LeagueContext'
 import MatchupModalBody from '../../MatchupModalBody'
 
 type MyProps = {
@@ -33,7 +33,7 @@ type MyProps = {
 
 const WeekStatCard = (props: MyProps) => {
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 
 	let leagueMember
 

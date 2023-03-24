@@ -11,8 +11,8 @@ import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
-import {Context} from '../../../contexts/Context'
-import {StatsContext} from '../../../contexts/LeagueContext'
+import {LeagueContext} from '../../../contexts/LeagueContext'
+import {StatsContext} from '../../../contexts/StatsContext'
 import styles from '../../../styles/Home.module.css'
 export default function LeagueLayout({
 	children, // will be a page or nested layout
@@ -20,7 +20,7 @@ export default function LeagueLayout({
 	children: React.ReactNode
 }) {
 	enableAllPlugins()
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const [leagueContext, setLeagueContext] = useContext(StatsContext)
 	const [leagueDataExists, setLeagueDataExists] = useState(false)
 	let leagueId = usePathname()?.replace('/league/', '')

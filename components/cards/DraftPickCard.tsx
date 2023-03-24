@@ -13,7 +13,7 @@ import {DraftPick} from '../../classes/sleeper/DraftPick'
 import {DraftPlayer} from '../../classes/custom/Draft'
 import {project_colors} from '../../utility/project_colors'
 import {POSITION} from '../../utility/rosterFunctions'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import League from '../../classes/custom/League'
 
 type MyProps = {
@@ -24,7 +24,7 @@ type MyProps = {
 }
 
 export default function DraftPickCard(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const template = `"player_name player_name pick_no"
                     "drafted_by drafted_by thumbnail"`
 	let opacity = 1

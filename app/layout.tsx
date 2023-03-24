@@ -4,8 +4,8 @@ import {Analytics} from '@vercel/analytics/react'
 import axios from 'axios'
 import {useContext, useEffect, useMemo, useState} from 'react'
 import useSWR from 'swr'
-import {Context} from '../contexts/Context'
-import {StatsContext} from '../contexts/LeagueContext'
+import {LeagueContext} from '../contexts/LeagueContext'
+import {StatsContext} from '../contexts/StatsContext'
 import '../styles/globals.css'
 import customTheme from '../theme/index'
 
@@ -50,12 +50,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<body>
 				{
 					<StatsContext.Provider value={[statsContext, setStatsContext]}>
-						<Context.Provider value={[context, setContext]}>
+						<LeagueContext.Provider value={[context, setContext]}>
 							<ChakraProvider theme={customTheme}>
 								<Analytics />
 								{children}
 							</ChakraProvider>
-						</Context.Provider>
+						</LeagueContext.Provider>
 					</StatsContext.Provider>
 				}
 			</body>

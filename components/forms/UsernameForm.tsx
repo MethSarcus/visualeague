@@ -2,11 +2,14 @@
 import {
 	Box,
 	Button,
+	Center,
 	Collapse,
 	Container,
 	Fade,
+	HStack,
 	Input,
 	ScaleFade,
+	Select,
 	SlideFade,
 	Spacer,
 	Wrap,
@@ -22,6 +25,7 @@ function UsernameForm() {
 	const [text, setText] = useState('')
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())
+	const [selectedSeason, setSelectedSeason] = useState(2022)
 
 	useEffect(() => {
 		if ('usernames' in localStorage) {
@@ -56,18 +60,26 @@ function UsernameForm() {
 	return (
 		<Container data-testid='username_form'>
 			<form onSubmit={onFormSubmit}>
+				<HStack mt={[0, 3]}>
 				<Input
 					list={'data'}
 					variant='outline'
 					placeholder='Sleeper Username'
 					data-testid='username_input'
-					size='lg'
-					p={5}
+					size={['md', 'lg']}
 					display='inline-block'
-					mt={[0, 3]}
+
 					value={text}
 					onChange={(e) => textChanged(e.target.value)}
 				/>
+				<Select size={['sm','lg']} maxW={["80px", "100px"]}>
+				<option value='2022'>2022</option>
+				<option value='2021'>2021</option>
+				<option value='2020'>2020</option>
+				<option value='2019'>2019</option>
+				</Select>
+				</HStack>
+
 				<Collapse in={!usernameSubmitted}>
 					<Button
 						variant='solid'

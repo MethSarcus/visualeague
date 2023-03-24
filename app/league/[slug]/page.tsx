@@ -23,7 +23,7 @@ import League from '../../../classes/custom/League'
 import GenericStatCard from '../../../components/cards/statcards/GenericStatCard'
 import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
 import LeagueOverviewDataTable from '../../../components/tables/LeagueOverviewDatatable'
-import {Context} from '../../../contexts/Context'
+import {LeagueContext} from '../../../contexts/LeagueContext'
 import BarChart from '../../../components/charts/bar/PFBarChart'
 import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
@@ -33,7 +33,7 @@ import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineCha
 export default function LeaguePage() {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const leagueId = usePathname()?.replace('/league/', '')
 
 	const desktopGrid = `"header header header"

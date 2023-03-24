@@ -28,7 +28,7 @@ import LeagueMember from '../../classes/custom/LeagueMember'
 import Matchup from '../../classes/custom/Matchup'
 import MatchupInterface from '../../classes/custom/MatchupInterface'
 import {MatchupPlayer} from '../../classes/custom/MatchupPlayer'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
 import {LINEUP_POSITION} from '../../utility/rosterFunctions'
 import {LINEUP_OPTIONS} from '../sleeper/HorizontalPillSelector'
@@ -41,7 +41,7 @@ interface MyProps {
 }
 
 export default function MatchupPreview(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	const [homeStarters, setHomeStarters] = useState(
 		props.matchup?.homeTeam.starters
