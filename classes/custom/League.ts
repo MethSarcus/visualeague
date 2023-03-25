@@ -408,8 +408,8 @@ export default class League {
 			let weekNum = week.weekNumber
 			let isPlayoffs = false
 			if (
-				this.settings.playoff_week_start &&
-				this.settings.playoff_week_start <= weekNum
+				this.settings.settings.playoff_week_start &&
+				this.settings.settings.playoff_week_start <= weekNum
 			) {
 				isPlayoffs = true
 			}
@@ -884,13 +884,13 @@ export default class League {
 			case SeasonPortion.REGULAR: {
 				eligibleWeeks = eligibleWeeks.slice(
 					0,
-					this.settings.playoff_week_start ?? 14
+					this.settings.settings.playoff_week_start - 1
 				)
 				break
 			}
 			case SeasonPortion.POST: {
 				eligibleWeeks = eligibleWeeks.slice(
-					this.settings.playoff_week_start ?? 14,
+					this.settings.settings.playoff_week_start - 1,
 					eligibleWeeks.length
 				)
 				break
@@ -1408,24 +1408,22 @@ export default class League {
 			{length: this.allMatchups.length},
 			(_, i) => i + 1
 		)
-
 		switch (this.seasonPortion) {
 			case SeasonPortion.REGULAR: {
 				enabledWeeks = enabledWeeks.slice(
 					0,
-					this.settings.playoff_week_start ?? 14
+					this.settings.settings.playoff_week_start - 1
 				)
 				break
 			}
 			case SeasonPortion.POST: {
 				enabledWeeks = enabledWeeks.slice(
-					this.settings.playoff_week_start ?? 14,
+					this.settings.settings.playoff_week_start - 1,
 					enabledWeeks.length
 				)
 				break
 			}
 		}
-
 		return enabledWeeks
 	}
 

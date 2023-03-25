@@ -24,7 +24,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	
 	const {data: leagueStats, error: leagueStatsError} = useSWR(
 		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: numWeeks}, (_, i) => i + 1).map((weekNum) => {
+		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
 				return `/api/stats/${seasonContext}/${weekNum}`
 			}),
 		multiFetcher
@@ -32,7 +32,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
 	const {data: leagueProjections, error: leagueProjectionsError} = useSWR(
 		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: numWeeks}, (_, i) => i + 1).map((weekNum) => {
+		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
 				return `/api/projections/${seasonContext}/${weekNum}`
 			}),
 		multiFetcher
@@ -48,8 +48,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			let projections = leagueProjections.filter((v) => {return v.status == 'fulfilled'}).map((weeklyProjString) => {
 				return JSON.parse((weeklyProjString as any).value) as any
 			})
-
-			console.log(stats)
 
 			setStatsContext({stats: stats, projections: projections})
 		}
