@@ -1,12 +1,12 @@
 "use client"
-import {Box, Button, Center, Flex, HStack} from '@chakra-ui/react'
+import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react'
 import produce from 'immer'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import { project_colors } from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
@@ -19,7 +19,7 @@ interface MyProps {
 }
 
 function Navbar(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 
 	function setSeasonPortion(selected: String) {
 
@@ -108,7 +108,7 @@ interface NavButtonProps {
 }
 function NavbarButton(props: NavButtonProps) {;
 	const pathName = usePathname();
-
+	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 	if (props.link != undefined && props.disabled != true) {
 		return (
 			<Link href={props.link} 
@@ -126,7 +126,7 @@ function NavbarButton(props: NavButtonProps) {;
 					borderRadius={0}
 					colorScheme={'primary'}
 					textColor='white'
-					isActive={pathName == "/" + props.link}
+					isActive={pathName == "/" + props.link && isLargerThan800}
 					_active={
 						{ bg: project_colors.secondary[500]}
 					}
@@ -152,7 +152,7 @@ function NavbarButton(props: NavButtonProps) {;
 				fontWeight={'medium'}
 				colorScheme={'primary'}
 				textColor='white'
-				isActive={pathName?.includes("/" + props.link)}
+				isActive={pathName?.includes("/" + props.link) && isLargerThan800}
 				_active={
 					{ bg: project_colors.secondary[500]}
 				}

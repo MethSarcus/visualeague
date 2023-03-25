@@ -22,10 +22,10 @@ import TradeCard from '../../../../components/cards/TradeCard'
 import WorstTradeCard from '../../../../components/cards/WorstTradeCard'
 import WeeklyTradesLineChart from '../../../../components/charts/line/WeeklyTradesLineChart'
 import TradeChordChart from '../../../../components/charts/TradeChordChart'
-import {Context} from '../../../../contexts/Context'
+import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 export default function Page() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const desktopTemplate = `
     "imba imba trades trades"
     "imba imba trades trades"

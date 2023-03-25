@@ -1,17 +1,20 @@
 'use client'
 import {Avatar, Box, Button, Center, ScaleFade} from '@chakra-ui/react'
 import Link from 'next/link'
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import {LeagueSettings} from '../classes/sleeper/LeagueSettings'
+import { LeagueContext } from '../contexts/LeagueContext'
 
 type MyProps = {
 	league: LeagueSettings
 }
 const UserLeagueCell = (props: MyProps) => {
 	const [leagueSelected, setLeagueSelected] = useState(false)
+	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 
 	function onclick() {
 		setLeagueSelected(true)
+		setLeagueContext({})
 	}
 
 	return (

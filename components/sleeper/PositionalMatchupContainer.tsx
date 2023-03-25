@@ -2,7 +2,7 @@
 import {Box, Center} from '@chakra-ui/react'
 import {useContext} from 'react'
 import {BlankPlayer, MatchupPlayer} from '../../classes/custom/MatchupPlayer'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
 import {LINEUP_POSITION} from '../../utility/rosterFunctions'
 import SleeperLineupBadge from '../PositionBadges/SleeperLineupBadge'
@@ -16,7 +16,7 @@ interface MyProps {
 }
 
 export default function PositionalMatchupContainer(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	let homePlayerDetails
 	let awayPlayerDetails
 
