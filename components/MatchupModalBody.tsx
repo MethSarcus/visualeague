@@ -2,7 +2,7 @@ import { Box, Button, Center, ModalBody, ModalCloseButton, ModalContent, ModalFo
 import { useContext, useState } from "react";
 import League from "../classes/custom/League";
 import Matchup from "../classes/custom/Matchup";
-import { Context } from "../contexts/Context";
+import { LeagueContext } from "../contexts/LeagueContext";
 import { project_colors } from "../utility/project_colors";
 import { LINEUP_POSITION } from "../utility/rosterFunctions";
 import { LINEUP_OPTIONS } from "./sleeper/HorizontalPillSelector";
@@ -15,7 +15,7 @@ interface MyProps {
 }
 
 export default function MatchupModalBody(props: MyProps) {
-    const [context, setContext] = useContext(Context)
+    const [context, setContext] = useContext(LeagueContext)
     const [homeStarters, setHomeStarters] = useState(props.matchup?.homeTeam.starters)
     const [homeBench, setHomeBench] = useState(props.matchup?.homeTeam.bench)
     const [homeScore, setHomeScore] = useState(props.matchup?.homeTeam.pf)

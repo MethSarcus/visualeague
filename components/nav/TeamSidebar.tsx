@@ -9,12 +9,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { usePathname } from 'next/navigation'
-import { Context } from "../../contexts/Context";
+import { LeagueContext } from "../../contexts/LeagueContext";
 import MemberList from "../groups/MemberList";
 import { project_colors } from "../../utility/project_colors";
 
 export default function TeamSidebar() {
-  const [context, setContext] = useContext(Context);
+  const [context, setContext] = useContext(LeagueContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const pathName = usePathname();
 

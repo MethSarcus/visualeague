@@ -2,7 +2,7 @@ import {Box, Button, Collapse, Text, useDisclosure} from '@chakra-ui/react'
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
-import {Context} from '../../../contexts/Context'
+import {LeagueContext} from '../../../contexts/LeagueContext'
 import {POSITION} from '../../../utility/rosterFunctions'
 import TeamCard from '../../cards/TeamCard'
 import TeamCardWithTrendingGraph from '../../cards/TeamCardWithTrendingGraph'
@@ -15,7 +15,7 @@ interface MyProps {
 }
 
 export default function MemberRoster(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	return (
 		<Box>
 			<Box w={'full'} height={'40px'}>

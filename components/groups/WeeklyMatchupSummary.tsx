@@ -4,7 +4,7 @@ import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import MatchupInterface from '../../classes/custom/MatchupInterface'
 import { MatchupSide } from '../../classes/custom/MatchupSide'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import HorizontalPillSelector from '../nav/SeasonPortionSelector'
 import MatchupHeaderTeam from '../sleeper/MatchupHeaderTeam'
 
@@ -21,7 +21,7 @@ interface matchupProps {
 }
 
 export default function WeeklyMatchupSummaryHeader(props: MyProps) {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
     let matchups: matchupProps[] = []
     
 	if (context?.settings == undefined) return <div>loading</div>

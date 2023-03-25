@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import Trade from "../../classes/custom/Trade";
-import { Context } from "../../contexts/Context";
+import { LeagueContext } from "../../contexts/LeagueContext";
 import TradeCard from "./TradeCard";
 
 interface MyProps {

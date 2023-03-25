@@ -1,7 +1,7 @@
 import {useRadioGroup, Center, HStack, useRadio, Box} from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
 import { SeasonPortion } from '../../classes/custom/League'
-import { Context } from '../../contexts/Context'
+import { LeagueContext } from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
 
 interface MyProps {
@@ -10,8 +10,8 @@ interface MyProps {
 
 export default function HorizontalPillSelector(props: MyProps) {
 	const options = [SeasonPortion.REGULAR, SeasonPortion.POST, SeasonPortion.ALL]
-    const [context, setContext] = useContext(Context)
-
+    const [context, setContext] = useContext(LeagueContext)
+	const [league_id, setLeagueID] = useState(context?.league_id)
 	const {getRootProps, getRadioProps} = useRadioGroup({
 		name: 'season_portion',
 		defaultValue: (context.seasonPortion ?? SeasonPortion.ALL),
@@ -19,6 +19,14 @@ export default function HorizontalPillSelector(props: MyProps) {
 	})
 
 	const group = getRootProps()
+	useEffect(() => {
+		if (context?.league_id != league_id) {
+			props.onclick("ALL")
+		}
+		
+	}, [context, context?.league_id, league_id, props])
+
+
       
 
 	return (

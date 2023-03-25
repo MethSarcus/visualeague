@@ -23,10 +23,10 @@ import TeamPlayerStatGroup from '../../../../../components/groups/stats/TeamPlay
 import TeamStatGroup from '../../../../../components/groups/stats/TeamStatGroup'
 import WeeklyTeamStatGroup from '../../../../../components/groups/stats/WeeklyTeamStatGroup'
 import MemberTradeGroup from '../../../../../components/groups/transactions/MemberTradeGroup'
-import { Context } from '../../../../../contexts/Context'
+import { LeagueContext } from '../../../../../contexts/LeagueContext'
 
 export default function TeamPage() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const memberId = usePathname()?.split('/').at(-1)
 
 	let member: undefined | LeagueMember

@@ -32,11 +32,11 @@ import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import MemberScores from '../../classes/custom/MemberStats'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import {getReadableScoringKey} from '../../utility/rosterFunctions'
 
 export default function SettingsSidebar() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
 

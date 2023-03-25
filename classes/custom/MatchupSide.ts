@@ -63,7 +63,7 @@ export class MatchupSide {
 					'BN',
 					stats.get(playerId),
 					projections.get(playerId),
-					playerDetails.get(playerId)!.fantasy_positions,
+					playerDetails.get(playerId)?.fantasy_positions,
 					settings.scoring_settings
 				)
 			})

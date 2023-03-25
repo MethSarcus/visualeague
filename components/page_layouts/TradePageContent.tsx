@@ -15,7 +15,7 @@ import useSWR from "swr";
 import League from "../../classes/custom/League";
 import Trade from "../../classes/custom/Trade";
 import { SleeperTransaction } from "../../classes/sleeper/SleeperTransaction";
-import { Context } from "../../contexts/Context";
+import { LeagueContext } from "../../contexts/LeagueContext";
 import TradeCard from "../cards/TradeCard";
 import TradeChordChart from "../charts/TradeChordChart";
 

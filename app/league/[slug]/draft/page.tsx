@@ -20,10 +20,10 @@ import DraftValueBarChart from '../../../../components/charts/bar/DraftValueBarC
 import DraftBoard from '../../../../components/groups/DraftBoard'
 import DraftPageStatGroup from '../../../../components/groups/stats/DraftPageStatGroup'
 import DraftValueTable from '../../../../components/tables/DraftValueTable'
-import {Context} from '../../../../contexts/Context'
+import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 export default function Page() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const desktopGrid = `
 	"draft_cards draft_cards"
 	"draft_table draft_chart"`
@@ -34,7 +34,7 @@ export default function Page() {
 	if (!context.settings) return <Spinner />
 
 	return (
-			<Tabs isFitted variant='enclosed' colorScheme={"secondary"} >
+			<Tabs isFitted variant='enclosed' colorScheme={"secondary"} mt={4} mx={2} isLazy>
 				<TabList mb='1em' color={"white"}>
 					<Tab>Stats</Tab>
 					<Tab>Draftboard</Tab>
@@ -42,6 +42,7 @@ export default function Page() {
 				<TabPanels>
 					<TabPanel>
 						<Grid
+						
 							templateAreas={[mobileGrid, desktopGrid]}
 							gridTemplateColumns={['1fr', '1fr 1fr']}
 							mx={5}

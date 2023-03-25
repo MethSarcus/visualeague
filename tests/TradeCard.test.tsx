@@ -4,6 +4,8 @@ import TeamStatCard from '../components/cards/statcards/TeamStatCard'
 import WorstTradeCard from '../components/cards/WorstTradeCard'
 import Trade from '../classes/custom/Trade'
 import TradeCard from '../components/cards/TradeCard'
+import { ChakraProvider } from '@chakra-ui/react'
+import customTheme from '../theme/index'
 
 describe('TradeCard', () => {
 
@@ -14,14 +16,18 @@ describe('TradeCard', () => {
 		expect(trade.consenter_ids).toEqual([ 8, 3 ])
 	})
 
-	// test('TradeCardInits', () => {
-	// 	let trade = new Trade(JSON.parse(sleeperTransaction))
-	// 	render(<TradeCard trade={trade}/>)
-	// })
 	test('Renders Tradecard', () => {
 		let tradeCard = <WorstTradeCard trade={undefined} title={'worst trade'} />
 		render(tradeCard)
 		let card = screen.getByTestId('card_title')
 		expect(card).toHaveTextContent('worst trade')
+	})
+
+	test("Renders TeamStatCard", () => {
+		let teamStatCard = <ChakraProvider theme={customTheme}><TeamStatCard statName={'stat_name'} statValue={'testValue'} isLoaded={true} isGoodThing={undefined} /></ChakraProvider>
+		render(teamStatCard)
+		let card = screen.getByTestId('team_stat_card_container')
+		expect(card).toHaveTextContent('stat_name')
+		expect(card).toHaveTextContent('testValue')
 	})
 })

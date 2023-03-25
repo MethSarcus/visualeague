@@ -4,7 +4,7 @@ import { BasicTooltip, Chip, TableTooltip } from '@nivo/tooltip';
 import React, { useContext } from 'react';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { SleeperTransaction } from '../../classes/sleeper/SleeperTransaction';
-import { Context } from '../../contexts/Context';
+import { LeagueContext } from '../../contexts/LeagueContext';
 import { project_colors } from "../../utility/project_colors";
 
 
@@ -15,7 +15,7 @@ interface MyProps {
 
 
 const TradeChordChart = (props: MyProps) => {
-    let context = useContext(Context)
+    let context = useContext(LeagueContext)
 
     if (!context[0].members) return <Box>Loading...</Box>
     let data = formatTradesForTradeChart(props.trades, 10) as any

@@ -3,7 +3,7 @@ import { ResponsivePie } from "@nivo/pie";
 import { useContext } from "react";
 import { MatchupPlayer } from "../../classes/custom/MatchupPlayer";
 import { SleeperPlayerDetails } from "../../classes/custom/Player";
-import { Context } from "../../contexts/Context";
+import { LeagueContext } from "../../contexts/LeagueContext";
 import { PositionColors } from "./ChartColors";
 
 interface MyProps {
@@ -15,7 +15,7 @@ interface MyProps {
 
 
 const LineupPieChart = (props: MyProps) => {
-  const [context, setContext] = useContext(Context)
+  const [context, setContext] = useContext(LeagueContext)
   if (!props.players || context.settings == undefined) return <Spinner/>
   let margins = props.margins
   if (!props.margins) {

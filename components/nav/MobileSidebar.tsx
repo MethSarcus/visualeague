@@ -26,12 +26,12 @@ import {RxLoop} from 'react-icons/rx'
 import {GiStrong} from 'react-icons/gi'
 import {BsGrid3X2, BsBarChart} from 'react-icons/bs'
 import {VscListTree} from 'react-icons/vsc'
-import {Context} from '../../contexts/Context'
+import {LeagueContext} from '../../contexts/LeagueContext'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
 
 export default function MobileSidebar() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	return (
 		<>

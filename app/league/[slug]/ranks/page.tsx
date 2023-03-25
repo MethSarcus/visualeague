@@ -6,10 +6,10 @@ import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
-import {Context} from '../../../../contexts/Context'
+import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 export default function RankPage() {
-	const [context, setContext] = useContext(Context)
+	const [context, setContext] = useContext(LeagueContext)
 	const [filteredIds, setFilteredIds] = useState([] as number[])
 
 
