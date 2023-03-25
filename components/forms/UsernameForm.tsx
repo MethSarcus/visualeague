@@ -16,6 +16,7 @@ import {
 	WrapItem,
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 import {useEffect, useState} from 'react'
 import {project_colors} from '../../utility/project_colors'
@@ -26,6 +27,7 @@ function UsernameForm() {
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())
 	const [selectedSeason, setSelectedSeason] = useState(2022)
+	const pathname = usePathname();
 
 	useEffect(() => {
 		if ('usernames' in localStorage) {
@@ -127,6 +129,7 @@ function UsernameForm() {
 						style={{textDecoration: 'none'}}
 					>
 						<Button
+							visibility={pathname != "/" ? "hidden" : "visible"}
 							variant='outline'
 							size='xs'
 							ml={2}

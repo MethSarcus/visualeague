@@ -128,3 +128,7 @@ a {
   background: #2F3241;
   border-radius: 5px;
 }
+
+select option {
+  background: rgb(75, 75, 75)!important;
+}
