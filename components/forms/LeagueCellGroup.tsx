@@ -1,7 +1,9 @@
 import {Box, Spinner, VStack, Wrap, WrapItem} from '@chakra-ui/react'
 import axios from 'axios'
+import { useContext } from 'react'
 import useSWR from 'swr'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
+import { LeagueContext } from '../../contexts/LeagueContext'
 import UserLeagueCell from '../UserLeagueCell'
 
 type MyProps = {

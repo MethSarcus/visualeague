@@ -17,7 +17,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	const [seasonContext, setSeasonContext] = useState(null)
 	
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-	let numWeeks = 18
 	function multiFetcher(...urls: any[]) {
 		return Promise.allSettled(urls.map((url) => fetcher(url)))
 	}
