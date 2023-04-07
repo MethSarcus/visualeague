@@ -16,41 +16,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	const [statsContext, setStatsContext] = useState({})
 	const [seasonContext, setSeasonContext] = useState(null)
 	
-	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-	function multiFetcher(...urls: any[]) {
-		return Promise.allSettled(urls.map((url) => fetcher(url)))
-	}
-	
-	const {data: leagueStats, error: leagueStatsError} = useSWR(
-		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
-				return `/api/stats/${seasonContext}/${weekNum}`
-			}),
-		multiFetcher
-	)
-
-	const {data: leagueProjections, error: leagueProjectionsError} = useSWR(
-		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
-				return `/api/projections/${seasonContext}/${weekNum}`
-			}),
-		multiFetcher
-	)
-
-	useMemo(() => {
-		if (leagueStats && leagueProjections) {
-			
-			let stats = leagueStats.filter((v) => {return v.status == 'fulfilled'}).map((weeklyStatString) => {
-				return JSON.parse((weeklyStatString as any).value) as any
-			})
-
-			let projections = leagueProjections.filter((v) => {return v.status == 'fulfilled'}).map((weeklyProjString) => {
-				return JSON.parse((weeklyProjString as any).value) as any
-			})
-
-			setStatsContext({stats: stats, projections: projections})
-		}
-	}, [leagueStats, leagueProjections])
 	return (
 		<html lang='en'>
 			<body>

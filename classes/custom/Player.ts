@@ -118,4 +118,11 @@ export interface SleeperPlayerDetails {
   weight: string;
   practice_participation?: any;
   search_last_name: string;
+  ktc?: KTC_Values;
+}
+
+interface KTC_Values {
+  oneQBValue: number;
+  superFlexValue: number;
+  ktc_id: number
 }
