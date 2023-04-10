@@ -29,12 +29,17 @@ export default function LeagueLayout({
 			: null,
 		fetcher
 	)
+	
+	const {data: draftSettings, error: draftSettingsError} = useSWR(
+		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
+			: null,
+		fetcher
+	)
 
-	const {data: leagueData, error: leagueError} = useSWR(
-		params.slug != undefined &&
-			sleeperLeagueError == undefined &&
-			sleeperLeagueData
-			? `/api/league/${params.slug}`
+	const {data: draftPicks, error: draftError} = useSWR(
+		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}/picks`
 			: null,
 		fetcher
 	)
@@ -51,31 +56,28 @@ export default function LeagueLayout({
 		}
 	)
 
+	const {data: leagueData, error: leagueError} = useSWR(
+		params.slug != undefined &&
+			sleeperLeagueError == undefined &&
+			sleeperLeagueData
+			? `/api/league/${params.slug}`
+			: null,
+		fetcher
+	)
+
 	const {data: tradeData, error: tradeError} = useSWR(
 		params.slug != undefined ? `/api/trades/${params.slug}` : null,
 		fetcher
 	)
 
-	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		leagueData?.league != undefined && leagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}`
-			: null,
-		fetcher
-	)
 
-	const {data: draftData, error: draftError} = useSWR(
-		leagueData?.league != undefined && leagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}/picks`
-			: null,
-		fetcher
-	)
 
 	useEffect(() => {
-		if (leagueData && statsData && draftData && draftSettings) {
+		if (leagueData && statsData && draftPicks && draftSettings) {
 			let league = new League(
 				leagueData.league,
 				statsData,
-				new Draft(draftData, draftSettings),
+				new Draft(draftPicks, draftSettings),
 				undefined,
 				tradeData?.trades
 			)
@@ -84,7 +86,7 @@ export default function LeagueLayout({
 			return
 		}
 	}, [
-		draftData,
+		draftPicks,
 		draftSettings,
 		leagueData,
 		setLeagueContext,
