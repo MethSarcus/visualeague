@@ -46,7 +46,7 @@ export default function LeagueLayout({
 
 	const {data: statsData, error: statsError} = useSWR(
 		sleeperLeagueData?.season != undefined
-			? `../stats/${sleeperLeagueData.season}_season.json`
+			? `/stats/${sleeperLeagueData.season}_season.json`
 			: null,
 		fetcher,
 		{
@@ -69,8 +69,6 @@ export default function LeagueLayout({
 		params.slug != undefined ? `/api/trades/${params.slug}` : null,
 		fetcher
 	)
-
-
 
 	useEffect(() => {
 		if (leagueData && statsData && draftPicks && draftSettings) {
