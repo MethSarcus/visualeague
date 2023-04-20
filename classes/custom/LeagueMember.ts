@@ -5,8 +5,10 @@ import MemberBadgeData from './MemberBadge'
 import MemberScores from './MemberStats'
 import SeasonPlayer from './SeasonPlayer'
 
+
+
 export default class LeagueMember {
-	userDetails: SleeperUser
+	userDetails: SleeperUser | undefined
 	roster: SleeperRoster
 	name: string
 	userId: string
@@ -20,22 +22,22 @@ export default class LeagueMember {
 	badges: MemberBadgeData[] = []
 	draft_pos: number
 
-	constructor(userDetails: SleeperUser, roster: SleeperRoster, draft_pos: number) {
+	constructor(userDetails: SleeperUser | undefined, roster: SleeperRoster, draft_pos: number) {
 		this.userDetails = userDetails
 		this.roster = roster
-		this.name = userDetails.display_name
-		this.userId = userDetails.user_id
-		this.avatar = userDetails.avatar
+		this.name = userDetails?.display_name ?? `Blank Member`
+		this.userId = userDetails?.user_id ??  `roster_${roster.roster_id}`
+		this.avatar = userDetails?.avatar ?? "" //TODO include url for profile icon
 		this.division_id = roster.settings.division
 		this.draft_pos = draft_pos
 
-		if (userDetails.metadata.team_name != null) {
+		if (userDetails?.metadata.team_name != null) {
 			this.teamName = userDetails.metadata.team_name
 		} else {
-			this.teamName = `Team ${userDetails.display_name}`
+			this.teamName = `Team ${userDetails?.display_name ?? "Blank"}`
 		}
 
-		if (userDetails.metadata.avatar != null) {
+		if (userDetails?.metadata.avatar != null) {
 			this.teamAvatar = userDetails.metadata.avatar
 		}
 	}
@@ -82,6 +84,10 @@ export default class LeagueMember {
 		} else {
 			return this.teamAvatar
 		}
+	}
+
+	getDisplayName(): string {
+		return this.userDetails?.display_name ?? "Empty Display Name"
 	}
 
 	getNotablePlayers(filteredPositions: POSITION[] = []) {

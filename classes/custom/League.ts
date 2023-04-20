@@ -548,10 +548,10 @@ export default class League {
 						if (awayTeam) {
 							let highScore =
 								matchup.getMemberSide(matchup.winnerRosterId)?.pf ??
-								matchup.homeTeam
+								matchup.homeTeam?.pf
 							let lowScore =
 								matchup.getMemberSide(matchup.loserRosterId!)?.pf ??
-								matchup.awayTeam
+								matchup.awayTeam?.pf
 							let margin = matchup.getMargin()
 							let combinedScore = homeTeam.pf + (awayTeam?.pf ?? 0)
 
@@ -769,50 +769,6 @@ export default class League {
 				member.tradePartnerMap.set(i, 0)
 		})
 	}
-
-	// getNotableDraftStats() {
-	// 	let bestValuePick: DraftPlayer | null = null
-	// 	let worstValuePick: DraftPlayer | null = null
-	// 	let bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
-	// 	let worstPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
-
-	// 	this.draft.picks.forEach((pick) => {
-	// 		let pickPosition = pick.metadata.position as POSITION
-	// 		if (bestValuePick == null) {
-	// 			bestValuePick = pick
-	// 			worstValuePick = pick
-	// 		} else if (pick.draftValue > bestValuePick.draftValue) {
-	// 			bestValuePick = pick
-	// 		}
-
-	// 		if (bestPositionalPicks.has(pickPosition)) {
-	// 			if (
-	// 				bestPositionalPicks.get(pickPosition)?.draftValue ??
-	// 				0 < pick.draftValue
-	// 			) {
-	// 				bestPositionalPicks.set(pickPosition, pick)
-	// 			}
-	// 		} else {
-	// 			bestPositionalPicks.set(pickPosition, pick)
-	// 		}
-
-	// 		if (!worstPositionalPicks.has(pickPosition)) {
-	// 			worstPositionalPicks.set(pickPosition, pick)
-	// 		} else if (
-	// 			worstPositionalPicks.has(pickPosition) &&
-	// 			(worstPositionalPicks.get(pickPosition)?.draftValue ??
-	// 				0 < pick.draftValue)
-	// 		) {
-	// 			worstPositionalPicks.set(pick.metadata.position as POSITION, pick)
-	// 		}
-	// 	})
-	// 	return {
-	// 		bestValuePick: bestValuePick as unknown as DraftPlayer,
-	// 		worstValuePick: worstValuePick as unknown as DraftPlayer,
-	// 		bestPositionalPicks: bestPositionalPicks,
-	// 		worstPositionalPicks: worstPositionalPicks,
-	// 	}
-	// }
 
 	getBestAndWorstDrafter() {
 		let bestDrafter: LeagueMember | null = null
@@ -1444,6 +1400,10 @@ export default class League {
 		})
 
 		return allWeeks
+	}
+
+	awardMemberBadges() {
+		
 	}
 }
 

@@ -111,7 +111,7 @@ export default function MatchupHeaderTeam(props: MyProps) {
 					lineHeight='10px'
 					textAlign={props.isHomeTeam ? 'start' : 'end'}
 				>
-					@{props.member?.userDetails.display_name}
+					@{props.member?.getDisplayName()}
 				</Text>
 				<Text
 					fontWeight={'semibold'}

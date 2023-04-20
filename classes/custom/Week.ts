@@ -51,6 +51,18 @@ export class Week {
       return teams
     }
 
+    getHighestWeeklyScorerRosterId(): number {
+      let highestScorerRosterId = -1
+      let highScore = 0
+      this.getAllTeams().forEach(team => {
+        if (team.pf > highScore) {
+          highestScorerRosterId = team.roster_id
+        }
+      });
+
+      return highestScorerRosterId
+    }
+
     getMemberMatchup(rosterId: number): Matchup | ByeWeekMatchup {
       let memberMatchup: Matchup | undefined | ByeWeekMatchup
       this.matchups.forEach(matchup => {

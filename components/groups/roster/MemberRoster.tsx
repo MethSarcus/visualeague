@@ -1,4 +1,4 @@
-import {Box, Button, Collapse, Text, useDisclosure} from '@chakra-ui/react'
+import {Box, Button, Collapse, Spacer, Text, useDisclosure} from '@chakra-ui/react'
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
@@ -27,9 +27,7 @@ export default function MemberRoster(props: MyProps) {
 			<TeamCard league={context} member={props.member} variant={''} size={''} />
 
 			<Box mt={4}>
-				<Text as={'h5'} color={'white'}>
-					Starters
-				</Text>
+				<Text as={'h5'} color={'white'}>Starters</Text>
 				{props.member.roster.starters.map((starter_id) => {
 					return (
 						<RosterPlayer
@@ -47,9 +45,7 @@ export default function MemberRoster(props: MyProps) {
 						/>
 					)
 				})}
-			</Box>
-
-			<Box mt={4}>
+				<Spacer/>
 				<Text as={'h5'} color={'white'}>
 					Bench
 				</Text>
