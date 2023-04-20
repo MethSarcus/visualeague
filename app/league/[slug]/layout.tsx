@@ -1,120 +1,81 @@
 'use client'
-import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
+import { Box, Button, Center, Grid, GridItem, Heading } from '@chakra-ui/react'
 import axios from 'axios'
-import {enableAllPlugins} from 'immer'
+import { enableAllPlugins } from 'immer'
 import Link from 'next/link'
-import {usePathname} from 'next/navigation'
-import React from 'react'
-import {useContext, useEffect, useMemo, useState} from 'react'
+import React, { useContext, useEffect } from 'react'
 import useSWR from 'swr'
-import {Draft} from '../../../classes/custom/Draft'
+import { Draft } from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import { LeagueContext } from '../../../contexts/LeagueContext'
-import { SeasonContext } from '../../../contexts/SeasonContext'
-import { StatsContext } from '../../../contexts/StatsContext'
 import styles from '../../../styles/Home.module.css'
 export default function LeagueLayout({
-	children, // will be a page or nested layout
+	children,
+	params,
 }: {
 	children: React.ReactNode
+	params: {slug: string}
 }) {
 	enableAllPlugins()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
-	const [statsContext, setStatsContext] = useContext(StatsContext)
-	const [seasonContext, setSeasonContext] = useContext(SeasonContext)
-	const [leagueDataExists, setLeagueDataExists] = useState(false)
-
-	
-	let leagueId = usePathname()?.replace('/league/', '')
-	if (leagueId?.includes('/trades')) {
-		leagueId = leagueId.replace('/trades', '')
-	}
-
-	if (leagueId?.includes('/ranks')) {
-		leagueId = leagueId.replace('/ranks', '')
-	}
-
-	if (leagueId?.includes('/team')) {
-		leagueId = leagueId.split('/team')[0]
-	}
-
-	if (leagueId?.includes('/draft')) {
-		leagueId = leagueId.replace('/draft', '')
-	}
-
-	if (leagueId?.includes('/rosters')) {
-		leagueId = leagueId.replace('/rosters', '')
-	}
 
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
-		leagueId != undefined
-			? `https://api.sleeper.app/v1/league/${leagueId}`
+		params.slug != undefined
+			? `https://api.sleeper.app/v1/league/${params.slug}`
 			: null,
 		fetcher
+	)
+	
+	const {data: draftSettings, error: draftSettingsError} = useSWR(
+		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
+			: null,
+		fetcher
+	)
+
+	const {data: draftPicks, error: draftError} = useSWR(
+		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}/picks`
+			: null,
+		fetcher
+	)
+
+	const {data: statsData, error: statsError} = useSWR(
+		sleeperLeagueData?.season != undefined
+			? `/stats/${sleeperLeagueData.season}_season.json`
+			: null,
+		fetcher,
+		{
+			revalidateIfStale: false,
+			revalidateOnFocus: false,
+			revalidateOnReconnect: false,
+		}
 	)
 
 	const {data: leagueData, error: leagueError} = useSWR(
-		leagueId != undefined &&
-			!leagueDataExists &&
+		params.slug != undefined &&
 			sleeperLeagueError == undefined &&
 			sleeperLeagueData
-			? `/api/league/${leagueId}`
+			? `/api/league/${params.slug}`
 			: null,
 		fetcher
 	)
+
 	const {data: tradeData, error: tradeError} = useSWR(
-		leagueId != undefined &&
-			!leagueDataExists &&
-			sleeperLeagueData
-			? `/api/trades/${leagueId}`
-			: null,
-		fetcher
-	)
-
-	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		leagueData?.league != undefined &&
-			!leagueDataExists &&
-			leagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}`
-			: null,
-		fetcher
-	)
-
-	const {data: draftData, error: draftError} = useSWR(
-		leagueData?.league != undefined &&
-			!leagueDataExists &&
-			leagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${leagueData.league.sleeperDetails.draft_id}/picks`
-			: null,
+		params.slug != undefined ? `/api/trades/${params.slug}` : null,
 		fetcher
 	)
 
 	useEffect(() => {
-		if (leagueId == leagueContext.settings?.league_id) {
-			setLeagueDataExists(true)
-		}
-		if (seasonContext != parseInt(sleeperLeagueData?.season)) {
-			setSeasonContext(parseInt(sleeperLeagueData?.season))
-		}
-		if (
-			leagueData &&
-			leagueData.league &&
-			tradeData &&
-			tradeData?.trades &&
-			draftData &&
-			draftSettings &&
-			statsContext?.stats &&
-			sleeperLeagueError == undefined
-		) {
+		if (leagueData && statsData && draftPicks && draftSettings) {
 			let league = new League(
 				leagueData.league,
-				statsContext.stats,
-				statsContext.projections,
-				new Draft(draftData, draftSettings),
+				statsData,
+				new Draft(draftPicks, draftSettings),
 				undefined,
 				tradeData?.trades
 			)
@@ -123,20 +84,12 @@ export default function LeagueLayout({
 			return
 		}
 	}, [
-		leagueContext.settings?.league_id,
-		draftData,
+		draftPicks,
 		draftSettings,
 		leagueData,
-		leagueId,
 		setLeagueContext,
-		tradeData,
+		statsData,
 		tradeData?.trades,
-		statsContext,
-		statsContext.stats,
-		sleeperLeagueError,
-		seasonContext,
-		setSeasonContext,
-		sleeperLeagueData?.season
 	])
 
 	if (sleeperLeagueError) {
@@ -187,7 +140,7 @@ export default function LeagueLayout({
 						fontWeight='bold'
 					>
 						<GridItem area={'header'}>
-							<Navbar leagueID={leagueId} />
+							<Navbar leagueID={params.slug} />
 						</GridItem>
 						<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
 							{children}

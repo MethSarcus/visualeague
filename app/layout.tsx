@@ -1,13 +1,11 @@
 'use client'
+import {CacheProvider} from '@chakra-ui/next-js'
 import {ChakraProvider} from '@chakra-ui/react'
 import {Analytics} from '@vercel/analytics/react'
-import axios from 'axios'
-import {useContext, useEffect, useMemo, useState} from 'react'
-import useSWR from 'swr'
+import {useState} from 'react'
 import {LeagueContext} from '../contexts/LeagueContext'
-import {StatsContext} from '../contexts/StatsContext'
 import {SeasonContext} from '../contexts/SeasonContext'
-import {useSWRConfig} from 'swr'
+import {StatsContext} from '../contexts/StatsContext'
 import '../styles/globals.css'
 import customTheme from '../theme/index'
 
@@ -15,53 +13,68 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 	const [context, setContext] = useState({})
 	const [statsContext, setStatsContext] = useState({})
 	const [seasonContext, setSeasonContext] = useState(null)
-	
-	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-	function multiFetcher(...urls: any[]) {
-		return Promise.allSettled(urls.map((url) => fetcher(url)))
-	}
-	
-	const {data: leagueStats, error: leagueStatsError} = useSWR(
-		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
-				return `/api/stats/${seasonContext}/${weekNum}`
-			}),
-		multiFetcher
-	)
 
-	const {data: leagueProjections, error: leagueProjectionsError} = useSWR(
-		seasonContext != null && Number.isInteger(seasonContext) &&
-		Array.from({length: seasonContext < 2021 ? 17 : 18}, (_, i) => i + 1).map((weekNum) => {
-				return `/api/projections/${seasonContext}/${weekNum}`
-			}),
-		multiFetcher
-	)
-
-	useMemo(() => {
-		if (leagueStats && leagueProjections) {
-			
-			let stats = leagueStats.filter((v) => {return v.status == 'fulfilled'}).map((weeklyStatString) => {
-				return JSON.parse((weeklyStatString as any).value) as any
-			})
-
-			let projections = leagueProjections.filter((v) => {return v.status == 'fulfilled'}).map((weeklyProjString) => {
-				return JSON.parse((weeklyProjString as any).value) as any
-			})
-
-			setStatsContext({stats: stats, projections: projections})
-		}
-	}, [leagueStats, leagueProjections])
 	return (
 		<html lang='en'>
+			<head>
+				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+				<title>VisuaLeague</title>
+				<meta name='Visualize your league' content='Created by Seth Marcus' />
+				<meta name='theme-color' content='#121212' />
+				<meta
+					name='description'
+					content='Visualize your fantasy football leagues and find insights to help you improve. Gauge the strengths and weaknesses for each team at a glance to Learn from past mistakes and prevent future ones'
+				></meta>
+				<link
+					rel='apple-touch-icon'
+					sizes='180x180'
+					href='/favicons/apple-touch-icon.png'
+				/>
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='16x16'
+					href='/favicons/favicon-16x16.png'
+				/>
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='32x32'
+					href='/favicons/favicon-32x32.png'
+				/>
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='100x100'
+					href='/favicons/favicon-100x100.png'
+				/>
+
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='192x192'
+					href='/favicons/favicon-192x192.png'
+				/>
+
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='512x512'
+					href='/favicons/favicon-512x512.png'
+				/>
+				<link rel='icon' href='/favicon.ico' />
+			</head>
 			<body>
 				{
 					<SeasonContext.Provider value={[seasonContext, setSeasonContext]}>
 						<StatsContext.Provider value={[statsContext, setStatsContext]}>
 							<LeagueContext.Provider value={[context, setContext]}>
-								<ChakraProvider theme={customTheme}>
-									<Analytics />
-									{children}
-								</ChakraProvider>
+								<Analytics />
+								<CacheProvider>
+									<ChakraProvider theme={customTheme}>
+										{children}
+									</ChakraProvider>
+								</CacheProvider>
 							</LeagueContext.Provider>
 						</StatsContext.Provider>
 					</SeasonContext.Provider>

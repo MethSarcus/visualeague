@@ -28,6 +28,7 @@ import MemberScores from './MemberStats'
 import {OrdinalStatInfo} from './OrdinalStatInfo'
 import {SleeperPlayerDetails} from './Player'
 import SeasonPlayer from './SeasonPlayer'
+import StatsResponse from './StatsResponse'
 import Trade from './Trade'
 import {Week} from './Week'
 
@@ -55,8 +56,7 @@ export default class League {
 
 	constructor(
 		sleeperLeague: SleeperLeague,
-		playerStats: object[],
-		playerProjections: object[],
+		playerStats: StatsResponse,
 		draft: Draft,
 		modifiedSettings?: LeagueSettings,
 		trades?: SleeperTransaction[]
@@ -85,8 +85,7 @@ export default class League {
 		this.allMatchups = sleeperLeague.matchups
 
 		this.settings = sleeperLeague.sleeperDetails
-		this.createPlayerStatsMap(playerStats)
-		this.initPlayerProjectionsMap(playerProjections)
+		this.parseStatResponse(playerStats)
 		this.initMemberTradeMap()
 		this.calcStats(false)
 		if (trades) {
@@ -337,31 +336,41 @@ export default class League {
 			})
 	}
 
+	parseStatResponse(statsResponse: StatsResponse) {
+		for (let i = 1; i <= this.settings.settings.last_scored_leg; i++) {
+			let stats = statsResponse[i]["stats"]
+			let projections = statsResponse[i]["projections"]
+
+			this.createPlayerStatsMap(stats, i)
+			this.initPlayerProjectionsMap(projections, i)
+		}
+		
+	 }
+
 	//Creates a map mapping week number to a map of player id to the players stats
 	//The incoming array contains an array of stats objects
-	createPlayerStatsMap(stats: object[]) {
+	createPlayerStatsMap(stats: object, week: number) {
 		try {
-			stats?.forEach((statList: any, index: number) => {
-				let weekNum = index + 1
-				this.playerStatMap.set(weekNum, new Map())
-				Object.keys(statList).forEach((key: any) => {
-					this.playerStatMap.get(weekNum)?.set(key, statList[key])
-				})
+			this.playerStatMap.set(week, new Map())
+			Object.keys(stats).forEach((key: any) => {
+				this.playerStatMap.get(week)?.set(key, stats[key as keyof object])
 			})
 		} catch (error) {
 			console.log(error)
 		}
 	}
 
-	//Creates a map mapping week number to a map of player id to the players projections
-	initPlayerProjectionsMap(projections: object[]) {
-		projections.forEach((projectionList: any, index: number) => {
-			let weekNum = index + 1
-			this.playerProjectionMap.set(weekNum, new Map())
-			Object.keys(projectionList).forEach((key: any) => {
-				this.playerProjectionMap.get(weekNum)?.set(key, projectionList[key])
+	//Creates a map mapping week number to a map of player id to the players stats
+	//The incoming array contains an array of stats objects
+	initPlayerProjectionsMap(projections: object, week: number) {
+		try {
+			this.playerProjectionMap.set(week, new Map())
+			Object.keys(projections).forEach((key: any) => {
+				this.playerProjectionMap.get(week)?.set(key, projections[key as keyof object])
 			})
-		})
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	setTaxiSquadIncluded(include: boolean) {
@@ -539,10 +548,10 @@ export default class League {
 						if (awayTeam) {
 							let highScore =
 								matchup.getMemberSide(matchup.winnerRosterId)?.pf ??
-								matchup.homeTeam
+								matchup.homeTeam?.pf
 							let lowScore =
 								matchup.getMemberSide(matchup.loserRosterId!)?.pf ??
-								matchup.awayTeam
+								matchup.awayTeam?.pf
 							let margin = matchup.getMargin()
 							let combinedScore = homeTeam.pf + (awayTeam?.pf ?? 0)
 
@@ -760,50 +769,6 @@ export default class League {
 				member.tradePartnerMap.set(i, 0)
 		})
 	}
-
-	// getNotableDraftStats() {
-	// 	let bestValuePick: DraftPlayer | null = null
-	// 	let worstValuePick: DraftPlayer | null = null
-	// 	let bestPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
-	// 	let worstPositionalPicks: Map<POSITION, DraftPlayer> = new Map()
-
-	// 	this.draft.picks.forEach((pick) => {
-	// 		let pickPosition = pick.metadata.position as POSITION
-	// 		if (bestValuePick == null) {
-	// 			bestValuePick = pick
-	// 			worstValuePick = pick
-	// 		} else if (pick.draftValue > bestValuePick.draftValue) {
-	// 			bestValuePick = pick
-	// 		}
-
-	// 		if (bestPositionalPicks.has(pickPosition)) {
-	// 			if (
-	// 				bestPositionalPicks.get(pickPosition)?.draftValue ??
-	// 				0 < pick.draftValue
-	// 			) {
-	// 				bestPositionalPicks.set(pickPosition, pick)
-	// 			}
-	// 		} else {
-	// 			bestPositionalPicks.set(pickPosition, pick)
-	// 		}
-
-	// 		if (!worstPositionalPicks.has(pickPosition)) {
-	// 			worstPositionalPicks.set(pickPosition, pick)
-	// 		} else if (
-	// 			worstPositionalPicks.has(pickPosition) &&
-	// 			(worstPositionalPicks.get(pickPosition)?.draftValue ??
-	// 				0 < pick.draftValue)
-	// 		) {
-	// 			worstPositionalPicks.set(pick.metadata.position as POSITION, pick)
-	// 		}
-	// 	})
-	// 	return {
-	// 		bestValuePick: bestValuePick as unknown as DraftPlayer,
-	// 		worstValuePick: worstValuePick as unknown as DraftPlayer,
-	// 		bestPositionalPicks: bestPositionalPicks,
-	// 		worstPositionalPicks: worstPositionalPicks,
-	// 	}
-	// }
 
 	getBestAndWorstDrafter() {
 		let bestDrafter: LeagueMember | null = null
@@ -1435,6 +1400,10 @@ export default class League {
 		})
 
 		return allWeeks
+	}
+
+	awardMemberBadges() {
+		
 	}
 }
 

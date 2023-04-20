@@ -68,7 +68,7 @@ const TeamPositionalBarChart = (props: MyProps) => {
 function formatScoresForBarChart(member: LeagueMember, positions: POSITION[]) {
 	let data: object[] = []
 	let keys: string[] = positions
-    let posObj = {user: member.userDetails.display_name} as any
+    let posObj = {user: member.getDisplayName()} as any
 	positions.forEach((rosterPos) => {
 		posObj[rosterPos.toString()] = parseFloat(member.stats.position_scores.get(rosterPos)?.toFixed(2) ?? "0")
         posObj[rosterPos.toString() + "Color"] = PositionColors[rosterPos]
