@@ -12,7 +12,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/next-js": "^2.1.2",
-    "@chakra-ui/react": "^2.5.0",
+    "@chakra-ui/react": "^2.5.4",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@inovua/reactdatagrid-community": "^5.8.4",
@@ -32,7 +32,7 @@
     "chart.js": "^4.2.1",
     "cors": "^2.8.5",
     "framer-motion": "^6.5.1",
-    "immer": "^9.0.17",
+    "immer": "^9.0.21",
     "mongodb": "^4.13.0",
     "next": "^13.2.1",
     "react": "^18.2.0",
