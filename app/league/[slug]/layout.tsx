@@ -29,7 +29,7 @@ export default function LeagueLayout({
 			: null,
 		fetcher
 	)
-	
+
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
 		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
