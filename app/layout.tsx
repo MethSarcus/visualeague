@@ -1,5 +1,4 @@
-import {Analytics} from '@vercel/analytics/react'
-import '../styles/globals.css'
+
 import {Providers} from './providers'
 
 const RootLayout = ({children}: {children: React.ReactNode}) => {
@@ -54,7 +53,6 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
 				<link rel='icon' href='/favicon.ico' />
 			</head>
 			<body>
-				<Analytics />
 				<Providers>{children}</Providers>
 			</body>
 		</html>
