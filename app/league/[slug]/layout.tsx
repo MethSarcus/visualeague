@@ -11,13 +11,13 @@ import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import { LeagueContext } from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
-export default function LeagueLayout({
+const LeagueLayout = ({
 	children,
 	params,
 }: {
 	children: React.ReactNode
 	params: {slug: string}
-}) {
+}) => {
 	enableAllPlugins()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 
@@ -155,3 +155,5 @@ export default function LeagueLayout({
 		</section>
 	)
 }
+
+export default LeagueLayout
