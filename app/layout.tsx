@@ -54,10 +54,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 				<link rel='icon' href='/favicon.ico' />
 			</head>
 			<body>
-				<Providers>
-					<Analytics />
-					{children}
-				</Providers>
+				<Analytics />
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	)
