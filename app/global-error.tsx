@@ -3,8 +3,6 @@
 import { Box, Button, Center, Heading, Link } from "@chakra-ui/react";
 
 export default function GlobalError({
-  error,
-  reset,
 }: {
   error: Error;
   reset: () => void;
