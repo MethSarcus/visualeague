@@ -30,7 +30,7 @@ import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/League
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
 
-export default function LeaguePage() {
+const LeaguePage = () => {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
 	const [context, setContext] = useContext(LeagueContext)
@@ -102,3 +102,5 @@ export default function LeaguePage() {
 		</Box>
 	)
 }
+
+export default LeaguePage
