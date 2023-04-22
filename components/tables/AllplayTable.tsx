@@ -15,8 +15,7 @@ interface MyProps {
 interface LooseObject {
 	[key: string]: any
 }
-
-export default function AllplayTable(props: MyProps) {
+const AllplayTable = (props: MyProps) => {
 	const columns = [{name: 'name', header: 'Name', type: 'string'}]
 	const data: object[] = []
 
@@ -56,3 +55,5 @@ export default function AllplayTable(props: MyProps) {
 		/>
 	)
 }
+
+export default AllplayTable

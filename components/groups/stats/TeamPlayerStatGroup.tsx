@@ -13,7 +13,7 @@ interface MyProps {
   filteredPositions?: POSITION[]
 }
 
-export default function TeamPlayerStatGroup(props: MyProps) {
+const TeamPlayerStatGroup = (props: MyProps) => {
   if (props.league?.settings == undefined) return <div>Loading...</div>;
   const member = props.league?.members.get(props.memberId);
   let playerDetails = props.league.playerDetails;
@@ -93,3 +93,5 @@ export default function TeamPlayerStatGroup(props: MyProps) {
     </HStack>
   );
 }
+
+export default TeamPlayerStatGroup

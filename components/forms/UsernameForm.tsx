@@ -2,15 +2,12 @@
 import {
 	Box,
 	Button,
-	Center,
 	Collapse,
 	Container,
-	Fade,
 	HStack,
 	Input,
 	ScaleFade,
 	Select,
-	SlideFade,
 	Spacer,
 	Wrap,
 	WrapItem,
@@ -22,7 +19,7 @@ import {useEffect, useState} from 'react'
 import {project_colors} from '../../utility/project_colors'
 import LeagueCellGroup from './LeagueCellGroup'
 
-function UsernameForm() {
+const UsernameForm = () => {
 	const [text, setText] = useState('')
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())

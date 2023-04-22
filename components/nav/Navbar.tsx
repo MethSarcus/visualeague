@@ -18,7 +18,7 @@ interface MyProps {
 	leagueID: string | undefined
 }
 
-function Navbar(props: MyProps) {
+const Navbar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
 
 	function setSeasonPortion(selected: String) {

@@ -1,17 +1,10 @@
 'use client'
 import {
-	Flex,
-	Avatar,
-	Spacer,
-	Box,
-	Text,
-	useMultiStyleConfig,
-	defineStyleConfig,
-	ResponsiveValue,
+	Avatar, Box, Flex, Spacer, Text
 } from '@chakra-ui/react'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import {MatchupSide} from '../../classes/custom/MatchupSide'
-import {project_colors} from '../../utility/project_colors'
+import { MatchupSide } from '../../classes/custom/MatchupSide'
+import { project_colors } from '../../utility/project_colors'
 
 interface MyProps {
 	matchupSide: MatchupSide | undefined
@@ -26,7 +19,7 @@ interface MyProps {
 	isHomeTeam: boolean
 }
 
-export default function MatchupHeaderTeam(props: MyProps) {
+const MatchupHeaderTeam = (props: MyProps) => {
 	const {variant, size, ...rest} = props
 
 	let ringColor = project_colors.outcomeColor.tie_color
@@ -171,3 +164,5 @@ export default function MatchupHeaderTeam(props: MyProps) {
 		</Flex>
 	)
 }
+
+export default MatchupHeaderTeam

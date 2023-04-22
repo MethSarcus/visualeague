@@ -1,12 +1,9 @@
 'use client'
-import React from 'react'
-import {Box, Skeleton, Spinner} from '@chakra-ui/react'
-import {AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE, SnakeDraftPlayer} from '../../classes/custom/Draft'
-import ReactDataGrid from '@inovua/reactdatagrid-community'
+import { Skeleton, Spinner } from '@chakra-ui/react'
 import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
 import DataTable, { TableColumn } from 'react-data-table-component'
-import e from 'cors'
+import { AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE } from '../../classes/custom/Draft'
 import { customDatatableStyles } from './LeagueOverviewDatatable'
 
 interface MyProps {
@@ -23,7 +20,7 @@ interface DataRow {
 	value: number
 }
 
-export default function DraftValueTable(props: MyProps) {
+const DraftValueTable = (props: MyProps) => {
 	const data = [...props.draft?.picks.values() ?? []].sort(
 		(a: DraftPlayer, b: DraftPlayer) => b.draftValue - a.draftValue
 	).map(player => {return formatMemberDataForTable(player)})
@@ -111,3 +108,5 @@ function formatMemberDataForTable(player: DraftPlayer): DataRow {
 
 	return playerObj
 }
+
+export default DraftValueTable

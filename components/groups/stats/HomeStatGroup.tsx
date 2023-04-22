@@ -9,7 +9,7 @@ interface MyProps {
 
 }
 
-export default function HomeStatGroup(props: MyProps) {
+const HomeStatGroup = (props: MyProps) => {
     const notableMembers = props.league?.getNotableMembers?.()
     return (
         <SimpleGrid columns={2} spacing={3} height={"full"}>
@@ -56,3 +56,5 @@ export default function HomeStatGroup(props: MyProps) {
     )
 
 }
+
+export default HomeStatGroup

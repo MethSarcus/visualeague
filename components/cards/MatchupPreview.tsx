@@ -40,7 +40,7 @@ interface MyProps {
 	member: LeagueMember | undefined
 }
 
-export default function MatchupPreview(props: MyProps) {
+const MatchupPreview = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	const [homeStarters, setHomeStarters] = useState(
@@ -289,3 +289,5 @@ export default function MatchupPreview(props: MyProps) {
 		</>
 	)
 }
+
+export default MatchupPreview

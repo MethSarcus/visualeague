@@ -13,7 +13,7 @@ import { LeagueContext } from "../../contexts/LeagueContext";
 import MemberList from "../groups/MemberList";
 import { project_colors } from "../../utility/project_colors";
 
-export default function TeamSidebar() {
+const TeamSidebar = () => {
   const [context, setContext] = useContext(LeagueContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const pathName = usePathname();
@@ -66,3 +66,5 @@ export default function TeamSidebar() {
 function formatScoreKey(key: string) {
   return key.replaceAll("_", " ");
 }
+
+export default TeamSidebar

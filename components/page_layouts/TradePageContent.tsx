@@ -19,7 +19,7 @@ import { LeagueContext } from "../../contexts/LeagueContext";
 import TradeCard from "../cards/TradeCard";
 import TradeChordChart from "../charts/TradeChordChart";
 
-export default function TradePageContent() {
+const TradePageContent = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const leagueId = usePathname()?.replace("/league/","").replace("/trades", "");
   const [trades, setTrades] = useState([]);
@@ -75,3 +75,5 @@ export default function TradePageContent() {
     </Container>
   );
 }
+
+export default TradePageContent;

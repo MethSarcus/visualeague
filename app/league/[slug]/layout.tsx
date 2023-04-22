@@ -11,13 +11,13 @@ import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import { LeagueContext } from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
-export default function LeagueLayout({
+const LeagueLayout = ({
 	children,
 	params,
 }: {
 	children: React.ReactNode
 	params: {slug: string}
-}) {
+}) => {
 	enableAllPlugins()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 
@@ -29,7 +29,7 @@ export default function LeagueLayout({
 			: null,
 		fetcher
 	)
-	
+
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
 		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
@@ -101,6 +101,7 @@ export default function LeagueLayout({
 							<Box>
 								<Heading color={'white'} my={2}>
 									Error Finding League
+									{children}
 								</Heading>
 
 								<Link href={'/'}>
@@ -126,10 +127,8 @@ export default function LeagueLayout({
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>
 	return (
-		<section>
-			<main className={styles.main}>
-				<div className='App'>
 					<Grid
+						bg={'surface.6'}
 						gap={0}
 						h={'100vh'}
 						gridTemplateRows={'0fr 1fr 0fr'}
@@ -150,8 +149,7 @@ export default function LeagueLayout({
 							<Footer />
 						</GridItem>
 					</Grid>
-				</div>
-			</main>
-		</section>
 	)
 }
+
+export default LeagueLayout

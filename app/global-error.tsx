@@ -2,13 +2,11 @@
 
 import { Box, Button, Center, Heading, Link } from "@chakra-ui/react";
 
-export default function GlobalError({
-  error,
-  reset,
+const GlobalError = ({
 }: {
   error: Error;
   reset: () => void;
-}) {
+}) => {
   return (
 					<div className='App'>
 						<Center pt={10}>
@@ -34,3 +32,5 @@ export default function GlobalError({
 					</div>
   );
 }
+
+export default GlobalError

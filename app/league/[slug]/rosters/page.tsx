@@ -9,7 +9,7 @@ import League from '../../../../classes/custom/League'
 import MemberRoster from '../../../../components/groups/roster/MemberRoster'
 import { LeagueContext } from '../../../../contexts/LeagueContext'
 
-export default function Page() {
+const Page = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const [shownMembers, setShownMembers] = useState([] as string[])
 	const desktopGrid = `"controls"
@@ -36,3 +36,5 @@ export default function Page() {
 		</Grid>
 	)
 }
+
+export default Page

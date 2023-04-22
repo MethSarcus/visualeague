@@ -24,7 +24,7 @@ import WeeklyTradesLineChart from '../../../../components/charts/line/WeeklyTrad
 import TradeChordChart from '../../../../components/charts/TradeChordChart'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
-export default function Page() {
+const Page = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const desktopTemplate = `
     "imba imba trades trades"
@@ -92,3 +92,5 @@ export default function Page() {
 		</Box>
 	)
 }
+
+export default Page

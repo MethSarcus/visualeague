@@ -9,7 +9,7 @@ type MyProps = {
 	isGoodThing: boolean | null | undefined
 }
 
-export default function TeamStatCard(props: MyProps) {
+const TeamStatCard = (props: MyProps) => {
 	let borderColor = '#B00020'
 
 	if (props.isGoodThing == null || props.isGoodThing == undefined) {
@@ -58,3 +58,5 @@ export default function TeamStatCard(props: MyProps) {
 		</Box>
 	)
 }
+
+export default TeamStatCard

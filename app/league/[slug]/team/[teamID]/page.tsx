@@ -25,7 +25,7 @@ import WeeklyTeamStatGroup from '../../../../../components/groups/stats/WeeklyTe
 import MemberTradeGroup from '../../../../../components/groups/transactions/MemberTradeGroup'
 import { LeagueContext } from '../../../../../contexts/LeagueContext'
 
-export default function TeamPage() {
+const TeamPage = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const memberId = usePathname()?.split('/').at(-1)
 
@@ -138,3 +138,5 @@ export default function TeamPage() {
 		</Box>
 	)
 }
+
+export default TeamPage

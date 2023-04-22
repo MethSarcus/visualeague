@@ -15,7 +15,7 @@ interface MyProps {
 	isByeWeek?: boolean
 }
 
-export default function PositionalMatchupContainer(props: MyProps) {
+const PositionalMatchupContainer = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
 	let homePlayerDetails
 	let awayPlayerDetails
@@ -49,3 +49,5 @@ export default function PositionalMatchupContainer(props: MyProps) {
 		</Center>
 	)
 }
+
+export default PositionalMatchupContainer
