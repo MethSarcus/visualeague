@@ -22,7 +22,7 @@ import DraftPageStatGroup from '../../../../components/groups/stats/DraftPageSta
 import DraftValueTable from '../../../../components/tables/DraftValueTable'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
-export default function Page() {
+const Page = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const desktopGrid = `
 	"draft_cards draft_cards"
@@ -65,3 +65,5 @@ export default function Page() {
 			</Tabs>
 	)
 }
+
+export default Page

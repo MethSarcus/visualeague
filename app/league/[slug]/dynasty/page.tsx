@@ -5,7 +5,7 @@ import { useContext } from "react"
 import KTC_Bar_Chart from "../../../../components/charts/bar/KTC_Bar_Chart"
 import { LeagueContext } from "../../../../contexts/LeagueContext"
 
-export default function DynastyPage() {
+const DynastyPage = () => {
     const [context, setContext] = useContext(LeagueContext)
 
     
@@ -45,3 +45,5 @@ export default function DynastyPage() {
         </Box>
     )
 }
+
+export default DynastyPage

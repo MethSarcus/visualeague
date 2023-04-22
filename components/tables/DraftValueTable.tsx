@@ -23,7 +23,7 @@ interface DataRow {
 	value: number
 }
 
-export default function DraftValueTable(props: MyProps) {
+const DraftValueTable = (props: MyProps) => {
 	const data = [...props.draft?.picks.values() ?? []].sort(
 		(a: DraftPlayer, b: DraftPlayer) => b.draftValue - a.draftValue
 	).map(player => {return formatMemberDataForTable(player)})
@@ -111,3 +111,5 @@ function formatMemberDataForTable(player: DraftPlayer): DataRow {
 
 	return playerObj
 }
+
+export default DraftValueTable

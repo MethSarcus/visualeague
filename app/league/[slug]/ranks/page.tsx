@@ -8,7 +8,7 @@ import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBum
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
-export default function RankPage() {
+const RankPage = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const [filteredIds, setFilteredIds] = useState([] as number[])
 
@@ -70,3 +70,5 @@ export default function RankPage() {
 		</Box>
 	)
 }
+
+export default RankPage

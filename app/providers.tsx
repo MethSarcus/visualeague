@@ -1,4 +1,3 @@
-// app/providers.tsx
 'use client'
 
 import {CacheProvider} from '@chakra-ui/next-js'
@@ -10,7 +9,7 @@ import {SeasonContext} from '../contexts/SeasonContext'
 import {StatsContext} from '../contexts/StatsContext'
 import customTheme from '../theme/index'
 
-export function Providers({children}: {children: React.ReactNode}) {
+const Providers = ({children}: {children: React.ReactNode}) => {
 	const [context, setContext] = useState({})
 	const [statsContext, setStatsContext] = useState({})
 	const [seasonContext, setSeasonContext] = useState(null)
@@ -27,3 +26,5 @@ export function Providers({children}: {children: React.ReactNode}) {
 		</CacheProvider>
 	)
 }
+
+export default Providers

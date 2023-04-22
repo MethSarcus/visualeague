@@ -12,7 +12,7 @@ interface MyProps {
   memberId: number;
 }
 
-export default function TeamStatGroup(props: MyProps) {
+const TeamStatGroup = (props: MyProps) => {
   let member;
   let pfRank;
   let paRank;
@@ -96,3 +96,5 @@ function getMemberStats(stats: OrdinalStatInfo[], memberId: number) {
 
   return memberStat;
 }
+
+export default TeamStatGroup;

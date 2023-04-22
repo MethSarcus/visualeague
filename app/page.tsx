@@ -5,7 +5,7 @@ import Image from 'next/image'
 import UsernameForm from '../components/forms/UsernameForm'
 import logo from '../public/images/logo.png'
 import styles from '../styles/Home.module.css'
-export default function Page() {
+const Page = () => {
 	return (
 		<div className={styles.container}>
 			<main className={styles.main}>
@@ -44,3 +44,5 @@ export default function Page() {
 		</div>
 	)
 }
+
+export default Page

@@ -10,7 +10,7 @@ interface MyProps {
 	memberId: number
 }
 
-export default function TeamStatGroup(props: MyProps) {
+const TeamStatGroup = (props: MyProps) => {
 	let member
 	let bestWeek
 	let worstWeek

@@ -35,7 +35,7 @@ import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {getReadableScoringKey} from '../../utility/rosterFunctions'
 
-export default function SettingsSidebar() {
+const SettingsSidebar = () => {
 	const [context, setContext] = useContext(LeagueContext)
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
@@ -222,3 +222,5 @@ export default function SettingsSidebar() {
 function formatScoreKey(key: string) {
 	return key.replaceAll('_', ' ')
 }
+
+export default SettingsSidebar

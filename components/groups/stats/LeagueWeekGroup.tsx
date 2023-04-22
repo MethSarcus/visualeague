@@ -8,7 +8,7 @@ import WeekStatCard from '../../cards/statcards/WeekStatCard'
 interface MyProps {
 	league: League | undefined
 }
-export default function LeagueNotableWeeksStatGroup(props: MyProps) {
+const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 	let bestWeekTeam
 	let bestWeek
 	let worstWeekTeam
@@ -85,3 +85,5 @@ export default function LeagueNotableWeeksStatGroup(props: MyProps) {
 		</HStack>
 	)
 }
+
+export default LeagueNotableWeeksStatGroup

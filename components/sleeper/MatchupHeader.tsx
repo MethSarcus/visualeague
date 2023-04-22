@@ -28,7 +28,7 @@ interface MyProps {
 	awayAlteredProjectedScore?: number
 }
 
-export default function MatchupHeader(props: MyProps) {
+const MatchupHeader = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
 	if (context.settings == undefined)
 		return (
@@ -107,3 +107,5 @@ export default function MatchupHeader(props: MyProps) {
 		</ModalHeader>
 	)
 }
+
+export default MatchupHeader
