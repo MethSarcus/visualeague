@@ -79,3 +79,5 @@ function getMemberStats(stats: OrdinalStatInfo[], memberId: number) {
 
 	return memberStat
 }
+
+export default TeamStatGroup
