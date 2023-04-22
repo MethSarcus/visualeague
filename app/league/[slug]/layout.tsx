@@ -11,7 +11,7 @@ import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import { LeagueContext } from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
-const RootLayout = ({
+const LeagueLayout = ({
 	children,
 	params,
 }: {
@@ -152,4 +152,4 @@ const RootLayout = ({
 	)
 }
 
-export default RootLayout
+export default LeagueLayout
