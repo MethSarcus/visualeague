@@ -127,10 +127,8 @@ const LeagueLayout = ({
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>
 	return (
-		<section>
-			<main className={styles.main}>
-				<div className='App'>
 					<Grid
+						bg={'surface.6'}
 						gap={0}
 						h={'100vh'}
 						gridTemplateRows={'0fr 1fr 0fr'}
@@ -151,9 +149,6 @@ const LeagueLayout = ({
 							<Footer />
 						</GridItem>
 					</Grid>
-				</div>
-			</main>
-		</section>
 	)
 }
 
