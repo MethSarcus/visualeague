@@ -101,6 +101,7 @@ const LeagueLayout = ({
 							<Box>
 								<Heading color={'white'} my={2}>
 									Error Finding League
+									{children}
 								</Heading>
 
 								<Link href={'/'}>

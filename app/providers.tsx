@@ -14,16 +14,18 @@ const Providers = ({children}: {children: React.ReactNode}) => {
 	const [statsContext, setStatsContext] = useState({})
 	const [seasonContext, setSeasonContext] = useState(null)
 	return (
-		<CacheProvider>
+
 			<SeasonContext.Provider value={[seasonContext, setSeasonContext]}>
 				<StatsContext.Provider value={[statsContext, setStatsContext]}>
 					<LeagueContext.Provider value={[context, setContext]}>
                     <Analytics />
+                    <CacheProvider>
 						<ChakraProvider theme={customTheme}>{children}</ChakraProvider>
+                        </CacheProvider>
 					</LeagueContext.Provider>
 				</StatsContext.Provider>
 			</SeasonContext.Provider>
-		</CacheProvider>
+
 	)
 }
 

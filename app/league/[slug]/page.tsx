@@ -1,34 +1,18 @@
 'use client'
 import {
-	Box,
-	Button,
-	Collapse,
-	Container,
-	Text,
-	Flex,
-	Grid,
+	Box, Grid,
 	GridItem,
-	Heading,
-	IconButton,
-	Skeleton,
-	SkeletonText,
-	Spacer,
+	Heading, Skeleton
 } from '@chakra-ui/react'
-import axios from 'axios'
-import {MdExpandLess, MdExpandMore, MdMore} from 'react-icons/md'
-import {usePathname} from 'next/navigation'
-import {useContext, useEffect, useState} from 'react'
-import useSWR from 'swr'
-import League from '../../../classes/custom/League'
-import GenericStatCard from '../../../components/cards/statcards/GenericStatCard'
-import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
-import LeagueOverviewDataTable from '../../../components/tables/LeagueOverviewDatatable'
-import {LeagueContext} from '../../../contexts/LeagueContext'
+import { usePathname } from 'next/navigation'
+import { useContext, useState } from 'react'
 import BarChart from '../../../components/charts/bar/PFBarChart'
-import TeamPlayerStatGroup from '../../../components/groups/stats/TeamPlayerStatGroup'
-import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
-import TeamRadarChart from '../../../components/charts/TeamRadarChart'
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
+import TeamRadarChart from '../../../components/charts/TeamRadarChart'
+import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
+import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
+import LeagueOverviewDataTable from '../../../components/tables/LeagueOverviewDatatable'
+import { LeagueContext } from '../../../contexts/LeagueContext'
 
 const LeaguePage = () => {
 	const [show, setShow] = useState(false)
