@@ -80,7 +80,7 @@ export function getLeague(leagueId: string) {
 // -------------------------------------------------------------------
 // Gets all members of a league
 // -------------------------------------------------------------------
-function getLeagueMembers(leagueId: string) {
+export function getLeagueMembers(leagueId: string) {
   return new Promise((resolve) => {
     setTimeout(
       () =>

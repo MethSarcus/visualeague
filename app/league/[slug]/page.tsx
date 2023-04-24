@@ -55,7 +55,7 @@ const LeaguePage = () => {
 							m={2}
 							color={'white'}
 						>
-							{context?.settings?.name}
+							{context?.settings?.name + ` (${context?.settings?.season})`}
 						</Heading>
 					</Skeleton>
 				</GridItem>
