@@ -130,7 +130,7 @@ const LeagueLayout = ({
 		<Grid
 			bg={'surface.6'}
 			gap={0}
-			h={'100vh'}
+			h={'100dvh'}
 			gridTemplateRows={'0fr 1fr 0fr'}
 			templateAreas={`"header header"
                     "main main"

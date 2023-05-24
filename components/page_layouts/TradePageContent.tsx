@@ -56,7 +56,7 @@ const TradePageContent = () => {
       <TradeChordChart trades={trades} />
     </GridItem>
     <GridItem  area="trades" >
-    <Container textColor={"white"} maxH={"50vh"} overflowY={"auto"} color='white'>
+    <Container textColor={"white"} maxH={"50dvh"} overflowY={"auto"} color='white'>
     {trades.map((trade: Trade) => {
             return <TradeCard key={trade.transaction_id} trade={trade} />;
           })}
