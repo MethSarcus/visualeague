@@ -1,15 +1,15 @@
 'use client'
-import { Box, Button, Center, Grid, GridItem, Heading } from '@chakra-ui/react'
+import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
-import { enableAllPlugins } from 'immer'
+import {enableAllPlugins} from 'immer'
 import Link from 'next/link'
-import React, { useContext, useEffect } from 'react'
+import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
-import { Draft } from '../../../classes/custom/Draft'
+import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
-import { LeagueContext } from '../../../contexts/LeagueContext'
+import {LeagueContext} from '../../../contexts/LeagueContext'
 import styles from '../../../styles/Home.module.css'
 const LeagueLayout = ({
 	children,
@@ -127,28 +127,28 @@ const LeagueLayout = ({
 	if (leagueError || tradeError)
 		return <Heading color={'white'}>Failed to load</Heading>
 	return (
-					<Grid
-						bg={'surface.6'}
-						gap={0}
-						h={'100vh'}
-						gridTemplateRows={'0fr 1fr 0fr'}
-						templateAreas={`"header header"
+		<Grid
+			bg={'surface.6'}
+			gap={0}
+			h={'100dvh'}
+			gridTemplateRows={'0fr 1fr 0fr'}
+			templateAreas={`"header header"
                     "main main"
                     "footer footer"`}
-						color='surface.0'
-						fontWeight='bold'
-					>
-						<GridItem area={'header'}>
-							<Navbar leagueID={params.slug} />
-						</GridItem>
-						<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
-							{children}
-						</GridItem>
+			color='surface.0'
+			fontWeight='bold'
+		>
+			<GridItem area={'header'}>
+				<Navbar leagueID={params.slug} />
+			</GridItem>
+			<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
+				{children}
+			</GridItem>
 
-						<GridItem bg='surface.0' mt={'auto'} area={'footer'}>
-							<Footer />
-						</GridItem>
-					</Grid>
+			<GridItem bg='surface.0' mt={'auto'} area={'footer'}>
+				<Footer />
+			</GridItem>
+		</Grid>
 	)
 }
 

@@ -4,7 +4,6 @@ import {
 	GridItem,
 	Heading, Skeleton
 } from '@chakra-ui/react'
-import { usePathname } from 'next/navigation'
 import { useContext, useState } from 'react'
 import BarChart from '../../../components/charts/bar/PFBarChart'
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
@@ -18,7 +17,6 @@ const LeaguePage = () => {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
 	const [context, setContext] = useContext(LeagueContext)
-	const leagueId = usePathname()?.replace('/league/', '')
 
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
@@ -55,7 +53,7 @@ const LeaguePage = () => {
 							m={2}
 							color={'white'}
 						>
-							{context?.settings?.name}
+							{context?.settings?.name + ` (${context?.settings?.season})`}
 						</Heading>
 					</Skeleton>
 				</GridItem>

@@ -6,7 +6,6 @@ import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
 import {project_colors} from '../../../utility/project_colors'
 import {PositionColors} from '../ChartColors'
 import {AxisTickProps} from '@nivo/axes'
-import {useTheme} from '@nivo/core'
 import { DraftPick } from '../../../classes/sleeper/DraftPick'
 import { DraftPlayer } from '../../../classes/custom/Draft'
 

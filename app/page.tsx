@@ -17,7 +17,7 @@ const Page = () => {
 						templateRows='1fr'
 						templateColumns='1fr'
 					>
-						<GridItem area={'empty'} h={'25vh'} />
+						<GridItem area={'empty'} h={'25dvh'} />
 
 						<GridItem area={'main'} w='100vw'>
 							<Container
