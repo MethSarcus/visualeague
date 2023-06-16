@@ -1,5 +1,4 @@
 import {Spinner} from '@chakra-ui/react'
-import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import {SleeperPlayerDetails} from '../../../classes/custom/Player'
 import {createRangeArray} from '../../../utility/rosterFunctions'
 import {

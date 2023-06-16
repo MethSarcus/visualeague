@@ -29,6 +29,17 @@ export default class LeagueStats {
 		)
 	}
 
+	getPositionAvgTotalPointsMap(numLeagueMembers: number) {
+		let pointsMap = new Map()
+		Array.from(this.position_scores.keys()).forEach((position) => {
+			if (this.position_scores.get(position) != undefined) {
+				pointsMap.set(position, (this.position_scores.get(position)! / numLeagueMembers).toFixed(2))
+			}
+			
+		})
+		return pointsMap
+	}
+
 	reset() {
 		this.avg_pf = 0
 		this.avg_pa = 0

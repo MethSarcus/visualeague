@@ -106,4 +106,12 @@ export default class Matchup implements MatchupInterface {
 
 		return matchupSide
 	}
+
+	public getOpponent(roster_id: number) {
+		if (this.homeTeam.roster_id == roster_id) {
+			return this.awayTeam
+		} else {
+			return this.homeTeam
+		}
+	}
 }

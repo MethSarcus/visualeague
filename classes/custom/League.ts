@@ -1402,8 +1402,42 @@ export default class League {
 		return allWeeks
 	}
 
-	awardMemberBadges() {
-		
+	getAllWeeksWithOpponentForMember(rosterId: number) {
+		let allWeeks: Matchup[] = []
+
+		this.getEnabledWeeks().forEach((weekNumber) => {
+			if (this.weeks.get(weekNumber)!.getMemberMatchup(rosterId) instanceof Matchup && this.weeks.get(weekNumber)!.getMemberMatchup(rosterId).isByeWeek == false) {
+				allWeeks.push(this.weeks.get(weekNumber)!.getMemberMatchup(rosterId) as Matchup)
+			}
+		})
+
+		return allWeeks
+	}
+
+	getOpponentPositionalScores(roster_id: number) {
+		let opponentPositionalScores = new Map()
+		let memberMatchups = this.getAllWeeksWithOpponentForMember(roster_id)
+		memberMatchups.forEach((matchup) => {
+			let opponentWeeklyPositonScores = matchup.getOpponent(roster_id)?.position_scores
+			if (opponentWeeklyPositonScores != undefined) {
+				Array.from(opponentWeeklyPositonScores.keys()).forEach((position) => {
+					if (opponentPositionalScores.has(position)) {
+						let currentScore = opponentPositionalScores.get(position)
+						opponentPositionalScores.set(
+								position,
+								currentScore + opponentWeeklyPositonScores!.get(position)
+							)
+					} else {
+						opponentPositionalScores.set(
+							position,
+							opponentWeeklyPositonScores!.get(position)
+						)
+					}
+				})
+			}
+		})
+
+		return opponentPositionalScores
 	}
 }
 

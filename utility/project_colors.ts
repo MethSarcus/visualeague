@@ -54,9 +54,9 @@ export const project_colors = {
 		DL: 'rgba(250, 153, 97, 0.8)',
 		DB: 'rgba(254, 160, 202, 0.8)',
 		LB: 'rgba(174, 182, 252, 0.8)',
-		K: '#7988a1',
-		DEF: '#bd66ff',
-		BN: '#A7BAD0',
+		K: 'rgba(121, 136, 161, .8)',
+		DEF: 'rgba(189, 102, 255, .8)',
+		BN: 'rgba(167, 186, 208, .8)',
 	},
 	sleeper: {
 		light_card: '#43495A',
@@ -111,4 +111,9 @@ export function hexColorToFloatColor(hex: string) {
 		parseInt(hex.substring(2, 4), 16) / 255,
 		parseInt(hex.substring(4, 6), 16) / 255,
 	]
+}
+
+//New opacity must be between 0 and 1
+export function alterRGBAOpacity(rgba: string, newOpacity: number) {
+	return rgba.slice(0, -4) + newOpacity + ')';
 }
