@@ -103,7 +103,7 @@ const TeamPagePointsChartMobile = (props: MyProps) => {
 	}
 
 
-	return <Bar options={mobileOptions} data={formattedData} />
+	return <Bar options={mobileOptions as any} data={formattedData} />
 }
 
 function createChartData(
