@@ -24,7 +24,7 @@ interface MyProps {
 	isMobile: boolean
 }
 
-const TeamPagePointsChart = (props: MyProps) => {
+const TeamPagePointsChartMobile = (props: MyProps) => {
 	
 	ChartJS.register(ArcElement, Tooltip, Legend)
 	let formattedData = createChartData(
@@ -70,6 +70,7 @@ const TeamPagePointsChart = (props: MyProps) => {
 
 	const mobileOptions = {
 		aspectRatio: .25,
+		indexAxis: 'y',
 		layout: {
 			padding: {
 				left: 2,
@@ -78,7 +79,6 @@ const TeamPagePointsChart = (props: MyProps) => {
 				bottom: 2,
 			},
 		},
-		indexAxis: 'y',
 		scales: {
 			y: {
 				beginAtZero: true,
@@ -103,7 +103,7 @@ const TeamPagePointsChart = (props: MyProps) => {
 	}
 
 
-	return <Bar options={desktopOptions} data={formattedData} />
+	return <Bar options={mobileOptions} data={formattedData} />
 }
 
 function createChartData(
@@ -158,7 +158,7 @@ function createChartData(
 	return data
 }
 
-export default TeamPagePointsChart
+export default TeamPagePointsChartMobile
 
 
 // scales: {

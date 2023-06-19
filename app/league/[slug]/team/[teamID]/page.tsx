@@ -1,5 +1,17 @@
 'use client'
-import {Box, Flex, Grid, GridItem, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useMediaQuery} from '@chakra-ui/react'
+import {
+	Box,
+	Flex,
+	Grid,
+	GridItem,
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
+	Text,
+	useMediaQuery,
+} from '@chakra-ui/react'
 import {usePathname} from 'next/navigation'
 import {useContext} from 'react'
 import League from '../../../../../classes/custom/League'
@@ -9,6 +21,7 @@ import {Week} from '../../../../../classes/custom/Week'
 import MatchupPreview from '../../../../../components/cards/MatchupPreview'
 import TeamCardWithTrendingGraph from '../../../../../components/cards/TeamCardWithTrendingGraph'
 import TeamPagePointsChart from '../../../../../components/charts/bar/TeamPagePointsChart'
+import TeamPagePointsChartMobile from '../../../../../components/charts/bar/TeamPagePointsChartMobile'
 import TeamPageRadarChart from '../../../../../components/charts/team_charts/TeamPageRadarChart'
 import TeamPlayerStatGroup from '../../../../../components/groups/stats/TeamPlayerStatGroup'
 import TeamStatGroup from '../../../../../components/groups/stats/TeamStatGroup'
@@ -17,7 +30,10 @@ import MemberTradeGroup from '../../../../../components/groups/transactions/Memb
 import {LeagueContext} from '../../../../../contexts/LeagueContext'
 
 const TeamPage = () => {
-	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
+	const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
+		ssr: true,
+		fallback: false, // return false on the server, and re-evaluate on the client side
+	})
 	const [context, setContext] = useContext(LeagueContext)
 	const memberId = usePathname()?.split('/').at(-1)
 	let member: undefined | LeagueMember
@@ -44,7 +60,7 @@ const TeamPage = () => {
   "playerStats"
   "weekStats"
   "radar"`
-
+	console.debug('isLargerThan800', isLargerThan800)
 	return (
 		<Box overflowX={'hidden'}>
 			<Grid gap={5} mx={4} my={2} templateAreas={[mobileTemplate, desktopTemplate]}>
@@ -96,19 +112,36 @@ const TeamPage = () => {
 
 						<TabPanels>
 							<TabPanel>
-								{member && (
-									<Flex bg={'surface.0'} borderRadius={'md'} minH="600px">
-										<TeamPagePointsChart
-											isMobile={!isLargerThan800}
-											memberName={member.name}
-											homePointMap={member.stats.position_scores}
-											awayPointMap={(context as League).getOpponentPositionalScores(member.roster.roster_id)}
-											avgPointMap={(context as League).stats.getPositionAvgTotalPointsMap(
-												(context as League).members.size
-											)}
-										/>
-									</Flex>
-								)}
+								{member &&
+									(isLargerThan800 ? (
+										<Flex bg={'surface.0'} borderRadius={'md'} minH='600px'>
+											<TeamPagePointsChart
+												isMobile={!isLargerThan800}
+												memberName={member.name}
+												homePointMap={member.stats.position_scores}
+												awayPointMap={(context as League).getOpponentPositionalScores(
+													member.roster.roster_id
+												)}
+												avgPointMap={(context as League).stats.getPositionAvgTotalPointsMap(
+													(context as League).members.size
+												)}
+											/>
+										</Flex>
+									) : 
+										<Flex bg={'surface.0'} borderRadius={'md'} minH='600px'>
+											<TeamPagePointsChartMobile
+												isMobile={!isLargerThan800}
+												memberName={member.name}
+												homePointMap={member.stats.position_scores}
+												awayPointMap={(context as League).getOpponentPositionalScores(
+													member.roster.roster_id
+												)}
+												avgPointMap={(context as League).stats.getPositionAvgTotalPointsMap(
+													(context as League).members.size
+												)}
+											/>
+										</Flex>
+									)}
 							</TabPanel>
 							<TabPanel maxH={'600px'} minH='300px' h={'1px'}>
 								<TeamPageRadarChart league={context} memberId={parseInt(memberId!)} />
