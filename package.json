@@ -15,7 +15,7 @@
     "@chakra-ui/react": "^2.6.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
-    "@inovua/reactdatagrid-community": "^5.9.1",
+    "@inovua/reactdatagrid-community": "^5.10.1",
     "@nivo/bar": "^0.83.0",
     "@nivo/bump": "^0.83.0",
     "@nivo/chord": "^0.83.0",
