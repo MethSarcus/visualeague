@@ -1,5 +1,5 @@
 import e from 'cors'
-import produce, {immerable} from 'immer'
+import {produce, immerable} from 'immer'
 import {Transaction} from 'mongodb'
 import {
 	calcPlayerPoints,

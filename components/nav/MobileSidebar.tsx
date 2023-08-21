@@ -71,7 +71,7 @@ export default function MobileSidebar() {
 							align='stretch'
 						>
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}`}>
+								<Link href={`${context.settings.league_id}`}>
 									<Button
 										variant={'unstyled'}
 										leftIcon={<BsBarChart/>}
@@ -87,7 +87,7 @@ export default function MobileSidebar() {
 							</Box>
 
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/ranks`}>
+								<Link href={`${context.settings.league_id}/ranks`}>
 									<Button
 										leftIcon={<GiStrong />}
 										variant={'unstyled'}
@@ -99,7 +99,7 @@ export default function MobileSidebar() {
 								</Link>
 							)}
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/trades`}>
+								<Link href={`${context.settings.league_id}/trades`}>
 									<Button
 										leftIcon={<RxLoop />}
 										variant={'unstyled'}
@@ -111,7 +111,7 @@ export default function MobileSidebar() {
 								</Link>
 							)}
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/draft`}>
+								<Link href={`${context.settings.league_id}/draft`}>
 									<Button
 										variant={'unstyled'}
 										_hover={{textColor: 'grey'}}
@@ -126,7 +126,7 @@ export default function MobileSidebar() {
 							)}
 
 							{context?.settings && (
-								<Link href={`league/${context.settings.league_id}/rosters`}>
+								<Link href={`${context.settings.league_id}/rosters`}>
 									<Button
 										variant={'unstyled'}
 										_hover={{textColor: 'grey'}}

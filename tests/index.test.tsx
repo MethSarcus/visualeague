@@ -3,6 +3,12 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Page from '../app/page'
+import type * as ReactDom from 'react-dom';
+
+jest.mock('react-dom', () => ({
+  ...jest.requireActual<typeof ReactDom>('react-dom'),
+  preload: jest.fn(),
+}));
 
 describe('Home', () => {
 	// afterEach function runs after each test suite is executed

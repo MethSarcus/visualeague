@@ -1,7 +1,7 @@
 'use client'
 import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
-import {enableAllPlugins} from 'immer'
+import {enableMapSet} from "immer"
 import Link from 'next/link'
 import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
@@ -18,7 +18,7 @@ const LeagueLayout = ({
 	children: React.ReactNode
 	params: {slug: string}
 }) => {
-	enableAllPlugins()
+	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
