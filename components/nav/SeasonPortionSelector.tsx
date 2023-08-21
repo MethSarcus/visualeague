@@ -1,3 +1,4 @@
+'use client'
 import {useRadioGroup, Center, HStack, useRadio, Box} from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
 import { SeasonPortion } from '../../classes/custom/League'

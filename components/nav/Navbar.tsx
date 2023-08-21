@@ -1,6 +1,6 @@
 "use client"
 import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react'
-import produce from 'immer'
+import  {produce} from 'immer'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'

@@ -60,7 +60,6 @@ const TeamPage = () => {
   "playerStats"
   "weekStats"
   "radar"`
-	console.debug('isLargerThan800', isLargerThan800)
 	return (
 		<Box overflowX={'hidden'}>
 			<Grid gap={5} mx={4} my={2} templateAreas={[mobileTemplate, desktopTemplate]}>

@@ -25,7 +25,7 @@ import {
 	useDisclosure,
 	VStack,
 } from '@chakra-ui/react'
-import produce from 'immer'
+import {produce} from 'immer'
 import React, {useContext, useEffect} from 'react'
 import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'

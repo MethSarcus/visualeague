@@ -5,7 +5,6 @@ import LeagueMember from '../../classes/custom/LeagueMember'
 import MatchupInterface from '../../classes/custom/MatchupInterface'
 import { MatchupSide } from '../../classes/custom/MatchupSide'
 import {LeagueContext} from '../../contexts/LeagueContext'
-import HorizontalPillSelector from '../nav/SeasonPortionSelector'
 import MatchupHeaderTeam from '../sleeper/MatchupHeaderTeam'
 
 interface MyProps {
