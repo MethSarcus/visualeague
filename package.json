@@ -33,7 +33,7 @@
     "cors": "^2.8.5",
     "framer-motion": "10.15.0",
     "immer": "10.0.2",
-    "mongodb": "^4.16.0",
+    "mongodb": "^4.17.0",
     "next": "^13.4.12",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
