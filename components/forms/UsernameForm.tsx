@@ -76,6 +76,7 @@ const UsernameForm = () => {
 					onChange={(e) => textChanged(e.target.value)}
 				/>
 				<Select size={['sm','lg']} maxW={["80px", "100px"]} onChange={onSeasonChange}>
+				<option value='2022'>2023</option>
 				<option value='2022'>2022</option>
 				<option value='2021'>2021</option>
 				<option value='2020'>2020</option>
