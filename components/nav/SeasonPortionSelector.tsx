@@ -31,7 +31,7 @@ export default function HorizontalPillSelector(props: MyProps) {
       
 
 	return (
-		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={(context as League | null)?.settings.season_type == SeasonPortion.POST || SeasonPortion.ALL ? "hidden" : "visible"}>
+		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={(context as League | null)?.settings?.season_type == SeasonPortion.POST || SeasonPortion.ALL ? "visible" : "hidden"}>
 			<HStack
 				{...group}
 				bg={project_colors.secondary[800]}
