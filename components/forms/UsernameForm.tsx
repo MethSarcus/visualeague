@@ -23,7 +23,7 @@ const UsernameForm = () => {
 	const [text, setText] = useState('')
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())
-	const [selectedSeason, setSelectedSeason] = useState(2022)
+	const [selectedSeason, setSelectedSeason] = useState(2023)
 	const pathname = usePathname();
 
 	useEffect(() => {
@@ -76,6 +76,7 @@ const UsernameForm = () => {
 					onChange={(e) => textChanged(e.target.value)}
 				/>
 				<Select size={['sm','lg']} maxW={["80px", "100px"]} onChange={onSeasonChange}>
+				<option value='2023'>2023</option>
 				<option value='2022'>2022</option>
 				<option value='2021'>2021</option>
 				<option value='2020'>2020</option>

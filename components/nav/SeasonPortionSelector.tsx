@@ -1,7 +1,7 @@
 'use client'
 import {useRadioGroup, Center, HStack, useRadio, Box} from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
-import { SeasonPortion } from '../../classes/custom/League'
+import League, { SeasonPortion } from '../../classes/custom/League'
 import { LeagueContext } from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
 
@@ -31,7 +31,7 @@ export default function HorizontalPillSelector(props: MyProps) {
       
 
 	return (
-		<Center textAlign={'center'} mx={[1, 2, 4]}>
+		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={(context as League | null)?.settings?.season_type == SeasonPortion.POST || (context as League | null)?.settings?.season_type == SeasonPortion.ALL ? "visible" : "hidden"}>
 			<HStack
 				{...group}
 				bg={project_colors.secondary[800]}
