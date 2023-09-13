@@ -23,7 +23,7 @@ const UsernameForm = () => {
 	const [text, setText] = useState('')
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())
-	const [selectedSeason, setSelectedSeason] = useState(2022)
+	const [selectedSeason, setSelectedSeason] = useState(2023)
 	const pathname = usePathname();
 
 	useEffect(() => {
