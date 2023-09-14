@@ -11,7 +11,7 @@ type MyProps = {
 const LeagueMemberButton = (props: MyProps) => {
 	return (
 		<Box onClick={props.onclose}>
-			<Link href={`${props.leagueId}/team/${props.member.roster.roster_id}`}>
+			<Link href={`../team/${props.member.roster.roster_id}`}>
 				<Button
 					size={'sm'}
 					p={3}
