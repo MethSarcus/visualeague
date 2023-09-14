@@ -48,7 +48,7 @@ const Navbar = (props: MyProps) => {
 				<NavbarButton
 					buttonText='VisuaLeague'
 					disabled={context.settings == undefined}
-					link={`/${context.settings?.league_id}`}
+					link={`/league/${context.settings?.league_id}`}
 				/>
 			</HStack>
 			<HStack
@@ -65,28 +65,28 @@ const Navbar = (props: MyProps) => {
 				<NavbarButton
 					buttonText='League'
 					disabled={context.settings == undefined}
-					link={`${context.settings?.league_id}`}
+					link={`/league/${context.settings?.league_id}`}
 				/>
 				<TeamSidebar />
 				<NavbarButton
 					buttonText='Power Rankings'
 					disabled={context.settings == undefined}
-					link={`${context?.settings?.league_id}/ranks`}
+					link={`/league/${context?.settings?.league_id}/ranks`}
 				/>
 				<NavbarButton
 					buttonText='Trading'
 					disabled={context.settings == undefined}
-					link={`${context?.settings?.league_id}/trades`}
+					link={`/league/${context?.settings?.league_id}/trades`}
 				/>
 				<NavbarButton
 					buttonText='Draft'
 					disabled={context.settings == undefined}
-					link={`${context?.settings?.league_id}/draft`}
+					link={`/league/${context?.settings?.league_id}/draft`}
 				/>
 				<NavbarButton
 					buttonText='Rosters'
 					disabled={context.settings == undefined}
-					link={`${context?.settings?.league_id}/rosters`}
+					link={`/league/${context?.settings?.league_id}/rosters`}
 				/>
 				<Box pl={3}>
 					<ExpandableLeagueSearch />

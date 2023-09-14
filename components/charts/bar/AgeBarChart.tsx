@@ -93,7 +93,7 @@ function formatScoresForBarChart(playerDetails: SleeperPlayerDetails[]) {
 	let highAge = 0
 	let lowAge = 100
 	playerDetails.forEach((details) => {
-		if (details.age != undefined) {
+		if (details?.age != undefined) {
 			ageMap.set(details.age, (ageMap.get(details.age) ?? 0) + 1)
 			if (details.age < lowAge) {
 				lowAge = details.age

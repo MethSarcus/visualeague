@@ -139,7 +139,7 @@ function getMatchups(leagueId: string, numWeeks: number) {
 // -------------------------------------------------------------------
 // Gets all matchups
 // -------------------------------------------------------------------
-function getStats(
+export function getStats(
   connectToDatabase: typeof MongoClient,
   playerIds: string[],
   week: number
