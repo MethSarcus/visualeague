@@ -1,6 +1,5 @@
 import e from 'cors'
 import {produce, immerable} from 'immer'
-import {Transaction} from 'mongodb'
 import {
 	calcPlayerPoints,
 	LINEUP_POSITION,
