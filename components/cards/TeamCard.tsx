@@ -15,9 +15,11 @@ import {
 	VStack,
 } from '@chakra-ui/react'
 import {useRouter} from 'next/router'
+import { useContext } from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import {SleeperPlayerDetails} from '../../classes/custom/Player'
+import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
 import AgeBarChart from '../charts/bar/AgeBarChart'
 import TrendingLineChart from '../charts/team_charts/TrendingLineChart'
 
@@ -31,7 +33,7 @@ type MyProps = {
 const TeamCardWithTrendingGraph = (props: MyProps) => {
 	const {variant, size, ...rest} = props
 	const {isOpen, onToggle} = useDisclosure()
-
+	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
 	return (
 		<Card
 			boxShadow={'lg'}
@@ -81,7 +83,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 					<Box>
 						<AgeBarChart
 							playerDetails={props.member?.roster.players.map((playerId) => {
-								return props.league.playerDetails.get(
+								return playerDetailsContext?.get(
 									playerId
 								) as SleeperPlayerDetails
 							})}

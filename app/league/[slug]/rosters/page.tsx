@@ -18,7 +18,7 @@ const Page = () => {
 	const mobileGrid = `"controls"
 	"rosters"`
 
-	if (context.settings == undefined || context.playerDetails == undefined)
+	if (context.settings == undefined)
 		return <Spinner />
 	return (
 		<Grid

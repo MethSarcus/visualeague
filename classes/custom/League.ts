@@ -11,7 +11,7 @@ import {
 import {DraftPick} from '../sleeper/DraftPick'
 import { DraftOrder } from '../sleeper/DraftSettings'
 import {LeagueSettings, ScoringSettings} from '../sleeper/LeagueSettings'
-import SleeperLeague from '../sleeper/SleeperLeague'
+import LeagueData from '../sleeper/SleeperLeague'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
 import {SleeperRoster} from '../sleeper/SleeperRoster'
 import {SleeperTransaction} from '../sleeper/SleeperTransaction'
@@ -25,7 +25,7 @@ import {MatchupPlayer} from './MatchupPlayer'
 import {MatchupSide} from './MatchupSide'
 import MemberScores from './MemberStats'
 import {OrdinalStatInfo} from './OrdinalStatInfo'
-import {SleeperPlayerDetails} from './Player'
+import Player, {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from './Player'
 import SeasonPlayer from './SeasonPlayer'
 import StatsResponse from './StatsResponse'
 import Trade from './Trade'
@@ -45,17 +45,14 @@ export default class League {
 	public modifiedSettings?: LeagueSettings
 	public useModifiedSettings: boolean = false
 	public taxiIncludedInMaxPf: boolean = false
-	public playerDetails: Map<string, SleeperPlayerDetails> = new Map()
-	public playerStatMap: Map<number, Map<string, ScoringSettings>> = new Map()
-	public playerProjectionMap: Map<number, Map<string, ScoringSettings>> =
-		new Map()
 	public memberIdToRosterId: Map<string, number> = new Map()
 	public stats: LeagueStats = new LeagueStats()
 	public draft: Draft
 
 	constructor(
-		sleeperLeague: SleeperLeague,
-		playerStats: StatsResponse,
+		sleeperLeague: LeagueData,
+		playerScores: Map<string, PlayerScores>,
+		playerDetails: Map<string, SleeperPlayerDetails>,
 		draft: Draft,
 		modifiedSettings?: LeagueSettings,
 		trades?: SleeperTransaction[]
@@ -66,9 +63,7 @@ export default class League {
 		} else {
 			this.modifiedSettings = sleeperLeague.sleeperDetails
 		}
-		sleeperLeague.player_details.forEach((player: any) => {
-			this.playerDetails.set(player._id, player.details)
-		})
+
 		sleeperLeague.users.forEach((user: SleeperUser) => {
 			sleeperLeague.rosters.forEach((roster: SleeperRoster) => {
 				if (roster.owner_id == user.user_id) {
@@ -84,9 +79,8 @@ export default class League {
 		this.allMatchups = sleeperLeague.matchups
 
 		this.settings = sleeperLeague.sleeperDetails
-		this.parseStatResponse(playerStats)
 		this.initMemberTradeMap()
-		this.calcStats(false)
+		this.calcStats(playerScores, playerDetails, false)
 		if (trades) {
 			this.trades = trades?.map((trade) => {
 				return new Trade(trade)
@@ -126,9 +120,9 @@ export default class League {
 		return memberTradeNum
 	}
 
-	setSeasonPortion(portion: SeasonPortion) {
+	setSeasonPortion(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, portion: SeasonPortion) {
 		this.seasonPortion = portion
-		this.reCalcStats(this.taxiIncludedInMaxPf)
+		this.reCalcStats(playerScores, playerDetails, this.taxiIncludedInMaxPf)
 	}
 
 	calcTradeStats() {
@@ -335,48 +329,11 @@ export default class League {
 			})
 	}
 
-	parseStatResponse(statsResponse: StatsResponse) {
-		for (let i = 1; i <= this.settings.settings.last_scored_leg; i++) {
-			let stats = statsResponse[i]["stats"]
-			let projections = statsResponse[i]["projections"]
-
-			this.createPlayerStatsMap(stats, i)
-			this.initPlayerProjectionsMap(projections, i)
-		}
-		
-	 }
-
-	//Creates a map mapping week number to a map of player id to the players stats
-	//The incoming array contains an array of stats objects
-	createPlayerStatsMap(stats: object, week: number) {
-		try {
-			this.playerStatMap.set(week, new Map())
-			Object.keys(stats).forEach((key: any) => {
-				this.playerStatMap.get(week)?.set(key, stats[key as keyof object])
-			})
-		} catch (error) {
-			console.log(error)
-		}
-	}
-
-	//Creates a map mapping week number to a map of player id to the players stats
-	//The incoming array contains an array of stats objects
-	initPlayerProjectionsMap(projections: object, week: number) {
-		try {
-			this.playerProjectionMap.set(week, new Map())
-			Object.keys(projections).forEach((key: any) => {
-				this.playerProjectionMap.get(week)?.set(key, projections[key as keyof object])
-			})
-		} catch (error) {
-			console.log(error)
-		}
-	}
-
 	setTaxiSquadIncluded(include: boolean) {
 		this.taxiIncludedInMaxPf = include
 	}
 
-	modifyStats(customSettings: ScoringSettings, useTaxiSquad: boolean) {
+	modifyStats(customSettings: ScoringSettings, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>,  useTaxiSquad: boolean) {
 		this.modifiedSettings = produce(
 			this.modifiedSettings,
 			(draftState: LeagueSettings) => {
@@ -385,7 +342,7 @@ export default class League {
 		)
 
 		this.useModifiedSettings = true
-		this.reCalcStats(useTaxiSquad)
+		this.reCalcStats(playerScores, playerDetails, useTaxiSquad)
 	}
 
 	disableModifiedStats() {
@@ -409,7 +366,7 @@ export default class League {
 	}
 
 	//Takes in an array filled with sleeper matchup arrays
-	calcLeagueWeeks(taxiMap?: Map<number, string[]>) {
+	calcLeagueWeeks(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, taxiMap?: Map<number, string[]>) {
 		this.weeks = new Map()
 		let matchups = this.getEligibleMatchups()
 		matchups.forEach((week) => {
@@ -428,9 +385,8 @@ export default class League {
 			let weekObj = new Week(
 				weekNum,
 				week.matchups ?? [],
-				this.playerStatMap,
-				this.playerProjectionMap,
-				this.playerDetails,
+				playerScores,
+				playerDetails,
 				settings,
 				isPlayoffs,
 				taxiMap
@@ -439,7 +395,7 @@ export default class League {
 		})
 	}
 
-	calcDraftValues() {
+	calcDraftValues(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
 		let totalDraftValue = 0
 		let posScoreMap = new Map()
 		this.getPositions().forEach(position => {
@@ -449,15 +405,10 @@ export default class League {
 			
 		})
 		this.draft.picks.forEach((pick, player_id) => {
+			//TODO revisit this and maybe change to be based on projections in case a player scores 0 points
 			this.getEnabledWeeks().forEach((weekNum) => {
-				if (this.playerProjectionMap.get(weekNum)?.has(pick.player_id)) {
-					let pointsScored =
-						calcPlayerPoints(
-							this.playerStatMap.get(weekNum)?.get(pick.player_id),
-							this.modifiedSettings?.scoring_settings ??
-								this.settings.scoring_settings
-						) ?? 0
-					pick.addGame(pointsScored)
+				if (playerScores.get(pick.player_id)?.stats?.has(weekNum)) {
+					pick.addGame(playerScores.get(player_id)?.stats.get(weekNum) ?? 0)
 				}
 			})
 
@@ -753,13 +704,13 @@ export default class League {
 		})
 	}
 
-	getPlayerStat(playerId: number, weekNum: number) {
-		return this.playerStatMap.get(weekNum)?.get(playerId.toString())
-	}
+	// getPlayerStat(playerId: number, weekNum: number) {
+	// 	return this.playerDetails.get(playerId + "")?.stats.get(weekNum)
+	// }
 
-	getPlayerProjection(playerId: number, weekNum: number) {
-		return this.playerProjectionMap.get(weekNum)?.get(playerId.toString())
-	}
+	// getPlayerProjection(playerId: number, weekNum: number) {
+	// 	return this.playerDetails.get(playerId + "")?.projections.get(weekNum)
+	// }
 
 	//Creates a map for each member that maps their roster id to number of trades done
 	initMemberTradeMap() {
@@ -865,21 +816,21 @@ export default class League {
 			return {matchups: this.allMatchups.at(weekNum), weekNumber: weekNum + 1}
 		})
 	}
-	reCalcStats(useTaxiSquad: boolean) {
+	reCalcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>,  useTaxiSquad: boolean) {
 		this.resetAllStats()
-		this.calcStats(useTaxiSquad)
+		this.calcStats(playerScores, playerDetails, useTaxiSquad)
 	}
 
-	calcStats(useTaxiSquad: boolean) {
+	calcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, useTaxiSquad: boolean) {
 		let taxiMap
 		if (!useTaxiSquad) {
 			this.taxiIncludedInMaxPf = useTaxiSquad
 			taxiMap = this.getTaxiMap()
 		}
-		this.calcLeagueWeeks(taxiMap ?? new Map())
-		this.calcMemberScores()
+		this.calcLeagueWeeks(playerScores, playerDetails, taxiMap ?? new Map())
+		this.calcMemberScores(playerScores)
 		this.calcLeagueStats()
-		this.calcDraftValues()
+		this.calcDraftValues(playerScores, playerDetails)
 		this.calcAllPlayStats()
 	}
 
@@ -919,7 +870,7 @@ export default class League {
 	}
 
 	//Needs weeks to be set
-	calcMemberScores() {
+	calcMemberScores(playerInfo: Map<string, PlayerScores>) {
 		this.weeks.forEach((week) => {
 			week.matchups.forEach((matchup) => {
 				let homeId = matchup.homeTeam.roster_id
@@ -1305,7 +1256,8 @@ export default class League {
 			)?.rank!
 
 			member.players.forEach((player) => {
-				player.calcStats()
+				let playerInformation = playerInfo.get(player.id)
+				player.calcStats(playerInformation?.stats ?? new Map(), playerInformation?.projections ?? new Map())
 			})
 
 			this.getPositions().forEach((position) => {
@@ -1328,42 +1280,12 @@ export default class League {
 		})
 	}
 
-	getAllWeekScoresForPlayer(playerId: string) {
-		let weekScores = new Map()
-		let projectedWeekScores = new Map()
-		let settings = this.getSettings()?.scoring_settings
-		this.playerStatMap.forEach((weekStats, weekNum) => {
-			let playerStats = weekStats.get(playerId)
-			let playerProjections = this.playerProjectionMap
-				.get(weekNum)
-				?.get(playerId)
-			let weekPoints = 0
-			let weekProjectedPoints = 0
-			if (playerStats != undefined && settings && playerProjections) {
-				for (const [key, value] of Object.entries(playerStats)) {
-					let points =
-						value * (settings[key as keyof ScoringSettings] as number)
-					if (!isNaN(points)) {
-						weekPoints += points
-					}
-				}
-
-				for (const [key, value] of Object.entries(playerProjections)) {
-					let points =
-						value * (settings[key as keyof ScoringSettings] as number)
-					if (!isNaN(points)) {
-						weekProjectedPoints += points
-					}
-				}
-			}
-			weekScores.set(weekNum, weekPoints)
-			projectedWeekScores.set(weekNum, weekProjectedPoints)
-		})
-
+	getAllWeekScoresForPlayer(playerId: string, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
+		let player = playerScores.get(playerId)
 		return {
-			scores: weekScores,
-			projectedScores: projectedWeekScores,
-			details: this.playerDetails.get(playerId),
+			scores: player?.stats ?? new Map(),
+			projectedScores: player?.projections ?? new Map(),
+			details: playerDetails.get(playerId),
 		}
 	}
 

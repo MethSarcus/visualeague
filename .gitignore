@@ -15,6 +15,9 @@
 # production
 /build
 
+#Sleeper Stats
+/stats
+
 # misc
 .DS_Store
 *.pem
@@ -36,3 +39,4 @@ yarn-error.log*
 
 /taxi_stats
 .vscode/settings.json
+

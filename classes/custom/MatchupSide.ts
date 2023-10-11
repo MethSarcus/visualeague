@@ -1,4 +1,4 @@
-import {SleeperPlayerDetails} from './Player'
+import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from './Player'
 import {LeagueSettings} from '../sleeper/LeagueSettings'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
 import {
@@ -32,8 +32,7 @@ export class MatchupSide {
 	constructor(
 		weekNumber: number,
 		matchup: SleeperMatchup,
-		stats: Map<string, any>,
-		projections: Map<string, any>,
+		playerScores: Map<string, PlayerScores>,
 		playerDetails: Map<string, SleeperPlayerDetails>,
 		settings: LeagueSettings,
 		filteredPlayers?: string[]
@@ -43,28 +42,30 @@ export class MatchupSide {
 		this.matchup_id = matchup.matchup_id
 		this.starters = matchup.starters.map((playerId, index) => {
 			if (playerId == '0') {
-				return new MatchupPlayer(playerId)
+				return new MatchupPlayer(playerId, 0, 0)
 			} else {
+				let scores = playerScores.get(playerId)
+				let details = playerDetails.get(playerId)
 				return new MatchupPlayer(
 					playerId,
+					scores?.stats.get(weekNumber) ?? 0,
+					scores?.projections.get(weekNumber) ?? 0,
 					settings.roster_positions?.at(index),
-					stats.get(playerId),
-					projections.get(playerId),
-					playerDetails.get(playerId)?.fantasy_positions,
-					settings.scoring_settings
+					details?.fantasy_positions
 				)
 			}
 		})
 		this.bench = matchup.players
 			.filter((player) => !matchup.starters.includes(player))
 			.map((playerId, index) => {
+				let scores = playerScores.get(playerId)
+				let details = playerDetails.get(playerId)
 				return new MatchupPlayer(
 					playerId,
+					scores?.stats.get(weekNumber) ?? 0,
+					scores?.projections.get(weekNumber) ?? 0,
 					'BN',
-					stats.get(playerId),
-					projections.get(playerId),
-					playerDetails.get(playerId)?.fantasy_positions,
-					settings.scoring_settings
+					details?.fantasy_positions
 				)
 			})
 		if (matchup.custom_points) {

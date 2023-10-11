@@ -1,7 +1,10 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
+import { useContext } from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
+import { SleeperPlayerDetails } from '../../../classes/custom/Player'
+import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
 import {getPositionColor} from '../../../utility/rosterFunctions'
 
 interface MyProps {
@@ -15,14 +18,15 @@ const theme = {
 
 const KTC_Bar_Chart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	if (props.league?.settings == undefined) return <Spinner />
-	let formattedData = formatScoresForBarChart(props.league)
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	if (props.league?.settings == undefined || playerDetails?.size < 1) return <Spinner />
+	let formattedData = formatScoresForBarChart(props.league, playerDetails)
 	let keys = formattedData.chartKeys
 	let data = formattedData.chartData as BarDatum[]
 	if (data.length <= 0) return <Spinner />
 	const getColor = (bar: BarDatum) => {
 		return getPositionColor(
-			props.league?.playerDetails.get(bar.id as any)?.position as any
+			playerDetails?.get(bar.id as any)?.position as any
 		)
 	}
 	return (
@@ -30,7 +34,7 @@ const KTC_Bar_Chart = (props: MyProps) => {
 			data={data}
 			keys={keys}
 			tooltip={({id, value, color}) => {
-				let playerDets = props.league?.playerDetails.get(id as any)
+				let playerDets = playerDetails?.get(id as any)
 				return (
 					<div
 						style={{
@@ -108,7 +112,7 @@ interface MemberDataObj {
 	[key: string]: any
 }
 
-function formatScoresForBarChart(league: League) {
+function formatScoresForBarChart(league: League, playerDetails: Map<string, SleeperPlayerDetails>) {
 	let keys: Set<string> = new Set<string>()
 	let data: object[] = []
 	let memberDataObjects = new Map<number, MemberDataObj>()
@@ -117,8 +121,8 @@ function formatScoresForBarChart(league: League) {
 		let memberData: {[k: string]: any} = {}
 		let memberRosterValue = 0
 		member.roster.players.sort((a: string, b: string) => {
-			let aVal = league.playerDetails.get(a)?.ktc?.oneQBValue ?? 0
-			let bVal = league.playerDetails.get(b)?.ktc?.oneQBValue ?? 0
+			let aVal = playerDetails.get(a)?.ktc?.oneQBValue ?? 0
+			let bVal = playerDetails.get(b)?.ktc?.oneQBValue ?? 0
 			if (aVal < bVal) {
 				return 1
 			} else if (aVal > bVal) {
@@ -128,9 +132,9 @@ function formatScoresForBarChart(league: League) {
 			}
 		}).forEach((player_id) => {
 			
-			if (league.playerDetails.get(player_id)?.ktc?.oneQBValue != undefined) {
-				memberData[player_id] = league.playerDetails.get(player_id)?.ktc?.oneQBValue ?? 0
-				memberRosterValue += league.playerDetails.get(player_id)?.ktc?.oneQBValue ?? 0
+			if (playerDetails.get(player_id)?.ktc?.oneQBValue != undefined) {
+				memberData[player_id] = playerDetails.get(player_id)?.ktc?.oneQBValue ?? 0
+				memberRosterValue += playerDetails.get(player_id)?.ktc?.oneQBValue ?? 0
 				
 				keys.add(player_id)
 			}

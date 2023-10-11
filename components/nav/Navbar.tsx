@@ -6,7 +6,10 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
+import { PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
+import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
+import { PlayerScoresContext } from '../../contexts/PlayerScoresContext'
 import { project_colors } from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
@@ -20,11 +23,13 @@ interface MyProps {
 
 const Navbar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
+	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
 
 	function setSeasonPortion(selected: String) {
 
 		const nextState = produce(context, (draftState: League) => {
-			draftState.setSeasonPortion(selected as SeasonPortion)
+			draftState.setSeasonPortion(playerScores, playerDetails, selected as SeasonPortion)
 		})
 		setContext(nextState)
 	}

@@ -7,8 +7,6 @@ import { ScoringAct, ScoringSettings } from "../sleeper/LeagueSettings";
 import League from "./League";
 
 export default class SeasonPlayer {
-  public playerScores: Map<number, number> = new Map();
-  public playerProjectedScores: Map<number, number> = new Map();
   public roster_id: number;
   public lineupPosition: LINEUP_POSITION;
   public starter_points: number = 0;
@@ -50,8 +48,8 @@ export default class SeasonPlayer {
     this.weeks_played = []
     this.weeks_benched = []
     this.teamPositionRank = 0
-    this.playerScores = new Map()
-    this.playerProjectedScores = new Map()
+    // this.playerScores = new Map()
+    // this.playerProjectedScores = new Map()
   }
 
   addWeek(
@@ -63,8 +61,8 @@ export default class SeasonPlayer {
     this.points_scored += pointsScored;
     this.projected_points += projectedPoints;
 
-    this.playerScores.set(weekNumber, pointsScored);
-    this.playerProjectedScores.set(weekNumber, projectedPoints);
+    // this.playerScores.set(weekNumber, pointsScored);
+    // this.playerProjectedScores.set(weekNumber, projectedPoints);
 
     if (wasStarted) {
       this.weeks_played.push(weekNumber);
@@ -73,18 +71,18 @@ export default class SeasonPlayer {
     }
   }
 
-  calcStats() {
-    this.calcStarterStats()
-    this.calcBenchStats()
-    this.calcCombinedStats()
+  calcStats(playerScores: Map<number, number>, playerProjectedScores: Map<number, number>) {
+    this.calcStarterStats(playerScores, playerProjectedScores)
+    this.calcBenchStats(playerScores, playerProjectedScores)
+    this.calcCombinedStats(playerScores, playerProjectedScores)
   }
 
-  calcStarterStats() {
+  calcStarterStats(playerScores: Map<number, number>, playerProjectedScores: Map<number, number>) {
     let startWeeks = this.weeks_played
       .filter((weekNumber) => {
         return (
-          this.playerProjectedScores.get(weekNumber) != undefined &&
-          (this.playerProjectedScores.get(weekNumber) as number) > 0
+          playerProjectedScores.get(weekNumber) != undefined &&
+          (playerProjectedScores.get(weekNumber) as number) > 0
         );
       })
       .sort((a: number, b: number) => {
@@ -92,7 +90,7 @@ export default class SeasonPlayer {
       }) as number[];
 
     let pointValues = startWeeks.map((value) =>
-      this.playerScores.get(value)
+      playerScores.get(value)
     ) as number[];
 
     this.starter_points = pointValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -100,32 +98,32 @@ export default class SeasonPlayer {
     this.avgPointsPerStart = pointValues.reduce((a, b) => a + b, 0) / pointValues.length;
   }
 
-  calcBenchStats() {
+  calcBenchStats(playerScores: Map<number, number>, playerProjectedScores: Map<number, number>) {
     let benchWeeks = this.weeks_benched
       .filter((weekNumber) => {
         return (
-          this.playerProjectedScores.get(weekNumber) != undefined &&
-          (this.playerProjectedScores.get(weekNumber) as number) > 0
+          playerProjectedScores.get(weekNumber) != undefined &&
+          (playerProjectedScores.get(weekNumber) as number) > 0
         );
       })
       .sort((a: number, b: number) => {
         return a - b;
       }) as number[];
     let pointValues = benchWeeks.map((value) =>
-      this.playerScores.get(value)
+      playerScores.get(value)
     ) as number[];
     this.bench_points = pointValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     this.avgPointsPerBench =
       pointValues.reduce((a, b) => a + b, 0) / pointValues.length;
   }
 
-  calcCombinedStats() {
+  calcCombinedStats(playerScores: Map<number, number>, playerProjectedScores: Map<number, number>) {
     let allActiveWeeks = this.weeks_played
       .concat(this.weeks_benched)
       .filter((weekNumber) => {
         return (
-          this.playerProjectedScores.get(weekNumber) != undefined &&
-          (this.playerProjectedScores.get(weekNumber) as number) > 0
+          playerProjectedScores.get(weekNumber) != undefined &&
+          (playerProjectedScores.get(weekNumber) as number) > 0
         );
       })
       .sort((a: number, b: number) => {
@@ -133,7 +131,7 @@ export default class SeasonPlayer {
       }) as number[];
 
     let pointValues = allActiveWeeks.map((value) =>
-      this.playerScores.get(value)
+      playerScores.get(value)
     ) as number[];
     
     this.stdDev = standardDeviation(pointValues);
@@ -141,8 +139,8 @@ export default class SeasonPlayer {
     allActiveWeeks.forEach((weekNum) => {
       weeklyDiffs.set(
         weekNum,
-        this.playerScores.get(weekNum)! -
-          this.playerProjectedScores.get(weekNum)!
+        playerScores.get(weekNum)! -
+          playerProjectedScores.get(weekNum)!
       );
     });
 

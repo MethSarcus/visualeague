@@ -7,9 +7,12 @@ import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
 import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
+import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import {LeagueContext} from '../../../contexts/LeagueContext'
+import {PlayerScoresContext} from '../../../contexts/PlayerScoresContext'
+import {PlayerDetailsContext} from '../../../contexts/PlayerDetailsContext'
 import styles from '../../../styles/Home.module.css'
 const LeagueLayout = ({
 	children,
@@ -20,6 +23,9 @@ const LeagueLayout = ({
 }) => {
 	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
+	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext)
+	const [playerScoresContext, setPlayerScoresContext] = useContext(PlayerScoresContext)
+
 
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
@@ -44,18 +50,6 @@ const LeagueLayout = ({
 		fetcher
 	)
 
-	const {data: statsData, error: statsError} = useSWR(
-		sleeperLeagueData?.season != undefined
-			? `/stats/${sleeperLeagueData.season}_season.json`
-			: null,
-		fetcher,
-		{
-			revalidateIfStale: false,
-			revalidateOnFocus: false,
-			revalidateOnReconnect: false,
-		}
-	)
-
 	const {data: leagueData, error: leagueError} = useSWR(
 		params.slug != undefined &&
 			sleeperLeagueError == undefined &&
@@ -71,16 +65,28 @@ const LeagueLayout = ({
 	)
 
 	useEffect(() => {
-		if (leagueData && statsData && draftPicks && draftSettings) {
+		if (leagueData && draftPicks && draftSettings) {
+			let playerScores = new Map<string, PlayerScores>()
+			let playerDetails = new Map<string, SleeperPlayerDetails>()
+			leagueData.league.player_details.forEach((player: DatabasePlayer) => {
+				let playerObj = new PlayerScores(player, leagueData.league.sleeperDetails)
+				playerDetails.set(player._id, player.details)
+				playerScores.set(player._id, playerObj)
+			})
+			setPlayerScoresContext(playerScores)
+			setPlayerDetailsContext(playerDetails)
+			
 			let league = new League(
 				leagueData.league,
-				statsData,
+				playerScores,
+				playerDetails,
 				new Draft(draftPicks, draftSettings),
 				undefined,
 				tradeData?.trades
 			)
-			console.log(league)
 			setLeagueContext(league)
+			console.log(league)
+
 			return
 		}
 	}, [
@@ -88,7 +94,8 @@ const LeagueLayout = ({
 		draftSettings,
 		leagueData,
 		setLeagueContext,
-		statsData,
+		setPlayerScoresContext,
+		setPlayerDetailsContext,
 		tradeData?.trades,
 	])
 
