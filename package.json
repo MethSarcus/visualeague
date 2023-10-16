@@ -34,7 +34,7 @@
     "framer-motion": "10.16.2",
     "immer": "10.0.2",
     "mongodb": "^4.17.1",
-    "next": "^13.4.19",
+    "next": "^13.5.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.5.3",
