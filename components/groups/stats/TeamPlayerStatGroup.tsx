@@ -1,7 +1,11 @@
 "use client";
 import { Box, Flex, HStack, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { useContext } from "react";
 import League from "../../../classes/custom/League";
 import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
+import { PlayerScores, SleeperPlayerDetails } from "../../../classes/custom/Player";
+import { PlayerDetailsContext } from "../../../contexts/PlayerDetailsContext";
+import { PlayerScoresContext } from "../../../contexts/PlayerScoresContext";
 import { POSITION } from "../../../utility/rosterFunctions";
 import GenericStatCard from "../../cards/statcards/GenericStatCard";
 import TeamPlayerStatCard from "../../cards/statcards/TeamPlayerStatCard";
@@ -14,10 +18,10 @@ interface MyProps {
 }
 
 const TeamPlayerStatGroup = (props: MyProps) => {
-  if (props.league?.settings == undefined) return <div>Loading...</div>;
+  const [playerScoresContext, setPlayerInfoContext] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
+  const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+  if (props.league?.settings == undefined || playerScoresContext == null) return <div>Loading...</div>;
   const member = props.league?.members.get(props.memberId);
-  let playerDetails = props.league.playerDetails;
-
   let bestPlayer;
   let leastConsistent;
   let lowestAvgScorer;
@@ -39,7 +43,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
       <TeamPlayerStatCard
         title={"MVP"}
         player={bestPlayer}
-        playerDetails={playerDetails.get(bestPlayer?.id!)}
+        playerDetails={playerDetailsContext?.get(bestPlayer?.id!)}
         mainStat={`${bestPlayer?.points_scored.toFixed(2)} PF`}
         subStat={`${bestPlayer?.avgPointsPerStart.toFixed(2)} Avg`}
         isLoaded={true}
@@ -48,7 +52,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
       <TeamPlayerStatCard
         title={"LVP"}
         player={lowestAvgScorer}
-        playerDetails={playerDetails.get(lowestAvgScorer?.id!)}
+        playerDetails={playerDetailsContext?.get(lowestAvgScorer?.id!)}
         mainStat={`${lowestAvgScorer?.avgPointsPerStart.toFixed(2)} Avg PF`}
         isLoaded={true}
         isGoodThing={false}
@@ -56,7 +60,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
       <TeamPlayerStatCard
         title={"Least Consistent"}
         player={leastConsistent}
-        playerDetails={playerDetails.get(leastConsistent?.id!)}
+        playerDetails={playerDetailsContext?.get(leastConsistent?.id!)}
         mainStat={`${leastConsistent?.stdDev.toFixed(2)} Std Dev`}
         isLoaded={true}
         isGoodThing={true}
@@ -65,7 +69,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
       <TeamPlayerStatCard
         title={"Most Consistent"}
         player={mostConsistent}
-        playerDetails={playerDetails.get(mostConsistent?.id!)}
+        playerDetails={playerDetailsContext?.get(mostConsistent?.id!)}
         mainStat={`${mostConsistent?.stdDev.toFixed(2)} Std Dev`}
         isLoaded={true}
         isGoodThing={true}
@@ -73,7 +77,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
       <TeamPlayerStatCard
         title={"Most Predictable"}
         player={leastPredictionError}
-        playerDetails={playerDetails.get(leastPredictionError?.id!)}
+        playerDetails={playerDetailsContext?.get(leastPredictionError?.id!)}
         mainStat={`${leastPredictionError?.rootMeanSquareError.toFixed(
           2
         )} RSME`}
@@ -83,7 +87,7 @@ const TeamPlayerStatGroup = (props: MyProps) => {
             <TeamPlayerStatCard
         title={"Least Predictable"}
         player={mostPredictionError}
-        playerDetails={playerDetails.get(mostPredictionError?.id!)}
+        playerDetails={playerDetailsContext?.get(mostPredictionError?.id!)}
         mainStat={`${mostPredictionError?.rootMeanSquareError.toFixed(
           2
         )} RSME`}

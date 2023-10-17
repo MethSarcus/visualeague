@@ -31,12 +31,17 @@ import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import MemberScores from '../../classes/custom/MemberStats'
+import { PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
 import {LeagueContext} from '../../contexts/LeagueContext'
+import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
+import { PlayerScoresContext } from '../../contexts/PlayerScoresContext'
 import {getReadableScoringKey} from '../../utility/rosterFunctions'
 
 const SettingsSidebar = () => {
 	const [context, setContext] = useContext(LeagueContext)
+	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
 
@@ -85,7 +90,7 @@ const SettingsSidebar = () => {
 
 		const nextState = produce(context, (draftState: League) => {
 			draftState.setTaxiSquadIncluded(taxiIncludedMaxPfChecked)
-			draftState.modifyStats(settings, taxiIncludedMaxPfChecked)
+			draftState.modifyStats(settings, playerScores, playerDetails, taxiIncludedMaxPfChecked)
 			draftState.useModifiedSettings = customScoringChecked
 		})
 		setContext(nextState)

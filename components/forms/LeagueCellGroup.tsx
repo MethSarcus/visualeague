@@ -13,6 +13,7 @@ type MyProps = {
 }
 
 const LeagueCellGroup = (props: MyProps) => {
+	
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 	const {data: userData, error: userError} = useSWR(
 		props.usernameSubmitted
@@ -28,7 +29,8 @@ const LeagueCellGroup = (props: MyProps) => {
 				: null,
 		fetcher
 	)
-	if (userError) return <div>Failed to load</div>
+	if (props.usernameSubmitted != true) return <div></div>
+	if (props.usernameSubmitted && userData == null) return <div>No Leagues Found</div>
 	if (!userData || !leaguesData) return <Spinner size={'md'} />
 
 	return (

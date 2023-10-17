@@ -1,8 +1,12 @@
 import {Spinner} from '@chakra-ui/react'
 import {ResponsiveLine} from '@nivo/line'
+import { useContext } from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
+import { PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
 import SeasonPlayer from '../../../classes/custom/SeasonPlayer'
+import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
+import { PlayerScoresContext } from '../../../contexts/PlayerScoresContext'
 import {project_colors} from '../../../utility/project_colors'
 
 interface MyProps {
@@ -12,8 +16,10 @@ interface MyProps {
 }
 
 const RosterPlayerTrendingLineChart = (props: MyProps) => {
-	if (!props.player || !props.league) return <Spinner />
-	let data = formatScoresForLineChart(props.player, props.league) as any
+	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	if (!props.player || !props.league || !playerScores) return <Spinner />
+	let data = formatScoresForLineChart(props.player, props.league, playerScores, playerDetails) as any
 	const theme = {
 		textColor: 'white',
 	}
@@ -72,9 +78,9 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 	)
 }
 
-function formatScoresForLineChart(player: SeasonPlayer, league: League) {
+function formatScoresForLineChart(player: SeasonPlayer, league: League, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
 	let weekScores: {x: string; y: string | undefined | null; started: boolean; wasActive: boolean}[] = []
-	let allWeekStats = league.getAllWeekScoresForPlayer(player.id)
+	let allWeekStats = league.getAllWeekScoresForPlayer(player.id, playerScores, playerDetails)
 	allWeekStats.scores.forEach((score, weekNum) => {
 		if (player.weeks_played.includes(weekNum) && allWeekStats.projectedScores.get(weekNum) > 0) {
 			weekScores.push({

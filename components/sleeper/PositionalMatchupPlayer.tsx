@@ -24,7 +24,7 @@ export default function PositionalMatchupPlayer(props: MyProps) {
 		>
 			<Box textAlign={props.isInverted ? 'end' : 'start'}>
 				<Text as={'p'} color={'white'} fontWeight={'bold'} fontSize={'1.1em'}>
-					{props.playerDetails?.first_name.charAt(0)}.{' '}
+					{props.playerDetails?.first_name?.charAt(0)}.{' '}
 					{props.playerDetails?.last_name}
 				</Text>
 				<Text
@@ -33,7 +33,7 @@ export default function PositionalMatchupPlayer(props: MyProps) {
 					color={'white'}
 					fontSize={'.8em'}
 				>
-					{props.playerDetails?.fantasy_positions[0]}-
+					{props.playerDetails?.fantasy_positions?.at(0)}-
 					{props.playerDetails?.team}
 				</Text>
 			</Box>

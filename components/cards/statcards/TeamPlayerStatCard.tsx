@@ -9,7 +9,7 @@ import {
   SkeletonCircle,
   SkeletonText,
 } from "@chakra-ui/react";
-import { SleeperPlayerDetails } from "../../../classes/custom/Player";
+import {SleeperPlayerDetails } from "../../../classes/custom/Player";
 import SeasonPlayer from "../../../classes/custom/SeasonPlayer";
 
 type MyProps = {

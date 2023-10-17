@@ -22,14 +22,17 @@ export default async function handler(
     res
       .status(200)
       .json({ details: playerDetails as unknown as SleeperPlayerDetails });
-  } else if (player?.length == 2) {
+  } else if (player?.length == 3) {
     let playerId = player[0];
-    let weekNumber = player[1];
+    let season = player[1]
+    let weekNumber = player[2];
+
 
     const playerDetails = await getPlayerStats(
       connectToDatabase(),
       playerId as string,
-      weekNumber as unknown as number
+      weekNumber as unknown as number,
+      season as unknown as number
     );
     res
       .status(200)
@@ -56,7 +59,7 @@ export async function getPlayerDetails(
     let query = { _id: playerId };
 
     let res = await collection.findOne(query);
-    return res.details;
+    return res.stats;
   } catch (err) {
     console.log(err);
   }
@@ -65,6 +68,7 @@ export async function getPlayerDetails(
 export async function getPlayerStats(
   connectToDatabase: typeof MongoClient,
   playerId: string,
+  season: number,
   week: number
 ) {
   const client = await connectToDatabase;
@@ -73,23 +77,23 @@ export async function getPlayerStats(
   }
 
   try {
-    const db = client.db(`week_${week}`);
+    const db = client.db(season.toString());
 
-    let stats = db.collection("player_stats");
-    let projections = db.collection("player_projections");
+    let projections = db.collection(`week_${week}_stats`);
     let query = { _id: playerId };
 
-    let stat = await stats.findOne(query);
     let projection = await projections.findOne(query);
-    return { player_stats: stat, player_projections: projection };
+    return projection;
   } catch (err) {
     console.log(err);
   }
 }
 
+
 export async function getPlayerProjections(
   connectToDatabase: typeof MongoClient,
   playerId: string,
+  season: number,
   week: number
 ) {
   const client = await connectToDatabase;
@@ -98,9 +102,9 @@ export async function getPlayerProjections(
   }
 
   try {
-    const db = client.db(`week_${week}`);
+    const db = client.db(season.toString());
 
-    let projections = db.collection("player_projections");
+    let projections = db.collection(`week_${week}_projections`);
     let query = { _id: playerId };
 
     let projection = await projections.findOne(query);
@@ -113,7 +117,8 @@ export async function getPlayerProjections(
 export async function getMultiPlayerProjections(
   connectToDatabase: typeof MongoClient,
   playerIds: string[],
-  week: number
+  week: number,
+  season: number
 ) {
   const client = await connectToDatabase;
   if (!client) {
@@ -121,9 +126,9 @@ export async function getMultiPlayerProjections(
   }
 
   try {
-    const db = client.db(`week_${week}`);
+    const db = client.db(`${season}`);
 
-    let projections = db.collection("player_projections");
+    let projections = db.collection(`week_${week}_projections`);
     let query = { _id: { $in: playerIds } };
     let projection = await projections.find(query).toArray();
     return projection;
@@ -135,6 +140,7 @@ export async function getMultiPlayerProjections(
 export async function getMultiPlayerStats(
   connectToDatabase: typeof MongoClient,
   playerIds: string[],
+  season: number,
   week: number
 ) {
   const client = await connectToDatabase;
@@ -143,12 +149,12 @@ export async function getMultiPlayerStats(
   }
 
   try {
-    const db = client.db(`week_${week}`);
+    const db = client.db(`${season}`);
 
-    let projections = db.collection("player_stats");
+    let weekData = db.collection(`week_${week}`);
     let query = { _id: { $in: playerIds } };
-    let projection = await projections.find(query).toArray();
-    return projection;
+    let data = await weekData.find(query).toArray();
+    return data;
   } catch (err) {
     console.log(err);
   }
@@ -156,7 +162,8 @@ export async function getMultiPlayerStats(
 
 export async function getMultiPlayerDetails(
   connectToDatabase: typeof MongoClient,
-  playerIds: string[]
+  playerIds: string[],
+  season: string,
 ) {
   const client = await connectToDatabase;
   if (!client) {
@@ -164,9 +171,10 @@ export async function getMultiPlayerDetails(
   }
 
   try {
-    const db = client.db(`players`);
+    const db = client.db(`${season}`);
 
     let details = db.collection("player_details");
+
     let query = { _id: { $in: playerIds } };
     let projectionQuery = {
       projection: {
@@ -178,10 +186,44 @@ export async function getMultiPlayerDetails(
         "details.team": 1,
         "details.age": 1,
         "details.ktc": 1,
+        "stats": 1,
+        "projections": 1,
       },
     };
-    let detail = await details.find(query, projectionQuery).toArray();
-    return detail;
+    let playerDetails = await details.find(query, projectionQuery).toArray();
+    return playerDetails;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getWeeklyPlayerStats(
+  connectToDatabase: typeof MongoClient,
+  playerIds: string[],
+  season: string,
+  startWeek: number,
+  endWeek: number
+) {
+  const client = await connectToDatabase;
+  if (!client) {
+    return;
+  }
+
+  try {
+    const db = client.db(`${season}`);
+    let weeks = [];
+    for (var i = startWeek; i <= endWeek; i++) {
+        weeks.push(i);
+    }
+    let query = { _id: { $in: playerIds } };
+
+    await Promise.all(weeks.map(weekNumber => {
+      return db.collection(`week_${weekNumber}`)
+        .find(query)
+        .toArray()
+    }));
+
+    return weeks
   } catch (err) {
     console.log(err);
   }

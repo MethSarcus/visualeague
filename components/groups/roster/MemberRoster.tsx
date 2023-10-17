@@ -2,7 +2,10 @@ import {Box, Button, Collapse, Spacer, Text, useDisclosure} from '@chakra-ui/rea
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
+import { PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
 import {LeagueContext} from '../../../contexts/LeagueContext'
+import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
+import { PlayerScoresContext } from '../../../contexts/PlayerScoresContext'
 import {POSITION} from '../../../utility/rosterFunctions'
 import TeamCard from '../../cards/TeamCard'
 import TeamCardWithTrendingGraph from '../../cards/TeamCardWithTrendingGraph'
@@ -16,6 +19,8 @@ interface MyProps {
 
 export default function MemberRoster(props: MyProps) {
 	const [context, setContext] = useContext(LeagueContext)
+	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
 	return (
 		<Box>
 			<Box w={'full'} height={'40px'}>
@@ -33,7 +38,7 @@ export default function MemberRoster(props: MyProps) {
 						<RosterPlayer
 							key={starter_id}
 							league={context}
-							playerDetails={(context as League)?.playerDetails?.get(
+							playerDetails={playerDetails?.get(
 								starter_id
 							)}
 							leaguePositionAverage={(
@@ -57,7 +62,7 @@ export default function MemberRoster(props: MyProps) {
 							league={context}
 								key={bench_id}
 								isBenched={true}
-								playerDetails={(context as League)?.playerDetails?.get(
+								playerDetails={playerDetails?.get(
 									bench_id
 								)}
 								leaguePositionAverage={(
