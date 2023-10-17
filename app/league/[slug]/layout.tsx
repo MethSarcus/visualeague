@@ -28,26 +28,34 @@ const LeagueLayout = ({
 
 
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+	const disableValidation = {
+		revalidateIfStale: false,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: false
+	  }
 
 	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
 		params.slug != undefined
 			? `https://api.sleeper.app/v1/league/${params.slug}`
 			: null,
-		fetcher
+		fetcher,
+		disableValidation
 	)
 
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
 		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
 			: null,
-		fetcher
+		fetcher,
+		disableValidation
 	)
 
 	const {data: draftPicks, error: draftError} = useSWR(
 		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}/picks`
 			: null,
-		fetcher
+		fetcher,
+		disableValidation
 	)
 
 	const {data: leagueData, error: leagueError} = useSWR(
@@ -56,12 +64,14 @@ const LeagueLayout = ({
 			sleeperLeagueData
 			? `/api/league/${params.slug}`
 			: null,
-		fetcher
+		fetcher,
+		disableValidation
 	)
 
 	const {data: tradeData, error: tradeError} = useSWR(
 		params.slug != undefined ? `/api/trades/${params.slug}` : null,
-		fetcher
+		fetcher,
+		disableValidation
 	)
 
 	useEffect(() => {
