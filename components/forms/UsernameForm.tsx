@@ -1,17 +1,6 @@
 'use client'
-import {
-	Box,
-	Button,
-	Collapse,
-	Container,
-	HStack,
-	Input,
-	ScaleFade,
-	Select,
-	Spacer,
-	Wrap,
-	WrapItem,
-} from '@chakra-ui/react'
+
+import { Box, Button, Collapse, Container, HStack, Input, ScaleFade, Select, Spacer, Wrap, WrapItem } from '@chakra-ui/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'

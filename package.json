@@ -10,12 +10,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.1.5",
-    "@chakra-ui/react": "^2.8.0",
+    "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@inovua/reactdatagrid-community": "^5.9.5",
+    "@inovua/reactdatagrid-community": "^5.10.2",
     "@nivo/bar": "^0.83.0",
     "@nivo/bump": "^0.83.0",
     "@nivo/chord": "^0.83.0",
@@ -29,18 +29,18 @@
     "@sendgrid/mail": "^7.7.0",
     "@vercel/analytics": "^1.0.2",
     "axios": "^0.27.2",
-    "chart.js": "^4.3.2",
+    "chart.js": "^4.4.0",
     "cors": "^2.8.5",
-    "framer-motion": "10.16.2",
+    "framer-motion": "10.16.4",
     "immer": "10.0.2",
     "mongodb": "^4.17.1",
     "next": "^13.5.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
-    "react-data-table-component": "^7.5.3",
+    "react-data-table-component": "^7.5.4",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
-    "swr": "2.2.2"
+    "swr": "2.2.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
