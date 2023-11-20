@@ -3,8 +3,8 @@ import { Box, Container, Flex, SkeletonText } from "@chakra-ui/react";
 
 type MyProps = {
   statName?: String | null | undefined;
-  statValue?: String | null | undefined;
-  statRank?: String | null | undefined;
+  statSubtitle?: String | null | undefined;
+  statText?: String | null | undefined;
   isLoaded: boolean;
   isGoodThing: boolean | null | undefined;
 };
@@ -42,14 +42,14 @@ const TeamPersonalStatCard = (props: MyProps) => {
                 fontWeight={"medium"}
                 color={"textTheme.highEmphasis"}
               >
-                {props.statRank}
+                {props.statText}
               </Box>
               <Box
                 fontSize={".8em"}
                 fontWeight="light"
                 color={"textTheme.mediumEmphasis"}
               >
-                {props.statValue}
+                {props.statSubtitle}
               </Box>
             </SkeletonText>
     </Box>

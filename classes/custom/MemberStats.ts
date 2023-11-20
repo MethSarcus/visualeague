@@ -18,6 +18,7 @@ export default class MemberScores {
     public ties: number = 0
     public win_pct: number = 0
     public overall_rank: number = 0
+    public trajectory: number = 0
     public allPlayWinMap: Map<number, number> = new Map()
     public allPlayLossMap: Map<number, number> = new Map()
     public allPlayTieMap: Map<number, number> = new Map()
@@ -54,6 +55,7 @@ export default class MemberScores {
        this.wasUpset = 0
        this.wins = 0
        this.losses = 0
+       this.trajectory = 0
        this.ties = 0
        this.win_pct = 0
        this.overall_rank = 0

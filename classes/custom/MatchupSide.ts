@@ -33,7 +33,7 @@ export class MatchupSide {
 		weekNumber: number,
 		matchup: SleeperMatchup,
 		playerScores: Map<string, PlayerScores>,
-		playerDetails: Map<string, SleeperPlayerDetails>,
+		playerDetails: Map<string, DatabasePlayer>,
 		settings: LeagueSettings,
 		filteredPlayers?: string[]
 	) {
@@ -51,7 +51,7 @@ export class MatchupSide {
 					scores?.stats.get(weekNumber) ?? 0,
 					scores?.projections.get(weekNumber) ?? 0,
 					settings.roster_positions?.at(index),
-					details?.fantasy_positions
+					details?.details?.fantasy_positions
 				)
 			}
 		})
@@ -65,7 +65,7 @@ export class MatchupSide {
 					scores?.stats.get(weekNumber) ?? 0,
 					scores?.projections.get(weekNumber) ?? 0,
 					'BN',
-					details?.fantasy_positions
+					details?.details?.fantasy_positions
 				)
 			})
 		if (matchup.custom_points) {

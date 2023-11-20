@@ -26,13 +26,13 @@ const Navbar = (props: MyProps) => {
 	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
 	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
 
-	function setSeasonPortion(selected: String) {
+	// function setSeasonPortion(selected: String) {
 
-		const nextState = produce(context, (draftState: League) => {
-			draftState.setSeasonPortion(playerScores, playerDetails, selected as SeasonPortion)
-		})
-		setContext(nextState)
-	}
+	// 	const nextState = produce(context, (draftState: League) => {
+	// 		draftState.setSeasonPortion(playerScores, playerDetails, selected as SeasonPortion)
+	// 	})
+	// 	setContext(nextState)
+	// }
 	return (
 		<Flex
 			bg={'secondary.600'}
@@ -97,8 +97,8 @@ const Navbar = (props: MyProps) => {
 					<ExpandableLeagueSearch />
 				</Box>
 			</HStack>
-			<SeasonPortionSelector onclick={setSeasonPortion} />
-			<Center pr={3} my={2}>{context.modifiedSettings && <SettingsSidebar />}</Center>
+			{/* <SeasonPortionSelector onclick={setSeasonPortion} /> */}
+			<Center pr={3} my={2}>{context?.settings && <SettingsSidebar leagueSettings={context?.settings} />}</Center>
 		</Flex>
 	)
 }

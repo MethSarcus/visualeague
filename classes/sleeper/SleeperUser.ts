@@ -1,3 +1,29 @@
+import { SleeperRoster } from "./SleeperRoster";
+
+export class UserData {
+  user_id: string;
+  settings?: null;
+  metadata: Metadata;
+  league_id: string;
+  is_owner: boolean;
+  is_bot?: boolean | null;
+  display_name: string;
+  avatar: string;
+  roster: SleeperRoster;
+
+  constructor(sleeperUser: SleeperUser, roster: SleeperRoster) {
+    this.user_id = sleeperUser.user_id;
+    this.settings = sleeperUser.settings;
+    this.metadata = sleeperUser.metadata;
+    this.league_id = sleeperUser.league_id;
+    this.is_owner = sleeperUser.is_owner;
+    this.display_name = sleeperUser.display_name;
+    this.avatar = sleeperUser.avatar;
+    this.roster = roster;
+  }
+}
+
+
 export interface SleeperUser {
     user_id: string;
     settings?: null;

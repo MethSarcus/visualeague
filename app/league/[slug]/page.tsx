@@ -5,7 +5,7 @@ import {
 	Heading, Skeleton
 } from '@chakra-ui/react'
 import { useContext, useState } from 'react'
-import BarChart from '../../../components/charts/bar/PFBarChart'
+import LeagueStackedPfBarChart from '../../../components/charts/bar/LeaguePFBarChart'
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
 import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
@@ -20,8 +20,8 @@ const LeaguePage = () => {
 
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
-                      "pfTable pfBarChart pfBarChart"
-                      "radarChart pfLineChart pfLineChart"`
+                      "pfTable pfLineChart pfLineChart"
+                      "radarChart pfBarChart pfBarChart"`
 
 	const mobileGrid = `"header"
                       "leagueTable"
@@ -71,14 +71,17 @@ const LeaguePage = () => {
 						<LeagueWeeklyPointsLineChart league={context} />
 					</Box>
 				</GridItem>
-				<GridItem area={'pfBarChart'} minHeight={"350px"}>
-						<BarChart league={context} />
-				</GridItem>
+
 
 				<GridItem area={'radarChart'}>
 					<Box height={'500px'} textColor='black'>
 						<TeamRadarChart league={context} />
 					</Box>
+				</GridItem>				
+				<GridItem area={'pfBarChart'} minHeight={"350px"}>
+				<Box>
+					<LeagueStackedPfBarChart league={context} />
+				</Box>
 				</GridItem>
 			</Grid>
 		</Box>

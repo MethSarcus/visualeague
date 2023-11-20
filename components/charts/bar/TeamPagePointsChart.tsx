@@ -1,6 +1,4 @@
 'use client'
-import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {SleeperPlayerDetails} from '../../../classes/custom/Player'
 import {createRangeArray, POSITION} from '../../../utility/rosterFunctions'
 import {
 	Chart as ChartJS,

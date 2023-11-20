@@ -1,6 +1,6 @@
 import {LINEUP_POSITION, POSITION} from '../../utility/rosterFunctions'
 import {SleeperRoster} from '../sleeper/SleeperRoster'
-import {SleeperUser} from '../sleeper/SleeperUser'
+import {SleeperUser, UserData} from '../sleeper/SleeperUser'
 import MemberBadgeData from './MemberBadge'
 import MemberScores from './MemberStats'
 import SeasonPlayer from './SeasonPlayer'
@@ -22,13 +22,13 @@ export default class LeagueMember {
 	badges: MemberBadgeData[] = []
 	draft_pos: number
 
-	constructor(userDetails: SleeperUser | undefined, roster: SleeperRoster, draft_pos: number) {
+	constructor(userDetails: UserData, draft_pos: number) {
 		this.userDetails = userDetails
-		this.roster = roster
+		this.roster = userDetails?.roster
 		this.name = userDetails?.display_name ?? `Blank Member`
-		this.userId = userDetails?.user_id ??  `roster_${roster.roster_id}`
+		this.userId = userDetails?.user_id ??  `roster_${userDetails.roster.roster_id}`
 		this.avatar = userDetails?.avatar ?? "" //TODO include url for profile icon
-		this.division_id = roster.settings.division
+		this.division_id = userDetails.roster.settings.division
 		this.draft_pos = draft_pos
 
 		if (userDetails?.metadata.team_name != null) {

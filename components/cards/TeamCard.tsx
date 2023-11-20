@@ -18,7 +18,7 @@ import {useRouter} from 'next/router'
 import { useContext } from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import {SleeperPlayerDetails} from '../../classes/custom/Player'
+import {DatabasePlayer, SleeperPlayerDetails} from '../../classes/custom/Player'
 import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
 import AgeBarChart from '../charts/bar/AgeBarChart'
 import TrendingLineChart from '../charts/team_charts/TrendingLineChart'
@@ -33,7 +33,7 @@ type MyProps = {
 const TeamCardWithTrendingGraph = (props: MyProps) => {
 	const {variant, size, ...rest} = props
 	const {isOpen, onToggle} = useDisclosure()
-	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
 	return (
 		<Card
 			boxShadow={'lg'}
@@ -85,7 +85,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 							playerDetails={props.member?.roster.players.map((playerId) => {
 								return playerDetailsContext?.get(
 									playerId
-								) as SleeperPlayerDetails
+								) as DatabasePlayer
 							})}
 						/>
 					</Box>

@@ -71,15 +71,15 @@ export class PlayerScores {
 	stats: Map<number, number> = new Map()
 	projections: Map<number, number> = new Map()
 
-	constructor(databasePlayer: DatabasePlayer, leagueSettings: LeagueSettings) {
-		for (let i = leagueSettings.settings.start_week; i <= leagueSettings.settings.last_scored_leg; i++) {
+	constructor(databasePlayer: DatabasePlayer, scoringSettings: ScoringSettings, startWeek: number, lastScoredLeg: number) {
+		for (let i = startWeek; i <= lastScoredLeg; i++) {
 			if (databasePlayer.stats[i] != undefined) {
-				this.stats.set(i, this.calculatePoints(leagueSettings.scoring_settings, databasePlayer.stats[i]))
+				this.stats.set(i, this.calculatePoints(scoringSettings, databasePlayer.stats[i]))
 			}
 			if (databasePlayer.projections[i] != undefined) {
 				this.projections.set(
 					i,
-					this.calculatePoints(leagueSettings.scoring_settings, databasePlayer.projections[i])
+					this.calculatePoints(scoringSettings, databasePlayer.projections[i])
 				)
 			}
 		}

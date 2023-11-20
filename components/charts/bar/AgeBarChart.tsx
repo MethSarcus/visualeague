@@ -1,5 +1,5 @@
 import {Spinner} from '@chakra-ui/react'
-import {SleeperPlayerDetails} from '../../../classes/custom/Player'
+import {DatabasePlayer, SleeperPlayerDetails} from '../../../classes/custom/Player'
 import {createRangeArray} from '../../../utility/rosterFunctions'
 import {
 	Chart as ChartJS,
@@ -15,7 +15,7 @@ import {Bar} from 'react-chartjs-2'
 import {project_colors} from '../../../utility/project_colors'
 
 interface MyProps {
-	playerDetails?: SleeperPlayerDetails[]
+	playerDetails?: DatabasePlayer[]
 }
 
 const theme = {
@@ -87,12 +87,13 @@ const AgeBarChart = (props: MyProps) => {
 	return <Bar options={options} data={chartData} />
 }
 
-function formatScoresForBarChart(playerDetails: SleeperPlayerDetails[]) {
+function formatScoresForBarChart(playerDetails: DatabasePlayer[]) {
 	let data: number[] = []
 	let ageMap = new Map<number, number>()
 	let highAge = 0
 	let lowAge = 100
-	playerDetails.forEach((details) => {
+	playerDetails.forEach((player) => {
+		let details = player?.details
 		if (details?.age != undefined) {
 			ageMap.set(details.age, (ageMap.get(details.age) ?? 0) + 1)
 			if (details.age < lowAge) {

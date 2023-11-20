@@ -15,7 +15,7 @@ import LeagueData from '../sleeper/SleeperLeague'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
 import {SleeperRoster} from '../sleeper/SleeperRoster'
 import {SleeperTransaction} from '../sleeper/SleeperTransaction'
-import {SleeperUser} from '../sleeper/SleeperUser'
+import {SleeperUser, UserData} from '../sleeper/SleeperUser'
 import {Draft, DraftPlayer} from './Draft'
 import LeagueMember from './LeagueMember'
 import LeagueStats from './LeagueStats'
@@ -48,37 +48,31 @@ export default class League {
 	public memberIdToRosterId: Map<string, number> = new Map()
 	public stats: LeagueStats = new LeagueStats()
 	public draft: Draft
+	public userData: UserData[]
+	customSettings?: ScoringSettings
 
 	constructor(
-		sleeperLeague: LeagueData,
+		users: UserData[],
+		matchups: SleeperMatchup[][],
+		leagueSettings: LeagueSettings,
 		playerScores: Map<string, PlayerScores>,
-		playerDetails: Map<string, SleeperPlayerDetails>,
+		playerDetails: Map<string, DatabasePlayer>,
 		draft: Draft,
-		modifiedSettings?: LeagueSettings,
-		trades?: SleeperTransaction[]
+		trades?: SleeperTransaction[],
+		customSettings?: ScoringSettings
 	) {
-		if (modifiedSettings) {
-			this.modifiedSettings = modifiedSettings
-			this.useModifiedSettings = true
-		} else {
-			this.modifiedSettings = sleeperLeague.sleeperDetails
-		}
-
-		sleeperLeague.users.forEach((user: SleeperUser) => {
-			sleeperLeague.rosters.forEach((roster: SleeperRoster) => {
-				if (roster.owner_id == user.user_id) {
-					let order = draft.settings.draft_order
-					let draftPos = order[user.user_id as unknown as keyof DraftOrder]
-					this.members.set(roster.roster_id, new LeagueMember(user, roster, draftPos))
-					this.memberIdToRosterId.set(user.user_id, roster.roster_id)
-				}
-			})
+		this.userData = users
+		users.forEach((user: UserData) => {
+				let order = draft.settings.draft_order
+				let draftPos = order[user.user_id as unknown as keyof DraftOrder]
+				this.members.set(user.roster.roster_id, new LeagueMember(user, draftPos))
+				this.memberIdToRosterId.set(user.user_id, user.roster.roster_id)
 		})
 
 		this.draft = draft
-		this.allMatchups = sleeperLeague.matchups
-
-		this.settings = sleeperLeague.sleeperDetails
+		this.allMatchups = matchups
+		this.customSettings = customSettings
+		this.settings = leagueSettings
 		this.initMemberTradeMap()
 		this.calcStats(playerScores, playerDetails, false)
 		if (trades) {
@@ -120,7 +114,7 @@ export default class League {
 		return memberTradeNum
 	}
 
-	setSeasonPortion(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, portion: SeasonPortion) {
+	setSeasonPortion(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>, portion: SeasonPortion) {
 		this.seasonPortion = portion
 		this.reCalcStats(playerScores, playerDetails, this.taxiIncludedInMaxPf)
 	}
@@ -333,7 +327,7 @@ export default class League {
 		this.taxiIncludedInMaxPf = include
 	}
 
-	modifyStats(customSettings: ScoringSettings, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>,  useTaxiSquad: boolean) {
+	modifyStats(customSettings: ScoringSettings, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>,  useTaxiSquad: boolean) {
 		this.modifiedSettings = produce(
 			this.modifiedSettings,
 			(draftState: LeagueSettings) => {
@@ -366,7 +360,7 @@ export default class League {
 	}
 
 	//Takes in an array filled with sleeper matchup arrays
-	calcLeagueWeeks(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, taxiMap?: Map<number, string[]>) {
+	calcLeagueWeeks(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>, taxiMap?: Map<number, string[]>) {
 		this.weeks = new Map()
 		let matchups = this.getEligibleMatchups()
 		matchups.forEach((week) => {
@@ -395,7 +389,7 @@ export default class League {
 		})
 	}
 
-	calcDraftValues(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
+	calcDraftValues(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>) {
 		let totalDraftValue = 0
 		let posScoreMap = new Map()
 		this.getPositions().forEach(position => {
@@ -816,12 +810,12 @@ export default class League {
 			return {matchups: this.allMatchups.at(weekNum), weekNumber: weekNum + 1}
 		})
 	}
-	reCalcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>,  useTaxiSquad: boolean) {
+	reCalcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>,  useTaxiSquad: boolean) {
 		this.resetAllStats()
 		this.calcStats(playerScores, playerDetails, useTaxiSquad)
 	}
 
-	calcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, useTaxiSquad: boolean) {
+	calcStats(playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>, useTaxiSquad: boolean) {
 		let taxiMap
 		if (!useTaxiSquad) {
 			this.taxiIncludedInMaxPf = useTaxiSquad
@@ -1278,6 +1272,8 @@ export default class League {
 				}
 			})
 		})
+
+		this.setMembersTrajectory()
 	}
 
 	getAllWeekScoresForPlayer(playerId: string, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
@@ -1333,6 +1329,34 @@ export default class League {
 		})
 
 		return allWeeks
+	}
+
+	setMembersTrajectory() {
+			Array.from(this.members.keys()).forEach((memberRosterId) => {
+			let member = this.members.get(memberRosterId)
+			let seasonLength = this.getEnabledWeeks().length
+			let beforeWeeks = seasonLength - 3
+			let beforeScore = 0
+			for (let weekNumber = 1; weekNumber <= beforeWeeks; weekNumber++) {
+				let week = this.weeks.get(weekNumber)
+				beforeScore += week?.getMemberMatchupSide(memberRosterId).pf ?? 0
+			}
+	
+			let memberAverageBeforePoints = beforeScore / beforeWeeks
+	
+			let afterScore = 0
+			for (let weekNumber = beforeWeeks + 1; weekNumber <= seasonLength; weekNumber++) {
+				let week = this.weeks.get(weekNumber)
+				afterScore += week?.getMemberMatchupSide(memberRosterId).pf ?? 0
+			}
+	
+			let memberAveragePointsAfter = afterScore / (seasonLength - beforeWeeks)
+	
+			let trajectory = memberAveragePointsAfter - memberAverageBeforePoints
+			if (member != undefined) {
+				member.stats.trajectory = trajectory
+			}
+		})
 	}
 
 	getOpponentPositionalScores(roster_id: number) {

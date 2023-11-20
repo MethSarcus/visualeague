@@ -11,7 +11,7 @@ export class Week {
     byeWeeks: ByeWeekMatchup[] = []
     weekNumber: number
 
-    constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>, leagueSettings: LeagueSettings, isPlayoffs: boolean, taxiMap?: Map<number, string[]>) {
+    constructor(weekNumber: number, sleeperMatchups: SleeperMatchup[], playerScores: Map<string, PlayerScores>, playerDetails: Map<string, DatabasePlayer>, leagueSettings: LeagueSettings, isPlayoffs: boolean, taxiMap?: Map<number, string[]>) {
         this.weekNumber = weekNumber
         let matchupIds = new Map()
         sleeperMatchups.forEach((matchup: SleeperMatchup) => {

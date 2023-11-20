@@ -14,6 +14,9 @@ import {LeagueContext} from '../../../contexts/LeagueContext'
 import {PlayerScoresContext} from '../../../contexts/PlayerScoresContext'
 import {PlayerDetailsContext} from '../../../contexts/PlayerDetailsContext'
 import styles from '../../../styles/Home.module.css'
+import { LeagueSettings } from '../../../classes/sleeper/LeagueSettings'
+import { SleeperRoster } from '../../../classes/sleeper/SleeperRoster'
+import { SleeperUser, UserData } from '../../../classes/sleeper/SleeperUser'
 const LeagueLayout = ({
 	children,
 	params,
@@ -77,21 +80,30 @@ const LeagueLayout = ({
 	useEffect(() => {
 		if (leagueData && draftPicks && draftSettings) {
 			let playerScores = new Map<string, PlayerScores>()
-			let playerDetails = new Map<string, SleeperPlayerDetails>()
+			let playerDetails = new Map<string, DatabasePlayer>()
 			leagueData.league.player_details.forEach((player: DatabasePlayer) => {
-				let playerObj = new PlayerScores(player, leagueData.league.sleeperDetails)
-				playerDetails.set(player._id, player.details)
+				let settings = leagueData.league.sleeperDetails as LeagueSettings
+				let playerObj = new PlayerScores(player, settings.scoring_settings, settings.settings.start_week, settings.settings.last_scored_leg)
+				playerDetails.set(player._id, player)
 				playerScores.set(player._id, playerObj)
 			})
+			console.log(playerDetails)
+			console.log(playerScores)
 			setPlayerScoresContext(playerScores)
 			setPlayerDetailsContext(playerDetails)
-			
+			let users: UserData[] = []
+			leagueData.league.rosters.forEach((roster: SleeperRoster) => {
+				users.push(new UserData(leagueData.league.users.find((user: SleeperUser) => {
+					return user.user_id == roster.owner_id
+				}), roster))
+			});
 			let league = new League(
-				leagueData.league,
+				users,
+				leagueData.league.matchups,
+				leagueData.league.sleeperDetails,
 				playerScores,
 				playerDetails,
 				new Draft(draftPicks, draftSettings),
-				undefined,
 				tradeData?.trades
 			)
 			setLeagueContext(league)

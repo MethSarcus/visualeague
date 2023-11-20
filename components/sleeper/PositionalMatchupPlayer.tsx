@@ -2,12 +2,12 @@ import {
   Box, Flex, Spacer, Text
 } from '@chakra-ui/react'
 import { MatchupPlayer } from '../../classes/custom/MatchupPlayer'
-import { SleeperPlayerDetails } from '../../classes/custom/Player'
+import { DatabasePlayer, SleeperPlayerDetails } from '../../classes/custom/Player'
 import { project_colors } from '../../utility/project_colors'
 
 interface MyProps {
 	player: MatchupPlayer | undefined
-	playerDetails: SleeperPlayerDetails | undefined
+	playerDetails: DatabasePlayer | undefined
 	isInverted?: boolean
 }
 
@@ -24,8 +24,8 @@ export default function PositionalMatchupPlayer(props: MyProps) {
 		>
 			<Box textAlign={props.isInverted ? 'end' : 'start'}>
 				<Text as={'p'} color={'white'} fontWeight={'bold'} fontSize={'1.1em'}>
-					{props.playerDetails?.first_name?.charAt(0)}.{' '}
-					{props.playerDetails?.last_name}
+					{props.playerDetails?.details.first_name?.charAt(0)}.{' '}
+					{props.playerDetails?.details.last_name}
 				</Text>
 				<Text
 					as={'p'}
@@ -33,8 +33,8 @@ export default function PositionalMatchupPlayer(props: MyProps) {
 					color={'white'}
 					fontSize={'.8em'}
 				>
-					{props.playerDetails?.fantasy_positions?.at(0)}-
-					{props.playerDetails?.team}
+					{props.playerDetails?.details.fantasy_positions?.at(0)}-
+					{props.playerDetails?.details.team}
 				</Text>
 			</Box>
 			<Spacer />
