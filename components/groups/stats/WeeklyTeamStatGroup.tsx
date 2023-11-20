@@ -65,15 +65,4 @@ const TeamStatGroup = (props: MyProps) => {
 	)
 }
 
-function getMemberStats(stats: OrdinalStatInfo[], memberId: number) {
-	let memberStat
-	stats.forEach((stat) => {
-		if (stat.rosterId == memberId) {
-			memberStat = stat
-		}
-	})
-
-	return memberStat
-}
-
 export default TeamStatGroup

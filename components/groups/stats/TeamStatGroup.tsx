@@ -99,14 +99,14 @@ const TeamStatGroup = (props: MyProps) => {
 				isLoaded={props.league?.settings != undefined}
 				statText={`${numberUserTrades} Trades Made`}
 				statSubtitle={''}
-				isGoodThing={(member?.stats.trajectory ?? 0) > 0}
+				isGoodThing={null}
 			/>
 			<TeamPersonalStatCard
 				statName={'Against All Odds'}
 				isLoaded={props.league?.settings != undefined}
 				statText={`Underdog in ${member?.stats.timesUnderdog} Matchups`}
 				statSubtitle={''}
-				isGoodThing={(member?.stats.trajectory ?? 0) > 0}
+				isGoodThing={null}
 			/>
 		</SimpleGrid>
 	)
