@@ -21,18 +21,14 @@ const TeamStatGroup = (props: MyProps) => {
 	if (props.league?.settings != undefined) {
 		member = props.league.members.get(props.memberId)
 		notableWeeks = props.league.getMemberNotableWeeks(props.memberId)
-		bestWeek = (notableWeeks.bestWeek as unknown as Matchup).getMemberSide(
-			props.memberId
-		)
-		worstWeek = (notableWeeks.worstWeek as unknown as Matchup).getMemberSide(
-			props.memberId
-		)
+		bestWeek = (notableWeeks.bestWeek as unknown as Matchup).getMemberSide(props.memberId)
+		worstWeek = (notableWeeks.worstWeek as unknown as Matchup).getMemberSide(props.memberId)
 		closestMatchup = notableWeeks.closestGame as unknown as Matchup
 		furthestMatchup = notableWeeks.furthestGame as unknown as Matchup
 	}
 
 	return (
-		<HStack spacing={3} maxWidth='inherit' align={"stretch"}>
+		<HStack spacing={3} maxWidth='inherit' align={'stretch'}>
 			<NotableMatchupStatCard
 				title={'Best Week'}
 				isLoaded={props.league?.settings != undefined}

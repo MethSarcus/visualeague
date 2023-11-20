@@ -31,29 +31,31 @@ import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import MemberScores from '../../classes/custom/MemberStats'
-import { PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
-import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
+import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../classes/custom/Player'
+import {LeagueSettings, ScoringSettings} from '../../classes/sleeper/LeagueSettings'
 import {LeagueContext} from '../../contexts/LeagueContext'
-import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
-import { PlayerScoresContext } from '../../contexts/PlayerScoresContext'
+import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
+import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
 import {getReadableScoringKey} from '../../utility/rosterFunctions'
+import ScoringInputField from '../forms/ScoringInputField'
 
-const SettingsSidebar = () => {
+interface MyProps {
+	leagueSettings: LeagueSettings
+}
+
+const SettingsSidebar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
-	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [
+		Map<string, DatabasePlayer>,
+		any
+	]
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
-
-	const [customSettings, setCustomSettings] = React.useState(
-		context.modifiedSettings
+	const [customSettings, setCustomSettings] = React.useState(props.leagueSettings.scoring_settings)
+	const [customScoringChecked, setCustomScoringChecked] = React.useState(context.settings.useModifiedSettings)
+	const [taxiIncludedMaxPfChecked, setTaxiIncludedMaxPfChecked] = React.useState(
+		context.settings.taxiIncludedInMaxPf
 	)
-	const [customScoringChecked, setCustomScoringChecked] = React.useState(
-		context.settings.useModifiedSettings
-	)
-
-	const [taxiIncludedMaxPfChecked, setTaxiIncludedMaxPfChecked] =
-		React.useState(context.settings.taxiIncludedInMaxPf)
 
 	function onCheckboxClick(e: any) {
 		setCustomScoringChecked(e.target.checked)
@@ -63,14 +65,10 @@ const SettingsSidebar = () => {
 		setTaxiIncludedMaxPfChecked(e.target.checked)
 	}
 
-	const onInputChange = async (e: {
-		target: {id: string | number; value: string}
-	}) => {
+	const onInputChange = async (e: {target: {id: string | number; value: string}}) => {
 		setCustomSettings(
-			produce(customSettings, (draftState: LeagueSettings) => {
-				;(draftState.scoring_settings as any)[e.target.id] = parseFloat(
-					e.target.value
-				)
+			produce(customSettings, (draftState: ScoringSettings) => {
+				;(draftState as any)[e.target.id] = parseFloat(e.target.value)
 			})
 		)
 	}
@@ -83,26 +81,45 @@ const SettingsSidebar = () => {
 	}, [context.settings, context.taxiIncludedInMaxPf])
 
 	const onApplyPressed = () => {
-		let settings = context.settings.scoring_settings
+		let scoringSettings = props.leagueSettings.scoring_settings
 		if (customScoringChecked) {
-			settings = customSettings.scoring_settings
+			scoringSettings = customSettings
 		}
 
-		const nextState = produce(context, (draftState: League) => {
-			draftState.setTaxiSquadIncluded(taxiIncludedMaxPfChecked)
-			draftState.modifyStats(settings, playerScores, playerDetails, taxiIncludedMaxPfChecked)
-			draftState.useModifiedSettings = customScoringChecked
+		let playerScores = new Map<string, PlayerScores>()
+		playerDetails.forEach((player: DatabasePlayer) => {
+			let playerObj = new PlayerScores(
+				player,
+				scoringSettings,
+				props.leagueSettings.settings.start_week,
+				props.leagueSettings.settings.last_scored_leg
+			)
+			// playerDetails.set(player._id, player)
+			playerScores.set(player._id, playerObj)
 		})
-		setContext(nextState)
+
+		let league = new League(
+			context?.userData,
+			context?.allMatchups,
+			context?.settings,
+			playerScores,
+			playerDetails,
+			context.draft,
+			context?.trades,
+			customSettings
+		)
+
+		setContext(league)
 	}
 
 	return (
 		<>
 			<IconButton
-			size={"xs"}
+				size={'sm'}
+				color={"secondary.600"}
+				background={'none'}
 				disabled={context.settings == undefined}
-				bg={'none'}
-				_hover={{background: 'secondary.600'}}
+				_hover={{background: 'secondary.900'}}
 				icon={<GoGear />}
 				onClick={onOpen}
 				aria-label={'settings'}
@@ -116,21 +133,12 @@ const SettingsSidebar = () => {
 						Settings
 						<br />
 						{context && (
-							<FormControl
-								mt={4}
-								display='flex'
-								flexDirection={'column'}
-								alignItems='stretch'
-							>
+							<FormControl mt={4} display='flex' flexDirection={'column'} alignItems='stretch'>
 								<Flex
 									mt={2}
 									visibility={
-										((context as League)?.settings?.settings.taxi_slots ?? 0) >
-										0
-											? 'visible'
-											: 'collapse'
-									}
-								>
+										((context as League)?.settings?.settings.taxi_slots ?? 0) > 0 ? 'visible' : 'collapse'
+									}>
 									<FormLabel htmlFor='taxiMaxPf' mb='0'>
 										Taxi squad in MaxPF
 									</FormLabel>
@@ -146,11 +154,7 @@ const SettingsSidebar = () => {
 										Use Custom settings
 									</FormLabel>
 									<Spacer />
-									<Switch
-										id='customSettings'
-										isChecked={customScoringChecked}
-										onChange={onCheckboxClick}
-									/>
+									<Switch id='customSettings' isChecked={customScoringChecked} onChange={onCheckboxClick} />
 								</Flex>
 							</FormControl>
 						)}
@@ -158,48 +162,22 @@ const SettingsSidebar = () => {
 					<DrawerBody>
 						{context.settings && (
 							<VStack align={'start'}>
-								{Object.keys(context.modifiedSettings.scoring_settings)
+								{Object.keys(context.settings.scoring_settings)
 									.sort(function (a, b) {
 										return a.localeCompare(b)
 									})
-									// .filter(setting => setting.includes(searchTerm))
 									.map((setting) => {
 										return (
-											<Center key={setting} visibility={'visible'}>
-												{getReadableScoringKey(setting)}{' '}
-												<NumberInput
-													ml={2}
-													isInvalid={
-														customSettings.scoring_settings[setting] !=
-														context.settings.scoring_settings[setting]
-													}
-													isDisabled={!customScoringChecked}
-													variant={'filled'}
-													textColor={'white'}
-													defaultValue={
-														context.modifiedSettings.scoring_settings[setting]
-													}
-												>
-													<Tooltip
-														isDisabled={
-															customSettings.scoring_settings[setting] ==
-															context.settings.scoring_settings[setting]
-														}
-														label={
-															'Original Value: ' +
-															context.settings.scoring_settings[setting]
-														}
-														placement={'top'}
-													>
-														<NumberInputField
-															bg={'surface.2'}
-															_hover={{background: 'surface.3'}}
-															id={setting}
-															onChange={onInputChange}
-														/>
-													</Tooltip>
-												</NumberInput>
-											</Center>
+											<ScoringInputField
+												key={setting}
+												settingKey={setting}
+												originalValue={
+													props.leagueSettings.scoring_settings[setting as keyof ScoringSettings] ?? 0
+												}
+												settingValue={customSettings[setting as keyof ScoringSettings] ?? 0}
+												customScoringChecked={customScoringChecked}
+												onInputChange={onInputChange}
+											/>
 										)
 									})}
 							</VStack>
@@ -210,11 +188,7 @@ const SettingsSidebar = () => {
 						<Button size={'sm'} onClick={onClose} variant='ghost'>
 							Close
 						</Button>
-						<Button
-							size={'sm'}
-							onClick={onApplyPressed}
-							colorScheme={'primary'}
-						>
+						<Button size={'sm'} onClick={onApplyPressed} colorScheme={'primary'}>
 							Apply
 						</Button>
 					</DrawerFooter>
@@ -222,10 +196,6 @@ const SettingsSidebar = () => {
 			</Drawer>
 		</>
 	)
-}
-
-function formatScoreKey(key: string) {
-	return key.replaceAll('_', ' ')
 }
 
 export default SettingsSidebar

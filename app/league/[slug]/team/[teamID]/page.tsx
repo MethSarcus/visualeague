@@ -105,7 +105,6 @@ const TeamPage = () => {
 						<TabList>
 							<Tab>Positional Point Chart</Tab>
 							<Tab>Pos Avg</Tab>
-
 							<Tab>Trades</Tab>
 						</TabList>
 

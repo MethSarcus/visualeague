@@ -2,7 +2,7 @@
 import {Box, Center} from '@chakra-ui/react'
 import {useContext} from 'react'
 import {BlankPlayer, MatchupPlayer} from '../../classes/custom/MatchupPlayer'
-import { PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
+import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
 import { PlayerScoresContext } from '../../contexts/PlayerScoresContext'
@@ -20,7 +20,7 @@ interface MyProps {
 
 const PositionalMatchupContainer = (props: MyProps) => {
 	const [playerScoresContext, setPlayerInfoContext] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
 
 	let homePlayerDetails
 	let awayPlayerDetails
