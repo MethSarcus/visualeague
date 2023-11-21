@@ -10,14 +10,14 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
-import {SleeperPlayerDetails} from '../../../classes/custom/Player'
+import {DatabasePlayer, SleeperPlayerDetails} from '../../../classes/custom/Player'
 import SeasonPlayer from '../../../classes/custom/SeasonPlayer'
 import {project_colors} from '../../../utility/project_colors'
 import RosterPlayerTrendingLineChart from '../../charts/team_charts/RosterPlayerTrendingLineChart'
 import PositionBadge from '../../PositionBadges/PositionBadge'
 
 interface MyProps {
-	playerDetails: SleeperPlayerDetails | undefined
+	playerDetails: DatabasePlayer | undefined
 	playerSeasonDetails: SeasonPlayer | undefined
 	leaguePositionAverage: number
 	isBenched?: boolean
@@ -26,6 +26,12 @@ interface MyProps {
 
 export default function RosterPlayer(props: MyProps) {
 	const {isOpen, onToggle} = useDisclosure()
+	try {
+		props.playerDetails?.details?.fantasy_positions[0]
+	} catch (error) {
+		console.log(props.playerDetails)
+	}
+	
 	return (
 		<Box
 			bg={project_colors.sleeper.background_dark}
@@ -57,16 +63,16 @@ export default function RosterPlayer(props: MyProps) {
 					variant={
 						props.isBenched == true
 							? 'BN'
-							: props.playerDetails?.fantasy_positions[0] ?? 'RB'
+							: props.playerDetails?.details?.fantasy_positions[0] ?? 'RB'
 					}
 					size={'xs'}
 				/>
 				<Avatar
 					size={'xs'}
 					src={
-						isNaN(+props.playerDetails?.player_id!)
-							? `https://sleepercdn.com/images/team_logos/nfl/${props.playerDetails?.player_id.toLowerCase()}.png`
-							: `https://sleepercdn.com/content/nfl/players/${props.playerDetails?.player_id}.jpg`
+						isNaN(+props.playerDetails?.details?.player_id!)
+							? `https://sleepercdn.com/images/team_logos/nfl/${props.playerDetails?.details?.player_id.toLowerCase()}.png`
+							: `https://sleepercdn.com/content/nfl/players/${props.playerDetails?.details?.player_id}.jpg`
 					}
 				/>
 				<Box textAlign={'start'}>
@@ -77,8 +83,8 @@ export default function RosterPlayer(props: MyProps) {
 						noOfLines={1}
 						textOverflow={"clip"}
 					>
-						{props.playerDetails?.first_name.charAt(0)}.{' '}
-						{props.playerDetails?.last_name}
+						{props.playerDetails?.details?.first_name.charAt(0)}.{' '}
+						{props.playerDetails?.details?.last_name}
 					</Text>
 					<Text
 						as={'p'}
@@ -86,13 +92,13 @@ export default function RosterPlayer(props: MyProps) {
 						color={'white'}
 						fontSize={'.6em'}
 					>
-						{props.playerDetails?.fantasy_positions[0]}-
-						{props.playerDetails?.team}
+						{props.playerDetails?.details?.fantasy_positions[0]}-
+						{props.playerDetails?.details?.team}
 					</Text>
 				</Box>
 				<Spacer/>
 				<Text color={project_colors.sleeper.text_normal} fontSize={".65em"} >
-					{(props.playerDetails?.fantasy_positions[0] ?? 'UN') +
+					{(props.playerDetails?.details?.fantasy_positions[0] ?? 'UN') +
 						props.playerSeasonDetails?.teamPositionRank}
 				</Text>
 			</HStack>
