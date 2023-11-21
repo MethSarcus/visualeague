@@ -2,7 +2,7 @@ import {Box, Button, Collapse, Spacer, Text, useDisclosure} from '@chakra-ui/rea
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
-import { PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
+import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
 import {LeagueContext} from '../../../contexts/LeagueContext'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
 import { PlayerScoresContext } from '../../../contexts/PlayerScoresContext'
@@ -20,7 +20,7 @@ interface MyProps {
 export default function MemberRoster(props: MyProps) {
 	const [context, setContext] = useContext(LeagueContext)
 	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
 	return (
 		<Box>
 			<Box w={'full'} height={'40px'}>
