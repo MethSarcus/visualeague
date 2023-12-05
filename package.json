@@ -25,7 +25,7 @@
     "@nivo/radar": "^0.83.0",
     "@nivo/radial-bar": "^0.83.0",
     "@nivo/scatterplot": "^0.83.0",
-    "@nivo/tooltip": "^0.83.0",
+    "@nivo/tooltip": "^0.83.1",
     "@sendgrid/mail": "^7.7.0",
     "@vercel/analytics": "^1.1.1",
     "axios": "^1.6.0",
