@@ -16,7 +16,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@inovua/reactdatagrid-community": "^5.10.2",
-    "@nivo/bar": "^0.83.0",
+    "@nivo/bar": "^0.84.0",
     "@nivo/bump": "^0.83.0",
     "@nivo/chord": "^0.83.0",
     "@nivo/core": "^0.83.0",
