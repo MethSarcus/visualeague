@@ -31,7 +31,7 @@
     "axios": "^1.6.0",
     "chart.js": "^4.4.0",
     "cors": "^2.8.5",
-    "framer-motion": "10.16.4",
+    "framer-motion": "10.17.6",
     "immer": "10.0.3",
     "mongodb": "^4.17.1",
     "next": "^13.5.6",
