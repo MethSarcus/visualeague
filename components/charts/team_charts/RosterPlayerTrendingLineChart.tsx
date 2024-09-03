@@ -21,7 +21,7 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 	if (!props.player || !props.league || !playerScores) return <Spinner />
 	let data = formatScoresForLineChart(props.player, props.league, playerScores, playerDetails) as any
 	const theme = {
-		textColor: 'white',
+		text: {fill: project_colors.textTheme.highEmphasis},
 	}
 
 	if (data.length <= 0) return <Spinner />
