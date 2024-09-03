@@ -15,7 +15,7 @@ interface MyProps {
 
 const theme = {
 	background: 'none',
-	textColor: 'white',
+	text: {fill: project_colors.textTheme.highEmphasis}
 }
 
 const DraftValueBarChart = (props: MyProps) => {

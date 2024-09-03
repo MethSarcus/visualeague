@@ -5,6 +5,7 @@ import Matchup from '../../../classes/custom/Matchup'
 import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
 import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
+import TeamPersonalStatCard from '../../cards/statcards/TeamPersonalStatCard'
 
 interface MyProps {
 	league?: League
@@ -62,10 +63,6 @@ const TeamStatGroup = (props: MyProps) => {
 				subStat={`Week ${furthestMatchup?.weekNumber}`}
 				matchup={notableWeeks?.furthestGame}
 			/>
-			<GenericStatCard 
-			statName={"Times Underdog"} 
-			statValue={props.league?.members.get(props.memberId)?.stats.timesUnderdog.toString()}
-			isGoodThing={true} isLoaded={props.league?.settings != null}/>
 		</HStack>
 	)
 }
