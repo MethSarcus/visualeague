@@ -15,7 +15,7 @@ const WeeklyRankingBumpChart = (props: MyProps) => {
   if (props.league?.settings == undefined) return <Spinner />;
   let data = formatScoresForBumpChart(props.league, props.filteredIds) as any;
   const theme = {
-    textColor: "white",
+    text: {fill: project_colors.textTheme.highEmphasis}
   };
 
   const CustomPoint = ({ point }: { point: BumpPoint<any, any> }) => {
