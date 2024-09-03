@@ -3,6 +3,7 @@ import {HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import Matchup from '../../../classes/custom/Matchup'
 import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
+import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
 
 interface MyProps {
@@ -61,6 +62,10 @@ const TeamStatGroup = (props: MyProps) => {
 				subStat={`Week ${furthestMatchup?.weekNumber}`}
 				matchup={notableWeeks?.furthestGame}
 			/>
+			<GenericStatCard 
+			statName={"Times Underdog"} 
+			statValue={props.league?.members.get(props.memberId)?.stats.timesUnderdog.toString()}
+			isGoodThing={true} isLoaded={props.league?.settings != null}/>
 		</HStack>
 	)
 }
