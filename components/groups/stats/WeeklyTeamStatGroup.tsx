@@ -3,7 +3,9 @@ import {HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import Matchup from '../../../classes/custom/Matchup'
 import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
+import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
+import TeamPersonalStatCard from '../../cards/statcards/TeamPersonalStatCard'
 
 interface MyProps {
 	league?: League

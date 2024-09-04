@@ -2,7 +2,6 @@
 import {Box, Grid, GridItem, Heading, Skeleton} from '@chakra-ui/react'
 import React from 'react'
 import {useContext, useState} from 'react'
-import WeeklyRankingBumpChart from '../../../../components/charts/BumpChart'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'

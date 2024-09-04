@@ -91,7 +91,8 @@ export default function MemberSkillScatterPlot (props: MyProps) {
 	}
 	const theme = {
 		background: isLargerThan800 ? project_colors.surface[1] : "",
-		textColor: 'white',
+		text: {fill: project_colors.textTheme.highEmphasis},
+		
 	}
 
 	if (data.length <= 0) return <Spinner />

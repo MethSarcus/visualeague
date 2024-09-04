@@ -14,7 +14,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 	let data = formatScoresForLineChart(props.league, isOnMobile) as any
 	const theme = {
 		background: isOnMobile ? undefined : project_colors.surface[1],
-		textColor: 'white',
+		text: {fill: project_colors.textTheme.highEmphasis},
 	}
 
   const desktopMargin = {top: 20, right: 170, bottom: 50, left: 60}
