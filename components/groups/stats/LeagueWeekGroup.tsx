@@ -2,6 +2,7 @@
 import {HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import Matchup from '../../../classes/custom/Matchup'
+import { MatchupSide } from '../../../classes/custom/MatchupSide'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
 import WeekStatCard from '../../cards/statcards/WeekStatCard'
 
@@ -9,10 +10,10 @@ interface MyProps {
 	league: League | undefined
 }
 const LeagueNotableWeeksStatGroup = (props: MyProps) => {
-	let bestWeekTeam
-	let bestWeek
-	let worstWeekTeam
-	let worstWeek
+	let bestWeekTeam: MatchupSide | undefined = undefined
+	let bestWeek: Matchup | undefined = undefined
+	let worstWeekTeam: MatchupSide | undefined = undefined
+	let worstWeek: Matchup | undefined = undefined
 	let closestGame: Matchup | undefined = undefined
 	let furthestGame: Matchup | undefined = undefined
 	let biggestShootout: Matchup | undefined = undefined //highest combined score
@@ -22,9 +23,9 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 		let notableWeeks = props.league.getLeagueNotableWeeks()
 
 		bestWeek = notableWeeks.matchupForBestTeam as unknown as Matchup
-		bestWeekTeam = bestWeek.getWinner()
+		bestWeekTeam = bestWeek?.getWinner()
 		worstWeek = notableWeeks.matchupForWorstTeam as unknown as Matchup
-		worstWeekTeam = worstWeek.getLoser()
+		worstWeekTeam = worstWeek?.getLoser()
 
 		closestGame = notableWeeks.closestGame as unknown as Matchup
 		biggestShootout = notableWeeks.biggestShootout as unknown as Matchup
@@ -52,35 +53,35 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 				subStat={
 					props.league?.members?.get(worstWeekTeam?.roster_id ?? 0)?.teamName
 				}
-				isLoaded={bestWeekTeam != undefined}
+				isLoaded={worstWeekTeam != undefined}
 			/>
 			<NotableMatchupStatCard
 				matchup={biggestShootout}
 				title={'Biggest Shootout'}
 				score={`${biggestShootout?.getCombinedScore().toFixed(2)}`}
 				subSubStat={'Combined Points'}
-				isLoaded={bestWeekTeam != undefined}
+				isLoaded={biggestShootout != undefined}
 			/>
 			<NotableMatchupStatCard
 				matchup={smallestShootout}
 				title={'Smallest Shootout'}
 				score={`${smallestShootout?.getCombinedScore().toFixed(2)}`}
 				subSubStat={'Combined Points'}
-				isLoaded={bestWeekTeam != undefined}
+				isLoaded={smallestShootout != undefined}
 			/>
 			<NotableMatchupStatCard
 				matchup={closestGame}
 				title={'Closest Match'}
 				score={`${closestGame?.getMargin().toFixed(2)}`}
 				subSubStat={'margin'}
-				isLoaded={bestWeekTeam != undefined}
+				isLoaded={closestGame != undefined}
 			/>
 			<NotableMatchupStatCard
 				matchup={furthestGame}
 				title={'Biggest Stomp'}
 				score={`${furthestGame?.getMargin().toFixed(2)}`}
 				subSubStat={'margin'}
-				isLoaded={bestWeekTeam != undefined}
+				isLoaded={furthestGame != undefined}
 			/>
 		</HStack>
 	)

@@ -1,46 +1,37 @@
 'use client'
 import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
-import {enableMapSet} from "immer"
+import {enableMapSet} from 'immer'
 import Link from 'next/link'
 import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
 import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
-import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
+import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../../classes/custom/Player'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import {LeagueContext} from '../../../contexts/LeagueContext'
 import {PlayerScoresContext} from '../../../contexts/PlayerScoresContext'
 import {PlayerDetailsContext} from '../../../contexts/PlayerDetailsContext'
 import styles from '../../../styles/Home.module.css'
-import { LeagueSettings } from '../../../classes/sleeper/LeagueSettings'
-import { SleeperRoster } from '../../../classes/sleeper/SleeperRoster'
-import { SleeperUser, UserData } from '../../../classes/sleeper/SleeperUser'
-const LeagueLayout = ({
-	children,
-	params,
-}: {
-	children: React.ReactNode
-	params: {slug: string}
-}) => {
+import {LeagueSettings} from '../../../classes/sleeper/LeagueSettings'
+import {SleeperRoster} from '../../../classes/sleeper/SleeperRoster'
+import {BlankUserData, SleeperUser, UserData} from '../../../classes/sleeper/SleeperUser'
+const LeagueLayout = ({children, params}: {children: React.ReactNode; params: {slug: string}}) => {
 	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext)
 	const [playerScoresContext, setPlayerScoresContext] = useContext(PlayerScoresContext)
 
-
 	const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 	const disableValidation = {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
-		revalidateOnReconnect: false
-	  }
+		revalidateOnReconnect: false,
+	}
 
 	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
-		params.slug != undefined
-			? `https://api.sleeper.app/v1/league/${params.slug}`
-			: null,
+		params.slug != undefined ? `https://api.sleeper.app/v1/league/${params.slug}` : null,
 		fetcher,
 		disableValidation
 	)
@@ -62,9 +53,7 @@ const LeagueLayout = ({
 	)
 
 	const {data: leagueData, error: leagueError} = useSWR(
-		params.slug != undefined &&
-			sleeperLeagueError == undefined &&
-			sleeperLeagueData
+		params.slug != undefined && sleeperLeagueError == undefined && sleeperLeagueData
 			? `/api/league/${params.slug}`
 			: null,
 		fetcher,
@@ -83,7 +72,12 @@ const LeagueLayout = ({
 			let playerDetails = new Map<string, DatabasePlayer>()
 			leagueData.league.player_details.forEach((player: DatabasePlayer) => {
 				let settings = leagueData.league.sleeperDetails as LeagueSettings
-				let playerObj = new PlayerScores(player, settings.scoring_settings, settings.settings.start_week, settings.settings.last_scored_leg)
+				let playerObj = new PlayerScores(
+					player,
+					settings.scoring_settings,
+					settings.settings.start_week,
+					settings.settings.last_scored_leg
+				)
 				playerDetails.set(player._id, player)
 				playerScores.set(player._id, playerObj)
 			})
@@ -93,10 +87,15 @@ const LeagueLayout = ({
 			setPlayerDetailsContext(playerDetails)
 			let users: UserData[] = []
 			leagueData.league.rosters.forEach((roster: SleeperRoster) => {
-				users.push(new UserData(leagueData.league.users.find((user: SleeperUser) => {
+				let user = leagueData.league.users.find((user: SleeperUser) => {
 					return user.user_id == roster.owner_id
-				}), roster))
-			});
+				})
+				if (user == undefined) {
+					users.push(new BlankUserData(leagueData.league.league_id, roster.owner_id, roster))
+				} else {
+					users.push(new UserData(user, roster))
+				}
+			})
 			let league = new League(
 				users,
 				leagueData.league.matchups,
@@ -139,8 +138,7 @@ const LeagueLayout = ({
 								<Link
 									href={
 										'https://github.com/MethSarcus/visualeague/issues/new?assignees=MethSarcus&labels=&template=bug_report.md&title='
-									}
-								>
+									}>
 									<Button mx={5} variant={'outline'} colorScheme={'red'}>
 										Report bug
 									</Button>
@@ -153,8 +151,7 @@ const LeagueLayout = ({
 		)
 	}
 
-	if (leagueError || tradeError)
-		return <Heading color={'white'}>Failed to load</Heading>
+	if (leagueError || tradeError) return <Heading color={'white'}>Failed to load</Heading>
 	return (
 		<Grid
 			bg={'surface.6'}
@@ -165,8 +162,7 @@ const LeagueLayout = ({
                     "main main"
                     "footer footer"`}
 			color='surface.0'
-			fontWeight='bold'
-		>
+			fontWeight='bold'>
 			<GridItem area={'header'}>
 				<Navbar leagueID={params.slug} />
 			</GridItem>
