@@ -67,7 +67,7 @@ export default class Matchup implements MatchupInterface {
 		return Math.abs(this.homeTeam.pf - (this.awayTeam?.pf ?? this.homeTeam.pf))
 	}
 
-	public getWinner() {
+	public getWinner(): MatchupSide | undefined {
 		let winner
 		if (!this.isTie) {
 			if (this.homeTeam.roster_id == this.winnerRosterId) {
@@ -75,6 +75,8 @@ export default class Matchup implements MatchupInterface {
 			} else {
 				winner = this.awayTeam
 			}
+		} else {
+			winner = undefined
 		}
 
 		return winner
