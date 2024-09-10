@@ -16,7 +16,7 @@ export default async function handler(
 	if (league) {
 		const leagueUsers = (await getLeagueMembers(league.toString())) as SleeperUser[]
 		const drafts = leagueUsers.map((user) => {
-			return getMemberDraftDetails(user.user_id, 2023)
+			return getMemberDraftDetails(user.user_id, 2024)
 		})
 		let uniqueDrafts = new Set<string>()
 		await Promise.all(drafts).then((values) => {
