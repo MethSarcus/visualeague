@@ -27,11 +27,17 @@ export default function HorizontalPillSelector(props: MyProps) {
 		
 	}, [context, context?.league_id, league_id, props])
 
+	function isVisible() {
+		if (context && context instanceof League) {
+			return (context.settings.settings.playoff_week_start!  <= context.settings.settings.leg)
+		}
+		
+	}
 
       
-
+	if (!(context instanceof League)) return <Box></Box>
 	return (
-		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={(context as League | null)?.settings?.season_type == SeasonPortion.POST || (context as League | null)?.settings?.season_type == SeasonPortion.ALL ? "visible" : "hidden"}>
+		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={isVisible() ? 'visible' : 'hidden'}>
 			<HStack
 				{...group}
 				bg={project_colors.secondary[800]}
