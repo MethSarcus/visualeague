@@ -1,16 +1,16 @@
-"use client"
+'use client'
 import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react'
-import  {produce} from 'immer'
+import {produce} from 'immer'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import {usePathname} from 'next/navigation'
 import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
-import { PlayerScores, SleeperPlayerDetails } from '../../classes/custom/Player'
+import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
-import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
-import { PlayerScoresContext } from '../../contexts/PlayerScoresContext'
-import { project_colors } from '../../utility/project_colors'
+import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
+import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
+import {project_colors} from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
 import SeasonPortionSelector from './SeasonPortionSelector'
@@ -23,23 +23,24 @@ interface MyProps {
 
 const Navbar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
-	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
+	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any]
+	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [
+		Map<string, DatabasePlayer>,
+		any
+	]
 
-	// function setSeasonPortion(selected: String) {
-
-	// 	const nextState = produce(context, (draftState: League) => {
-	// 		draftState.setSeasonPortion(playerScores, playerDetails, selected as SeasonPortion)
-	// 	})
-	// 	setContext(nextState)
-	// }
+	function setSeasonPortion(selected: String) {
+		const nextState = produce(context, (draftState: League) => {
+			draftState.setSeasonPortion(playerScores, playerDetails, selected as SeasonPortion)
+		})
+		setContext(nextState)
+	}
 	return (
 		<Flex
 			bg={'secondary.600'}
 			bgGradient='linear(to-r, surface.1, surface.0)'
 			maxWidth={'100vw'}
-			color={'white'}
-		>
+			color={'white'}>
 			<HStack
 				spacing='0px'
 				pl={3}
@@ -47,8 +48,7 @@ const Navbar = (props: MyProps) => {
 				flex={1}
 				display={{sm: 'none', base: 'flex'}}
 				maxWidth={'100vw'}
-				overflow='hidden'
-			>
+				overflow='hidden'>
 				<MobileSidebar />
 				<NavbarButton
 					buttonText='VisuaLeague'
@@ -65,8 +65,7 @@ const Navbar = (props: MyProps) => {
 				spacing='0px'
 				display={{sm: 'flex', base: 'none'}}
 				maxWidth={'100vw'}
-				overflow='hidden'
-			>
+				overflow='hidden'>
 				<NavbarButton
 					buttonText='League'
 					disabled={context.settings == undefined}
@@ -97,8 +96,12 @@ const Navbar = (props: MyProps) => {
 					<ExpandableLeagueSearch />
 				</Box>
 			</HStack>
-			{/* <SeasonPortionSelector onclick={setSeasonPortion} /> */}
-			<Center pr={3} my={2}>{context?.settings && <SettingsSidebar leagueSettings={context?.settings} />}</Center>
+			<Center pr={3} my={2}>
+				<SeasonPortionSelector onclick={setSeasonPortion} />
+			</Center>
+			<Center pr={3} my={2}>
+				{context?.settings && <SettingsSidebar leagueSettings={context?.settings} />}
+			</Center>
 		</Flex>
 	)
 }
@@ -111,13 +114,12 @@ interface NavButtonProps {
 	disabled?: boolean
 	onclick?: () => void
 }
-function NavbarButton(props: NavButtonProps) {;
-	const pathName = usePathname();
+function NavbarButton(props: NavButtonProps) {
+	const pathName = usePathname()
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 	if (props.link != undefined && props.disabled != true) {
 		return (
-			<Link href={props.link} 
-			>
+			<Link href={props.link}>
 				<Button
 					transition={'all .2s ease'}
 					_hover={{
@@ -131,13 +133,10 @@ function NavbarButton(props: NavButtonProps) {;
 					borderRadius={0}
 					colorScheme={'primary'}
 					textColor='white'
-					isActive={pathName == "/" + props.link && isLargerThan800}
-					_active={
-						{ bg: project_colors.secondary[500]}
-					}
-					variant={"ghost"}
-					aria-label={props.buttonText}
-				>
+					isActive={pathName == '/' + props.link && isLargerThan800}
+					_active={{bg: project_colors.secondary[500]}}
+					variant={'ghost'}
+					aria-label={props.buttonText}>
 					{props.buttonText}
 				</Button>
 			</Link>
@@ -157,13 +156,10 @@ function NavbarButton(props: NavButtonProps) {;
 				fontWeight={'medium'}
 				colorScheme={'primary'}
 				textColor='white'
-				isActive={pathName?.includes("/" + props.link) && isLargerThan800}
-				_active={
-					{ bg: project_colors.secondary[500]}
-				}
+				isActive={pathName?.includes('/' + props.link) && isLargerThan800}
+				_active={{bg: project_colors.secondary[500]}}
 				variant='ghost'
-				aria-label={props.buttonText}
-			>
+				aria-label={props.buttonText}>
 				{props.buttonText}
 			</Button>
 		)
