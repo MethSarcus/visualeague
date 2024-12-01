@@ -50,7 +50,6 @@ const HomeStatGroup = (props: MyProps) => {
         statOwner={notableMembers?.worstManager.name}
         avatar={notableMembers?.worstManager.getAvatar() ?? ""}
         isGoodThing={false}
-        
       />
       </SimpleGrid>
     )
