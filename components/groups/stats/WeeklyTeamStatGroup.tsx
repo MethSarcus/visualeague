@@ -6,6 +6,7 @@ import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
 import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
 import TeamPersonalStatCard from '../../cards/statcards/TeamPersonalStatCard'
+import RivalsGroup from './RivalsStatGroup'
 
 interface MyProps {
 	league?: League

@@ -42,6 +42,10 @@ export default class LeagueMember {
 		}
 	}
 
+	getAvatarUrl() {
+		return `https://sleepercdn.com/avatars/${this.avatar}`
+	}
+
 	getBestPlayer() {
 		var mapAsc = new Map(
 			[...this.players.entries()].sort(
