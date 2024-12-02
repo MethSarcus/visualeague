@@ -46,6 +46,10 @@ const TeamStatCard = (props: MyProps) => {
         {props.title}
       </Box>
 
+      <Box fontWeight="bold" fontSize={"1em"} color={"textTheme.mediumEmphasis"}>
+        {props.playerDetails?.first_name} {props.playerDetails?.last_name}
+      </Box>
+
       <Avatar
         my={2}
         size={"md"}
@@ -53,9 +57,6 @@ const TeamStatCard = (props: MyProps) => {
         borderColor={"grey"}
         src={isNaN(+props.player?.id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.id.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.id}.jpg`}
       />
-      <Text color={"textTheme.highEmphasis"}>
-        {props.playerDetails?.first_name} {props.playerDetails?.last_name}
-      </Text>
 
       <Text
         fontSize={".9em"}
