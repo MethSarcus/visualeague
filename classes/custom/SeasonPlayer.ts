@@ -24,6 +24,8 @@ export default class SeasonPlayer {
   public rootMeanSquareError: number = 0;
   public avgPointsPerStart: number = 0;
   public avgPointsPerBench: number = 0;
+  public highestScore: number = 0;
+  public lowestScore: number | undefined = undefined;
 
   constructor(
     playerId: string,
@@ -48,6 +50,8 @@ export default class SeasonPlayer {
     this.weeks_played = []
     this.weeks_benched = []
     this.teamPositionRank = 0
+    this.highestScore = 0
+    this.lowestScore = undefined
     // this.playerScores = new Map()
     // this.playerProjectedScores = new Map()
   }
@@ -60,6 +64,13 @@ export default class SeasonPlayer {
   ) {
     this.points_scored += pointsScored;
     this.projected_points += projectedPoints;
+    if (this.lowestScore == undefined || pointsScored < this.lowestScore) {
+      this.lowestScore = pointsScored;
+    }
+
+    if (this.highestScore < pointsScored) {
+      this.highestScore = pointsScored;
+    }
 
     // this.playerScores.set(weekNumber, pointsScored);
     // this.playerProjectedScores.set(weekNumber, projectedPoints);

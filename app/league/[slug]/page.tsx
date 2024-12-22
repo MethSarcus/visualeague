@@ -2,11 +2,12 @@
 import {
 	Box, Grid,
 	GridItem,
-	Heading, Skeleton
+	Heading, Skeleton, useMediaQuery
 } from '@chakra-ui/react'
 import { useContext, useState } from 'react'
 import LeagueStackedPfBarChart from '../../../components/charts/bar/LeaguePFBarChart'
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
+import WeekRangeChart from '../../../components/charts/line/WeekRangeChart'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
 import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
@@ -18,6 +19,7 @@ const LeaguePage = () => {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
 	const [context, setContext] = useContext(LeagueContext)
+	const isMobile = useMediaQuery('(max-width: 768px)')
 
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
@@ -74,7 +76,7 @@ const LeaguePage = () => {
 				</GridItem>
 				<GridItem area={'pfLineChart'}>
 					<Box height={'350px'} textColor='black'>
-						<LeagueWeeklyPointsLineChart league={context} />
+						{isMobile ? <WeekRangeChart league={context} /> : <LeagueWeeklyPointsLineChart league={context} />}
 					</Box>
 				</GridItem>
 
@@ -85,9 +87,7 @@ const LeaguePage = () => {
 					</Box>
 				</GridItem>				
 				<GridItem area={'pfBarChart'} minHeight={"350px"}>
-				<Box>
 					<LeagueStackedPfBarChart league={context} />
-				</Box>
 				</GridItem>
 			</Grid>
 		</Box>

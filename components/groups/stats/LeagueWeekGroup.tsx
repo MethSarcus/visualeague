@@ -1,5 +1,5 @@
 'use client'
-import {HStack} from '@chakra-ui/react'
+import {Box, HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import Matchup from '../../../classes/custom/Matchup'
 import { MatchupSide } from '../../../classes/custom/MatchupSide'
@@ -31,6 +31,8 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 		biggestShootout = notableWeeks.biggestShootout as unknown as Matchup
 		furthestGame = notableWeeks.furthestGame as unknown as Matchup
 		smallestShootout = notableWeeks.smallestShootout as unknown as Matchup
+	} else {
+		return <Box>Loading...</Box>
 	}
 
 	return (
@@ -40,7 +42,8 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 				memberId={bestWeekTeam?.roster_id}
 				score={`${bestWeekTeam?.pf?.toFixed(2)} PF`}
 				title={'Highest Score'}
-				subStat={
+				subStat={props.league?.getMember(bestWeekTeam?.roster_id ?? -1)?.teamName}
+				subSubStat={
 					props.league?.members?.get(bestWeekTeam?.roster_id ?? 0)?.teamName
 				}
 				isLoaded={bestWeekTeam != undefined}
@@ -50,7 +53,8 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 				matchup={worstWeek}
 				score={`${worstWeekTeam?.pf?.toFixed(2)} PF`}
 				title={'Lowest Score'}
-				subStat={
+				subStat={props.league?.getMember(smallestShootout?.loserRosterId ?? -1)?.teamName}
+				subSubStat={
 					props.league?.members?.get(worstWeekTeam?.roster_id ?? 0)?.teamName
 				}
 				isLoaded={worstWeekTeam != undefined}

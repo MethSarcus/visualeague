@@ -8,10 +8,10 @@ interface MyProps {
 	league: League | undefined
 }
 
-const LeagueWeeklyPointsLineChart = (props: MyProps) => {
+const WeekRangeChart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
 	if (props.league?.settings == undefined) return <Spinner />
-	let data = formatScoresForLineChart(props.league, isOnMobile) as any
+	let data = formatScoresForLineChart(props.league) as any
 	const theme = {
 		background: isOnMobile ? undefined : project_colors.surface[1],
 		text: {fill: project_colors.textTheme.highEmphasis},
@@ -52,7 +52,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 			data={data}
 			theme={theme}
 			margin={isOnMobile ? mobileMargin : desktopMargin}
-			curve={'basis'}
+			curve={'natural'}
 			enableGridX={false}
 			enableCrosshair={false}
 			xScale={{type: 'point'}}
@@ -64,7 +64,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 				reverse: false,
 			}}
 			yFormat=' >-.1f'
-			axisTop={{legend: "Weekly PF", legendPosition: "middle", legendOffset: isOnMobile ? -20 : -40, format: () => '', tickSize: 0}}
+			axisTop={{legend: "Weekly PF Range", legendPosition: "middle", legendOffset: isOnMobile ? -20 : -40, format: () => '', tickSize: 0}}
 			axisRight={null}
 			enableSlices={false}
       lineWidth={1}
@@ -107,44 +107,49 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 			pointLabelYOffset={-12}
 			useMesh={true}
 			debugMesh={false}
-			legends={isOnMobile ? [] : [deskTopLegend as any]}
+			legends={[deskTopLegend as any]}
 		/>
 	)
 }
 
-function formatScoresForLineChart(league: League | undefined, isMobile?: boolean) {
+function formatScoresForLineChart(league: League | undefined) {
 	let data: object[] = []
-	let memberWeekScoreMap: Map<number, object[]> = new Map()
+	let leagueAverageScores: object[] = []
+    let weekHighestScores: object[] = []
+    let weekLowestScores: object[] = []
 
 	league?.weeks?.forEach((week) => {
-		week.getAllScores().forEach((team) => {
-			if (memberWeekScoreMap.has(team.id)) {
-				;(memberWeekScoreMap.get(team.id) as object[]).push({
-					x: isMobile ? week.weekNumber : 'Week ' + week.weekNumber,
-					y: team.score,
-				})
-			} else {
-				memberWeekScoreMap.set(team.id, [
-					{
-						x:  isMobile ? week.weekNumber : 'Week ' + week.weekNumber,
-						y: team.score,
-					},
-				])
-			}
+		let weekRange = week.getWeekRange()
+
+		leagueAverageScores.push({
+			x: week.weekNumber,
+			y: weekRange.averageScore,
+		})
+		weekHighestScores.push({
+			x: week.weekNumber,
+			y: weekRange.highScore,
+		})
+		weekLowestScores.push({
+			x: week.weekNumber,
+			y: weekRange.lowScore,
 		})
 	})
 
-	league?.members?.forEach((member: LeagueMember) => {
-		if (league.memberIdToRosterId.has(member.userId)) {
-			data.push({
-				id: member.name,
-				data: memberWeekScoreMap.get(
-					league.memberIdToRosterId.get(member.userId) as number
-				),
-			})
-		}
+	data.push({
+		id: 'Average',
+		data: leagueAverageScores
+	})
+
+	data.push({
+		id: 'High Score',
+		data: weekHighestScores
+	})
+
+	data.push({
+		id: 'Low Score',
+		data: weekLowestScores
 	})
 	return data
 }
 
-export default LeagueWeeklyPointsLineChart
+export default WeekRangeChart

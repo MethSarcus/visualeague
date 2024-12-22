@@ -63,6 +63,7 @@ const LeagueStackedPfBarChart = (props: MyProps) => {
 				},
 			},
 			responsive: true,
+			maintainAspectRatio:true,
 			scales: {
 				x: {
 					stacked: true,
