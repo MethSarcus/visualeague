@@ -28,6 +28,8 @@ const TeamPlayerStatGroup = (props: MyProps) => {
   let mostConsistent;
   let leastPredictionError;
   let mostPredictionError;
+  let highestScore;
+  let lowestScore;
 
   if (member) {
     let notablePlayers = member?.getNotablePlayers();
@@ -37,6 +39,8 @@ const TeamPlayerStatGroup = (props: MyProps) => {
     mostConsistent = notablePlayers.mostConsistent;
     leastPredictionError = notablePlayers.mostAccuratePredictions;
     mostPredictionError = notablePlayers.leastAccuratePredictions;
+    highestScore = notablePlayers.highestScore;
+    lowestScore = notablePlayers.lowestScore;
   }
   return (
     <HStack spacing={3} maxWidth="inherit" align={"stretch"}>
@@ -98,6 +102,28 @@ const TeamPlayerStatGroup = (props: MyProps) => {
         )} RSME`}
         isLoaded={true}
         isGoodThing={true}
+      />
+                  <TeamPlayerStatCard
+        title={"Highest Score"}
+        player={highestScore}
+        playerDetails={playerDetailsContext?.get(highestScore?.id!)?.details}
+        subStat={`${highestScore?.highestScore.toFixed(2)}`}
+        mainStat={`${highestScore?.avgPointsPerStart.toFixed(
+          2
+        )} Avg`}
+        isLoaded={true}
+        isGoodThing={true}
+      />
+                        <TeamPlayerStatCard
+        title={"Lowest Score"}
+        player={lowestScore}
+        playerDetails={playerDetailsContext?.get(lowestScore?.id!)?.details}
+        subStat={`${lowestScore?.lowestScore?.toFixed(2)}`}
+        mainStat={`${lowestScore?.avgPointsPerStart.toFixed(
+          2
+        )} Avg`}
+        isLoaded={true}
+        isGoodThing={false}
       />
     </HStack>
   );

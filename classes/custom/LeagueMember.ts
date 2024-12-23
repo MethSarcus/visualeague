@@ -101,6 +101,8 @@ export default class LeagueMember {
 		let lowestAvgScorer: SeasonPlayer
 		let mostAccuratePredictions: SeasonPlayer
 		let leastAccuratePredictions: SeasonPlayer
+		let highestScore: SeasonPlayer
+		let lowestScore: SeasonPlayer
 
 		this.players.forEach((player, id) => {
 			if (
@@ -110,6 +112,8 @@ export default class LeagueMember {
 			) {
 				highestScorer = player
 				leastConsistent = player
+				highestScore = player
+				lowestScore = player
 				lowestAvgScorer = player
 				mostConsistent = player
 				mostAccuratePredictions = player
@@ -130,6 +134,18 @@ export default class LeagueMember {
 
 				if (player.stdDev < mostConsistent.stdDev) {
 					mostConsistent = player
+				}
+
+				if (player.highestScore > highestScore.highestScore) {
+					highestScore = player
+				}
+
+				if (lowestScore.lowestScore == undefined) {
+					lowestScore = player
+				} else {
+					if (player.lowestScore && player.lowestScore < lowestScore.lowestScore!) {
+						lowestScore = player
+					}
 				}
 
 				if (
@@ -157,6 +173,8 @@ export default class LeagueMember {
 			mostConsistent: mostConsistent!,
 			mostAccuratePredictions: mostAccuratePredictions!,
 			leastAccuratePredictions: leastAccuratePredictions!,
+			highestScore: highestScore!,
+			lowestScore: lowestScore!
 		}
 
 		return notablePlayers

@@ -31,7 +31,7 @@ const SuperStatsGroup = (props: MyProps) => {
 		leastConsistent = notableMembers.leastConsistent
 	}
 	return (
-		<SimpleGrid columns={8} spacing={3} height={'full'}>
+		<SimpleGrid columns={8} spacing={3} height={'full'} overflowX={'scroll'} minChildWidth={'150px'}>
 			<GenericStatCard
 				statName={'Best Win Streak'}
 				isLoaded={props.league?.settings != undefined}

@@ -102,6 +102,28 @@ export class Week {
       return memberMatchupSide as unknown as MatchupSide
     }
 
+    getWeekRange() {
+      let highScore: number | undefined = undefined
+      let lowScore: number | undefined = undefined
+      let weekTotal = 0
+
+      this.getAllTeams().forEach(team => {
+        if (highScore == undefined || team.pf > highScore) {
+          highScore = team.pf
+        } else if (lowScore == undefined || team.pf < lowScore) {
+          lowScore = team.pf
+        }
+
+        weekTotal += team.pf
+      })
+
+      return {
+        highScore: highScore,
+        lowScore: lowScore,
+        averageScore: weekTotal / this.getAllTeams().length
+      }
+    }
+
     getAllScores() {
       let teams = this.getAllTeams()
       return teams.sort((a: MatchupSide, b: MatchupSide) => {
