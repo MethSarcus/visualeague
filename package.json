@@ -18,7 +18,7 @@
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@nivo/bar": "^0.87.0",
     "@nivo/bump": "^0.87.0",
-    "@nivo/chord": "^0.87.0",
+    "@nivo/chord": "^0.99.0",
     "@nivo/core": "^0.87.0",
     "@nivo/line": "^0.87.0",
     "@nivo/pie": "^0.87.0",
