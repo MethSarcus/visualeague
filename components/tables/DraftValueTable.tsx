@@ -24,7 +24,6 @@ const DraftValueTable = (props: MyProps) => {
 	const data = [...props.draft?.picks.values() ?? []].sort(
 		(a: DraftPlayer, b: DraftPlayer) => b.draftValue - a.draftValue
 	).map(player => {return formatMemberDataForTable(player)})
-
 	const cols: TableColumn<DataRow>[] = [{
 		name: "name",
 		selector: (row) => row.name,
@@ -105,7 +104,6 @@ function formatMemberDataForTable(player: DraftPlayer): DataRow {
 	} else {
 		playerObj.pick_no = player.pick_no
 	}
-
 	return playerObj
 }
 

@@ -1,9 +1,7 @@
 import e from 'cors'
 import {produce, immerable} from 'immer'
 import {
-	calcPlayerPoints,
 	LINEUP_POSITION,
-	ordinal_suffix_of,
 	POSITION,
 	standardDeviation,
 	TIE_CONST,
@@ -554,6 +552,8 @@ export default class League {
 			this.getEnabledWeeks().forEach((weekNum) => {
 				if (playerScores.get(pick.player_id)?.stats?.has(weekNum)) {
 					pick.addGame(playerScores.get(player_id)?.stats.get(weekNum) ?? 0)
+				} else {
+					pick.addGame(0)
 				}
 			})
 

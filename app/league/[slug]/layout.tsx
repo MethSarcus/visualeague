@@ -17,7 +17,8 @@ import styles from '../../../styles/Home.module.css'
 import {LeagueSettings} from '../../../classes/sleeper/LeagueSettings'
 import {SleeperRoster} from '../../../classes/sleeper/SleeperRoster'
 import {BlankUserData, SleeperUser, UserData} from '../../../classes/sleeper/SleeperUser'
-const LeagueLayout = ({children, params}: {children: React.ReactNode; params: {slug: string}}) => {
+const LeagueLayout = ({children, params}: {children: React.ReactNode; params: any}) => {
+	const { slug } = React.use(params)
 	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext)
@@ -31,7 +32,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: {s
 	}
 
 	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
-		params.slug != undefined ? `https://api.sleeper.app/v1/league/${params.slug}` : null,
+		slug != undefined ? `https://api.sleeper.app/v1/league/${slug}` : null,
 		fetcher,
 		disableValidation
 	)
@@ -53,15 +54,15 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: {s
 	)
 
 	const {data: leagueData, error: leagueError} = useSWR(
-		params.slug != undefined && sleeperLeagueError == undefined && sleeperLeagueData
-			? `/api/league/${params.slug}`
+		slug != undefined && sleeperLeagueError == undefined && sleeperLeagueData
+			? `/api/league/${slug}`
 			: null,
 		fetcher,
 		disableValidation
 	)
 
 	const {data: tradeData, error: tradeError} = useSWR(
-		params.slug != undefined ? `/api/trades/${params.slug}` : null,
+		slug != undefined ? `/api/trades/${slug}` : null,
 		fetcher,
 		disableValidation
 	)
@@ -164,7 +165,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: {s
 			color='surface.0'
 			fontWeight='bold'>
 			<GridItem area={'header'}>
-				<Navbar leagueID={params.slug} />
+				<Navbar leagueID={slug} />
 			</GridItem>
 			<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
 				{children}
