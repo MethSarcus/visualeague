@@ -1373,7 +1373,7 @@ export default class League {
 		Array.from(this.members.keys()).forEach((memberRosterId) => {
 			let member = this.members.get(memberRosterId)
 			let seasonLength = this.getEnabledWeeks().length
-			let beforeWeeks = seasonLength - 3
+			let beforeWeeks = seasonLength <= 3 ? 2 : seasonLength - 3
 			let beforeScore = 0
 			for (let weekNumber = 1; weekNumber <= beforeWeeks; weekNumber++) {
 				let week = this.weeks.get(weekNumber)

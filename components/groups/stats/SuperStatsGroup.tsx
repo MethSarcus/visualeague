@@ -19,7 +19,6 @@ const SuperStatsGroup = (props: MyProps) => {
 
 	if (props.league?.settings == undefined) return <Flex>Loading</Flex>
 	let notableMembers = props.league?.getLeagueSuperStats()
-	console.log(notableMembers)
 	if (notableMembers) {
 		bestStreak = notableMembers.bestStreak
 		worstStreak = notableMembers.worstStreak
@@ -31,7 +30,7 @@ const SuperStatsGroup = (props: MyProps) => {
 		leastConsistent = notableMembers.leastConsistent
 	}
 	return (
-		<SimpleGrid columns={8} spacing={3} height={'full'} overflowX={'scroll'} minChildWidth={'150px'}>
+		<SimpleGrid columns={8} spacing={3} height={'full'} overflowX={'auto'} minChildWidth={'150px'}  >
 			<GenericStatCard
 				statName={'Best Win Streak'}
 				isLoaded={props.league?.settings != undefined}
