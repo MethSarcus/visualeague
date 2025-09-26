@@ -6,6 +6,7 @@ import League from "../../classes/custom/League"
 import LeagueMember from "../../classes/custom/LeagueMember"
 import { project_colors } from "../../utility/project_colors"
 import { useMediaQuery } from '@chakra-ui/react'
+import { JSX } from "react"
 
 const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	const formattedMembers: DataRow[] = []

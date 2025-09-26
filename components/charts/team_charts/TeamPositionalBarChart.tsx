@@ -2,11 +2,9 @@ import {Spinner} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
-import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
+import {POSITION} from '../../../utility/rosterFunctions'
 import {project_colors} from '../../../utility/project_colors'
 import {PositionColors} from '../ChartColors'
-import {AxisTickProps} from '@nivo/axes'
-import {useTheme} from '@nivo/core'
 
 interface MyProps {
 	league?: League
@@ -17,8 +15,6 @@ const theme = {
 	background: 'none',
 	textColor: 'white',
 }
-
-const getColor = (bar: BarDatum) => PositionColors[bar.id]
 
 const TeamPositionalBarChart = (props: MyProps) => {
 	if (props.league?.settings == undefined) return <Spinner />

@@ -19,6 +19,7 @@ const GlobalError = ({
 									<Button>Return to homepage</Button>
 								</Link>
 								<Link
+									isExternal={true}
 									href={
 										'https://github.com/MethSarcus/visualeague/issues/new?assignees=MethSarcus&labels=&template=bug_report.md&title='
 									}

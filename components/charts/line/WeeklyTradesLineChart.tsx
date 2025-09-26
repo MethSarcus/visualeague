@@ -1,7 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
 import { ResponsiveLine } from "@nivo/line";
-import League from "../../../classes/custom/League";
-import LeagueMember from "../../../classes/custom/LeagueMember";
 import Trade from "../../../classes/custom/Trade";
 import { project_colors } from "../../../utility/project_colors";
 
@@ -36,7 +34,7 @@ const WeeklyTradesLineChart = (props: MyProps) => {
                         color: "white"
                     }}
                 >
-                    <div>{`${point.serieId}: ${parseFloat(point.data.y as any).toFixed(2)}`}</div>
+                    <div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(2)}`}</div>
                 </div>
             )
         }}

@@ -1,7 +1,6 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
 import {ResponsiveLine} from '@nivo/line'
 import League from '../../../classes/custom/League'
-import LeagueMember from '../../../classes/custom/LeagueMember'
 import {project_colors} from '../../../utility/project_colors'
 
 interface MyProps {
@@ -95,7 +94,7 @@ const WeekRangeChart = (props: MyProps) => {
 							color: 'black',
 						}}
 					>
-						<div>{`${point.serieId}: ${parseFloat(point.data.y as any).toFixed(
+						<div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(
 							2
 						)}`}</div>
 					</div>
