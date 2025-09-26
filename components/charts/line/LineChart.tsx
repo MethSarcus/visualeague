@@ -95,7 +95,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 							color: 'black',
 						}}
 					>
-						<div>{`${point.serieId}: ${parseFloat(point.data.y as any).toFixed(
+						<div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(
 							2
 						)}`}</div>
 					</div>

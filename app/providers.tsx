@@ -21,9 +21,7 @@ const Providers = ({children}: {children: React.ReactNode}) => {
 			<PlayerScoresContext.Provider value={[playerScoresContext, setPlayerScoresContext] as any}>
 				<LeagueContext.Provider value={[context, setContext]}>
 					<Analytics />
-					<CacheProvider>
-						<ChakraProvider theme={customTheme}>{children}</ChakraProvider>
-					</CacheProvider>
+					<ChakraProvider theme={customTheme}>{children}</ChakraProvider>
 				</LeagueContext.Provider>
 			</PlayerScoresContext.Provider>
 		</PlayerDetailsContext.Provider>

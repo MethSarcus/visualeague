@@ -1,8 +1,9 @@
 import {
   Button, Code,
   HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger, Stack,
-  StackItem, Text
+  Box, Text
 } from "@chakra-ui/react";
+import { JSX } from "react";
 import {
   LeagueSettings,
   ScoringSettings
@@ -35,7 +36,7 @@ const ScoringPopover = (props: MyProps) => {
       <PopoverContent display="flex" bg={"surface_google.2"}>
         <PopoverArrow bg="surface_google.2" />
         <Stack direction={"row"} spacing={2}>
-          <StackItem>
+          <Box>
             <PopoverHeader>Positions</PopoverHeader>
             <PopoverBody>
               <Stack>
@@ -44,15 +45,15 @@ const ScoringPopover = (props: MyProps) => {
                 )}
               </Stack>
             </PopoverBody>
-          </StackItem>
-          <StackItem>
+          </Box>
+          <Box>
             <PopoverHeader>Scoring</PopoverHeader>
             <PopoverBody>
-              <StackItem>
+              <Box>
                 {formatScoringForPopover(props.league.scoring_settings)}
-              </StackItem>
+              </Box>
             </PopoverBody>
-          </StackItem>
+          </Box>
         </Stack>
         {hasVariablePPR(props.league.scoring_settings) && (
           <PopoverFooter>

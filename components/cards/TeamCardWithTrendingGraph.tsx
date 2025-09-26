@@ -39,7 +39,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 								objectFit='cover'
 								maxW={'100px'}
                 loading={"eager"}
-                placeholder={'blur'}
+				_placeholder={{ color: 'gray.500' }}
                 onLoad={() => setImageLoaded(true)}
                 minH={"60px"}
 								src={`https://sleepercdn.com/avatars/thumbs/${props.member?.avatar}`}

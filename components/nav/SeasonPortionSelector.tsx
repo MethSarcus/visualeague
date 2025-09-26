@@ -59,10 +59,10 @@ export default function HorizontalPillSelector(props: MyProps) {
 
 
 function RadioCard(props: any) {
-    const { getInputProps, getCheckboxProps } = useRadio(props)
+	const { getInputProps, getRadioProps } = useRadio(props)
   
     const input = getInputProps()
-    const checkbox = getCheckboxProps()
+	const checkbox = getRadioProps()
   
     return (
       <Box as='label' fontSize={".6em"}>
