@@ -8,6 +8,7 @@ import {
 	POSITION,
 } from '../../utility/rosterFunctions'
 import {MatchupPlayer} from './MatchupPlayer'
+import { position } from '@chakra-ui/react'
 
 export class MatchupSide {
 	weekNumber: number
@@ -51,7 +52,7 @@ export class MatchupSide {
 					scores?.stats.get(weekNumber) ?? 0,
 					scores?.projections.get(weekNumber) ?? 0,
 					settings.roster_positions?.at(index),
-					details?.details?.fantasy_positions
+					details?.details?.fantasy_positions.filter(((pos) => settings.roster_positions?.includes(pos)))
 				)
 			}
 		})
@@ -65,7 +66,7 @@ export class MatchupSide {
 					scores?.stats.get(weekNumber) ?? 0,
 					scores?.projections.get(weekNumber) ?? 0,
 					'BN',
-					details?.details?.fantasy_positions
+					details?.details?.fantasy_positions.filter(((pos) => settings.roster_positions?.includes(pos)))
 				)
 			})
 		if (matchup.custom_points) {
