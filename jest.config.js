@@ -1,3 +1,10 @@
+// Next 15 references the Fetch API while loading its Jest adapter. Node 16
+// does not expose these globals, so provide the minimal constructors needed
+// during configuration loading. Production Next.js runs with its own runtime.
+if (!global.Request) global.Request = class Request {}
+if (!global.Response) global.Response = class Response {}
+if (!global.Headers) global.Headers = class Headers {}
+
 const nextJest = require('next/jest')
 
 const createJestConfig = nextJest({

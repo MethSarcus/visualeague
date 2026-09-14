@@ -30,8 +30,11 @@ const LeagueCellGroup = (props: MyProps) => {
 		fetcher
 	)
 	if (props.usernameSubmitted != true) return <div></div>
-	if (props.usernameSubmitted && userData == null) return <div>No Leagues Found</div>
-	if (!userData || !leaguesData) return <Spinner size={'md'} />
+	if (props.usernameSubmitted && userError) return <div>Unable to find user</div>
+	if (props.usernameSubmitted && userData == null) return <Spinner size={'md'} />
+	if (leaguesError) return <div>Unable to load leagues</div>
+	if (!leaguesData) return <Spinner size={'md'} />
+	if (leaguesData.length === 0) return <div>No Leagues Found</div>
 
 	return (
 		<VStack overflowY={'auto'} maxH={'400px'} align={'flex-start'}>

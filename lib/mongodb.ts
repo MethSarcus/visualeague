@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import { ConnectionOptions } from 'tls';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -7,19 +6,18 @@ const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) {
     throw new Error('Define the MONGODB_URI environmental variable');
 }
+const mongoUri = MONGODB_URI
+
+let cachedClient: MongoClient | undefined
+let connectionPromise: Promise<MongoClient> | undefined
 
 export async function connectToDatabase() {
+    if (cachedClient) {
+        return cachedClient
+    }
 
-    // set the connection options
-    const options = {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-      maxPoolSize: 17
-    } as ConnectionOptions
+    connectionPromise ??= new MongoClient(mongoUri, {maxPoolSize: 17}).connect()
+    cachedClient = await connectionPromise
 
-    // Connect to cluster
-    let client = new MongoClient((MONGODB_URI as string), options);
-    await client.connect();
-
-    return client
+    return cachedClient
 }
