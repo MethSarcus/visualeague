@@ -22,14 +22,6 @@ const TeamPositionalBarChart = (props: MyProps) => {
 		props.league.members.get(props.memberId)!,
 		props.league.getPositions() as POSITION[]
 	) as any
-    let maxValue = 0
-    props.league.members.forEach(mem => {
-        mem.stats.position_scores.forEach(score => {
-            if (score > maxValue) {
-                maxValue = score
-            }
-        })
-    })
 	if (data.length <= 0) return <Spinner />
 	return (
 		<ResponsiveBar
@@ -42,7 +34,6 @@ const TeamPositionalBarChart = (props: MyProps) => {
 			indexScale={{type: 'band', round: true}}
 			borderWidth={.2}
             borderColor={project_colors.surface[0]}
-            maxValue={maxValue}
             colors={Object.keys(PositionColors).filter(colKey => data.keys.includes(colKey)).map(colKey => PositionColors[colKey])}
 			axisTop={null}
 			axisRight={null}
