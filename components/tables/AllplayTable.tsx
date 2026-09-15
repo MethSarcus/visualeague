@@ -1,9 +1,6 @@
 'use client'
-import React from 'react'
-import {Box, Spinner} from '@chakra-ui/react'
-import {Draft, DraftPlayer, DRAFT_TYPE} from '../../classes/custom/Draft'
+import {Spinner} from '@chakra-ui/react'
 import ReactDataGrid from '@inovua/reactdatagrid-community'
-import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
 import League from '../../classes/custom/League'
@@ -47,7 +44,7 @@ const AllplayTable = (props: MyProps) => {
 
 	return (
 		<ReactDataGrid
-			idProperty='pick_no'
+			idProperty='id'
 			columns={columns}
 			dataSource={data}
 			style={gridStyle}

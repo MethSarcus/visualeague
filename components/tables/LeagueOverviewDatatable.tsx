@@ -1,4 +1,4 @@
-import { Box, Skeleton, Spinner } from "@chakra-ui/react"
+import { Skeleton, Spinner } from "@chakra-ui/react"
 import DataTable, {
 	TableColumn
 } from "react-data-table-component"
@@ -66,32 +66,6 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	}
 
 	// data provides access to your row data
-
-	// const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
-	// 	data,
-	// }) => {
-	// 	return (
-	// 		<pre>
-	// 			{JSON.stringify(
-	// 				data,
-	// 				["pick", "player", "picked_by", "draft_id"],
-	// 				2
-	// 			)}
-	// 		</pre>
-	// 	)
-	// }
-	const conditionalRowStyles = [
-		{
-			when: (row: any) => true,
-			style: {
-				backgroundColor: "green",
-				color: "white",
-				"&:hover": {
-					cursor: "pointer",
-				},
-			},
-		},
-	]
 	return (
 		<Skeleton isLoaded={props.league != undefined}>
 		<DataTable
@@ -101,12 +75,9 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			defaultSortAsc={false}
 			data={formattedMembers}
 			customStyles={customDatatableStyles}
-			conditionalRowStyles={conditionalRowStyles}
 			progressPending={props.league.settings == undefined}
 			progressComponent={<Spinner />}
 			responsive={true}
-			// conditionalRowStyles={conditionalRowStyles}
-			// expandableRowsComponent={ExpandedComponent}
 			dense={true}
 		/>
 		</Skeleton>

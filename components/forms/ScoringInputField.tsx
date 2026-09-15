@@ -8,7 +8,7 @@ interface MyProps {
     settingValue: number
 	originalValue: number
     customScoringChecked: boolean
-    onInputChange: (e: any) => void
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const ScoringInputField = (props: MyProps) => {

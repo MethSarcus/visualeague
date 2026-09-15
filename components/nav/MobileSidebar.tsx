@@ -1,7 +1,7 @@
 import {HamburgerIcon} from '@chakra-ui/icons'
 
 import Link from 'next/link'
-import React, {useContext} from 'react'
+import {useContext} from 'react'
 import {RxLoop} from 'react-icons/rx'
 import {GiStrong} from 'react-icons/gi'
 import {BsGrid3X2, BsBarChart} from 'react-icons/bs'
@@ -12,7 +12,7 @@ import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
 import { useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, Text, DrawerHeader, Center, Avatar, Heading, DrawerBody, VStack, Divider, Button, HStack, DrawerFooter, Box } from '@chakra-ui/react'
 
 export default function MobileSidebar() {
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	return (
 		<>

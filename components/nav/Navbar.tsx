@@ -3,10 +3,9 @@ import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react
 import {produce} from 'immer'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import React from 'react'
 import {useContext} from 'react'
 import League, {SeasonPortion} from '../../classes/custom/League'
-import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../classes/custom/Player'
+import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
 import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
@@ -23,10 +22,10 @@ interface MyProps {
 
 const Navbar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
-	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any]
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [
+	const [playerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, unknown]
+	const [playerDetails] = useContext(PlayerDetailsContext) as [
 		Map<string, DatabasePlayer>,
-		any
+		unknown
 	]
 
 	function setSeasonPortion(selected: String) {

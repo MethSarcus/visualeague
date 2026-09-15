@@ -1,4 +1,4 @@
-import {Button, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure} from '@chakra-ui/react'
+import {IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, useDisclosure} from '@chakra-ui/react'
 import {HiOutlineSearch} from 'react-icons/hi'
 import UsernameForm from './UsernameForm'
 

@@ -1,9 +1,7 @@
-import {Box, Spinner, VStack, Wrap, WrapItem} from '@chakra-ui/react'
+import {Spinner, VStack} from '@chakra-ui/react'
 import axios from 'axios'
-import { useContext } from 'react'
 import useSWR from 'swr'
 import {LeagueSettings} from '../../classes/sleeper/LeagueSettings'
-import { LeagueContext } from '../../contexts/LeagueContext'
 import UserLeagueCell from '../UserLeagueCell'
 
 type MyProps = {
@@ -24,7 +22,7 @@ const LeagueCellGroup = (props: MyProps) => {
 
 	const {data: leaguesData, error: leaguesError} = useSWR(
 		() =>
-			userData.user_id
+			userData?.user_id
 				? `https://api.sleeper.app/v1/user/${userData.user_id}/leagues/nfl/${props.selectedSeason}`
 				: null,
 		fetcher
