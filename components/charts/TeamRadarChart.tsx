@@ -1,38 +1,50 @@
-import { Box, Spinner, useMediaQuery } from '@chakra-ui/react';
+import { Spinner, useMediaQuery } from '@chakra-ui/react';
 import { ResponsiveRadar } from '@nivo/radar';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import League from '../../classes/custom/League';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { POSITION } from '../../utility/rosterFunctions';
-import { useBreakpointValue } from '@chakra-ui/react'
-
 
 interface MyProps {
     league: League | undefined
 }
 
+interface RadarLegend {
+    anchor: 'right' | 'bottom'
+    direction: 'column' | 'row'
+    translateX: number
+    translateY: number
+    itemWidth: number
+    toggleSerie: boolean
+    itemHeight: number
+    itemTextColor: string
+    symbolSize: number
+    symbolShape: 'circle'
+    effects: {on: 'hover'; style: {itemTextColor: string}}[]
+}
+
+const theme = {
+    "background": "none",
+    "textColor": "white"
+}
+
 const TeamRadarChart = (props: MyProps) => {
-    const [hiddenMembers, setHiddenMembers] = useState([])
     const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {
         ssr: true,
         fallback: false, // return false on the server, and re-evaluate on the client side
       })
 
-    let marginVals = { top: 50, right: 100, bottom: 75, left: 0 }
-    let legendDirection = 'column'
-    let legendAnchor = 'right'
-    let legendsArr = []
-    if (!isLargerThan800) {
-        marginVals = { top: 0, right: 25, bottom: 75, left: 25 }
-        legendDirection = "row"
-        legendAnchor = 'bottom'
-    }
+    const marginVals = isLargerThan800
+        ? { top: 50, right: 100, bottom: 75, left: 0 }
+        : { top: 0, right: 25, bottom: 75, left: 25 }
+    const legendDirection: RadarLegend['direction'] = isLargerThan800 ? 'column' : 'row'
+    const legendAnchor: RadarLegend['anchor'] = isLargerThan800 ? 'right' : 'bottom'
 
-    if (isLargerThan800) {
-        legendsArr.push(
+    const legendsArr: RadarLegend[] = isLargerThan800
+        ? [
             {
-                anchor: legendAnchor as any,
-                direction: legendDirection as any,
+                anchor: legendAnchor,
+                direction: legendDirection,
                 translateX: -20,
                 translateY: -40,
                 itemWidth: 80,
@@ -50,25 +62,22 @@ const TeamRadarChart = (props: MyProps) => {
                     }
                 ]
             }
-        )
-    }
+        ]
+        : []
 
-    if (props.league?.settings == undefined) return <Spinner/>
-    let data = formatScoresForRadarChart(Array.from(props.league?.members.values()), props.league?.getPositions() as POSITION[]) as any
+    const league = props.league
+    const data = useMemo(() => {
+        if (league?.settings == undefined) return undefined
+        return formatScoresForRadarChart(Array.from(league.members.values()), league.getPositions())
+    }, [league])
 
-    const theme = {
-        "background": "none",
-        "textColor": "white"
-    }
-
+    if (data == undefined) return <Spinner/>
 
     return (
-
     <ResponsiveRadar
         data={data.chartData}
         keys={data.keys}
         theme={theme}
-        
         indexBy="position"
         valueFormat=">-.2f"
         margin={marginVals}
@@ -80,28 +89,28 @@ const TeamRadarChart = (props: MyProps) => {
         colors={{ scheme: 'nivo' }}
         blendMode="multiply"
         motionConfig="wobbly"
-        
-        legends={legendsArr as any}
+        legends={legendsArr}
+        role="application"
+        ariaLabel="Positional scoring breakdown by team"
     />)
 }
 
 
 function formatScoresForRadarChart(members: LeagueMember[] | undefined, positions: POSITION[] | undefined) {
-    let data: object[] = []
-    let keys: string[] = []
+    const data: Record<string, string | number>[] = []
+    const keys: string[] = []
 
-    members?.forEach((member: LeagueMember, key: number) => {keys.push(member.name)})
+    members?.forEach((member: LeagueMember) => {keys.push(member.name)})
 
     positions?.forEach((position) => {
-        let positionObj: {[k: string]: any} = {position: position}
-        members?.forEach((member: LeagueMember, key: number) => {
-            if (position != undefined && !isNaN(member.stats.position_scores.get(position) as any) && !isNaN(member.stats.position_starts.get(position) as any)) {
-                let positionScore = member.stats.position_scores.get(position)
-                let positionStarts = member.stats.position_starts.get(position)
-                let positionAverage = positionScore!! / positionStarts!!
-                positionObj[member.name] =  parseFloat(positionAverage.toFixed(2))
+        const positionObj: Record<string, string | number> = {position: position}
+        members?.forEach((member: LeagueMember) => {
+            const positionScore = member.stats.position_scores.get(position)
+            const positionStarts = member.stats.position_starts.get(position)
+            if (position != undefined && positionScore != undefined && positionStarts) {
+                const positionAverage = positionScore / positionStarts
+                positionObj[member.name] = parseFloat(positionAverage.toFixed(2))
             }
-
         })
         data.push(positionObj)
     })

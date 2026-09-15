@@ -9,45 +9,55 @@ import { PositionColors } from "./ChartColors";
 interface MyProps {
   players: MatchupPlayer[];
   playerDetails?: Map<string, SleeperPlayerDetails>;
-  margins?: object | undefined
+  margins?: { top: number; right: number; bottom: number; left: number };
 }
 
-
+interface PieDatum {
+  id: string;
+  label: string;
+  value: number;
+  position: string;
+  color: string;
+}
 
 const LineupPieChart = (props: MyProps) => {
-  const [context, setContext] = useContext(LeagueContext)
-  if (!props.players || context.settings == undefined) return <Spinner/>
-  let margins = props.margins
-  if (!props.margins) {
-    margins = { top: 80, right: 100, bottom: 80, left: 100 }
-  }
+  const [context] = useContext(LeagueContext);
+  if (!props.players || context.settings == undefined) return <Spinner />;
+  const margins = props.margins ?? { top: 80, right: 100, bottom: 80, left: 100 };
 
-  const formatScoresForPieChart = (players: MatchupPlayer[]) => {
+  const formatScoresForPieChart = (players: MatchupPlayer[]): PieDatum[] => {
     return players.map((player) => {
-      let fullName: any =
-        (player && player.playerId && player.playerId != "0") || "Empty";
-      if (context.playerDetails != undefined && fullName != "Empty") {
-        fullName = `${
-          context.playerDetails!!.get(player.playerId!!)!!.first_name
-        } ${context.playerDetails!!.get(player.playerId!!)!!.last_name}`;
+      const isBlank = !player?.playerId || player.playerId === "0";
+      let fullName = "Empty";
+      if (!isBlank && player.playerId) {
+        const details = context.playerDetails?.get(player.playerId);
+        fullName = details
+          ? `${details.first_name} ${details.last_name}`
+          : player.playerId;
       }
+      const position = player.eligiblePositions?.[0] ?? "BN";
       return {
         id: fullName,
         label: fullName,
-        value: player.score.toFixed(2),
-        position: player.eligiblePositions[0],
-        color: PositionColors[player.eligiblePositions[0]],
+        value: Number((player.score ?? 0).toFixed(2)),
+        position,
+        color: PositionColors[position],
       };
     });
   };
 
-  let data = formatScoresForPieChart(props.players);
+  const data = formatScoresForPieChart(props.players);
 
-  const CenteredMetric = ({ dataWithArc, centerX, centerY }: any) => {
-    let total: number = 0;
-    dataWithArc.forEach((datum: { value: number }) => {
-      total += parseFloat(datum.value as any);
-    });
+  const CenteredMetric = ({
+    dataWithArc,
+    centerX,
+    centerY,
+  }: {
+    dataWithArc: readonly {value: number}[];
+    centerX: number;
+    centerY: number;
+  }) => {
+    const total = dataWithArc.reduce((sum, datum) => sum + datum.value, 0);
 
     return (
       <text

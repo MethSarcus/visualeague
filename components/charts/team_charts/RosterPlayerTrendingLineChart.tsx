@@ -1,8 +1,7 @@
 import {Spinner} from '@chakra-ui/react'
-import {ResponsiveLine} from '@nivo/line'
-import { useContext } from 'react'
+import {LineSeries, ResponsiveLine} from '@nivo/line'
+import { useContext, useMemo } from 'react'
 import League from '../../../classes/custom/League'
-import LeagueMember from '../../../classes/custom/LeagueMember'
 import { PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
 import SeasonPlayer from '../../../classes/custom/SeasonPlayer'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
@@ -16,10 +15,15 @@ interface MyProps {
 }
 
 const RosterPlayerTrendingLineChart = (props: MyProps) => {
-	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
-	if (!props.player || !props.league || !playerScores) return <Spinner />
-	let data = formatScoresForLineChart(props.player, props.league, playerScores, playerDetails) as any
+	const [playerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, unknown];
+	const [playerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, unknown];
+	const {player, league} = props
+	const data = useMemo(() => {
+		if (!player || !league || !playerScores) return undefined
+		return formatScoresForLineChart(player, league, playerScores, playerDetails)
+	}, [player, league, playerScores, playerDetails])
+
+	if (!player || !league || !playerScores || data == undefined) return <Spinner />
 	const theme = {
 		text: {fill: project_colors.textTheme.highEmphasis},
 	}
@@ -59,7 +63,7 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 							fontSize: '12px',
 						}}
 					>
-						<div>{`${parseFloat(point.data.y as any).toFixed(2)}`}</div>
+						<div>{`${Number(point.data.y).toFixed(2)}`}</div>
 					</div>
 				)
 			}}
@@ -78,21 +82,22 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 	)
 }
 
-function formatScoresForLineChart(player: SeasonPlayer, league: League, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>) {
-	let weekScores: {x: string; y: string | undefined | null; started: boolean; wasActive: boolean}[] = []
-	let allWeekStats = league.getAllWeekScoresForPlayer(player.id, playerScores, playerDetails)
+function formatScoresForLineChart(player: SeasonPlayer, league: League, playerScores: Map<string, PlayerScores>, playerDetails: Map<string, SleeperPlayerDetails>): LineSeries[] {
+	const weekScores: {x: string; y: number | null; started: boolean; wasActive: boolean}[] = []
+	const allWeekStats = league.getAllWeekScoresForPlayer(player.id, playerScores, playerDetails)
 	allWeekStats.scores.forEach((score, weekNum) => {
-		if (player.weeks_played.includes(weekNum) && allWeekStats.projectedScores.get(weekNum) > 0) {
+		const projectedScore = allWeekStats.projectedScores.get(weekNum) ?? 0
+		if (player.weeks_played.includes(weekNum) && projectedScore > 0) {
 			weekScores.push({
 				x: 'Week ' + weekNum,
-				y: score?.toFixed(2),
+				y: score != undefined ? Number(score.toFixed(2)) : null,
 				started: true,
 				wasActive: true
 			})
-		} else if (allWeekStats.projectedScores.get(weekNum) > 0) {
+		} else if (projectedScore > 0) {
 			weekScores.push({
 				x: 'Week ' + weekNum,
-				y: score?.toFixed(2),
+				y: score != undefined ? Number(score.toFixed(2)) : null,
 				started: false,
 				wasActive: true
 			})
@@ -106,12 +111,10 @@ function formatScoresForLineChart(player: SeasonPlayer, league: League, playerSc
 		}
 	})
 
-	let data = {
+	return [{
 		id: player.id,
 		data: weekScores,
-	}
-
-	return [data]
+	}]
 }
 
 export default RosterPlayerTrendingLineChart

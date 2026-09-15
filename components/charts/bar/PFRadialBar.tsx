@@ -1,26 +1,29 @@
 import { Spinner } from '@chakra-ui/react';
-import { BarDatum, ResponsiveBar } from '@nivo/bar'
 import { ResponsiveRadialBar } from '@nivo/radial-bar';
-import { useContext, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import League from '../../../classes/custom/League';
 import LeagueMember from '../../../classes/custom/LeagueMember';
-import { LeagueContext } from '../../../contexts/LeagueContext';
-import { getPositionColor, POSITION } from '../../../utility/rosterFunctions';
-import { project_colors } from "../../../utility/project_colors";
 import { PositionColors } from '../ChartColors';
-
 
 interface MyProps {
     league: League
     roster_id?: number
 }
-  const theme = {
+
+interface RadialBarPoint {
+    x: string
+    y: number
+    color: string
+}
+
+const theme = {
     "background": "none",
     "textColor": "white"
 }
 
 const PFRadialBarChart = (props: MyProps) => {
-    let data = formatScoresForBarChart(props.league) as any
+    const league = props.league
+    const data = useMemo(() => formatScoresForBarChart(league), [league])
 
     if (data.length <= 0) return <Spinner/>
     return (<ResponsiveRadialBar
@@ -70,61 +73,50 @@ const PFRadialBarChart = (props: MyProps) => {
                 ]
             }
         ]}
+        role="application"
+        ariaLabel="Points for by position, per team"
     />)
 }
 
 
-    function formatScoresForBarChart(league: League, statType?: MemberStat) {
-        let data: object[] = []
-        let memberPositionScores: Map<number, object[]> = new Map()
+function formatScoresForBarChart(league: League) {
+    const data: {id: string; data: RadialBarPoint[]; pf: number}[] = []
+    const memberPositionScores: Map<number, RadialBarPoint[]> = new Map()
 
-        league.members.forEach((member) => {
-            member.stats.position_scores.forEach((value, position) => {
-                if (memberPositionScores.has(member.roster.roster_id)) {
-                    (memberPositionScores.get(member.roster.roster_id) as object[]).push({
-                        x: position,
-                        y: value,
-                        color: PositionColors[position]
-                    })
-                } else {
-                    memberPositionScores.set(member.roster.roster_id, [{
-                        x: position,
-                        y: value,
-                        color: PositionColors[position]
-                    }])
-                }
-            }) 
-        })
-
-        league.members.forEach((member: LeagueMember) => {
-            if (league.memberIdToRosterId.has(member.userId)) {
-                data.push({
-                    id: member.name,
-                    data: memberPositionScores.get(league.memberIdToRosterId.get(member.userId) as number),
-                    pf: member.stats.pf
-                })
-            }
-        })
-
-        data.sort((a: any, b: any) => {
-            if (a.pf < b.pf) {
-              return 1;
-            } else if (a.pf > b.pf) {
-              return -1;
+    league.members.forEach((member) => {
+        member.stats.position_scores.forEach((value, position) => {
+            const point = {x: position, y: value, color: PositionColors[position]}
+            const existing = memberPositionScores.get(member.roster.roster_id)
+            if (existing) {
+                existing.push(point)
             } else {
-              return 0;
+                memberPositionScores.set(member.roster.roster_id, [point])
             }
-          });
+        })
+    })
 
-        return data
-    }
+    league.members.forEach((member: LeagueMember) => {
+        const rosterId = league.memberIdToRosterId.get(member.userId)
+        if (rosterId != undefined) {
+            data.push({
+                id: member.name,
+                data: memberPositionScores.get(rosterId) ?? [],
+                pf: member.stats.pf
+            })
+        }
+    })
 
-    enum MemberStat {
-        PF = "pf",
-        PA = "pa",
-        PP = "pp",
-        GP = "gp",
-        OPSLAP = "opslap",
-    }
+    data.sort((a, b) => {
+        if (a.pf < b.pf) {
+            return 1;
+        } else if (a.pf > b.pf) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
+
+    return data
+}
 
 export default PFRadialBarChart

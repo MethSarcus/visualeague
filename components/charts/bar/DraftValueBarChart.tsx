@@ -1,12 +1,10 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {BarDatum, ResponsiveBar} from '@nivo/bar'
+import {BarDatum, ComputedDatum, ResponsiveBar} from '@nivo/bar'
+import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
 import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
 import {project_colors} from '../../../utility/project_colors'
-import {PositionColors} from '../ChartColors'
-import {AxisTickProps} from '@nivo/axes'
-import { DraftPick } from '../../../classes/sleeper/DraftPick'
 import { DraftPlayer } from '../../../classes/custom/Draft'
 
 interface MyProps {
@@ -20,15 +18,18 @@ const theme = {
 
 const DraftValueBarChart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	if (props.league?.settings == undefined) return <Spinner />
-	let formattedData = formatScoresForBarChart(props.league)
-	let keys = formattedData.chartKeys
-	let data = formattedData.chartData as BarDatum[]
+	const league = props.league
+	const formattedData = useMemo(() => {
+		if (league?.settings == undefined) return undefined
+		return formatScoresForBarChart(league)
+	}, [league])
+	if (formattedData == undefined) return <Spinner />
+	const keys = formattedData.chartKeys
+	const data = formattedData.chartData as BarDatum[]
 	if (data.length <= 0) return <Spinner />
-	const getColor = (bar: BarDatum) => {
+	const getColor = (bar: ComputedDatum<BarDatum>) => {
 		return getPositionColor(
-			props.league?.draft.picks.get(bar.id as any)
-				?.metadata.position as any
+			(league?.draft.picks.get(String(bar.id))?.metadata.position ?? undefined) as POSITION
 		)
 	}
 	return (
@@ -71,7 +72,7 @@ const DraftValueBarChart = (props: MyProps) => {
 				legendPosition: 'middle',
 				legendOffset: 0}}
       		enableLabel={false}
-			colors={getColor as any}
+			colors={getColor}
 
 			legends={[
 				{
@@ -136,8 +137,6 @@ function formatScoresForBarChart(league: League) {
 		memberDataObj.member = league.members.get(key)?.name
 		memberDataObj.draftValue = league.members.get(key)?.stats.draftValue
 	})
-
-	memberDataObjects
 
 	let formattedData = {
 		chartKeys: Array.from(keys),

@@ -110,7 +110,8 @@ export class Week {
       this.getAllTeams().forEach(team => {
         if (highScore == undefined || team.pf > highScore) {
           highScore = team.pf
-        } else if (lowScore == undefined || team.pf < lowScore) {
+        }
+        if (lowScore == undefined || team.pf < lowScore) {
           lowScore = team.pf
         }
 

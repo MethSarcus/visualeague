@@ -1,5 +1,6 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {ResponsiveLine} from '@nivo/line'
+import {LineSeries, ResponsiveLine} from '@nivo/line'
+import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
 import {project_colors} from '../../../utility/project_colors'
@@ -10,8 +11,12 @@ interface MyProps {
 
 const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	if (props.league?.settings == undefined) return <Spinner />
-	let data = formatScoresForLineChart(props.league, isOnMobile) as any
+	const league = props.league
+	const data = useMemo(
+		() => (league?.settings == undefined ? undefined : formatScoresForLineChart(league, isOnMobile)),
+		[league, isOnMobile]
+	)
+	if (data == undefined) return <Spinner />
 	const theme = {
 		background: isOnMobile ? undefined : project_colors.surface[1],
 		text: {fill: project_colors.textTheme.highEmphasis},
@@ -21,7 +26,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 
   const mobileMargin = {top: 25, right: 10, bottom: 40, left: 40}
 
-	const deskTopLegend = {
+	const deskTopLegend: NonNullable<Parameters<typeof ResponsiveLine>[0]['legends']>[number] = {
 		anchor: 'bottom-right',
 		direction: 'column',
 		justify: false,
@@ -95,7 +100,7 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 							color: 'black',
 						}}
 					>
-						<div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(
+						<div>{`${point.seriesId}: ${Number(point.data.y).toFixed(
 							2
 						)}`}</div>
 					</div>
@@ -107,40 +112,37 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 			pointLabelYOffset={-12}
 			useMesh={true}
 			debugMesh={false}
-			legends={isOnMobile ? [] : [deskTopLegend as any]}
+			legends={isOnMobile ? [] : [deskTopLegend]}
 		/>
 	)
 }
 
-function formatScoresForLineChart(league: League | undefined, isMobile?: boolean) {
-	let data: object[] = []
-	let memberWeekScoreMap: Map<number, object[]> = new Map()
+function formatScoresForLineChart(league: League, isMobile?: boolean): LineSeries[] {
+	const data: LineSeries[] = []
+	const memberWeekScoreMap: Map<number, {x: string | number; y: number}[]> = new Map()
 
-	league?.weeks?.forEach((week) => {
+	league.weeks?.forEach((week) => {
 		week.getAllScores().forEach((team) => {
-			if (memberWeekScoreMap.has(team.id)) {
-				;(memberWeekScoreMap.get(team.id) as object[]).push({
-					x: isMobile ? week.weekNumber : 'Week ' + week.weekNumber,
-					y: team.score,
-				})
+			if (team.score == undefined) return
+			const point = {
+				x: isMobile ? week.weekNumber : 'Week ' + week.weekNumber,
+				y: team.score,
+			}
+			const existing = memberWeekScoreMap.get(team.id)
+			if (existing) {
+				existing.push(point)
 			} else {
-				memberWeekScoreMap.set(team.id, [
-					{
-						x:  isMobile ? week.weekNumber : 'Week ' + week.weekNumber,
-						y: team.score,
-					},
-				])
+				memberWeekScoreMap.set(team.id, [point])
 			}
 		})
 	})
 
-	league?.members?.forEach((member: LeagueMember) => {
-		if (league.memberIdToRosterId.has(member.userId)) {
+	league.members?.forEach((member: LeagueMember) => {
+		const rosterId = league.memberIdToRosterId.get(member.userId)
+		if (rosterId != undefined) {
 			data.push({
 				id: member.name,
-				data: memberWeekScoreMap.get(
-					league.memberIdToRosterId.get(member.userId) as number
-				),
+				data: memberWeekScoreMap.get(rosterId) ?? [],
 			})
 		}
 	})
