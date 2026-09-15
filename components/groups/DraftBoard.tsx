@@ -63,7 +63,7 @@ export default function DraftBoard(props: MyProps) {
 						<GridItem key={mem.userId}>
 							<LeagueMemberDraftCard
 								user={mem}
-								setFocusFunction={setFocusOnclick as any} 
+								setFocusFunction={setFocusOnclick}
 								focusedRosterId={focusedRosterId}							/>
 						</GridItem>
 					)
@@ -78,7 +78,7 @@ export default function DraftBoard(props: MyProps) {
 				.map((pick: DraftPlayer) => {
 					return (
 						<GridItem key={pick.draft_id + '_' + pick.player_id}>
-							<DraftPickCard pick={pick} focusedRosterId={focusedRosterId} numMembers={10} isSnakeDraft={isSnakeDraft} />
+							<DraftPickCard pick={pick} focusedRosterId={focusedRosterId} numMembers={props.league?.members?.size} isSnakeDraft={isSnakeDraft} />
 						</GridItem>
 					)
 				})}

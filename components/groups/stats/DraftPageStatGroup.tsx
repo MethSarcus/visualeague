@@ -1,11 +1,8 @@
 import {
 	Box,
-	Wrap,
 	Text,
 	SimpleGrid,
 	Spinner,
-	VStack,
-	WrapItem,
 	Grid,
 	GridItem,
 } from '@chakra-ui/react'
@@ -67,7 +64,7 @@ export default function DraftPageStatGroup(props: MyProps) {
 					<GenericStatCard
 						statName={'Worst Drafter'}
 						isLoaded={worstDrafter != null}
-						statValue={worstDrafter.stats.draftPercentage + '% Value Drafted'}
+						statValue={worstDrafter?.stats.draftPercentage + '% Value Drafted'}
 						statOwner={worstDrafter?.name}
 						avatar={worstDrafter?.getAvatar() ?? ''}
 						isGoodThing={false}
