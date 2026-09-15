@@ -1,15 +1,11 @@
 import React, {useContext} from 'react'
 import {
-	Avatar,
 	Box,
-	Center,
 	Grid,
 	GridItem,
-	HStack,
 	Image,
 	Text,
 } from '@chakra-ui/react'
-import {DraftPick} from '../../classes/sleeper/DraftPick'
 import {DraftPlayer} from '../../classes/custom/Draft'
 import {project_colors} from '../../utility/project_colors'
 import {POSITION} from '../../utility/rosterFunctions'
@@ -24,24 +20,16 @@ type MyProps = {
 }
 
 export default function DraftPickCard(props: MyProps) {
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	const template = `"player_name player_name pick_no"
                     "drafted_by drafted_by thumbnail"`
-	let opacity = 1
-	if (props.focusedRosterId != -1 && props.focusedRosterId != props.pick?.roster_id) {
-		opacity= .25
-	} else {
-		opacity = 1
-	}
+	const isFiltering = props.focusedRosterId != undefined && props.focusedRosterId !== -1
+	const opacity = isFiltering && props.focusedRosterId !== props.pick?.roster_id ? .25 : 1
 
 	let pickNumber = props.pick?.draft_slot ?? 1
 	if (props.isSnakeDraft && (props.pick?.round ?? 2) % 2 == 0) {
 		pickNumber = Math.abs(pickNumber - (props.numMembers ?? 0)) + 1
 	}
-	// pickNumber = (props.pick?.pick_no ?? 1) % (props.numMembers ?? 1)
-	// if (pickNumber == 0) {
-	// 	pickNumber = 10
-	// }
 
 	if (props.numMembers == undefined) {
 		pickNumber = props.pick?.draft_slot ?? 1

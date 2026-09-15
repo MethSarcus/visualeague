@@ -1,7 +1,6 @@
 "use client";
 import {
   Box, Button,
-  Flex,
   Modal, ModalOverlay, Spacer, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
 import Matchup from "../../../classes/custom/Matchup";

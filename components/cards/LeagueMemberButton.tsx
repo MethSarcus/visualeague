@@ -1,4 +1,4 @@
-import {Avatar, Button, Box, useModalContext, useDisclosure} from '@chakra-ui/react'
+import {Avatar, Button, Box} from '@chakra-ui/react'
 import Link from 'next/link'
 import LeagueMember from '../../classes/custom/LeagueMember'
 

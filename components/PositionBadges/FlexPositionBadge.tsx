@@ -7,45 +7,45 @@ type MyProps = {
   size: string;
 };
 
+const FLEX_VARIANT_POSITIONS: Record<string, { label: string; bg: string; height: string }[]> = {
+  SUPER_FLEX: [
+    { label: "W", bg: "position.WR", height: "50%" },
+    { label: "R", bg: "position.RB", height: "50%" },
+    { label: "T", bg: "position.TE", height: "50%" },
+    { label: "Q", bg: "position.QB", height: "50%" },
+  ],
+  REC_FLEX: [
+    { label: "W", bg: "position.WR", height: "100%" },
+    { label: "T", bg: "position.TE", height: "100%" },
+  ],
+  WRRB_FLEX: [
+    { label: "W", bg: "position.WR", height: "100%" },
+    { label: "R", bg: "position.RB", height: "100%" },
+  ],
+  IDP_FLEX: [
+    { label: "DL", bg: "position.DL", height: "100%" },
+    { label: "DB", bg: "position.DB", height: "100%" },
+    { label: "LB", bg: "position.LB", height: "100%" },
+  ],
+  FLEX: [
+    { label: "W", bg: "position.WR", height: "100%" },
+    { label: "R", bg: "position.RB", height: "100%" },
+    { label: "T", bg: "position.TE", height: "100%" },
+  ],
+};
+
 const FlexPositionBadge = (props: MyProps) => {
   const { variant, size, ...rest } = props;
   const styles = useStyleConfig("FlexPositionBadge", { variant, size });
-  let includedPositions = [];
+  const includedPositions = FLEX_VARIANT_POSITIONS[variant] ?? [];
 
-  switch (variant) {
-    case "SUPER_FLEX": {
-      includedPositions.push(<Center h={"50%"} bg="position.WR">W</Center>);
-      includedPositions.push(<Center h={"50%"} bg="position.RB">R</Center>);
-      includedPositions.push(<Center h={"50%"} bg="position.TE">T</Center>);
-      includedPositions.push(<Center h={"50%"} bg="position.QB">Q</Center>);
-      break;
-    }
-    case "REC_FLEX": {
-      includedPositions.push(<Center h={"100%"} bg="position.WR">W</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.TE">T</Center>);
-      break;
-    }
-    case "WRRB_FLEX": {
-      includedPositions.push(<Center h={"100%"} bg="position.WR">W</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.RB">R</Center>);
-      break;
-    }
-    case "IDP_FLEX": {
-      includedPositions.push(<Center h={"100%"} bg="position.DL">DL</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.DB">DB</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.LB">LB</Center>);
-      break;
-    }
-    case "FLEX": {
-      includedPositions.push(<Center h={"100%"} bg="position.WR">W</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.RB">R</Center>);
-      includedPositions.push(<Center h={"100%"} bg="position.TE">T</Center>);
-      break;
-    }
-  }
   return (
     <SimpleGrid __css={styles} {...rest}>
-      {includedPositions}
+      {includedPositions.map((position) => (
+        <Center key={position.label} h={position.height} bg={position.bg}>
+          {position.label}
+        </Center>
+      ))}
     </SimpleGrid>
   );
 };

@@ -4,7 +4,6 @@ import {
 	Box,
 	Button,
 	Center,
-	Heading,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -12,9 +11,6 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	position,
-	Radio,
-	RadioGroup,
 	SkeletonCircle,
 	SkeletonText,
 	Stack,
@@ -25,9 +21,8 @@ import {
 import {useContext, useState} from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import Matchup from '../../classes/custom/Matchup'
 import MatchupInterface from '../../classes/custom/MatchupInterface'
-import {BlankPlayer, MatchupPlayer} from '../../classes/custom/MatchupPlayer'
+import {BlankPlayer} from '../../classes/custom/MatchupPlayer'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
 import {LINEUP_POSITION} from '../../utility/rosterFunctions'
@@ -41,7 +36,7 @@ interface MyProps {
 }
 
 const MatchupPreview = (props: MyProps) => {
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	const [homeStarters, setHomeStarters] = useState(
 		props.matchup?.homeTeam.starters
@@ -117,7 +112,6 @@ const MatchupPreview = (props: MyProps) => {
 			}
 		}
 	}
-	const [value, setValue] = useState('1')
 	let opponentId
 
 	if (props.matchup?.homeTeam.roster_id == props.member?.roster.roster_id) {
@@ -241,12 +235,12 @@ const MatchupPreview = (props: MyProps) => {
 										<PositionalMatchupContainer
 											key={index}
 											position={pos as LINEUP_POSITION}
-											homePlayer={homeStarters?.at(index)!}
-											awayPlayer={awayStarters?.at(index)!}
+											homePlayer={homeStarters?.at(index) ?? new BlankPlayer()}
+											awayPlayer={awayStarters?.at(index) ?? new BlankPlayer()}
 											isByeWeek={props.matchup?.isByeWeek}
 										/>
 									)
-								}) as any
+								})
 						}
 
 						<Box mt={8}>
@@ -270,7 +264,7 @@ const MatchupPreview = (props: MyProps) => {
 												isByeWeek={props.matchup?.isByeWeek}
 											/>
 										)
-									}) as any
+									})
 							}
 						</Box>
 					</ModalBody>

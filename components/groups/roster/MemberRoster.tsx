@@ -1,16 +1,13 @@
-import {Box, Button, Collapse, Spacer, Text, useDisclosure} from '@chakra-ui/react'
+import {Box, Spacer, Text} from '@chakra-ui/react'
 import {useContext} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
-import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from '../../../classes/custom/Player'
+import { DatabasePlayer } from '../../../classes/custom/Player'
 import {LeagueContext} from '../../../contexts/LeagueContext'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
-import { PlayerScoresContext } from '../../../contexts/PlayerScoresContext'
 import {POSITION} from '../../../utility/rosterFunctions'
 import TeamCard from '../../cards/TeamCard'
-import TeamCardWithTrendingGraph from '../../cards/TeamCardWithTrendingGraph'
 import TeamPositionalBarChart from '../../charts/team_charts/TeamPositionalBarChart'
-import TrendingLineChart from '../../charts/team_charts/TrendingLineChart'
 import RosterPlayer from './RosterPlayer'
 
 interface MyProps {
@@ -18,9 +15,8 @@ interface MyProps {
 }
 
 export default function MemberRoster(props: MyProps) {
-	const [context, setContext] = useContext(LeagueContext)
-	const [playerScores, setPlayerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
+	const [context] = useContext(LeagueContext)
+	const [playerDetails] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, unknown];
 	return (
 		<Box>
 			<Box w={'full'} height={'40px'}>
