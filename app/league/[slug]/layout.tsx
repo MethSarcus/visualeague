@@ -17,7 +17,7 @@ import styles from '../../../styles/Home.module.css'
 import {LeagueSettings} from '../../../classes/sleeper/LeagueSettings'
 import {SleeperRoster} from '../../../classes/sleeper/SleeperRoster'
 import {BlankUserData, SleeperUser, UserData} from '../../../classes/sleeper/SleeperUser'
-const LeagueLayout = ({children, params}: {children: React.ReactNode; params: any}) => {
+const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Promise<{slug: string}>}) => {
 	const { slug } = React.use(params)
 	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)

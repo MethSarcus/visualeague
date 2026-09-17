@@ -74,13 +74,20 @@ function formatScoresForBarChart(league?: League) {
 		return {data: [] as BarDatum[], positions: [] as POSITION[]}
 	}
 
-	const sortedIds = [...league.members.keys()].sort((a, b) => {
-		let aPf = league.members.get(a)?.stats.pf ?? 0
-		let bPf = league.members.get(b)?.stats.pf ?? 0
-		if (aPf < bPf) return 1
-		if (aPf > bPf) return -1
-		return 0
-	})
+	const sortedIds: number[] = []
+	for (const memberId of league.members.keys()) {
+		const memberPf = league.members.get(memberId)?.stats.pf ?? 0
+		let insertAt = sortedIds.length
+
+		while (insertAt > 0) {
+			const previousId = sortedIds[insertAt - 1]
+			const previousPf = league.members.get(previousId)?.stats.pf ?? 0
+			if (previousPf >= memberPf) break
+			insertAt--
+		}
+
+		sortedIds.splice(insertAt, 0, memberId)
+	}
 
 	const positions = (league.getPositions() ?? []) as POSITION[]
 
