@@ -1,6 +1,6 @@
 'use client'
-import {useRadioGroup, Center, HStack, useRadio, Box} from '@chakra-ui/react'
-import { useContext, useEffect, useState } from 'react'
+import {useRadioGroup, Center, HStack, useRadio, Box, UseRadioProps} from '@chakra-ui/react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import League, { SeasonPortion } from '../../classes/custom/League'
 import { LeagueContext } from '../../contexts/LeagueContext'
 import {project_colors} from '../../utility/project_colors'
@@ -9,19 +9,20 @@ interface MyProps {
 	onclick: (selected: string) => void
 }
 
-export default function HorizontalPillSelector(props: MyProps) {
+export default function SeasonPortionSelector(props: MyProps) {
 	const options = [SeasonPortion.REGULAR, SeasonPortion.POST, SeasonPortion.ALL]
-    const [context, setContext] = useContext(LeagueContext)
+    const [context] = useContext(LeagueContext)
 	const [league_id, setLeagueID] = useState(context?.league_id)
 	const {getRootProps, getRadioProps} = useRadioGroup({
 		name: 'season_portion',
-		defaultValue: (context.seasonPortion ?? SeasonPortion.ALL),
+		defaultValue: (context?.seasonPortion ?? SeasonPortion.ALL),
 		onChange: props.onclick,
 	})
 
 	const group = getRootProps()
 	useEffect(() => {
 		if (context?.league_id != league_id) {
+			setLeagueID(context?.league_id)
 			props.onclick("ALL")
 		}
 		
@@ -58,7 +59,7 @@ export default function HorizontalPillSelector(props: MyProps) {
 }
 
 
-function RadioCard(props: any) {
+function RadioCard(props: UseRadioProps & { children?: ReactNode }) {
 	const { getInputProps, getRadioProps } = useRadio(props)
   
     const input = getInputProps()

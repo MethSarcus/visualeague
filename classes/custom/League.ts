@@ -501,7 +501,7 @@ export default class League {
 						return pos as POSITION
 					}
 				})
-				.filter((value, index, array) => {
+				.filter((value, index, array): value is POSITION => {
 					return value != undefined && array.indexOf(value) === index
 				})
 		} else {

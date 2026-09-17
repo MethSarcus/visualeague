@@ -2,7 +2,6 @@
 import {
 	Box,
 	Button,
-	Center,
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
@@ -13,15 +12,9 @@ import {
 	Flex,
 	FormControl,
 	FormLabel,
-	HStack,
 	IconButton,
-	Input,
-	NumberInput,
-	NumberInputField,
 	Spacer,
-	Spinner,
 	Switch,
-	Tooltip,
 	useDisclosure,
 	VStack,
 } from '@chakra-ui/react'
@@ -29,14 +22,10 @@ import {produce} from 'immer'
 import React, {useContext, useEffect} from 'react'
 import {GoGear} from 'react-icons/go'
 import League from '../../classes/custom/League'
-import LeagueMember from '../../classes/custom/LeagueMember'
-import MemberScores from '../../classes/custom/MemberStats'
-import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../classes/custom/Player'
+import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {LeagueSettings, ScoringSettings} from '../../classes/sleeper/LeagueSettings'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
-import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
-import {getReadableScoringKey} from '../../utility/rosterFunctions'
 import ScoringInputField from '../forms/ScoringInputField'
 
 interface MyProps {
@@ -45,9 +34,9 @@ interface MyProps {
 
 const SettingsSidebar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [
+	const [playerDetails] = useContext(PlayerDetailsContext) as [
 		Map<string, DatabasePlayer>,
-		any
+		unknown
 	]
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
@@ -57,18 +46,18 @@ const SettingsSidebar = (props: MyProps) => {
 		context.settings.taxiIncludedInMaxPf
 	)
 
-	function onCheckboxClick(e: any) {
+	function onCheckboxClick(e: React.ChangeEvent<HTMLInputElement>) {
 		setCustomScoringChecked(e.target.checked)
 	}
 
-	function onTaxiCheckboxChanged(e: any) {
+	function onTaxiCheckboxChanged(e: React.ChangeEvent<HTMLInputElement>) {
 		setTaxiIncludedMaxPfChecked(e.target.checked)
 	}
 
 	const onInputChange = async (e: {target: {id: string | number; value: string}}) => {
 		setCustomSettings(
 			produce(customSettings, (draftState: ScoringSettings) => {
-				;(draftState as any)[e.target.id] = parseFloat(e.target.value)
+				(draftState as unknown as Record<string, number>)[e.target.id] = parseFloat(e.target.value)
 			})
 		)
 	}

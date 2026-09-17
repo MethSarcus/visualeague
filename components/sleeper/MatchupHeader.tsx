@@ -1,20 +1,15 @@
 'use client'
 import {
 	Flex,
-	Avatar,
 	Center,
 	Box,
-	Text,
-	useMultiStyleConfig,
 	ModalHeader,
 	Circle,
 } from '@chakra-ui/react'
 import {useContext} from 'react'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import Matchup from '../../classes/custom/Matchup'
 import MatchupInterface from '../../classes/custom/MatchupInterface'
 import {LeagueContext} from '../../contexts/LeagueContext'
-import {project_colors} from '../../utility/project_colors'
 import HorizontalPillSelector from './HorizontalPillSelector'
 import MatchupHeaderTeam from './MatchupHeaderTeam'
 
@@ -29,7 +24,7 @@ interface MyProps {
 }
 
 const MatchupHeader = (props: MyProps) => {
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	if (context.settings == undefined)
 		return (
 			<ModalHeader>

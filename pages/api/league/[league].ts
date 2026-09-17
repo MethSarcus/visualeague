@@ -34,6 +34,14 @@ function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) 
 	})
 }
 
+async function fetchSleeperJson(url: string) {
+	const response = await fetch(url)
+	if (!response.ok) {
+		throw new Error(`Sleeper request failed (${response.status}): ${url}`)
+	}
+	return response.json()
+}
+
 type Data = {
 	league: LeagueData
 }
@@ -64,56 +72,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export function getLeague(leagueId: string) {
-	// gets league details
-	return new Promise((resolve) => {
-		setTimeout(
-			() =>
-				resolve(fetch(`https://api.sleeper.app/v1/league/${leagueId}/`).then((response) => response.json())),
-			200
-		)
-	})
+	return fetchSleeperJson(`https://api.sleeper.app/v1/league/${leagueId}/`)
 }
 
 export function getLeagueMembers(leagueId: string) {
-	return new Promise((resolve) => {
-		setTimeout(
-			() =>
-				resolve(
-					fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`).then((response) => response.json())
-				),
-			200
-		)
-	})
+	return fetchSleeperJson(`https://api.sleeper.app/v1/league/${leagueId}/users`)
 }
 
 function getLeagueRosters(leagueId: string) {
 	// gets league details
-	return new Promise((resolve) => {
-		setTimeout(
-			() =>
-				resolve(
-					fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`).then((response) => response.json())
-				),
-			200
-		)
-	})
+	return fetchSleeperJson(`https://api.sleeper.app/v1/league/${leagueId}/rosters`)
 }
 
 function getMatchupPromises(leagueId: string, startWeek: number, endWeek: number) {
 	const promises = []
 	for (let i = startWeek; i <= endWeek; i++) {
 		promises.push(
-			new Promise((resolve) => {
-				setTimeout(
-					() =>
-						resolve(
-							fetch(`https://api.sleeper.app/v1/league/${leagueId}/matchups/${i}`).then((response) =>
-								response.json()
-							)
-						),
-					200
-				)
-			})
+			fetchSleeperJson(`https://api.sleeper.app/v1/league/${leagueId}/matchups/${i}`)
 		)
 	}
 
@@ -127,15 +102,11 @@ async function getMatchups(leagueId: string, leagueSettings: LeagueSettings) {
 	const matchups = (await Promise.all(
 		getMatchupPromises(leagueId, start_week, endWeek)
 	)) as SleeperMatchup[][]
-	for (let i = start_week; i <= endWeek; i++) {
-		matchups.forEach((weekMatchups) => {
-			weekMatchups.forEach((curMatch) => {
-				curMatch.players.forEach((playerId: string) => {
-					allPlayers.add(playerId)
-				})
-			})
+	matchups.forEach((weekMatchups) => {
+		weekMatchups.forEach((curMatch) => {
+			curMatch.players.forEach((playerId: string) => allPlayers.add(playerId))
 		})
-	}
+	})
 
 	return {matchups, allPlayers}
 }

@@ -7,7 +7,7 @@ import { project_colors } from "../utility/project_colors";
 
 type MyProps = {
   user: LeagueMember
-  setFocusFunction: (rosterID: number) => {}
+  setFocusFunction: (rosterID: number) => void
   focusedRosterId: number
 };
 

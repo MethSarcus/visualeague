@@ -1,27 +1,22 @@
-import {background, Box, Stack} from '@chakra-ui/react'
+import {Box, Stack} from '@chakra-ui/react'
 import {useContext} from 'react'
 import League from '../../classes/custom/League'
 import { DatabasePlayer } from '../../classes/custom/Player'
 import Trade from '../../classes/custom/Trade'
 import {TradedPick} from '../../classes/sleeper/DraftPick'
-import {
-	Adds,
-	SleeperTransaction,
-} from '../../classes/sleeper/SleeperTransaction'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
 import TradeSide from '../groups/transactions/TradeSide'
-import Card from './Card'
 
 interface MyProps {
 	trade: Trade | undefined
 }
 
 export default function TradeCard(props: MyProps) {
-	const [context, setContext] = useContext(LeagueContext)
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [
+	const [context] = useContext(LeagueContext) as [League, unknown]
+	const [playerDetails] = useContext(PlayerDetailsContext) as [
 		Map<string, DatabasePlayer>,
-		any
+		unknown
 	]
 	//Gotta reverse the order of the roster add/drops and make them easily accessable
 	const rosterPlayerAdds = new Map<number, (number | string)[]>()
@@ -114,7 +109,7 @@ export default function TradeCard(props: MyProps) {
 					<TradeSide
 						key={id}
 						rosterId={0}
-						ownerName={context.members.get(id).name}
+						ownerName={context.members.get(id)?.name ?? 'Unknown'}
 						playerAdds={
 							rosterPlayerAdds.get(id)?.map((playerId) => {
 								return playerDetails.get(playerId.toString())
@@ -135,4 +130,4 @@ export default function TradeCard(props: MyProps) {
 	)
 }
 
-function getAdds(owner_id: number, adds: Adds) {}
+

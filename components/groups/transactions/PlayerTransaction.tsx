@@ -1,4 +1,4 @@
-import { Avatar, Box, Center, Heading, HStack, Icon, Text } from "@chakra-ui/react";
+import { Avatar, Box, Heading, HStack, Icon, Text } from "@chakra-ui/react";
 import { SleeperPlayerDetails } from "../../../classes/custom/Player";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
@@ -29,7 +29,7 @@ export default function PlayerTransaction(props: MyProps) {
         name={name}
         size={"sm"}
         backgroundColor="rgb(239, 239, 239)"
-        src={isNaN(+props.player?.player_id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.player_id?.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.player_id}.jpg`}
+        src={isNaN(Number(props.player?.player_id)) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.player_id?.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.player_id}.jpg`}
 
       />
       <Box>

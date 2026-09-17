@@ -10,10 +10,8 @@ import {
 	SkeletonText,
 	Text,
 	Tooltip,
-	useMultiStyleConfig,
 	VStack,
 } from '@chakra-ui/react'
-import {useRouter} from 'next/router'
 import { useState } from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
@@ -55,14 +53,14 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 									label={`${props.member?.stats.divisionWins} - ${
 										props.member?.stats.divisionLosses
 									} ${
-										props.member?.stats?.divisionTies ?? 0 > 0
+										(props.member?.stats?.divisionTies ?? 0) > 0
 											? `-${props.member?.stats?.divisionTies}`
 											: ''
 									} Division Record`}
 								>
 									<Text p={0}>
 										{props.member?.stats.wins} - {props.member?.stats.losses}{' '}
-										{props.member?.stats?.ties ?? 0 > 0
+										{(props.member?.stats?.ties ?? 0) > 0
 											? `- ${props.member?.stats?.ties}`
 											: ''}
 									</Text>
@@ -72,10 +70,10 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 					</Center>
 				</GridItem>
 				<GridItem area={'linechart'}>
-					{props.league?.settings != undefined && (
+					{props.league?.settings != undefined && props.member != undefined && (
 						<TrendingLineChart
 							league={props.league}
-							memberId={props.member?.roster.roster_id!}
+							memberId={props.member.roster.roster_id}
 						/>
 					)}
 				</GridItem>

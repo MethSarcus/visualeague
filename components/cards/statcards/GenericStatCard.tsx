@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Box, Container, Flex, SkeletonText, Spacer } from "@chakra-ui/react";
+import { Avatar, Box, Flex, SkeletonText, Spacer } from "@chakra-ui/react";
 
 type MyProps = {
   statName?: String | null | undefined;

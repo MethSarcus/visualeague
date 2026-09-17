@@ -4,6 +4,7 @@ import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
 import DataTable, { TableColumn } from 'react-data-table-component'
 import { AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE } from '../../classes/custom/Draft'
+import { project_colors } from '../../utility/project_colors'
 import { customDatatableStyles } from './LeagueOverviewDatatable'
 
 interface MyProps {
@@ -60,9 +61,19 @@ const DraftValueTable = (props: MyProps) => {
 
 	const conditionalRowStyles = [
 		{
-			when: (row: any) => true,
+			when: (row: DataRow) => row.value > 0,
 			style: {
-				backgroundColor: "green",
+				backgroundColor: project_colors.statColor.good,
+				color: "white",
+				"&:hover": {
+					cursor: "pointer",
+				},
+			},
+		},
+		{
+			when: (row: DataRow) => row.value < 0,
+			style: {
+				backgroundColor: project_colors.statColor.bad,
 				color: "white",
 				"&:hover": {
 					cursor: "pointer",

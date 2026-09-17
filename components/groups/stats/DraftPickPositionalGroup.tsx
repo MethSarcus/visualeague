@@ -1,4 +1,4 @@
-import {Box, Center, HStack, Text, VStack} from '@chakra-ui/react'
+import {HStack, Text, VStack} from '@chakra-ui/react'
 import {DraftPlayer} from '../../../classes/custom/Draft'
 import { project_colors } from '../../../utility/project_colors'
 import {POSITION} from '../../../utility/rosterFunctions'

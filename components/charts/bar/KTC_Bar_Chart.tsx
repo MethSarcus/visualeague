@@ -1,11 +1,11 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {BarDatum, ResponsiveBar} from '@nivo/bar'
-import { useContext } from 'react'
+import {BarDatum, ComputedDatum, ResponsiveBar} from '@nivo/bar'
+import { useContext, useMemo } from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
 import { SleeperPlayerDetails } from '../../../classes/custom/Player'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
-import {getPositionColor} from '../../../utility/rosterFunctions'
+import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
 
 interface MyProps {
 	league?: League
@@ -18,15 +18,19 @@ const theme = {
 
 const KTC_Bar_Chart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	const [playerDetails, setPlayerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, any];
-	if (props.league?.settings == undefined || playerDetails?.size < 1) return <Spinner />
-	let formattedData = formatScoresForBarChart(props.league, playerDetails)
-	let keys = formattedData.chartKeys
-	let data = formattedData.chartData as BarDatum[]
+	const [playerDetails] = useContext(PlayerDetailsContext) as [Map<string, SleeperPlayerDetails>, unknown];
+	const league = props.league
+	const formattedData = useMemo(() => {
+		if (league?.settings == undefined || (playerDetails?.size ?? 0) < 1) return undefined
+		return formatScoresForBarChart(league, playerDetails)
+	}, [league, playerDetails])
+	if (formattedData == undefined) return <Spinner />
+	const keys = formattedData.chartKeys
+	const data = formattedData.chartData as BarDatum[]
 	if (data.length <= 0) return <Spinner />
-	const getColor = (bar: BarDatum) => {
+	const getColor = (bar: ComputedDatum<BarDatum>) => {
 		return getPositionColor(
-			playerDetails?.get(bar.id as any)?.position as any
+			(playerDetails?.get(String(bar.id))?.position ?? undefined) as POSITION
 		)
 	}
 	return (
@@ -34,7 +38,7 @@ const KTC_Bar_Chart = (props: MyProps) => {
 			data={data}
 			keys={keys}
 			tooltip={({id, value, color}) => {
-				let playerDets = playerDetails?.get(id as any)
+				let playerDets = playerDetails?.get(String(id))
 				return (
 					<div
 						style={{
@@ -79,7 +83,7 @@ const KTC_Bar_Chart = (props: MyProps) => {
 				legendOffset: 0,
 			}}
 			enableLabel={false}
-			colors={getColor as any}
+			colors={getColor}
 			legends={[
 				{
 					dataFrom: 'keys',

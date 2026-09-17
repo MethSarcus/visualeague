@@ -17,9 +17,8 @@ const UsernameForm = () => {
 
 	useEffect(() => {
 		if ('usernames' in localStorage) {
-			setStoredUsernames(
-				JSON.parse(localStorage.getItem('usernames') as string)
-			)
+			const saved = JSON.parse(localStorage.getItem('usernames') as string)
+			setStoredUsernames(Array.isArray(saved) ? saved : [])
 		}
 	}, [])
 
@@ -35,10 +34,12 @@ const UsernameForm = () => {
 
 	const onFormSubmit = (e: React.SyntheticEvent) => {
 		e.preventDefault()
+		const normalizedUsername = text.trim().toLowerCase()
 		setUsernameSubmitted(true)
-		if (!storedUsernames.includes(text.toLowerCase()) && text != '') {
-			storedUsernames.push(text.toLowerCase())
-			localStorage.setItem('usernames', JSON.stringify(storedUsernames))
+		if (normalizedUsername && !storedUsernames.includes(normalizedUsername)) {
+			const nextUsernames = [...storedUsernames, normalizedUsername]
+			setStoredUsernames(nextUsernames)
+			localStorage.setItem('usernames', JSON.stringify(nextUsernames))
 		}
 	}
 

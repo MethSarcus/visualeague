@@ -1,6 +1,6 @@
 import { Box, Center, HStack, useRadio, useRadioGroup, UseRadioProps } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { project_colors } from "../../utility/project_colors";
-
 
 interface MyProps {
     onclick: (selected: string) => void
@@ -34,7 +34,7 @@ export default function HorizontalPillSelector(props: MyProps) {
   }
 
 
-export function RadioCard(props: any) {
+export function RadioCard(props: UseRadioProps & { children?: ReactNode }) {
     const { getInputProps, getRadioProps } = useRadio(props)
   
     const input = getInputProps()

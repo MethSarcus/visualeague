@@ -1,5 +1,4 @@
 import { Avatar, AvatarBadge, Tooltip } from "@chakra-ui/react";
-import LeagueMember from "../../classes/custom/LeagueMember";
 import { OrdinalStatInfo } from "../../classes/custom/OrdinalStatInfo";
 
 interface MyProps {

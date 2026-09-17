@@ -9,7 +9,7 @@ type MyProps = { draftId: string };
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 const PicksTable = (props: MyProps) => {
-  const [context, setContext] = useContext(LeagueContext);
+  const [context] = useContext(LeagueContext);
   const { data, error } = useSWR('https://api.sleeper.app/v1/draft/' + props.draftId + '/picks', fetcher)
 
   if (error) return <div>Failed to load</div>

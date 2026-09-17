@@ -3,13 +3,11 @@ import {
 	Avatar,
 	Box,
 	Button,
-	Center,
 	Flex,
 	Modal,
 	ModalOverlay,
 	Skeleton,
 	SkeletonCircle,
-	Spacer,
 	Text,
 	useDisclosure,
 	VStack,
@@ -33,7 +31,7 @@ type MyProps = {
 
 const WeekStatCard = (props: MyProps) => {
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 
 	let leagueMember
 

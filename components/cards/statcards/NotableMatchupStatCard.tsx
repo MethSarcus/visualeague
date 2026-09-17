@@ -4,11 +4,8 @@ import {
 	AvatarBadge,
 	Box,
 	Button,
-	Card,
-	CardHeader,
 	Center,
 	Flex,
-	HStack,
 	Modal,
 	ModalOverlay,
 	Skeleton,
@@ -37,7 +34,7 @@ type MyProps = {
 
 const NotableMatchupStatCard = (props: MyProps) => {
 	const {isOpen, onOpen, onClose} = useDisclosure()
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	let homeMember
 	let awayMember
 	let awayBadgeColor = project_colors.outcomeColor.tie_color

@@ -2,7 +2,7 @@ import {
   Box, Flex, Spacer, Text
 } from '@chakra-ui/react'
 import { MatchupPlayer } from '../../classes/custom/MatchupPlayer'
-import { DatabasePlayer, SleeperPlayerDetails } from '../../classes/custom/Player'
+import { DatabasePlayer } from '../../classes/custom/Player'
 import { project_colors } from '../../utility/project_colors'
 
 interface MyProps {

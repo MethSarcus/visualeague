@@ -26,12 +26,7 @@ interface MyProps {
 
 export default function RosterPlayer(props: MyProps) {
 	const {isOpen, onToggle} = useDisclosure()
-	try {
-		props.playerDetails?.details?.fantasy_positions[0]
-	} catch (error) {
-		console.log(props.playerDetails)
-	}
-	
+	const playerId = props.playerDetails?.details?.player_id
 	return (
 		<Box
 			bg={project_colors.sleeper.background_dark}
@@ -70,9 +65,9 @@ export default function RosterPlayer(props: MyProps) {
 				<Avatar
 					size={'xs'}
 					src={
-						isNaN(+props.playerDetails?.details?.player_id!)
-							? `https://sleepercdn.com/images/team_logos/nfl/${props.playerDetails?.details?.player_id.toLowerCase()}.png`
-							: `https://sleepercdn.com/content/nfl/players/${props.playerDetails?.details?.player_id}.jpg`
+						isNaN(Number(playerId))
+							? `https://sleepercdn.com/images/team_logos/nfl/${playerId?.toLowerCase()}.png`
+							: `https://sleepercdn.com/content/nfl/players/${playerId}.jpg`
 					}
 				/>
 				<Box textAlign={'start'}>
@@ -83,7 +78,7 @@ export default function RosterPlayer(props: MyProps) {
 						noOfLines={1}
 						textOverflow={"clip"}
 					>
-						{props.playerDetails?.details?.first_name.charAt(0)}.{' '}
+						{props.playerDetails?.details?.first_name?.charAt(0)}.{' '}
 						{props.playerDetails?.details?.last_name}
 					</Text>
 					<Text
