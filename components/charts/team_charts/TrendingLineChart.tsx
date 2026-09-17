@@ -1,4 +1,4 @@
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useMediaQuery } from "@chakra-ui/react";
 import { LineSeries, ResponsiveLine } from "@nivo/line";
 import { useMemo } from "react";
 import League from "../../../classes/custom/League";
@@ -11,10 +11,12 @@ interface MyProps {
 
 const TrendingLineChart = (props: MyProps) => {
   const {league, memberId} = props
+  const [isOnMobile] = useMediaQuery('(max-width: 768px)')
   const data = useMemo(() => formatScoresForLineChart(league, memberId), [league, memberId]);
   const theme = {
     background: project_colors.surface[1],
     textColor: "white",
+    axis: {ticks: {text: {fontSize: 8}}},
   };
 
   if (data == undefined || data.length <= 0) return <Spinner />;
@@ -25,7 +27,7 @@ const TrendingLineChart = (props: MyProps) => {
     <ResponsiveLine
       data={data}
       theme={theme}
-      margin={{ top: 10, right: 25, bottom: 10, left: 5 }}
+      margin={{ top: 10, right: 25, bottom: isOnMobile ? 10 : 25, left: 5 }}
       yScale={{
         type: "linear",
         min: "auto",
@@ -38,11 +40,15 @@ const TrendingLineChart = (props: MyProps) => {
       axisLeft={null}
       enableGridY={false}
       enableGridX={false}
+      axisBottom={isOnMobile ? null : {
+        tickSize: 0,
+        tickPadding: 5,
+        format: (value) => `Week (${value})`,
+      }}
       colors={{ scheme: "dark2" }}
       pointSize={3}
-      pointColor={{ theme: "background" }}
-      pointBorderWidth={1}
-      pointBorderColor={{ from: "serieColor" }}
+      pointColor={{ from: "series.color", modifiers: [["brighter", 1.1]] }}
+      pointBorderWidth={0}
       useMesh={true}
       legends={[]}
       tooltip={({ point }) => {
@@ -79,7 +85,7 @@ function formatScoresForLineChart(league: League, memberId: number): LineSeries[
   const member = league.members.get(memberId);
   if (!member) return undefined
 
-  const weekScores: {x: string; y: number | null}[] = [];
+  const weekScores: {x: number; y: number | null}[] = [];
   const startWeek = 1;
   const endWeek = league.weeks.size;
 
@@ -87,7 +93,7 @@ function formatScoresForLineChart(league: League, memberId: number): LineSeries[
     const curWeek = league.weeks.get(i);
     if (curWeek) {
       weekScores.push({
-        x: "Week " + curWeek.weekNumber,
+        x: curWeek.weekNumber,
         y: curWeek.getMemberMatchupSide(memberId)?.pf ?? null,
       });
     }

@@ -49,9 +49,8 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 			enableGridX={false}
 			colors={{scheme: 'dark2'}}
 			pointSize={3}
-			pointColor={"white"}
-			pointBorderWidth={1}
-			pointBorderColor={{from: 'serieColor'}}
+			pointColor={{from: 'series.color', modifiers: [['brighter', 1.1]]}}
+			pointBorderWidth={0}
 			useMesh={true}
 			legends={[]}
 			tooltip={({point}) => {

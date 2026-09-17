@@ -40,9 +40,8 @@ const WeeklyTradesLineChart = (props: MyProps) => {
                 </div>
             )
         }}
-      pointColor={{ theme: "background" }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: "serieColor" }}
+      pointColor={{ from: "series.color", modifiers: [["brighter", 1.1]] }}
+      pointBorderWidth={0}
       useMesh={true}
       debugMesh={false}
     />

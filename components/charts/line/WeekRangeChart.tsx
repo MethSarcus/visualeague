@@ -105,9 +105,8 @@ const WeekRangeChart = (props: MyProps) => {
 					</div>
 				)
 			}}
-			pointColor={isOnMobile ? {from: "color"} : {theme: 'background'}}
-			pointBorderWidth={2}
-			pointBorderColor={{from: 'serieColor'}}
+			pointColor={{from: 'series.color', modifiers: [['brighter', 1.1]]}}
+			pointBorderWidth={0}
 			pointLabelYOffset={-12}
 			useMesh={true}
 			debugMesh={false}

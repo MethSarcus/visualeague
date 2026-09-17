@@ -29,7 +29,12 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
   const [imageLoaded, setImageLoaded] = useState(false)
 	return (
 		<Card boxShadow={'lg'} rounded={'md'} bg='surface.0' textColor={'white'} height={"max-content"}>
-			<Grid templateAreas={`"member linechart linechart"`} gap='1'>
+			<Grid
+				templateAreas={`"member linechart"`}
+				templateColumns='max-content minmax(0, 1fr)'
+				gap='1'
+				width='100%'
+			>
 				<GridItem area={'member'}>
 					<Center>
 						<Skeleton isLoaded={imageLoaded} fadeDuration={4} >
@@ -69,7 +74,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 						</VStack>
 					</Center>
 				</GridItem>
-				<GridItem area={'linechart'}>
+				<GridItem area={'linechart'} minWidth={0}>
 					{props.league?.settings != undefined && props.member != undefined && (
 						<TrendingLineChart
 							league={props.league}
