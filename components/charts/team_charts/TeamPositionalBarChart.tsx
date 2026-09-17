@@ -50,6 +50,7 @@ const TeamPositionalBarChart = (props: MyProps) => {
 			indexScale={{type: 'band', round: true}}
 			borderWidth={.2}
             borderColor={project_colors.surface[0]}
+            maxValue={maxValue}
             colors={Object.keys(PositionColors).filter(colKey => keys.includes(colKey)).map(colKey => PositionColors[colKey])}
 			axisTop={null}
 			axisRight={null}
