@@ -5,7 +5,7 @@ This project uses [Next.js](https://nextjs.org/) with [Chakra UI](https://chakra
 
 This app uses the experimental features provided with [NextJS 13](https://nextjs.org/blog/next-13) so make sure to read up on those changes
 
-Node.js 18.18 or newer is required by the current Next.js version.
+Node.js 20.9 or newer is required by the current Next.js version.
 
 ## Getting Started
 
