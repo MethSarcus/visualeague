@@ -23,14 +23,12 @@ const TeamPositionalBarChart = (props: MyProps) => {
 
 		const data = formatScoresForBarChart(member, league.getPositions())
 
-		let maxValue = 0
-		league.members.forEach(mem => {
-			mem.stats.position_scores.forEach(score => {
-				if (score > maxValue) {
-					maxValue = score
-				}
-			})
-		})
+		const maxValue = Math.max(
+			0,
+			...Array.from(league.members.values()).flatMap((mem) =>
+				Array.from(mem.stats.position_scores.values())
+			)
+		)
 
 		return {...data, maxValue}
 	}, [league, memberId])
@@ -46,11 +44,10 @@ const TeamPositionalBarChart = (props: MyProps) => {
 			indexBy='user'
 			margin={{top: 0, right: 0, bottom: 0, left: 0}}
 			groupMode='grouped'
-			valueScale={{type: 'linear'}}
+			valueScale={{type: 'linear', min: 0, max: maxValue}}
 			indexScale={{type: 'band', round: true}}
 			borderWidth={.2}
             borderColor={project_colors.surface[0]}
-            maxValue={maxValue}
             colors={Object.keys(PositionColors).filter(colKey => keys.includes(colKey)).map(colKey => PositionColors[colKey])}
 			axisTop={null}
 			axisRight={null}

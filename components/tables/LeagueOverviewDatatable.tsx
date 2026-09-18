@@ -16,32 +16,27 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			name: "Team",
 			selector: (row) => row.name,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "Record",
 			selector: (row) => row.record,
 			sortable: true,
-			grow: 1,
 			omit: isOnMobile,
 		},
 		{
 			name: "PF",
 			selector: (row) => row.pf,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "OPSLAP",
 			selector: (row) => row.opslap,
-			sortable: true,
-			grow: 1
+			sortable: true
 		},
 		{
 			name: "PA",
 			selector: (row) => row.pa,
 			sortable: true,
-			grow: 1,
 			omit: isOnMobile,
 		},
 		
@@ -49,13 +44,11 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			name: "PP",
 			selector: (row) => row.pp,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "GP",
 			selector: (row) => row.gp,
 			sortable: true,
-			grow: 1,
 		},
 	
 	]

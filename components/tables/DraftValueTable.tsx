@@ -28,36 +28,29 @@ const DraftValueTable = (props: MyProps) => {
 	const cols: TableColumn<DataRow>[] = [{
 		name: "name",
 		selector: (row) => row.name,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}, {
 		name: "ppg",
 		selector: (row) => row.ppg,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}, {
 		name: "pf",
 		selector: (row) => row.pf,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}]
 	
 	if (props.draft?.settings.type != DRAFT_TYPE.AUCTION ) {
 		cols.push({name: 'pick_no', selector: (row) => row.pick_no ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 	} else {
 		cols.push({name: 'amount', selector: (row) => row.amount ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 		cols.push({name: 'ppd', selector: (row) => row.ppd ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 	}
 
 	cols.push({name: 'value', selector: (row) => row.value,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 
 	const conditionalRowStyles = [
 		{

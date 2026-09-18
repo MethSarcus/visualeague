@@ -1,5 +1,4 @@
 import { Avatar, Box, Button, Center } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import LeagueMember from "../classes/custom/LeagueMember";
 import { SleeperUser } from "../classes/sleeper/SleeperUser";
