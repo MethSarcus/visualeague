@@ -1,8 +1,6 @@
-import { AvatarGroup, Box, HStack } from "@chakra-ui/react"
-import LeagueMember from "../../classes/custom/LeagueMember"
+import { Box, HStack, Text } from "@chakra-ui/react"
 import { OrdinalStatInfo } from "../../classes/custom/OrdinalStatInfo"
 import NumericalAvatar from "./NumericalAvatar"
-import { Text } from '@chakra-ui/react'
 
 interface MyProps {
     avatars: OrdinalStatInfo[]

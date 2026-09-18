@@ -1,26 +1,11 @@
 import {
 	Avatar,
-	Box,
-	Button,
 	Center,
 	Grid,
 	GridItem,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
 	Spinner,
-	Tooltip,
-	useDisclosure,
 } from '@chakra-ui/react'
-import React from 'react'
 import League from '../../classes/custom/League'
-import {MatchupSide} from '../../classes/custom/MatchupSide'
-import {Week} from '../../classes/custom/Week'
-import {project_colors} from '../../utility/project_colors'
 import AllPlayStatBox, { StatBoxProps } from './AllPlayStatBox'
 
 interface MyProps {
@@ -31,7 +16,6 @@ interface MyProps {
 const AllPlayRankGroup = (props: MyProps) => {
 	const firstRow: MemberNameProps[] = []
 	const bodyRows: (MemberNameProps | StatBoxProps)[] = []
-	const data: object[] = []
 
 	if (!props.league?.members) return <Spinner />
 	props.league?.members.forEach((member) => {

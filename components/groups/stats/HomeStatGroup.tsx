@@ -1,7 +1,6 @@
 "use client"
-import { Flex, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
-import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
 import GenericStatCard from "../../cards/statcards/GenericStatCard";
 
 interface MyProps {

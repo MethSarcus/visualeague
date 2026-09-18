@@ -31,8 +31,8 @@ export default async function handler(
     const playerDetails = await getPlayerStats(
       connectToDatabase(),
       playerId as string,
-      weekNumber as unknown as number,
-      season as unknown as number
+      season as unknown as number,
+      weekNumber as unknown as number
     );
     res
       .status(200)
@@ -58,8 +58,8 @@ export async function getPlayerDetails(
 
     let query = { _id: playerId };
 
-    let res = await collection.findOne(query);
-    return res.stats;
+    const player = await collection.findOne(query);
+    return player?.details ?? player;
   } catch (err) {
     console.log(err);
   }
@@ -151,7 +151,7 @@ export async function getMultiPlayerStats(
   try {
     const db = client.db(`${season}`);
 
-    let weekData = db.collection(`week_${week}`);
+    let weekData = db.collection(`week_${week}_stats`);
     let query = { _id: { $in: playerIds } };
     let data = await weekData.find(query).toArray();
     return data;
@@ -217,13 +217,11 @@ export async function getWeeklyPlayerStats(
     }
     let query = { _id: { $in: playerIds } };
 
-    await Promise.all(weeks.map(weekNumber => {
-      return db.collection(`week_${weekNumber}`)
+    return Promise.all(weeks.map(weekNumber => {
+      return db.collection(`week_${weekNumber}_stats`)
         .find(query)
         .toArray()
-    }));
-
-    return weeks
+    }))
   } catch (err) {
     console.log(err);
   }

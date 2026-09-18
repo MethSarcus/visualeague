@@ -1,5 +1,5 @@
 import { Text, VStack } from "@chakra-ui/react";
-import { DatabasePlayer, SleeperPlayerDetails } from "../../../classes/custom/Player";
+import { DatabasePlayer } from "../../../classes/custom/Player";
 import { TradedPick } from "../../../classes/sleeper/DraftPick";
 import DraftPickTransaction from "./DraftPickTransaction";
 import FaabTransaction from "./FaabTransaction";

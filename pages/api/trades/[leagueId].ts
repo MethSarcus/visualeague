@@ -70,16 +70,13 @@ function getTradePromises(
   const promises = [];
   for (let i = startWeek; i <= endWeek; i++) {
     promises.push(
-      new Promise((resolve) => {
-        setTimeout(
-          () =>
-            resolve(
-              fetch(
-                `https://api.sleeper.app/v1/league/${leagueId}/transactions/${i}`
-              ).then((response) => response.json())
-            ),
-          200
-        );
+      fetch(
+        `https://api.sleeper.app/v1/league/${leagueId}/transactions/${i}`
+      ).then((response) => {
+        if (!response.ok) {
+          throw new Error(`Sleeper request failed (${response.status})`)
+        }
+        return response.json()
       })
     );
   }

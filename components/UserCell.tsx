@@ -1,5 +1,7 @@
+"use client";
+
 import { Avatar, Box, Button, Center } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { SleeperUser } from "../classes/sleeper/SleeperUser";
 
 type MyProps = {
@@ -19,9 +21,9 @@ const UserCell = (props: MyProps) => {
         mr={2}
       />
       <Box as="p">{props.user.display_name}</Box>
-      <Button ml={2} variant="outline" size="xs" colorScheme={"primary"} onClick={() => {router.push({
-                  pathname: "/league/" + props.user.league_id
-                })}}>
+      <Button ml={2} variant="outline" size="xs" colorScheme={"primary"} onClick={() => {
+        router.push(`/league/${props.user.league_id}`)
+      }}>
         View
       </Button>
     </Center>

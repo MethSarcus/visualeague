@@ -2,15 +2,11 @@
 import {
   Avatar,
   Box,
-  Center,
-  Container,
-  Flex,
   Text,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/react";
 import {SleeperPlayerDetails } from "../../../classes/custom/Player";
 import SeasonPlayer from "../../../classes/custom/SeasonPlayer";
+import { getGoodBadBorderColor, getPlayerAvatarSrc } from "../../../utility/statCardHelpers";
 
 type MyProps = {
   player: SeasonPlayer | undefined;
@@ -22,13 +18,8 @@ type MyProps = {
   isGoodThing: boolean | undefined;
 };
 
-const TeamStatCard = (props: MyProps) => {
-  let borderColor = "#B00020";
-  if (props.isGoodThing == null || props.isGoodThing == undefined) {
-    borderColor = "grey";
-  } else if (props.isGoodThing == true) {
-    borderColor = "rgb(151,245,143, .8)";
-  }
+const TeamPlayerStatCard = (props: MyProps) => {
+  const borderColor = getGoodBadBorderColor(props.isGoodThing);
 
   return (
     <Box
@@ -39,6 +30,8 @@ const TeamStatCard = (props: MyProps) => {
       border={"1px"}
       borderRadius={4}
       boxShadow={"2xl"}
+      borderTop="2px"
+      borderTopColor={borderColor}
       minW={"200px"}
       minH={"175px"}
     >
@@ -55,7 +48,7 @@ const TeamStatCard = (props: MyProps) => {
         size={"md"}
         borderWidth={"1px"}
         borderColor={"grey"}
-        src={isNaN(+props.player?.id!) ? `https://sleepercdn.com/images/team_logos/nfl/${props.player?.id.toLowerCase()}.png` : `https://sleepercdn.com/content/nfl/players/${props.player?.id}.jpg`}
+        src={getPlayerAvatarSrc(props.player?.id)}
       />
 
       <Text
@@ -76,4 +69,4 @@ const TeamStatCard = (props: MyProps) => {
   );
 };
 
-export default TeamStatCard;
+export default TeamPlayerStatCard;

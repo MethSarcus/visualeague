@@ -1,15 +1,12 @@
 "use client";
-import { Box, Flex, HStack, SimpleGrid, Spacer } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useContext } from "react";
 import League from "../../../classes/custom/League";
-import { OrdinalStatInfo } from "../../../classes/custom/OrdinalStatInfo";
-import { DatabasePlayer, PlayerScores, SleeperPlayerDetails } from "../../../classes/custom/Player";
+import { DatabasePlayer, PlayerScores } from "../../../classes/custom/Player";
 import { PlayerDetailsContext } from "../../../contexts/PlayerDetailsContext";
 import { PlayerScoresContext } from "../../../contexts/PlayerScoresContext";
 import { POSITION } from "../../../utility/rosterFunctions";
-import GenericStatCard from "../../cards/statcards/GenericStatCard";
 import TeamPlayerStatCard from "../../cards/statcards/TeamPlayerStatCard";
-import TeamStatCard from "../../cards/statcards/TeamStatCard";
 
 interface MyProps {
   league?: League;
@@ -18,8 +15,8 @@ interface MyProps {
 }
 
 const TeamPlayerStatGroup = (props: MyProps) => {
-  const [playerScoresContext, setPlayerInfoContext] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, any];
-  const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
+  const [playerScoresContext] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, unknown];
+  const [playerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, unknown];
   if (props.league?.settings == undefined || playerScoresContext == null) return <div>Loading...</div>;
   const member = props.league?.members.get(props.memberId);
   let bestPlayer;

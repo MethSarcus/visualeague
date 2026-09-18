@@ -7,21 +7,17 @@ import {
 	Collapse,
 	Grid,
 	GridItem,
-	Image,
 	Text,
 	Tooltip,
 	useDisclosure,
-	useMultiStyleConfig,
 	VStack,
 } from '@chakra-ui/react'
-import {useRouter} from 'next/router'
 import { useContext } from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
-import {DatabasePlayer, SleeperPlayerDetails} from '../../classes/custom/Player'
+import {DatabasePlayer} from '../../classes/custom/Player'
 import { PlayerDetailsContext } from '../../contexts/PlayerDetailsContext'
 import AgeBarChart from '../charts/bar/AgeBarChart'
-import TrendingLineChart from '../charts/team_charts/TrendingLineChart'
 
 type MyProps = {
 	league: League
@@ -30,10 +26,9 @@ type MyProps = {
 	size: string
 }
 
-const TeamCardWithTrendingGraph = (props: MyProps) => {
-	const {variant, size, ...rest} = props
+const TeamCard = (props: MyProps) => {
 	const {isOpen, onToggle} = useDisclosure()
-	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, any];
+	const [playerDetailsContext] = useContext(PlayerDetailsContext) as [Map<string, DatabasePlayer>, unknown];
 	return (
 		<Card
 			boxShadow={'lg'}
@@ -59,14 +54,14 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 								label={`${props.member?.stats.divisionWins} - ${
 									props.member?.stats.divisionLosses
 								} ${
-									props.member?.stats?.divisionTies ?? 0 > 0
+									(props.member?.stats?.divisionTies ?? 0) > 0
 										? `-${props.member?.stats?.divisionTies}`
 										: ''
 								} Division Record`}
 							>
 								<Text p={0}>
 									{props.member?.stats.wins} - {props.member?.stats.losses}{' '}
-									{props.member?.stats?.ties ?? 0 > 0
+									{(props.member?.stats?.ties ?? 0) > 0
 										? `- ${props.member?.stats?.ties}`
 										: ''}
 								</Text>
@@ -77,7 +72,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 				</GridItem>
 			</Grid>
 			<Collapse in={isOpen} >
-				
+
 				<Box p={3}>
 				<Text fontSize={'xs'} mt={2} mb={1}>Additional Stats</Text>
 					<Box>
@@ -95,4 +90,4 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 	)
 }
 
-export default TeamCardWithTrendingGraph
+export default TeamCard

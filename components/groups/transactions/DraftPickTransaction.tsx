@@ -1,5 +1,4 @@
-import { Avatar, Box, Center, Heading, HStack, Icon, Text } from "@chakra-ui/react";
-import { SleeperPlayerDetails } from "../../../classes/custom/Player";
+import { Heading, HStack, Icon } from "@chakra-ui/react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { TradedPick } from "../../../classes/sleeper/DraftPick";
 import { ordinal_suffix_of } from "../../../utility/rosterFunctions";

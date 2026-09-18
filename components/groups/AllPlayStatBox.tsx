@@ -55,6 +55,9 @@ export default function AllPlayStatBox(props: StatBoxProps) {
 		cardOutlineColor = project_colors.statColor.neutral
 	}
 
+	const totalGames = props.wins + props.losses + props.ties
+	const winPct = totalGames > 0 ? ((props.wins / totalGames) * 100).toFixed(1) : '0.0'
+
 	let homeMember = props.league?.members?.get(props.homeId)
 	let awayMember = props.league?.members?.get(props.opponentId)
 
@@ -73,11 +76,7 @@ export default function AllPlayStatBox(props: StatBoxProps) {
 				placement='right'
 				isDisabled={props.disabled}
 				label={
-					(props.wins / (props.wins + props.losses + props.ties))
-						.toFixed(3)
-						.slice(1) +
-					'% Win Rate vs ' +
-					awayMember?.name
+					winPct + '% Win Rate vs ' + awayMember?.name
 				}
 			>
 				<Box

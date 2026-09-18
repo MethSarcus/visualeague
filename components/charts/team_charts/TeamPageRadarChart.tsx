@@ -1,33 +1,34 @@
-import { Box, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import { ResponsiveRadar } from "@nivo/radar";
-import { useState } from "react";
+import { useMemo } from "react";
 import League from "../../../classes/custom/League";
 import LeagueMember from "../../../classes/custom/LeagueMember";
 import { POSITION } from "../../../utility/rosterFunctions";
-import TeamRadarChart from "../TeamRadarChart";
 import { project_colors } from "../../../utility/project_colors"
 
 interface MyProps {
   league: League | undefined;
   memberId: number;
 }
+
+const theme = {
+  background: "none",
+  textColor: "white",
+}
+
 const TeamPageRadarChart = (props: MyProps) => {
+  const league = props.league
+  const memberId = props.memberId
+  const data = useMemo(() => {
+    if (league?.settings == undefined) return undefined
+    const member = league.members.get(memberId)
+    if (!member) return undefined
+    return formatScoresForRadarChart(member, league.getPositions(), league)
+  }, [league, memberId])
 
+  if (data == undefined) return <Spinner />;
 
-  if (props.league?.settings == undefined) return <Spinner />;
-
-  let data = formatScoresForRadarChart(
-    props.league.members.get(props.memberId)!,
-    props.league.getPositions() as POSITION[],
-    props.league
-  ) as any;
-
-  const theme = {
-    background: "none",
-    textColor: "white",
-  };
   return (
-
       <ResponsiveRadar
         data={data.chartData}
         keys={data.keys}
@@ -74,33 +75,28 @@ function formatScoresForRadarChart(
   positions: POSITION[],
   league: League
 ) {
-  let data: object[] = [];
-  let keys: string[] = [];
+  const data: Record<string, string | number>[] = [];
+  const keys: string[] = ["League Avg", member.name];
   let maxValue = 0
 
-  keys.push("League Avg");
-  keys.push(member.name);
-
-
   positions.forEach((position) => {
-    let positionObj: { [k: string]: any } = { position: position };
+    const positionObj: Record<string, string | number> = { position: position };
 
-    if (
-      position != undefined &&
-      !isNaN(member.stats.position_scores.get(position) as any) &&
-      !isNaN(member.stats.position_starts.get(position) as any)
-    ) {
-      let positionScore = member.stats.position_scores.get(position);
-      let positionStarts = member.stats.position_starts.get(position);
-      let positionAverage = positionScore! / positionStarts!;
+    const positionScore = member.stats.position_scores.get(position);
+    const positionStarts = member.stats.position_starts.get(position);
+    const positionAvgScore = league.stats.position_scores.get(position);
+    const positionAvgStarts = league.stats.position_starts.get(position);
+
+    if (positionScore != undefined && positionStarts) {
+      const positionAverage = positionScore / positionStarts;
       if (positionAverage > maxValue) {
         maxValue = positionAverage
       }
       positionObj[member.name] = parseFloat(positionAverage.toFixed(2));
+    }
 
-      let positionAvgScore = league.stats.position_scores.get(position);
-      let positionAvgStarts = league.stats.position_starts.get(position);
-      let positionAvgAverage = positionAvgScore! / positionAvgStarts!;
+    if (positionAvgScore != undefined && positionAvgStarts) {
+      const positionAvgAverage = positionAvgScore / positionAvgStarts;
       if (positionAvgAverage > maxValue) {
         maxValue = positionAvgAverage
       }
@@ -109,7 +105,6 @@ function formatScoresForRadarChart(
 
     data.push(positionObj);
   });
-  
 
   return { chartData: data, keys: keys, maxValue: maxValue + (maxValue / 9) };
 }

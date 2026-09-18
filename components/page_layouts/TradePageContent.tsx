@@ -1,21 +1,15 @@
 "use client"
 import {
-  Box,
-  Wrap,
-  Heading,
-  SimpleGrid,
   Container,
   Grid,
   GridItem,
+  Heading,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import League from "../../classes/custom/League";
 import Trade from "../../classes/custom/Trade";
-import { SleeperTransaction } from "../../classes/sleeper/SleeperTransaction";
-import { LeagueContext } from "../../contexts/LeagueContext";
 import TradeCard from "../cards/TradeCard";
 import TradeChordChart from "../charts/TradeChordChart";
 
@@ -32,7 +26,7 @@ const TradePageContent = () => {
     if (tradeData && tradeData.trades) {
       setTrades(tradeData.trades);
     }
-  }, [tradeData, setTrades, trades]);
+  }, [tradeData]);
 
   if (tradeError) return <Heading color={"white"}>Failed to load</Heading>;
   if (!tradeData) return <Heading color={"white"}>Loading...</Heading>;
@@ -63,14 +57,6 @@ const TradePageContent = () => {
   </Container>
 
           </GridItem>
-          {/* <GridItem color={"black"} area="chart">
-            <TradeChordChart trades={trades} />
-          </GridItem>
-          <GridItem textColor={"white"} colSpan={2} rowSpan={1} area="trades">
-          {trades.map((trade: SleeperTransaction) => {
-            return <TradeCard key={trade.transaction_id} trade={trade} />;
-          })}
-          </GridItem> */}
       </Grid>
     </Container>
   );

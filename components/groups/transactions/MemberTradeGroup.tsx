@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, HStack, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import League from "../../../classes/custom/League";
 import TradeCard from "../../cards/TradeCard";
 

@@ -12,14 +12,13 @@ const UsernameForm = () => {
 	const [text, setText] = useState('')
 	const [usernameSubmitted, setUsernameSubmitted] = useState(false)
 	const [storedUsernames, setStoredUsernames] = useState(new Array())
-	const [selectedSeason, setSelectedSeason] = useState(2025)
+	const [selectedSeason, setSelectedSeason] = useState(2026)
 	const pathname = usePathname();
 
 	useEffect(() => {
 		if ('usernames' in localStorage) {
-			setStoredUsernames(
-				JSON.parse(localStorage.getItem('usernames') as string)
-			)
+			const saved = JSON.parse(localStorage.getItem('usernames') as string)
+			setStoredUsernames(Array.isArray(saved) ? saved : [])
 		}
 	}, [])
 
@@ -35,10 +34,12 @@ const UsernameForm = () => {
 
 	const onFormSubmit = (e: React.SyntheticEvent) => {
 		e.preventDefault()
+		const normalizedUsername = text.trim().toLowerCase()
 		setUsernameSubmitted(true)
-		if (!storedUsernames.includes(text.toLowerCase()) && text != '') {
-			storedUsernames.push(text.toLowerCase())
-			localStorage.setItem('usernames', JSON.stringify(storedUsernames))
+		if (normalizedUsername && !storedUsernames.includes(normalizedUsername)) {
+			const nextUsernames = [...storedUsernames, normalizedUsername]
+			setStoredUsernames(nextUsernames)
+			localStorage.setItem('usernames', JSON.stringify(nextUsernames))
 		}
 	}
 
@@ -65,6 +66,7 @@ const UsernameForm = () => {
 					onChange={(e: { target: { value: string } }) => textChanged(e.target.value)}
 				/>
 				<Select size={['sm','lg']} maxW={["80px", "100px"]} onChange={onSeasonChange}>
+				<option value='2026'>2026</option>
 				<option value='2025'>2025</option>
 				<option value='2024'>2024</option>
 				<option value='2023'>2023</option>

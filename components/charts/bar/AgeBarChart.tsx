@@ -1,17 +1,8 @@
-import {Spinner} from '@chakra-ui/react'
-import {DatabasePlayer, SleeperPlayerDetails} from '../../../classes/custom/Player'
+import {Box, Spinner, Text} from '@chakra-ui/react'
+import {BarDatum, ResponsiveBar} from '@nivo/bar'
+import {useMemo} from 'react'
+import {DatabasePlayer} from '../../../classes/custom/Player'
 import {createRangeArray} from '../../../utility/rosterFunctions'
-import {
-	Chart as ChartJS,
-	ArcElement,
-	Tooltip,
-	Legend,
-	BarElement,
-	CategoryScale,
-	LinearScale,
-	Title,
-} from 'chart.js'
-import {Bar} from 'react-chartjs-2'
 import {project_colors} from '../../../utility/project_colors'
 
 interface MyProps {
@@ -20,75 +11,48 @@ interface MyProps {
 
 const theme = {
 	background: 'none',
-	textColor: 'white',
+	text: {fill: project_colors.textTheme.highEmphasis, fontSize: 9},
 }
 
 const AgeBarChart = (props: MyProps) => {
-	if (props.playerDetails == undefined) return <Spinner />
-	ChartJS.register(ArcElement, Tooltip, Legend)
-	let formattedData = formatScoresForBarChart(props.playerDetails ?? [])
-
-	if (formattedData.chartKeys.length <= 0) return <Spinner />
-
-	ChartJS.register(
-		CategoryScale,
-		LinearScale,
-		BarElement,
-		Title,
-		Tooltip,
-		Legend
+	const chartData = useMemo(
+		() => formatScoresForBarChart(props.playerDetails ?? []),
+		[props.playerDetails]
 	)
 
-  ChartJS.defaults.color = project_colors.textTheme.highEmphasis;
+	if (props.playerDetails == undefined) return <Spinner />
+	if (chartData.length <= 0) return <Spinner />
 
-	const options = {
-		layout: {
-			// padding: {
-			// 	left: 5,
-			// 	right: 5,
-			//   top: 5,
-			//   bottom: 5
-			// },
-		},
-
-		responsive: true,
-		plugins: {
-			legend: {
-				display: false,
-				position: 'top' as const,
-				labels: {
-					// This more specific font property overrides the global property
-					font: {
-						size: 7,
-					},
-				},
-			},
-			title: {
-				display: true,
-				text: 'Player Age Dist',
-        font: {
-          size: 9
-        },
-			},
-		},
-	}
-
-	let chartData = {
-		labels: formattedData.chartKeys,
-		datasets: [
-			{
-				label: 'Num Players',
-				data: formattedData.chartData,
-				backgroundColor: project_colors.secondary[600],
-			},
-		],
-	}
-
-	return <Bar options={options} data={chartData} />
+	return (
+		<Box>
+			<Text textAlign='center' fontSize='xs' color={project_colors.textTheme.highEmphasis}>
+				Player Age Dist
+			</Text>
+			<Box height='180px'>
+				<ResponsiveBar
+					data={chartData}
+					keys={['count']}
+					indexBy='age'
+					margin={{top: 5, right: 5, bottom: 25, left: 25}}
+					padding={0.3}
+					valueScale={{type: 'linear'}}
+					indexScale={{type: 'band', round: true}}
+					colors={project_colors.secondary[600]}
+					theme={theme}
+					borderColor={{from: 'color', modifiers: [['darker', 1.6]]}}
+					axisTop={null}
+					axisRight={null}
+					enableLabel={false}
+					enableGridY={false}
+					role='application'
+					ariaLabel='Distribution of player ages on roster'
+				/>
+			</Box>
+		</Box>
+	)
 }
 
-function formatScoresForBarChart(playerDetails: DatabasePlayer[]) {
-	let data: number[] = []
+function formatScoresForBarChart(playerDetails: DatabasePlayer[]): BarDatum[] {
 	let ageMap = new Map<number, number>()
 	let highAge = 0
 	let lowAge = 100
@@ -106,21 +70,14 @@ function formatScoresForBarChart(playerDetails: DatabasePlayer[]) {
 		}
 	})
 
-	let keys = createRangeArray(lowAge, highAge)
-		.sort()
-		.map((key) => {
-			return key
-		})
-
-	keys.forEach((key) => {
-		data.push(ageMap.get(key) ?? 0)
-	})
-
-	let formattedData = {
-		chartKeys: keys,
-		chartData: data,
+	if (ageMap.size === 0) {
+		return []
 	}
-	return formattedData
+
+	return createRangeArray(lowAge, highAge).map((age) => ({
+		age,
+		count: ageMap.get(age) ?? 0,
+	}))
 }
 
 export default AgeBarChart

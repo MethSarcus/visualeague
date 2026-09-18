@@ -8,11 +8,12 @@ interface MyProps {
     settingValue: number
 	originalValue: number
     customScoringChecked: boolean
-    onInputChange: (e: any) => void
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const ScoringInputField = (props: MyProps) => {
     const [customSettingValue, setCustomSettingValue] = React.useState(props.settingValue)
+	
     
 	return (
 		<Center key={props.settingKey} visibility={'visible'}>
@@ -20,15 +21,15 @@ const ScoringInputField = (props: MyProps) => {
 			<NumberInput
 				ml={2}
 				isInvalid={
-					customSettingValue != props.originalValue
+					customSettingValue != (props.originalValue ?? 0)
 				}
 				isDisabled={!props.customScoringChecked}
 				variant={'filled'}
 				textColor={'white'}
-				defaultValue={props.settingValue}>
+				defaultValue={props.settingValue ?? 0}>
 				<Tooltip
 					isDisabled={
-						customSettingValue == props.originalValue
+						customSettingValue == (props.originalValue ?? 0)
 					}
 					label={`Original Value: ${props.originalValue}`}
 					placement={'top'}>

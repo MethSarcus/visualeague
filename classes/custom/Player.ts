@@ -1,4 +1,21 @@
-import {LeagueSettings, ScoringAct, ScoringSettings} from '../sleeper/LeagueSettings'
+import {ScoringSettings} from '../sleeper/LeagueSettings'
+
+export function calculateScoringPoints(
+	stats: ScoringSettings | undefined,
+	leagueSettings: ScoringSettings
+): number | undefined {
+	if (stats === undefined) {
+		return undefined
+	}
+
+	return Object.entries(stats).reduce((score, [key, value]) => {
+		const multiplier = leagueSettings[key as keyof ScoringSettings]
+		const points = typeof multiplier === 'number' && typeof value === 'number'
+			? value * multiplier
+			: 0
+		return Number.isFinite(points) ? score + points : score
+	}, 0)
+}
 
 export default class Player {
 	public points_scored: number = 0
@@ -15,18 +32,9 @@ export default class Player {
 
 	calculatePoints(playerMap: PlayerMap, leagueSettings: ScoringSettings) {
 		const scoreDetails = playerMap.weekly_scores.get(this.week)?.get(this.id)
-		const projectionDetails = playerMap.weekly_scores.get(this.week)?.get(this.id)
-		if (scoreDetails != undefined) {
-			for (const [key, value] of Object.entries(scoreDetails)) {
-				this.points_scored += value * (leagueSettings[key as keyof ScoringSettings] as number)
-			}
-		}
-
-		if (projectionDetails != undefined) {
-			for (const [key, value] of Object.entries(projectionDetails)) {
-				this.points_projected += value * (leagueSettings[key as keyof ScoringSettings] as number)
-			}
-		}
+		const projectionDetails = playerMap.weekly_projections.get(this.week)?.get(this.id)
+		this.points_scored = calculateScoringPoints(scoreDetails, leagueSettings) ?? 0
+		this.points_projected = calculateScoringPoints(projectionDetails, leagueSettings) ?? 0
 	}
 }
 
@@ -41,22 +49,18 @@ export class PlayerMap {
 		this.playerDetails.set(player_id, playerDetails)
 	}
 
-	addPlayerWeekStats(weekNumber: number, player_id: string, statObject: object) {
-		if (weekNumber in this.weekly_scores.keys) {
-			this.weekly_scores.get(weekNumber)?.set(player_id, statObject)
-		} else {
+	addPlayerWeekStats(weekNumber: number, player_id: string, statObject: ScoringSettings) {
+		if (!this.weekly_scores.has(weekNumber)) {
 			this.weekly_scores.set(weekNumber, new Map())
-			this.weekly_scores.get(weekNumber)?.set(player_id, statObject)
 		}
+		this.weekly_scores.get(weekNumber)?.set(player_id, statObject)
 	}
 
-	addPlayerWeekProjections(weekNumber: number, player_id: string, statObject: object) {
-		if (weekNumber in this.weekly_scores.keys) {
-			this.weekly_projections.get(weekNumber)?.set(player_id, statObject)
-		} else {
+	addPlayerWeekProjections(weekNumber: number, player_id: string, statObject: ScoringSettings) {
+		if (!this.weekly_projections.has(weekNumber)) {
 			this.weekly_projections.set(weekNumber, new Map())
-			this.weekly_projections.get(weekNumber)?.set(player_id, statObject)
 		}
+		this.weekly_projections.get(weekNumber)?.set(player_id, statObject)
 	}
 }
 
@@ -86,17 +90,7 @@ export class PlayerScores {
 	}
 
 	calculatePoints(leagueSettings: ScoringSettings, playerStats: ScoringSettings) {
-		let score = 0
-		for (const [key, value] of Object.entries(playerStats)) {
-			if (leagueSettings[key as keyof ScoringSettings] != undefined) {
-				let points = value * (leagueSettings[key as keyof ScoringSettings] as number)
-				if (!isNaN(points)) {
-					score += points
-				}
-			}
-		}
-
-		return score
+		return calculateScoringPoints(playerStats, leagueSettings) ?? 0
 	}
 }
 

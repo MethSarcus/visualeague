@@ -1,5 +1,4 @@
 import { Avatar, Box, Button, Center } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import LeagueMember from "../classes/custom/LeagueMember";
 import { SleeperUser } from "../classes/sleeper/SleeperUser";
@@ -7,7 +6,7 @@ import { project_colors } from "../utility/project_colors";
 
 type MyProps = {
   user: LeagueMember
-  setFocusFunction: (rosterID: number) => {}
+  setFocusFunction: (rosterID: number) => void
   focusedRosterId: number
 };
 

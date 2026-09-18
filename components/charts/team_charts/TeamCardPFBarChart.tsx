@@ -1,7 +1,7 @@
 import { Spinner } from "@chakra-ui/react";
 import { BarDatum, ResponsiveBar } from "@nivo/bar";
+import { useMemo } from "react";
 import League from "../../../classes/custom/League";
-import { PositionColors } from "../ChartColors";
 
 interface MyProps {
   league?: League;
@@ -13,13 +13,15 @@ const theme = {
   textColor: "white",
 };
 
-const getColor = (bar: BarDatum) => PositionColors[bar.id];
-
 const BarChart = (props: MyProps) => {
-  if (props.league?.settings == undefined) return <Spinner />;
-  let data = formatScoresForBarChart(props.league, props.memberId);
+  const league = props.league
+  const memberId = props.memberId
+  const data = useMemo(() => {
+    if (league?.settings == undefined) return undefined
+    return formatScoresForBarChart(league, memberId)
+  }, [league, memberId])
 
-  if (data.length <= 0) return <Spinner />;
+  if (data == undefined || data.length <= 0) return <Spinner />;
 
   return (
     <ResponsiveBar
@@ -36,6 +38,7 @@ const BarChart = (props: MyProps) => {
     valueScale={{ type: 'linear' }}
     indexScale={{ type: 'band', round: true }}
     colors={{ scheme: 'nivo' }}
+    theme={theme}
     borderWidth={1}
     borderColor={{
         from: 'color',
@@ -77,9 +80,9 @@ const BarChart = (props: MyProps) => {
 };
 
 function formatScoresForBarChart(league: League, memberId: number) {
-  let data: BarDatum[] = [];
+  const data: BarDatum[] = [];
 
-  let member = league.members.get(parseInt(memberId as any));
+  const member = league.members.get(memberId);
   if (member != undefined) {
     data.push({
       "user": member.name,

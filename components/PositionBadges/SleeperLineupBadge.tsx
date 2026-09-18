@@ -1,4 +1,4 @@
-import { Center, useStyleConfig, Text, Box, Square, Wrap, SimpleGrid, HStack } from "@chakra-ui/react";
+import { Text, Box, Square, SimpleGrid, HStack } from "@chakra-ui/react";
 import { project_colors } from "../../utility/project_colors";
 import {
   getRosterSlotPositions,

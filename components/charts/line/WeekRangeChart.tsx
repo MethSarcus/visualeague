@@ -1,5 +1,6 @@
 import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {ResponsiveLine} from '@nivo/line'
+import {LineSeries, ResponsiveLine} from '@nivo/line'
+import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import {project_colors} from '../../../utility/project_colors'
 
@@ -9,8 +10,12 @@ interface MyProps {
 
 const WeekRangeChart = (props: MyProps) => {
 	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	if (props.league?.settings == undefined) return <Spinner />
-	let data = formatScoresForLineChart(props.league) as any
+	const league = props.league
+	const data = useMemo(
+		() => (league?.settings == undefined ? undefined : formatScoresForLineChart(league)),
+		[league]
+	)
+	if (data == undefined) return <Spinner />
 	const theme = {
 		background: isOnMobile ? undefined : project_colors.surface[1],
 		text: {fill: project_colors.textTheme.highEmphasis},
@@ -20,7 +25,7 @@ const WeekRangeChart = (props: MyProps) => {
 
   const mobileMargin = {top: 25, right: 10, bottom: 40, left: 40}
 
-	const deskTopLegend = {
+	const deskTopLegend: NonNullable<Parameters<typeof ResponsiveLine>[0]['legends']>[number] = {
 		anchor: 'bottom-right',
 		direction: 'column',
 		justify: false,
@@ -94,30 +99,29 @@ const WeekRangeChart = (props: MyProps) => {
 							color: 'black',
 						}}
 					>
-						<div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(
+						<div>{`${point.seriesId}: ${Number(point.data.y).toFixed(
 							2
 						)}`}</div>
 					</div>
 				)
 			}}
-			pointColor={isOnMobile ? {from: "color"} : {theme: 'background'}}
-			pointBorderWidth={2}
-			pointBorderColor={{from: 'serieColor'}}
+			pointColor={{from: 'series.color', modifiers: [['brighter', 1.1]]}}
+			pointBorderWidth={0}
 			pointLabelYOffset={-12}
 			useMesh={true}
 			debugMesh={false}
-			legends={[deskTopLegend as any]}
+			legends={[deskTopLegend]}
 		/>
 	)
 }
 
-function formatScoresForLineChart(league: League | undefined) {
-	let data: object[] = []
-	let leagueAverageScores: object[] = []
-    let weekHighestScores: object[] = []
-    let weekLowestScores: object[] = []
+function formatScoresForLineChart(league: League): LineSeries[] {
+	const data: LineSeries[] = []
+	const leagueAverageScores: {x: number; y: number}[] = []
+    const weekHighestScores: {x: number; y: number}[] = []
+    const weekLowestScores: {x: number; y: number}[] = []
 
-	league?.weeks?.forEach((week) => {
+	league.weeks?.forEach((week) => {
 		let weekRange = week.getWeekRange()
 
 		leagueAverageScores.push({
@@ -126,11 +130,11 @@ function formatScoresForLineChart(league: League | undefined) {
 		})
 		weekHighestScores.push({
 			x: week.weekNumber,
-			y: weekRange.highScore,
+			y: weekRange.highScore ?? 0,
 		})
 		weekLowestScores.push({
 			x: week.weekNumber,
-			y: weekRange.lowScore,
+			y: weekRange.lowScore ?? 0,
 		})
 	})
 

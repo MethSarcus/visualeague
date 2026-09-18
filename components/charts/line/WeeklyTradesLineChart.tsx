@@ -1,5 +1,6 @@
 import { Spinner } from "@chakra-ui/react";
-import { ResponsiveLine } from "@nivo/line";
+import { LineSeries, ResponsiveLine } from "@nivo/line";
+import { useMemo } from "react";
 import Trade from "../../../classes/custom/Trade";
 import { project_colors } from "../../../utility/project_colors";
 
@@ -8,8 +9,9 @@ interface MyProps {
 }
 
 const WeeklyTradesLineChart = (props: MyProps) => {
-  if (props.trades == undefined) return <Spinner />;
-  let data = formatScoresForLineChart(props.trades) as any;
+  const trades = props.trades
+  const data = useMemo(() => (trades == undefined ? undefined : formatScoresForLineChart(trades)), [trades]);
+  if (data == undefined) return <Spinner />;
   const theme = {
     background: project_colors.surface[1],
     textColor: "white",
@@ -34,24 +36,23 @@ const WeeklyTradesLineChart = (props: MyProps) => {
                         color: "white"
                     }}
                 >
-                    <div>{`${point.seriesId}: ${parseFloat(point.data.y as any).toFixed(2)}`}</div>
+                    <div>{`${point.seriesId}: ${Number(point.data.y).toFixed(2)}`}</div>
                 </div>
             )
         }}
-      pointColor={{ theme: "background" }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: "serieColor" }}
+      pointColor={{ from: "series.color", modifiers: [["brighter", 1.1]] }}
+      pointBorderWidth={0}
       useMesh={true}
       debugMesh={false}
     />
   );
 };
 
-function formatScoresForLineChart(trades: Trade[]) {
-  let tradeData = {
+function formatScoresForLineChart(trades: Trade[]): LineSeries[] {
+  const tradeData = {
     id: "trades",
     color: "#61cdbb",
-    data: [] as object[]
+    data: [] as {x: string; y: number}[]
   }
   let latestWeek = 1
   let tradeMap = new Map<number, number>()
@@ -77,9 +78,9 @@ function formatScoresForLineChart(trades: Trade[]) {
 
   Array.from(weekKeys).forEach((weekNum) => {
     if (weekNum == 1) {
-        tradeData.data.push({x: ` Week ${weekNum} <`, y: tradeMap.get(weekNum)})
+        tradeData.data.push({x: ` Week ${weekNum} <`, y: tradeMap.get(weekNum) ?? 0})
     } else {
-        tradeData.data.push({x: `Week ${weekNum}`, y: tradeMap.get(weekNum)})
+        tradeData.data.push({x: `Week ${weekNum}`, y: tradeMap.get(weekNum) ?? 0})
     }
     
   })

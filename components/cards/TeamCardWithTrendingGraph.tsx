@@ -10,10 +10,8 @@ import {
 	SkeletonText,
 	Text,
 	Tooltip,
-	useMultiStyleConfig,
 	VStack,
 } from '@chakra-ui/react'
-import {useRouter} from 'next/router'
 import { useState } from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
@@ -31,7 +29,12 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
   const [imageLoaded, setImageLoaded] = useState(false)
 	return (
 		<Card boxShadow={'lg'} rounded={'md'} bg='surface.0' textColor={'white'} height={"max-content"}>
-			<Grid templateAreas={`"member linechart linechart"`} gap='1'>
+			<Grid
+				templateAreas={`"member linechart"`}
+				templateColumns='max-content minmax(0, 1fr)'
+				gap='1'
+				width='100%'
+			>
 				<GridItem area={'member'}>
 					<Center>
 						<Skeleton isLoaded={imageLoaded} fadeDuration={4} >
@@ -55,14 +58,14 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 									label={`${props.member?.stats.divisionWins} - ${
 										props.member?.stats.divisionLosses
 									} ${
-										props.member?.stats?.divisionTies ?? 0 > 0
+										(props.member?.stats?.divisionTies ?? 0) > 0
 											? `-${props.member?.stats?.divisionTies}`
 											: ''
 									} Division Record`}
 								>
 									<Text p={0}>
 										{props.member?.stats.wins} - {props.member?.stats.losses}{' '}
-										{props.member?.stats?.ties ?? 0 > 0
+										{(props.member?.stats?.ties ?? 0) > 0
 											? `- ${props.member?.stats?.ties}`
 											: ''}
 									</Text>
@@ -71,11 +74,11 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 						</VStack>
 					</Center>
 				</GridItem>
-				<GridItem area={'linechart'}>
-					{props.league?.settings != undefined && (
+				<GridItem area={'linechart'} minWidth={0}>
+					{props.league?.settings != undefined && props.member != undefined && (
 						<TrendingLineChart
 							league={props.league}
-							memberId={props.member?.roster.roster_id!}
+							memberId={props.member.roster.roster_id}
 						/>
 					)}
 				</GridItem>

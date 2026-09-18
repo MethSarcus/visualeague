@@ -2,7 +2,9 @@
 
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import {ChakraProvider} from '@chakra-ui/react'
 import Page from '../app/page'
+import customTheme from '../theme'
 import type * as ReactDom from 'react-dom';
 
 jest.mock('react-dom', () => ({
@@ -16,7 +18,11 @@ describe('Home', () => {
 		cleanup() // Resets the DOM after each test suite
 	})
 	it('Renders Form', () => {
-		render(<Page />)
+		render(
+			<ChakraProvider theme={customTheme}>
+				<Page />
+			</ChakraProvider>
+		)
 		jest.spyOn(window.localStorage.__proto__, 'setItem')
 		const form = screen.getByTestId('username_form')
 		let input = screen.getByTestId('username_input')
@@ -26,7 +32,11 @@ describe('Home', () => {
 
 	it('Saves Username', () => {
 		jest.spyOn(window.localStorage.__proto__, 'setItem')
-		render(<Page />)
+		render(
+			<ChakraProvider theme={customTheme}>
+				<Page />
+			</ChakraProvider>
+		)
 
 		let input = screen.getByTestId('username_input')
 		fireEvent.change(input, {target: {value: 'MethSarcus'}})

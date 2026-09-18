@@ -1,7 +1,9 @@
+'use client'
+
 import {
   Box, Button, ButtonGroup, Spacer, Stack, Text, useMultiStyleConfig
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import {usePathname, useRouter} from 'next/navigation'
 import React from "react";
 import { LeagueSettings } from "../../classes/sleeper/LeagueSettings";
 import { getLeagueReceptionScoringType } from "../../utility/rosterFunctions";
@@ -17,13 +19,13 @@ const LeagueCard = (props: MyProps) => {
   const { variant, size, ...rest } = props;
   const styles = useMultiStyleConfig("LeagueCard", { variant, size });
   const router = useRouter();
+  const pathname = usePathname();
 
   function onSub(e: React.SyntheticEvent) {
     e.preventDefault();
-    router.push({
-      pathname:
-        "/user/" + router.query.username + "/draft/" + props.league.draft_id,
-    });
+    const username = pathname?.split('/').filter(Boolean)[1]
+    if (username == undefined) return
+    router.push(`/user/${username}/draft/${props.league.draft_id}`)
   }
 
   const settingsString = getLeagueReceptionScoringType(props.league);

@@ -1,5 +1,5 @@
 import {BlankPlayer, MatchupPlayer} from '../classes/custom/MatchupPlayer'
-import Player from '../classes/custom/Player'
+import {calculateScoringPoints} from '../classes/custom/Player'
 import {
 	LeagueSettings,
 	ScoringSettings,
@@ -362,21 +362,12 @@ function getEligiblePlayersForSlot(
 	return eligiblePlayers
 }
 
-export function calcPlayerPoints(stats: ScoringSettings | undefined,  leagueSettings: ScoringSettings): number | undefined {
-	let score: number | undefined = 0
-	if (stats != undefined) {
-	  for (const [key, value] of Object.entries(stats)) {
-		let points = value * (leagueSettings[key as keyof ScoringSettings] as number)
-		if (!isNaN(points)) {
-			score += points
-		}
-	  }
-	} else {
-		score = undefined
-	}
-
-	return score
-  }
+export function calcPlayerPoints(
+	stats: ScoringSettings | undefined,
+	leagueSettings: ScoringSettings
+): number | undefined {
+	return calculateScoringPoints(stats, leagueSettings)
+}
 
 export function getPositionColor(position: POSITION) {
 	switch (position) {
@@ -429,6 +420,9 @@ export function ordinal_suffix_of(i: number) {
 }
 
 export function standardDeviation(arr: number[], usePopulation = false) {
+	if (arr.length === 0 || (!usePopulation && arr.length === 1)) {
+		return 0
+	}
 	const mean = arr.reduce((acc: any, val: any) => acc + val, 0) / arr.length
 	return Math.sqrt(
 		arr
@@ -491,5 +485,5 @@ export function getReadableScoringKey(key: string): string {
 	return readableKey
 }
 
-export const createRangeArray = (start: number, end: number) => Array.from({length: (end - start)}, (v, k) => k + start);
-
+export const createRangeArray = (start: number, end: number) =>
+	start > end ? [] : Array.from({length: end - start + 1}, (_, index) => index + start)

@@ -2,18 +2,14 @@
 import {HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import Matchup from '../../../classes/custom/Matchup'
-import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
-import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
-import TeamPersonalStatCard from '../../cards/statcards/TeamPersonalStatCard'
-import RivalsGroup from './RivalsStatGroup'
 
 interface MyProps {
 	league?: League
 	memberId: number
 }
 
-const TeamStatGroup = (props: MyProps) => {
+const WeeklyTeamStatGroup = (props: MyProps) => {
 	let member
 	let bestWeek
 	let worstWeek
@@ -37,7 +33,7 @@ const TeamStatGroup = (props: MyProps) => {
 				isLoaded={props.league?.settings != undefined}
 				memberId={props.memberId}
 				score={`${bestWeek?.pf.toFixed(2)} PF`}
-				matchup={notableWeeks?.bestWeek as any}
+				matchup={notableWeeks?.bestWeek}
 				subStat={`Week ${bestWeek?.weekNumber}`}
 			/>
 			<NotableMatchupStatCard
@@ -68,4 +64,4 @@ const TeamStatGroup = (props: MyProps) => {
 	)
 }
 
-export default TeamStatGroup
+export default WeeklyTeamStatGroup

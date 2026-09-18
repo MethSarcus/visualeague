@@ -53,7 +53,7 @@ const LeagueNotableWeeksStatGroup = (props: MyProps) => {
 				matchup={worstWeek}
 				score={`${worstWeekTeam?.pf?.toFixed(2)} PF`}
 				title={'Lowest Score'}
-				subStat={props.league?.getMember(smallestShootout?.loserRosterId ?? -1)?.teamName}
+				subStat={props.league?.getMember(worstWeekTeam?.roster_id ?? -1)?.teamName}
 				subSubStat={
 					props.league?.members?.get(worstWeekTeam?.roster_id ?? 0)?.teamName
 				}

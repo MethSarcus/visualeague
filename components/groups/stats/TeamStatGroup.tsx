@@ -1,11 +1,8 @@
 'use client'
-import {Flex, HStack, SimpleGrid, Spacer} from '@chakra-ui/react'
+import {SimpleGrid} from '@chakra-ui/react'
 import League, {StatType} from '../../../classes/custom/League'
-import {OrdinalStatInfo} from '../../../classes/custom/OrdinalStatInfo'
 import {ordinal_suffix_of} from '../../../utility/rosterFunctions'
-import GenericStatCard from '../../cards/statcards/GenericStatCard'
 import TeamPersonalStatCard from '../../cards/statcards/TeamPersonalStatCard'
-import TeamStatCard from '../../cards/statcards/TeamStatCard'
 
 interface MyProps {
 	league?: League
@@ -110,17 +107,6 @@ const TeamStatGroup = (props: MyProps) => {
 			/>
 		</SimpleGrid>
 	)
-}
-
-function getMemberStats(stats: OrdinalStatInfo[], memberId: number) {
-	let memberStat
-	stats.forEach((stat) => {
-		if (stat.rosterId == memberId) {
-			memberStat = stat
-		}
-	})
-
-	return memberStat
 }
 
 export default TeamStatGroup

@@ -4,6 +4,7 @@ import '@inovua/reactdatagrid-community/index.css'
 import '@inovua/reactdatagrid-community/theme/default-dark.css'
 import DataTable, { TableColumn } from 'react-data-table-component'
 import { AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE } from '../../classes/custom/Draft'
+import { project_colors } from '../../utility/project_colors'
 import { customDatatableStyles } from './LeagueOverviewDatatable'
 
 interface MyProps {
@@ -27,42 +28,45 @@ const DraftValueTable = (props: MyProps) => {
 	const cols: TableColumn<DataRow>[] = [{
 		name: "name",
 		selector: (row) => row.name,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}, {
 		name: "ppg",
 		selector: (row) => row.ppg,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}, {
 		name: "pf",
 		selector: (row) => row.pf,
-		sortable: true,
-		grow: 1
+		sortable: true
 	}]
 	
 	if (props.draft?.settings.type != DRAFT_TYPE.AUCTION ) {
 		cols.push({name: 'pick_no', selector: (row) => row.pick_no ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 	} else {
 		cols.push({name: 'amount', selector: (row) => row.amount ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 		cols.push({name: 'ppd', selector: (row) => row.ppd ?? 0,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 	}
 
 	cols.push({name: 'value', selector: (row) => row.value,
-		sortable: true,
-		grow: 1})
+		sortable: true})
 
 	const conditionalRowStyles = [
 		{
-			when: (row: any) => true,
+			when: (row: DataRow) => row.value > 0,
 			style: {
-				backgroundColor: "green",
+				backgroundColor: project_colors.statColor.good,
+				color: "white",
+				"&:hover": {
+					cursor: "pointer",
+				},
+			},
+		},
+		{
+			when: (row: DataRow) => row.value < 0,
+			style: {
+				backgroundColor: project_colors.statColor.bad,
 				color: "white",
 				"&:hover": {
 					cursor: "pointer",

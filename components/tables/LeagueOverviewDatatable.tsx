@@ -1,4 +1,4 @@
-import { Box, Skeleton, Spinner } from "@chakra-ui/react"
+import { Skeleton, Spinner } from "@chakra-ui/react"
 import DataTable, {
 	TableColumn
 } from "react-data-table-component"
@@ -16,32 +16,27 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			name: "Team",
 			selector: (row) => row.name,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "Record",
 			selector: (row) => row.record,
 			sortable: true,
-			grow: 1,
 			omit: isOnMobile,
 		},
 		{
 			name: "PF",
 			selector: (row) => row.pf,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "OPSLAP",
 			selector: (row) => row.opslap,
-			sortable: true,
-			grow: 1
+			sortable: true
 		},
 		{
 			name: "PA",
 			selector: (row) => row.pa,
 			sortable: true,
-			grow: 1,
 			omit: isOnMobile,
 		},
 		
@@ -49,13 +44,11 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			name: "PP",
 			selector: (row) => row.pp,
 			sortable: true,
-			grow: 1,
 		},
 		{
 			name: "GP",
 			selector: (row) => row.gp,
 			sortable: true,
-			grow: 1,
 		},
 	
 	]
@@ -66,32 +59,6 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 	}
 
 	// data provides access to your row data
-
-	// const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
-	// 	data,
-	// }) => {
-	// 	return (
-	// 		<pre>
-	// 			{JSON.stringify(
-	// 				data,
-	// 				["pick", "player", "picked_by", "draft_id"],
-	// 				2
-	// 			)}
-	// 		</pre>
-	// 	)
-	// }
-	const conditionalRowStyles = [
-		{
-			when: (row: any) => true,
-			style: {
-				backgroundColor: "green",
-				color: "white",
-				"&:hover": {
-					cursor: "pointer",
-				},
-			},
-		},
-	]
 	return (
 		<Skeleton isLoaded={props.league != undefined}>
 		<DataTable
@@ -101,12 +68,9 @@ const LeagueOverviewDataTable = (props: MyProps): JSX.Element => {
 			defaultSortAsc={false}
 			data={formattedMembers}
 			customStyles={customDatatableStyles}
-			conditionalRowStyles={conditionalRowStyles}
 			progressPending={props.league.settings == undefined}
 			progressComponent={<Spinner />}
 			responsive={true}
-			// conditionalRowStyles={conditionalRowStyles}
-			// expandableRowsComponent={ExpandedComponent}
 			dense={true}
 		/>
 		</Skeleton>

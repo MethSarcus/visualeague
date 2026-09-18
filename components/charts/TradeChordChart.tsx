@@ -1,28 +1,32 @@
-import { Box, Spinner } from '@chakra-ui/react';
-import { ArcTooltipComponentProps, ResponsiveChord, RibbonTooltipComponentProps, ChordArcMouseHandler } from '@nivo/chord';
+import { Box } from '@chakra-ui/react';
+import { ArcTooltipComponentProps, ResponsiveChord, RibbonTooltipComponentProps } from '@nivo/chord';
 import { BasicTooltip, Chip, TableTooltip } from '@nivo/tooltip';
-import React, { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import LeagueMember from '../../classes/custom/LeagueMember';
 import { SleeperTransaction } from '../../classes/sleeper/SleeperTransaction';
 import { LeagueContext } from '../../contexts/LeagueContext';
-import { project_colors } from "../../utility/project_colors";
 
 
 interface MyProps {
     trades: SleeperTransaction[]
-
 }
 
 
 const TradeChordChart = (props: MyProps) => {
-    let context = useContext(LeagueContext)
+    const [context] = useContext(LeagueContext)
+    const members = context?.members as Map<number, LeagueMember> | undefined
+    const data = useMemo(
+        () => formatTradesForTradeChart(props.trades, members?.size ?? 0),
+        [props.trades, members]
+    )
+    const keys = useMemo(() => getChordKeys(members), [members])
 
-    if (!context[0].members) return <Box>Loading...</Box>
-    let data = formatTradesForTradeChart(props.trades, 10) as any
+    if (!members) return <Box>Loading...</Box>
+    if (props.trades.length === 0) return <Box>No trades yet</Box>
 
-    return (context[0].members && <ResponsiveChord
+    return (<ResponsiveChord
         data={data}
-        keys={getChordKeys(context[0].members)}
+        keys={keys}
         margin={{ bottom: 90}}
         valueFormat=".2f"
         padAngle={0.02}
@@ -39,6 +43,8 @@ const TradeChordChart = (props: MyProps) => {
                 ]
             ]
         }}
+        arcTooltip={ArcTooltip}
+        ribbonTooltip={RibbonTooltip}
         activeRibbonOpacity={0.75}
         inactiveRibbonOpacity={0.25}
         ribbonBorderColor={{
@@ -86,81 +92,83 @@ const TradeChordChart = (props: MyProps) => {
                 ]
             }
         ]}
+        role='application'
+        ariaLabel='Trades between league members'
     />)
 }
 
 
-    function formatTradesForTradeChart(trades: SleeperTransaction[], leagueSize: number) {
-        let data: number[][] = []
-        let memberTradeMap: Map<number, Map<number, number>> = new Map()
+function formatTradesForTradeChart(trades: SleeperTransaction[], leagueSize: number) {
+    let data: number[][] = []
+    let memberTradeMap: Map<number, Map<number, number>> = new Map()
+    for (let i = 1; i <= leagueSize; i++) {
+        memberTradeMap.set(i, new Map())
+    }
+
+    memberTradeMap.forEach((map) => {
         for (let i = 1; i <= leagueSize; i++) {
-            memberTradeMap.set(i, new Map())
+            map.set(i, 0)
         }
-        
-        memberTradeMap.forEach((map, key) => {
-            for (let i = 1; i <= leagueSize; i++) {
-                map.set(i, 0)
-            }
-        })
+    })
 
-        trades.forEach(trade => {
-            trade.consenter_ids.forEach(id => {
-                trade.consenter_ids.forEach(subId => {
-                    if (subId != id) {
-                        let existingTrades = memberTradeMap.get(id)?.get(subId)
-                        memberTradeMap.get(id)?.set(subId, existingTrades as any + 1)
-                    }
-                })
-                
+    trades.forEach(trade => {
+        trade.consenter_ids.forEach(id => {
+            trade.consenter_ids.forEach(subId => {
+                if (subId != id) {
+                    let existingTrades = memberTradeMap.get(id)?.get(subId) ?? 0
+                    memberTradeMap.get(id)?.set(subId, existingTrades + 1)
+                }
             })
-        })
 
-        memberTradeMap.forEach((tradeMap: Map<number, number>, rosterId: number) => {
-            let teamTrades: number[] = []
-            tradeMap.forEach((numTrades: number, id) => {
-                teamTrades.push(numTrades)
-            })
-            data.push(teamTrades)
-          });
-        return data 
+        })
+    })
+
+    memberTradeMap.forEach((tradeMap: Map<number, number>) => {
+        let teamTrades: number[] = []
+        tradeMap.forEach((numTrades: number) => {
+            teamTrades.push(numTrades)
+        })
+        data.push(teamTrades)
+    });
+    return data
+}
+
+function getChordKeys(members?: Map<number, LeagueMember>) {
+    let keys: string[] = []
+    if (!members) return keys
+    for (let i = 1; i <= members.size; i++) {
+        keys.push(members.get(i)?.name ?? `Team ${i}`)
     }
 
-    function getChordKeys(members: Map<number, LeagueMember>) {
-        let keys: string[] = []
-        for(let i = 1; i <= members.size; i++) {
-            keys.push(members.get(i)?.name as string)
-        }
+    return keys
+}
 
-        return keys
+const ArcTooltip = ({ arc }: ArcTooltipComponentProps) => (
+    <BasicTooltip
+        id={arc.label}
+        value={arc.formattedValue}
+        color={arc.color}
+        enableChip={true}
+    />
+)
 
-    }
-
-    const ArcTooltip = ({ arc }: ArcTooltipComponentProps) => (
-        <BasicTooltip
-            id={`Custom arc tooltip, ${arc.label}`}
-            value={arc.formattedValue}
-            color={arc.color}
-            enableChip={true}
-        />
-    )
-    
-    const RibbonTooltip = ({ ribbon }: RibbonTooltipComponentProps) => (
-        <TableTooltip
-            rows={[
-                [
-                    <Chip key="chip" color={ribbon.source.color} />,
-                    'Source (custom)',
-                    <strong key="id">{ribbon.source.id}</strong>,
-                    ribbon.source.value,
-                ],
-                [
-                    <Chip key="chip" color={ribbon.target.color} />,
-                    'Target (custom)',
-                    <strong key="id">{ribbon.target.id}</strong>,
-                    ribbon.target.value,
-                ],
-            ]}
-        />
-    )
+const RibbonTooltip = ({ ribbon }: RibbonTooltipComponentProps) => (
+    <TableTooltip
+        rows={[
+            [
+                <Chip key="source-chip" color={ribbon.source.color} />,
+                'Source',
+                <strong key="source-id">{ribbon.source.id}</strong>,
+                ribbon.source.value,
+            ],
+            [
+                <Chip key="target-chip" color={ribbon.target.color} />,
+                'Target',
+                <strong key="target-id">{ribbon.target.id}</strong>,
+                ribbon.target.value,
+            ],
+        ]}
+    />
+)
 
 export default TradeChordChart

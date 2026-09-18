@@ -1,4 +1,5 @@
-import { VStack, Box } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
+import { ReactElement } from "react";
 import LeagueMember from "../../classes/custom/LeagueMember";
 import LeagueMemberButton from "../cards/LeagueMemberButton";
 
@@ -9,7 +10,7 @@ interface MyProps {
 }
 
 const MemberList = (props: MyProps) => {
-    let memberButtons = [] as any
+    const memberButtons: ReactElement[] = []
     props.members.forEach((member, key) => {
         memberButtons.push(<LeagueMemberButton onclose={props.onclick} key={key} leagueId={props.leagueId} member={member}/>)
     })

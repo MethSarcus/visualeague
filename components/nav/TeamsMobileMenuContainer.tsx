@@ -1,47 +1,23 @@
-import {HamburgerIcon} from '@chakra-ui/icons'
 import {
-	Button,
-	Drawer,
-	DrawerBody,
-	DrawerCloseButton,
-	DrawerContent,
-	DrawerFooter,
 	Box,
-	Accordion,
-	AccordionItem,
-	AccordionButton,
-	AccordionPanel,
-	AccordionIcon,
-	DrawerHeader,
-	DrawerOverlay,
-	Icon,
-	IconButton,
-	useDisclosure,
-	Avatar,
-	Center,
-	Heading,
-	VStack,
-	StackDivider,
+	Button,
 	Collapse,
-	Fade,
+	useDisclosure,
 } from '@chakra-ui/react'
-import React, {useContext} from 'react'
+import {useContext} from 'react'
 import {
-	MdOutlineExpandLess,
 	MdOutlineExpandMore,
-	MdUnfoldLess,
 } from 'react-icons/md'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import LeagueMemberButton from '../cards/LeagueMemberButton'
-import MemberList from '../groups/MemberList'
 import { RiGroupLine } from "react-icons/ri";
 
 interface MyProps {
 	onclose: () => void
 }
 export default function TeamsMobileMenuContainer(props: MyProps) {
-	const [context, setContext] = useContext(LeagueContext)
+	const [context] = useContext(LeagueContext)
 	const {isOpen, onToggle} = useDisclosure()
 
 	return (
@@ -73,8 +49,4 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
 			</Collapse>
 		</Box>
 	)
-}
-
-function formatScoreKey(key: string) {
-	return key.replaceAll('_', ' ')
 }

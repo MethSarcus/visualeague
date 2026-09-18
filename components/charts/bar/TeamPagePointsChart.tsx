@@ -1,18 +1,10 @@
 'use client'
-import {createRangeArray, POSITION} from '../../../utility/rosterFunctions'
-import {
-	Chart as ChartJS,
-	ArcElement,
-	Tooltip,
-	Legend,
-	BarElement,
-	CategoryScale,
-	LinearScale,
-	Title,
-} from 'chart.js'
-import {Bar} from 'react-chartjs-2'
+import {Spinner} from '@chakra-ui/react'
+import {ResponsiveBar} from '@nivo/bar'
+import {useMemo} from 'react'
+import {POSITION} from '../../../utility/rosterFunctions'
 import {alterRGBAOpacity, project_colors} from '../../../utility/project_colors'
-import LeagueMember from '../../../classes/custom/LeagueMember'
+import {formatTeamPagePointsData, LEAGUE_AVG_KEY, OPPONENT_KEY} from './teamPagePointsChartData'
 
 interface MyProps {
 	memberName: string
@@ -22,169 +14,75 @@ interface MyProps {
 	isMobile: boolean
 }
 
-const TeamPagePointsChart = (props: MyProps) => {
-	
-	ChartJS.register(ArcElement, Tooltip, Legend)
-	let formattedData = createChartData(
-		props.memberName,
-		props.homePointMap,
-		props.awayPointMap,
-		props.avgPointMap
-	)
-
-	ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-	
-	const desktopOptions = {
-		layout: {
-			padding: {
-				left: 10,
-				right: 10,
-				top: 10,
-				bottom: 10,
-			},
-		},
-		scales: {
-			y: {
-				beginAtZero: true,
-				grid: {
-					color: project_colors.surface[1],
-				}
-			}
-		},
-		responsive: true,
-		maintainAspectRatio: false,
-		plugins: {
-			legend: {
-				display: true,
-				position: 'bottom' as const,
-			},
-			title: {
-				display: true,
-				text: 'Total points vs league',
-			},
-
-		},
-	}
-
-	const mobileOptions = {
-		aspectRatio: .25,
-		layout: {
-			padding: {
-				left: 2,
-				right: 2,
-				top: 2,
-				bottom: 2,
-			},
-		},
-		indexAxis: 'y',
-		scales: {
-			y: {
-				beginAtZero: true,
-				grid: {
-					color: project_colors.surface[1],
-				}
-			}
-		},
-		responsive: true,
-		maintainAspectRatio: true,
-		plugins: {
-			legend: {
-				display: true,
-				position: 'bottom' as const,
-			},
-			title: {
-				display: true,
-				text: 'Total points vs league',
-			},
-
-		},
-	}
-
-
-	return <Bar options={desktopOptions} data={formattedData} />
+const theme = {
+	background: 'none',
+	text: {fill: project_colors.textTheme.highEmphasis},
+	grid: {line: {stroke: project_colors.surface[1]}},
 }
 
-function createChartData(
-	homeMemberName: string,
-	homePointMap: Map<POSITION, number>,
-	awayPointMap: Map<POSITION, number>,
-	avgPointMap: Map<POSITION, number>
-) {
-	let datasets = []
-	let positions = Array.from(homePointMap.keys())
-	datasets.push({
-		label: homeMemberName,
-		data: Array.from(homePointMap.values()),
-		backgroundColor: positions.map((pos) => {
-			return project_colors.position[pos]
-		}),
-		borderColor: positions.map((pos) => {
-			return alterRGBAOpacity(project_colors.position[pos], 1)
-		}),
-		borderWidth: 2,
-	})
+const TeamPagePointsChart = (props: MyProps) => {
+	const {memberName, homePointMap, awayPointMap, avgPointMap} = props
+	const chartData = useMemo(
+		() => formatTeamPagePointsData(memberName, homePointMap, awayPointMap, avgPointMap),
+		[memberName, homePointMap, awayPointMap, avgPointMap]
+	)
 
-	datasets.push({
-		label: 'League Avg',
-		data: Array.from(avgPointMap.values()),
-		backgroundColor: positions.map((pos) => {
-			return alterRGBAOpacity(project_colors.position[pos], 0.3)
-		}),
-		borderColor: positions.map((pos) => {
-			return alterRGBAOpacity(project_colors.position[pos], 0.8)
-		}),
-		borderWidth: 2,
-	})
+	if (chartData.data.length <= 0) return <Spinner />
 
-	datasets.push({
-		label: 'Opponent Total',
-		data: Array.from(awayPointMap.values()),
-		backgroundColor: positions.map((pos) => {
-			return alterRGBAOpacity(project_colors.position[pos], 0.1)
-		}),
-		borderColor: positions.map((pos) => {
-			return alterRGBAOpacity(project_colors.position[pos], 1)
-		}),
-		borderWidth: 2,
-	})
-
-	let data = {
-		labels: positions,
-		datasets: datasets,
+	const getColor = (bar: {id: string | number; indexValue: string | number}) => {
+		const baseColor = project_colors.position[bar.indexValue as POSITION]
+		if (bar.id === memberName) return baseColor
+		if (bar.id === LEAGUE_AVG_KEY) return alterRGBAOpacity(baseColor, 0.3)
+		return alterRGBAOpacity(baseColor, 0.1)
 	}
 
-	return data
+	const getBorderColor = (bar: {data: {id: string | number; indexValue: string | number}}) => {
+		const baseColor = project_colors.position[bar.data.indexValue as POSITION]
+		if (bar.data.id === LEAGUE_AVG_KEY) return alterRGBAOpacity(baseColor, 0.8)
+		return alterRGBAOpacity(baseColor, 1)
+	}
+
+	return (
+		<ResponsiveBar
+			data={chartData.data}
+			keys={chartData.keys}
+			indexBy='position'
+			groupMode='grouped'
+			margin={{top: 30, right: 10, bottom: 40, left: 40}}
+			padding={0.3}
+			valueScale={{type: 'linear'}}
+			indexScale={{type: 'band', round: true}}
+			colors={getColor}
+			borderWidth={2}
+			borderColor={getBorderColor}
+			theme={theme}
+			enableGridY={true}
+			axisTop={{
+				legend: 'Total points vs league',
+				legendPosition: 'middle',
+				legendOffset: -20,
+				tickSize: 0,
+				format: () => '',
+			}}
+			axisRight={null}
+			axisBottom={{tickSize: 5, tickPadding: 5}}
+			enableLabel={false}
+			legends={[
+				{
+					dataFrom: 'keys',
+					anchor: 'bottom',
+					direction: 'row',
+					translateY: 40,
+					itemWidth: 90,
+					itemHeight: 20,
+					itemTextColor: project_colors.textTheme.highEmphasis,
+					symbolSize: 12,
+				},
+			]}
+			role='application'
+			ariaLabel={`Positional points comparison for ${memberName}`}
+		/>
+	)
 }
 
 export default TeamPagePointsChart
-
-
-// scales: {
-// 	yAxes: [
-// 		{
-// 			ticks: {
-// 				beginAtZero: true,
-// 				color: '#FFFFFF',
-// 				display: true,
-// 				tickLength: 8,
-// 			},
-// 			gridLines: {
-// 				color: '#FFFFFF',
-// 				thickness: 5,
-// 			},
-// 		},
-// 	],
-// 	xAxes: [
-// 		{
-// 			ticks: {
-// 				beginAtZero: true,
-// 				color: '#FFFFFF',
-// 				display: true,
-// 				tickLength: 8,
-// 			},
-// 			gridLines: {
-// 				color: 'red',
-// 			},
-// 		},
-// 	],
-// },

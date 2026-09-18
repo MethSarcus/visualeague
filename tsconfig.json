@@ -14,10 +14,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -32,7 +32,8 @@
     "lib/mongodb.js",
     "app/league/layout.tsx",
     ".next/types/**/*.ts",
-    "utility/project_colors"
+    "utility/project_colors",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
