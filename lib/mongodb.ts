@@ -16,7 +16,12 @@ export async function connectToDatabase() {
         return cachedClient
     }
 
-    connectionPromise ??= new MongoClient(mongoUri, {maxPoolSize: 17}).connect()
+    connectionPromise ??= new MongoClient(mongoUri, {maxPoolSize: 17})
+        .connect()
+        .catch((error) => {
+            connectionPromise = undefined
+            throw error
+        })
     cachedClient = await connectionPromise
 
     return cachedClient
