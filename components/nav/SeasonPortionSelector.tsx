@@ -3,7 +3,6 @@ import {useRadioGroup, Center, HStack, useRadio, Box, UseRadioProps} from '@chak
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import League, { SeasonPortion } from '../../classes/custom/League'
 import { LeagueContext } from '../../contexts/LeagueContext'
-import {project_colors} from '../../utility/project_colors'
 
 interface MyProps {
 	onclick: (selected: string) => void
@@ -41,9 +40,13 @@ export default function SeasonPortionSelector(props: MyProps) {
 		<Center textAlign={'center'} mx={[1, 2, 4]} visibility={isVisible() ? 'visible' : 'hidden'}>
 			<HStack
 				{...group}
-				bg={project_colors.secondary[800]}
-				width={'-moz-min-content'}
-				borderRadius={'5em'}
+				bg='surface.2'
+				width='max-content'
+				border='1px solid'
+				borderColor='whiteAlpha.200'
+				borderRadius='md'
+				spacing={1}
+				p={1}
 			>
 				{options.map((value) => {
 					const radio = getRadioProps({value})
@@ -66,19 +69,20 @@ function RadioCard(props: UseRadioProps & { children?: ReactNode }) {
 	const checkbox = getRadioProps()
   
     return (
-      <Box as='label' fontSize={".6em"}>
+	<Box as='label' fontSize={".7em"} fontWeight='semibold'>
         <input {...input} />
         <Box
           {...checkbox}
           cursor='pointer'
-          borderRadius='5em'
-          boxShadow='md'
+					borderRadius='sm'
           _checked={{
-            color: project_colors.sleeper.text_normal,
-            bg: project_colors.secondary[500],
+						color: 'surface.0',
+						bg: 'secondary.300',
+						boxShadow: 'sm',
           }}
-          px={1.5}
-          py={1}
+					_focusVisible={{boxShadow: 'outline'}}
+					px={2.5}
+					py={1.5}
           transition={"all .2s ease"}
         >
           {props.children}

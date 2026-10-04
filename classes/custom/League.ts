@@ -683,9 +683,18 @@ export default class League {
 		}
 	}
 
-	getMemberNotableWeeks(rosterId: number) {
+	getMemberNotableWeeks(rosterId: number): {
+		bestWeek: MatchupInterface | undefined
+		worstWeek: MatchupInterface | undefined
+		bestManagedWeek: MatchupInterface | undefined
+		worstManagedWeek: MatchupInterface | undefined
+		closestGame: MatchupInterface | undefined
+		furthestGame: MatchupInterface | undefined
+	} {
 		let bestWeek: MatchupInterface | undefined = undefined
 		let worstWeek: MatchupInterface | undefined = undefined
+		let bestManagedWeek: MatchupInterface | undefined = undefined
+		let worstManagedWeek: MatchupInterface | undefined = undefined
 		let closestGame: MatchupInterface | undefined = undefined
 		let furthestGame: MatchupInterface | undefined = undefined
 		this.getEnabledWeeks().forEach((weekNum) => {
@@ -698,13 +707,25 @@ export default class League {
 				if (bestWeek == undefined) {
 					bestWeek = matchup
 					worstWeek = matchup
+					bestManagedWeek = matchup
+					worstManagedWeek = matchup
 				} else {
-					if (matchup.getMemberSide(rosterId)!.pf > bestWeek.getMemberSide(rosterId)!.pf) {
+					const memberSide = matchup.getMemberSide(rosterId)!
+					const pointsLeft = memberSide.opslap - memberSide.pf
+					if (memberSide.pf > bestWeek.getMemberSide(rosterId)!.pf) {
 						bestWeek = matchup
 					}
 
-					if (matchup.getMemberSide(rosterId)!.pf < worstWeek!.getMemberSide(rosterId)!.pf) {
+					if (memberSide.pf < worstWeek!.getMemberSide(rosterId)!.pf) {
 						worstWeek = matchup
+					}
+					const bestManagedSide = bestManagedWeek!.getMemberSide(rosterId)!
+					const worstManagedSide = worstManagedWeek!.getMemberSide(rosterId)!
+					if (pointsLeft < bestManagedSide.opslap - bestManagedSide.pf) {
+						bestManagedWeek = matchup
+					}
+					if (pointsLeft > worstManagedSide.opslap - worstManagedSide.pf) {
+						worstManagedWeek = matchup
 					}
 					if (!matchup.isByeWeek) {
 						if (matchup.getMargin()! < closestGame?.getMargin()!) {
@@ -722,6 +743,8 @@ export default class League {
 		return {
 			bestWeek: bestWeek,
 			worstWeek: worstWeek,
+			bestManagedWeek: bestManagedWeek,
+			worstManagedWeek: worstManagedWeek,
 			closestGame: closestGame,
 			furthestGame: furthestGame,
 		}

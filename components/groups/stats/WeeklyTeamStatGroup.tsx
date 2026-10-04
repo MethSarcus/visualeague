@@ -1,7 +1,8 @@
 'use client'
 import {HStack} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
-import Matchup from '../../../classes/custom/Matchup'
+import MatchupInterface from '../../../classes/custom/MatchupInterface'
+import {MatchupSide} from '../../../classes/custom/MatchupSide'
 import NotableMatchupStatCard from '../../cards/statcards/NotableMatchupStatCard'
 
 interface MyProps {
@@ -10,20 +11,26 @@ interface MyProps {
 }
 
 const WeeklyTeamStatGroup = (props: MyProps) => {
-	let member
-	let bestWeek
-	let worstWeek
-	let closestMatchup
-	let furthestMatchup
-	let notableWeeks
+	let bestWeek: MatchupSide | undefined
+	let worstWeek: MatchupSide | undefined
+	let bestManagedWeek: MatchupInterface | undefined
+	let worstManagedWeek: MatchupInterface | undefined
+	let bestManagedSide: MatchupSide | undefined
+	let worstManagedSide: MatchupSide | undefined
+	let closestMatchup: MatchupInterface | undefined
+	let furthestMatchup: MatchupInterface | undefined
+	let notableWeeks: ReturnType<League['getMemberNotableWeeks']> | undefined
 
 	if (props.league?.settings != undefined) {
-		member = props.league.members.get(props.memberId)
 		notableWeeks = props.league.getMemberNotableWeeks(props.memberId)
-		bestWeek = (notableWeeks.bestWeek as unknown as Matchup).getMemberSide(props.memberId)
-		worstWeek = (notableWeeks.worstWeek as unknown as Matchup).getMemberSide(props.memberId)
-		closestMatchup = notableWeeks.closestGame as unknown as Matchup
-		furthestMatchup = notableWeeks.furthestGame as unknown as Matchup
+		bestWeek = notableWeeks.bestWeek?.getMemberSide(props.memberId)
+		worstWeek = notableWeeks.worstWeek?.getMemberSide(props.memberId)
+		bestManagedWeek = notableWeeks.bestManagedWeek
+		worstManagedWeek = notableWeeks.worstManagedWeek
+		bestManagedSide = bestManagedWeek?.getMemberSide(props.memberId)
+		worstManagedSide = worstManagedWeek?.getMemberSide(props.memberId)
+		closestMatchup = notableWeeks.closestGame
+		furthestMatchup = notableWeeks.furthestGame
 	}
 
 	return (
@@ -45,10 +52,34 @@ const WeeklyTeamStatGroup = (props: MyProps) => {
 				matchup={notableWeeks?.worstWeek}
 			/>
 			<NotableMatchupStatCard
+				title={'Best Managed Week'}
+				isLoaded={props.league?.settings != undefined}
+				memberId={props.memberId}
+				score={
+					bestManagedSide
+						? `${(bestManagedSide.opslap - bestManagedSide.pf).toFixed(2)} pts left`
+						: undefined
+				}
+				subStat={`Week ${bestManagedWeek?.weekNumber}`}
+				matchup={bestManagedWeek}
+			/>
+			<NotableMatchupStatCard
+				title={'Worst Managed Week'}
+				isLoaded={props.league?.settings != undefined}
+				memberId={props.memberId}
+				score={
+					worstManagedSide
+						? `${(worstManagedSide.opslap - worstManagedSide.pf).toFixed(2)} pts left`
+						: undefined
+				}
+				subStat={`Week ${worstManagedWeek?.weekNumber}`}
+				matchup={worstManagedWeek}
+			/>
+			<NotableMatchupStatCard
 				title={'Closest Matchup'}
 				isLoaded={props.league?.settings != undefined}
 				memberId={props.memberId}
-				score={`${closestMatchup?.getMargin().toFixed(2)} Diff`}
+				score={`${closestMatchup?.getMargin()?.toFixed(2)} Diff`}
 				subStat={`Week ${closestMatchup?.weekNumber}`}
 				matchup={notableWeeks?.closestGame}
 			/>
@@ -56,7 +87,7 @@ const WeeklyTeamStatGroup = (props: MyProps) => {
 				title={'Furthest Matchup'}
 				isLoaded={props.league?.settings != undefined}
 				memberId={props.memberId}
-				score={`${furthestMatchup?.getMargin().toFixed(2)} Diff`}
+				score={`${furthestMatchup?.getMargin()?.toFixed(2)} Diff`}
 				subStat={`Week ${furthestMatchup?.weekNumber}`}
 				matchup={notableWeeks?.furthestGame}
 			/>

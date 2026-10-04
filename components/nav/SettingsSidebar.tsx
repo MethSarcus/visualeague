@@ -105,20 +105,23 @@ const SettingsSidebar = (props: MyProps) => {
 		<>
 			<IconButton
 				size={'sm'}
-				color={"secondary.600"}
-				background={'none'}
+				color={"secondary.200"}
+				background={'whiteAlpha.50'}
+				border='1px solid'
+				borderColor='whiteAlpha.200'
+				borderRadius='md'
 				disabled={context.settings == undefined}
-				_hover={{background: 'secondary.900'}}
+				_hover={{background: 'whiteAlpha.100'}}
 				icon={<GoGear />}
 				onClick={onOpen}
 				aria-label={'settings'}
 			/>
 
 			<Drawer isOpen={isOpen} placement='right' onClose={onClose}>
-				<DrawerOverlay />
-				<DrawerContent bg={'surface.1'} textColor='white'>
+				<DrawerOverlay bg='blackAlpha.700' />
+				<DrawerContent bg={'surface.0'} textColor='white' borderLeft='1px solid' borderColor='whiteAlpha.200'>
 					<DrawerCloseButton />
-					<DrawerHeader>
+					<DrawerHeader borderBottom='1px solid' borderColor='whiteAlpha.200'>
 						Settings
 						<br />
 						{context && (
@@ -173,11 +176,11 @@ const SettingsSidebar = (props: MyProps) => {
 						)}
 					</DrawerBody>
 
-					<DrawerFooter>
+					<DrawerFooter borderTop='1px solid' borderColor='whiteAlpha.200' gap={2}>
 						<Button size={'sm'} onClick={onClose} variant='ghost'>
 							Close
 						</Button>
-						<Button size={'sm'} onClick={onApplyPressed} colorScheme={'primary'}>
+						<Button size={'sm'} onClick={onApplyPressed} colorScheme={'secondary'}>
 							Apply
 						</Button>
 					</DrawerFooter>

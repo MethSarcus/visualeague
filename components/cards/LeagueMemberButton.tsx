@@ -13,10 +13,14 @@ const LeagueMemberButton = (props: MyProps) => {
 		<Box onClick={props.onclose}>
 			<Link href={`/league/${props.leagueId}/team/${props.member.roster.roster_id}`}>
 				<Button
-
 					size={'sm'}
-					p={3}
-					colorScheme='secondary'
+					w='full'
+					justifyContent='flex-start'
+					px={2}
+					borderRadius='md'
+					variant='ghost'
+					color='textTheme.mediumEmphasis'
+					_hover={{bg: 'surface.2', color: 'white'}}
 					leftIcon={
 						<Avatar
 							src={`https://sleepercdn.com/avatars/thumbs/${props.member.avatar}`}

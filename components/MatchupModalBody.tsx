@@ -1,7 +1,7 @@
 import { Box, Button, Center, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import League from "../classes/custom/League";
-import Matchup from "../classes/custom/Matchup";
+import MatchupInterface from "../classes/custom/MatchupInterface";
 import { LeagueContext } from "../contexts/LeagueContext";
 import { project_colors } from "../utility/project_colors";
 import { LINEUP_POSITION } from "../utility/rosterFunctions";
@@ -10,7 +10,7 @@ import MatchupHeader from "./sleeper/MatchupHeader";
 import PositionalMatchupContainer from "./sleeper/PositionalMatchupContainer";
 
 interface MyProps {
-    matchup: Matchup | undefined
+    matchup: MatchupInterface | undefined
     onClose: any
 }
 

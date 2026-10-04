@@ -11,7 +11,6 @@ import { useContext } from "react";
 import { usePathname } from 'next/navigation'
 import { LeagueContext } from "../../contexts/LeagueContext";
 import MemberList from "../groups/MemberList";
-import { project_colors } from "../../utility/project_colors";
 
 const TeamSidebar = () => {
   const [context] = useContext(LeagueContext);
@@ -23,30 +22,25 @@ const TeamSidebar = () => {
       {context.settings && (
                 <Button
                 onClick={onOpen}
-                transition={"all .2s ease"}
+                transition={"all .18s ease"}
                 isActive={pathName?.includes("/team")}
-                _active={
-                  { bg: project_colors.secondary[500]}
-                }
-                _hover={{
-                  backgroundColor: "secondary.600",
-                  cursor: "pointer",
-                }}
-                  size={"md"}
-                  borderRadius={0}
+                bg={pathName?.includes("/team") ? "whiteAlpha.200" : "transparent"}
+                color={pathName?.includes("/team") ? "white" : "textTheme.mediumEmphasis"}
+                _active={{ bg: "secondary.700" }}
+                _hover={{ backgroundColor: "whiteAlpha.100", cursor: "pointer" }}
+                  size={"sm"}
+                  borderRadius={"md"}
                   fontWeight={"semibold"}
-                  colorScheme={"secondary_inverted"}
-                  textColor="white"
                   variant="ghost"
               >
                 Teams
               </Button>
       )}
-      <Drawer isOpen={isOpen} placement="left"  onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent bg={"surface.1"} textColor="white">
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <DrawerOverlay bg="blackAlpha.700" />
+        <DrawerContent bg={"surface.0"} textColor="white" borderRight="1px solid" borderColor="whiteAlpha.200">
           <DrawerCloseButton />
-          <DrawerHeader>
+          <DrawerHeader borderBottom="1px solid" borderColor="whiteAlpha.200">
             Teams
             <br />
           </DrawerHeader>

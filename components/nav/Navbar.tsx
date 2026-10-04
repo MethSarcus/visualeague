@@ -9,7 +9,6 @@ import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
 import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
-import {project_colors} from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
 import SeasonPortionSelector from './SeasonPortionSelector'
@@ -36,14 +35,21 @@ const Navbar = (props: MyProps) => {
 	}
 	return (
 		<Flex
-			bg={'secondary.600'}
-			bgGradient='linear(to-r, surface.1, surface.0)'
+			bg={'surface.0'}
+			borderBottom="1px solid"
+			borderColor="whiteAlpha.200"
+			position="sticky"
+			top={0}
+			zIndex="docked"
+			minH="64px"
 			maxWidth={'100vw'}
+			align="center"
+			backdropFilter="blur(16px)"
 			color={'white'}>
 			<HStack
 				spacing='0px'
 				pl={3}
-				paddingY={1}
+				paddingY={2}
 				flex={1}
 				display={{sm: 'none', base: 'flex'}}
 				maxWidth={'100vw'}
@@ -59,8 +65,8 @@ const Navbar = (props: MyProps) => {
 				py={0}
 				my={0}
 				flex={1}
-				mx={6}
-				gap={0}
+				mx={4}
+				gap={1}
 				spacing='0px'
 				display={{sm: 'flex', base: 'none'}}
 				maxWidth={'100vw'}
@@ -116,25 +122,27 @@ interface NavButtonProps {
 function NavbarButton(props: NavButtonProps) {
 	const pathName = usePathname()
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
+	const isCurrent = props.link !== undefined && (
+		pathName === props.link ||
+		(props.buttonText !== 'League' && pathName?.startsWith(`${props.link}/`))
+	)
 	if (props.link != undefined && props.disabled != true) {
 		return (
 			<Link href={props.link}>
 				<Button
-					transition={'all .2s ease'}
-					_hover={{
-						backgroundColor: 'secondary.600',
-						cursor: 'pointer',
-					}}
+					transition={'all .18s ease'}
+					_hover={{backgroundColor: 'whiteAlpha.100', cursor: 'pointer'}}
 					onClick={props.onclick}
 					disabled={props.disabled ?? false}
-					size={'md'}
+					size={'sm'}
 					fontWeight={'semibold'}
-					borderRadius={0}
-					colorScheme={'primary'}
-					textColor='white'
-					isActive={pathName == '/' + props.link && isLargerThan800}
-					_active={{bg: project_colors.secondary[500]}}
+					borderRadius={'md'}
+					color={isCurrent ? 'white' : 'textTheme.mediumEmphasis'}
+					bg={isCurrent ? 'whiteAlpha.200' : 'transparent'}
+					isActive={isCurrent && isLargerThan800}
+					_active={{bg: 'secondary.700'}}
 					variant={'ghost'}
+					px={3}
 					aria-label={props.buttonText}>
 					{props.buttonText}
 				</Button>
@@ -143,20 +151,16 @@ function NavbarButton(props: NavButtonProps) {
 	} else {
 		return (
 			<Button
-				transition={'all .2s ease'}
-				_hover={{
-					backgroundColor: 'secondary.600',
-					cursor: 'pointer',
-				}}
+				transition={'all .18s ease'}
+				_hover={{backgroundColor: 'whiteAlpha.100', cursor: 'pointer'}}
 				onClick={props.onclick}
 				disabled={props.disabled ?? false}
-				size={'md'}
-				borderRadius={0}
+				size={'sm'}
+				borderRadius={'md'}
 				fontWeight={'medium'}
-				colorScheme={'primary'}
-				textColor='white'
-				isActive={pathName?.includes('/' + props.link) && isLargerThan800}
-				_active={{bg: project_colors.secondary[500]}}
+				color='textTheme.mediumEmphasis'
+				isActive={isCurrent && isLargerThan800}
+				_active={{bg: 'secondary.700'}}
 				variant='ghost'
 				aria-label={props.buttonText}>
 				{props.buttonText}

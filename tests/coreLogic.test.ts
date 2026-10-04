@@ -17,6 +17,8 @@ import {
 } from '../utility/rosterFunctions'
 import {MatchupPlayer} from '../classes/custom/MatchupPlayer'
 import Player, {PlayerMap, PlayerScores, SleeperPlayerDetails} from '../classes/custom/Player'
+import League from '../classes/custom/League'
+import MatchupInterface from '../classes/custom/MatchupInterface'
 
 const details = {player_id: 'p1'} as SleeperPlayerDetails
 
@@ -153,6 +155,40 @@ describe('roster and scoring utilities', () => {
 			settings: {type: 2},
 		} as never)
 		expect(result).toEqual({pprString: '0.5 PPR', numQbString: '2QB', leagueTypeString: 'Dynasty'})
+	})
+})
+
+describe('team notable weeks', () => {
+	it('selects managed-week extrema by points left across enabled weeks, including bye weeks', () => {
+		const makeMatchup = (
+			weekNumber: number,
+			pf: number,
+			opslap: number,
+			isByeWeek = false
+		) => ({
+			weekNumber,
+			isByeWeek,
+			getMemberSide: () => ({pf, opslap}),
+			getMargin: () => 10,
+		}) as unknown as MatchupInterface
+
+		const matchups = [
+			makeMatchup(1, 100, 125),
+			makeMatchup(2, 85, 150, true),
+			makeMatchup(3, 110, 120),
+			makeMatchup(4, 80, 200),
+		]
+		const league = {
+			getEnabledWeeks: () => [1, 2, 3],
+			weeks: new Map(
+				matchups.map((matchup) => [matchup.weekNumber, {getMemberMatchup: () => matchup}])
+			),
+		} as unknown as League
+
+		const notableWeeks = League.prototype.getMemberNotableWeeks.call(league, 42)
+
+		expect(notableWeeks.bestManagedWeek?.weekNumber).toBe(3)
+		expect(notableWeeks.worstManagedWeek?.weekNumber).toBe(2)
 	})
 })
 
