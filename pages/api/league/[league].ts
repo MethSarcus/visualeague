@@ -8,13 +8,8 @@ import {SleeperMatchup} from '../../../classes/sleeper/SleeperMatchup'
 import {SleeperRoster} from '../../../classes/sleeper/SleeperRoster'
 import {
 	getMultiPlayerDetails,
-	getMultiPlayerProjections,
-	getMultiPlayerStats,
-	getWeeklyPlayerStats,
 } from '../player/[...player]'
-import {SleeperPlayerDetails} from '../../../classes/custom/Player'
 const {connectToDatabase} = require('../../../lib/mongodb')
-const {MongoClient} = require('mongodb')
 
 const cors = Cors({
 	methods: ['GET', 'HEAD'],
@@ -53,12 +48,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (league) {
 		let leagueId = league.toString()
 		let db = connectToDatabase()
-		const leagueSettings = (await getLeague(leagueId)) as LeagueSettings
-		const leagueUsers = (await getLeagueMembers(leagueId)) as SleeperUser[]
-		const leagueRosters = (await getLeagueRosters(leagueId)) as SleeperRoster[]
+		const [leagueSettings, leagueUsers, leagueRosters] = (await Promise.all([
+			getLeague(leagueId),
+			getLeagueMembers(leagueId),
+			getLeagueRosters(leagueId),
+		])) as [LeagueSettings, SleeperUser[], SleeperRoster[]]
 		const matchups = await getMatchups(leagueId, leagueSettings)
 		let allPlayers = [...matchups.allPlayers]
-		const playerDetails = await getMultiPlayerDetails(db, allPlayers, leagueSettings.season)
+		const playerDetails = await getMultiPlayerDetails(
+			db,
+			allPlayers,
+			leagueSettings.season,
+			leagueSettings.settings.start_week,
+			leagueSettings.settings.last_scored_leg
+		)
 		res
 			.status(200)
 			.json({
