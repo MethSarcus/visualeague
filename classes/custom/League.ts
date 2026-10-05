@@ -1,4 +1,3 @@
-import e from 'cors'
 import {produce, immerable} from 'immer'
 import {
 	LINEUP_POSITION,
@@ -6,27 +5,22 @@ import {
 	standardDeviation,
 	TIE_CONST,
 } from '../../utility/rosterFunctions'
-import {DraftPick} from '../sleeper/DraftPick'
 import {DraftOrder} from '../sleeper/DraftSettings'
 import {LeagueSettings, ScoringSettings} from '../sleeper/LeagueSettings'
-import LeagueData from '../sleeper/SleeperLeague'
 import {SleeperMatchup} from '../sleeper/SleeperMatchup'
-import {SleeperRoster} from '../sleeper/SleeperRoster'
 import {SleeperTransaction} from '../sleeper/SleeperTransaction'
-import {SleeperUser, UserData} from '../sleeper/SleeperUser'
-import {Draft, DraftPlayer} from './Draft'
+import {UserData} from '../sleeper/SleeperUser'
+import {Draft} from './Draft'
 import LeagueMember from './LeagueMember'
 import LeagueStats from './LeagueStats'
 import Matchup from './Matchup'
 import MatchupInterface from './MatchupInterface'
 import {MatchupPlayer} from './MatchupPlayer'
 import {MatchupSide} from './MatchupSide'
-import MemberScores from './MemberStats'
 import {OrdinalStatInfo} from './OrdinalStatInfo'
-import Player, {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from './Player'
-import RivalMap, {RivalStats} from './RivalStats'
+import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from './Player'
+import {RivalStats} from './RivalStats'
 import SeasonPlayer from './SeasonPlayer'
-import StatsResponse from './StatsResponse'
 import Trade from './Trade'
 import {Week} from './Week'
 
@@ -297,12 +291,13 @@ export default class League {
 		let smallestDiff: number | null = null
 		this.rivals.get(rosterId)?.forEach((rival) => {
 			if (rival.wins + rival.losses + rival.ties > 0) {
-				if (smallestDiff == null) {
+				if (smallestDiff === null) {
 					smallestDiff = Math.abs(rival.getPointDifferential())
 					memberRival = rival
 				} else {
-					if (rival.getPointDifferential() < smallestDiff) {
-						smallestDiff = Math.abs(rival.getPointDifferential())
+					const pointDiff = Math.abs(rival.getPointDifferential())
+					if (pointDiff < smallestDiff) {
+						smallestDiff = pointDiff
 						memberRival = rival
 					}
 				}
@@ -590,8 +585,8 @@ export default class League {
 		return worstTrade
 	}
 
-	getSortedTrades() {
-		return this.trades.sort((a, b) => {
+	getSortedTrades(): Trade[] {
+		return [...this.trades].sort((a, b) => {
 			if (a.biggestPointDifferential < b.biggestPointDifferential) {
 				return 1
 			} else if (a.biggestPointDifferential > b.biggestPointDifferential) {
@@ -855,11 +850,11 @@ export default class League {
 		})
 	}
 
-	getBestAndWorstDrafter() {
+	getBestAndWorstDrafter(): {bestDrafter: LeagueMember | null; worstDrafter: LeagueMember | null} {
 		let bestDrafter: LeagueMember | null = null
-		let bestDrafterScore: number = 0
+		let bestDrafterScore = Number.NEGATIVE_INFINITY
 		let worstDrafter: LeagueMember | null = null
-		let worstDrafterScore: number = 10000000000
+		let worstDrafterScore = Number.POSITIVE_INFINITY
 		this.members.forEach((member) => {
 			if (member.stats.draftValue > bestDrafterScore) {
 				bestDrafterScore = member.stats.draftValue
@@ -873,57 +868,58 @@ export default class League {
 		})
 
 		return {
-			bestDrafter: bestDrafter as unknown as LeagueMember,
-			worstDrafter: worstDrafter as unknown as LeagueMember,
+			bestDrafter,
+			worstDrafter,
 		}
 	}
 
-	getNotableMembers() {
-		let bestManager: LeagueMember
-		let worstManager: LeagueMember
-		let highestScoring: LeagueMember
-		let lowestScoring: LeagueMember
-		let mostConsistent: LeagueMember
-		let leastConsistent: LeagueMember
+	getNotableMembers(): {
+		bestManager: LeagueMember
+		worstManager: LeagueMember
+		highestScoring: LeagueMember
+		lowestScoring: LeagueMember
+		mostConsistent: LeagueMember
+		leastConsistent: LeagueMember
+	} | null {
+		const members = Array.from(this.members.values())
+		const firstMember = members[0]
+		if (firstMember === undefined) return null
 
-		this.members.forEach((member, rosterId) => {
-			if (!bestManager) {
-				bestManager = member
-				worstManager = member
+		let bestManager = firstMember
+		let worstManager = firstMember
+		let highestScoring = firstMember
+		let lowestScoring = firstMember
+		let mostConsistent = firstMember
+		let leastConsistent = firstMember
+
+		members.slice(1).forEach((member) => {
+			if (member.stats.pf > highestScoring.stats.pf) {
 				highestScoring = member
+			}
+			if (member.stats.pf < lowestScoring.stats.pf) {
 				lowestScoring = member
+			}
+			if (member.stats.gp > bestManager.stats.gp) {
+				bestManager = member
+			}
+			if (member.stats.gp < worstManager.stats.gp) {
+				worstManager = member
+			}
+			if (member.stats.stdDev < mostConsistent.stats.stdDev) {
 				mostConsistent = member
+			}
+			if (member.stats.stdDev > leastConsistent.stats.stdDev) {
 				leastConsistent = member
-			} else {
-				if (member.stats.pf > highestScoring.stats.pf) {
-					highestScoring = member
-				}
-				if (member.stats.pf < lowestScoring.stats.pf) {
-					lowestScoring = member
-				}
-				if (member.stats.gp > bestManager.stats.gp) {
-					bestManager = member
-				}
-				if (member.stats.gp < worstManager.stats.gp) {
-					worstManager = member
-				}
-
-				if (member.stats.stdDev < mostConsistent.stats.stdDev) {
-					mostConsistent = member
-				}
-				if (member.stats.stdDev > leastConsistent.stats.stdDev) {
-					leastConsistent = member
-				}
 			}
 		})
 
 		return {
-			bestManager: bestManager!,
-			worstManager: worstManager!,
-			highestScoring: highestScoring!,
-			lowestScoring: lowestScoring!,
-			mostConsistent: mostConsistent!,
-			leastConsistent: leastConsistent!,
+			bestManager,
+			worstManager,
+			highestScoring,
+			lowestScoring,
+			mostConsistent,
+			leastConsistent,
 		}
 	}
 
@@ -1009,6 +1005,43 @@ export default class League {
 		return taxiMap
 	}
 
+	private addTeamPlayerStats(member: LeagueMember, team: MatchupSide, weekNumber: number): void {
+		const addPlayerWeek = (player: MatchupPlayer, wasStarted: boolean) => {
+			const playerId = player.playerId
+			if (playerId === undefined) return
+
+			let seasonPlayer = member.players.get(playerId)
+			if (seasonPlayer === undefined) {
+				seasonPlayer = new SeasonPlayer(
+					playerId,
+					team.roster_id,
+					player.position as LINEUP_POSITION,
+					player.eligiblePositions as POSITION[]
+				)
+				member.players.set(playerId, seasonPlayer)
+			}
+			seasonPlayer.addWeek(weekNumber, player.score, player.projectedScore, wasStarted)
+		}
+
+		team.starters.forEach((player) => addPlayerWeek(player, true))
+		team.bench.forEach((player) => addPlayerWeek(player, false))
+		team.position_starts.forEach((starts, position) => {
+			member.stats.position_starts.set(
+				position,
+				(member.stats.position_starts.get(position) ?? 0) + starts
+			)
+			member.stats.position_scores.set(
+				position,
+				(member.stats.position_scores.get(position) ?? 0) + (team.position_scores.get(position) ?? 0)
+			)
+			member.stats.projected_position_scores.set(
+				position,
+				(member.stats.projected_position_scores.get(position) ?? 0) +
+					(team.position_projected_scores.get(position) ?? 0)
+			)
+		})
+	}
+
 	//Needs weeks to be set
 	calcMemberScores(playerInfo: Map<string, PlayerScores>) {
 		this.weeks.forEach((week) => {
@@ -1028,60 +1061,7 @@ export default class League {
 					homeMember.stats.gp += homeTeam.gp
 					homeMember.stats.gutPlays += homeTeam.gut_plays
 
-					homeTeam.starters.forEach((player) => {
-						if (homeMember!.players.has(player.playerId!)) {
-							homeMember!.players
-								.get(player.playerId!)!
-								.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-						} else {
-							let seasonPlayer = new SeasonPlayer(
-								player.playerId!,
-								homeTeam.roster_id,
-								player.position as LINEUP_POSITION,
-								player.eligiblePositions as POSITION[]
-							)
-							seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-							homeMember!.players.set(player.playerId!, seasonPlayer)
-						}
-					})
-
-					homeTeam.bench.forEach((player) => {
-						if (homeMember!.players.has(player.playerId!)) {
-							homeMember!.players
-								.get(player.playerId!)!
-								.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-						} else {
-							let seasonPlayer = new SeasonPlayer(
-								player.playerId!,
-								homeTeam.roster_id,
-								player.position as LINEUP_POSITION,
-								player.eligiblePositions as POSITION[]
-							)
-							seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-							homeMember!.players.set(player.playerId!, seasonPlayer)
-						}
-					})
-					homeTeam.position_starts.forEach((value, key) => {
-						if (homeMember?.stats.position_scores.has(key)) {
-							homeMember?.stats.position_starts.set(key, homeMember.stats.position_starts.get(key)!! + value)
-							homeMember?.stats.position_scores.set(
-								key,
-								homeMember.stats.position_scores.get(key)!! + homeTeam.position_scores.get(key)!!
-							)
-							homeMember?.stats.projected_position_scores.set(
-								key,
-								homeMember.stats.projected_position_scores.get(key)!! +
-									homeTeam.position_projected_scores.get(key)!!
-							)
-						} else {
-							homeMember?.stats.position_starts.set(key, value)
-							homeMember?.stats.position_scores.set(key, homeTeam.position_scores.get(key)!!)
-							homeMember?.stats.projected_position_scores.set(
-								key,
-								homeTeam.position_projected_scores.get(key)!!
-							)
-						}
-					})
+						this.addTeamPlayerStats(homeMember, homeTeam, week.weekNumber)
 					let awayTeam = matchup.awayTeam
 					let awayMember = this.members.get(matchup.awayTeam?.roster_id ?? 0)
 					if (awayTeam && awayMember) {
@@ -1105,64 +1085,7 @@ export default class League {
 						awayMember.stats.gp += awayTeam.gp
 						awayMember.stats.gutPlays += awayTeam.gut_plays
 
-						awayTeam.starters.forEach((player) => {
-							if (awayMember!.players.has(player.playerId!)) {
-								awayMember!.players
-									.get(player.playerId!)!
-									.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-							} else {
-								let seasonPlayer = new SeasonPlayer(
-									player.playerId!,
-									homeTeam.roster_id,
-									player.position as LINEUP_POSITION,
-									player.eligiblePositions as POSITION[]
-								)
-								seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-								awayMember!.players.set(player.playerId!, seasonPlayer)
-							}
-						})
-
-						awayTeam.bench.forEach((player) => {
-							if (awayMember!.players.has(player.playerId!)) {
-								awayMember!.players
-									.get(player.playerId!)!
-									.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-							} else {
-								let seasonPlayer = new SeasonPlayer(
-									player.playerId!,
-									homeTeam.roster_id,
-									player.position as LINEUP_POSITION,
-									player.eligiblePositions as POSITION[]
-								)
-								seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-								awayMember!.players.set(player.playerId!, seasonPlayer)
-							}
-						})
-
-						awayTeam.position_starts.forEach((value, key) => {
-							if (awayMember?.stats.position_scores.has(key)) {
-								awayMember?.stats.position_starts.set(
-									key,
-									awayMember.stats.position_starts.get(key)!! + value
-								)
-								awayMember?.stats.position_scores.set(
-									key,
-									awayMember.stats.position_scores.get(key)!! + awayTeam?.position_scores.get(key)!!
-								)
-								awayMember?.stats.projected_position_scores.set(
-									key,
-									awayMember.stats.projected_position_scores.get(key)!! +
-										awayTeam?.position_projected_scores.get(key)!!
-								)
-							} else {
-								awayMember?.stats.position_starts.set(key, value)
-								awayMember?.stats.position_scores.set(key, awayTeam?.position_scores.get(key)!!)
-								awayMember?.stats.projected_position_scores.set(
-									key,
-									awayTeam?.position_projected_scores.get(key)!!
-								)
-							}
-						})
+						this.addTeamPlayerStats(awayMember, awayTeam, week.weekNumber)
 
 						if (matchup.winnerRosterId == homeMember.roster.roster_id) {
 							homeMember.stats.wins += 1
@@ -1226,60 +1149,7 @@ export default class League {
 				homeMember.stats.opslap += homeTeam.opslap
 				homeMember.stats.gp += homeTeam.gp
 				homeMember.stats.gutPlays += homeTeam.gut_plays
-				homeTeam.starters.forEach((player) => {
-					if (homeMember!.players.has(player.playerId!)) {
-						homeMember!.players
-							.get(player.playerId!)!
-							.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-					} else {
-						let seasonPlayer = new SeasonPlayer(
-							player.playerId!,
-							homeTeam.roster_id,
-							player.position as LINEUP_POSITION,
-							player.eligiblePositions as POSITION[]
-						)
-						seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, true)
-						homeMember!.players.set(player.playerId!, seasonPlayer)
-					}
-				})
-
-				homeTeam.bench.forEach((player) => {
-					if (homeMember!.players.has(player.playerId!)) {
-						homeMember!.players
-							.get(player.playerId!)!
-							.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-					} else {
-						let seasonPlayer = new SeasonPlayer(
-							player.playerId!,
-							homeTeam.roster_id,
-							player.position as LINEUP_POSITION,
-							player.eligiblePositions as POSITION[]
-						)
-						seasonPlayer.addWeek(week.weekNumber, player.score, player.projectedScore, false)
-						homeMember!.players.set(player.playerId!, seasonPlayer)
-					}
-				})
-				homeTeam.position_starts.forEach((value, key) => {
-					if (homeMember?.stats.position_scores.has(key)) {
-						homeMember?.stats.position_starts.set(key, homeMember.stats.position_starts.get(key)!! + value)
-						homeMember?.stats.position_scores.set(
-							key,
-							homeMember.stats.position_scores.get(key)!! + homeTeam.position_scores.get(key)!!
-						)
-						homeMember?.stats.projected_position_scores.set(
-							key,
-							homeMember.stats.projected_position_scores.get(key)!! +
-								homeTeam.position_projected_scores.get(key)!!
-						)
-					} else {
-						homeMember?.stats.position_starts.set(key, value)
-						homeMember?.stats.position_scores.set(key, homeTeam.position_scores.get(key)!!)
-						homeMember?.stats.projected_position_scores.set(
-							key,
-							homeTeam.position_projected_scores.get(key)!!
-						)
-					}
-				})
+				this.addTeamPlayerStats(homeMember, homeTeam, week.weekNumber)
 			})
 			let teams: MatchupSide[] = week.getAllTeams()
 
@@ -1367,25 +1237,24 @@ export default class League {
 		return enabledWeeks
 	}
 
-	getAllWeeksForMember(rosterId: number) {
+	getAllWeeksForMember(rosterId: number): MatchupInterface[] {
 		let allWeeks: MatchupInterface[] = []
 
 		this.getEnabledWeeks().forEach((weekNumber) => {
-			allWeeks.push(this.weeks.get(weekNumber)!.getMemberMatchup(rosterId))
+			const matchup = this.weeks.get(weekNumber)?.getMemberMatchup(rosterId)
+			if (matchup !== undefined) allWeeks.push(matchup)
 		})
 
 		return allWeeks
 	}
 
-	getAllWeeksWithOpponentForMember(rosterId: number) {
+	getAllWeeksWithOpponentForMember(rosterId: number): Matchup[] {
 		let allWeeks: Matchup[] = []
 
 		this.getEnabledWeeks().forEach((weekNumber) => {
-			if (
-				this.weeks.get(weekNumber)!.getMemberMatchup(rosterId) instanceof Matchup &&
-				this.weeks.get(weekNumber)!.getMemberMatchup(rosterId).isByeWeek == false
-			) {
-				allWeeks.push(this.weeks.get(weekNumber)!.getMemberMatchup(rosterId) as Matchup)
+			const matchup = this.weeks.get(weekNumber)?.getMemberMatchup(rosterId)
+			if (matchup instanceof Matchup && !matchup.isByeWeek) {
+				allWeeks.push(matchup)
 			}
 		})
 
