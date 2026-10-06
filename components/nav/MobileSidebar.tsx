@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {useContext} from 'react'
 import {RxLoop} from 'react-icons/rx'
 import {GiStrong} from 'react-icons/gi'
-import {BsGrid3X2, BsBarChart} from 'react-icons/bs'
+import {BsGrid3X2, BsBarChart, BsTrophy} from 'react-icons/bs'
 import {VscListTree} from 'react-icons/vsc'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
@@ -87,6 +87,24 @@ export default function MobileSidebar() {
 										onClick={onClose}
 									>
 										Power Ranks
+								</Button>
+							</Link>
+						)}
+						{context?.settings && (
+							<Link href={`/league/${context.settings.league_id}/playoff-odds`}>
+								<Button
+									leftIcon={<BsTrophy />}
+									variant={'ghost'}
+									w='full'
+									justifyContent='flex-start'
+									borderRadius='md'
+									minH='44px'
+									px={3}
+									color='textTheme.mediumEmphasis'
+									_hover={{bg: 'surface.2', color: 'white'}}
+									onClick={onClose}
+								>
+									Playoff Odds
 									</Button>
 								</Link>
 							)}

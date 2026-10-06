@@ -83,6 +83,11 @@ const Navbar = (props: MyProps) => {
 					link={`/league/${context?.settings?.league_id}/ranks`}
 				/>
 				<NavbarButton
+					buttonText='Playoff Odds'
+					disabled={context.settings == undefined}
+					link={`/league/${context?.settings?.league_id}/playoff-odds`}
+				/>
+				<NavbarButton
 					buttonText='Trading'
 					disabled={context.settings == undefined}
 					link={`/league/${context?.settings?.league_id}/trades`}

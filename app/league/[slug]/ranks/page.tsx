@@ -6,7 +6,6 @@ import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillSca
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
 import ManagerDetailPanel from '../../../../components/groups/ManagerDetailPanel'
-import PlayoffOdds from '../../../../components/groups/PlayoffOdds'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 const RankPage = () => {
@@ -22,15 +21,13 @@ const RankPage = () => {
 	const desktopTemplate = `  
 	"header header"
 	"allplay_table cumulative_ranks"
-	"owner_skill owner_skill"
-	"playoff_odds playoff_odds"`
+	"owner_skill owner_skill"`
 
 	const mobileTemplate = `  
 	"header"
 	"cumulative_ranks"
 	"allplay_table"
-	"owner_skill"
-	"playoff_odds"`
+	"owner_skill"`
 	return (
 		<Box overflowX={'hidden'} w={'full'} height={'full'}>
 			<Grid
@@ -39,7 +36,7 @@ const RankPage = () => {
 				my={2}
 				templateAreas={[mobileTemplate, desktopTemplate]}
 				gridTemplateColumns={['minmax(0, 1fr)', '1fr 1fr']}
-				gridTemplateRows={'60px auto auto auto auto'}
+				gridTemplateRows={'60px auto auto auto'}
 			>
 				<GridItem area={'header'} minW={0}>
 					<Skeleton
@@ -84,10 +81,6 @@ const RankPage = () => {
 						</Box>
 						<ManagerDetailPanel league={context} memberName={hoveredMember ?? selectedMember} />
 					</Grid>
-				</GridItem>
-
-				<GridItem area={'playoff_odds'} minW={0}>
-					<PlayoffOdds league={context} />
 				</GridItem>
 			</Grid>
 		</Box>
