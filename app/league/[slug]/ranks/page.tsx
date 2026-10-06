@@ -5,6 +5,7 @@ import {useContext, useState} from 'react'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
+import PlayoffOdds from '../../../../components/groups/PlayoffOdds'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 const RankPage = () => {
@@ -18,13 +19,15 @@ const RankPage = () => {
 	const desktopTemplate = `  
 	"header header"
 	"allplay_table cumulative_ranks"
-	"owner_skill owner_skill"`
+	"owner_skill owner_skill"
+	"playoff_odds playoff_odds"`
 
 	const mobileTemplate = `  
 	"header"
 	"cumulative_ranks"
 	"allplay_table"
-	"owner_skill"`
+	"owner_skill"
+	"playoff_odds"`
 	return (
 		<Box overflowX={'hidden'} w={'full'} height={'full'}>
 			<Grid
@@ -33,7 +36,7 @@ const RankPage = () => {
 				my={2}
 				templateAreas={[mobileTemplate, desktopTemplate]}
 				gridTemplateColumns={['1fr', '1fr 1fr']}
-				gridTemplateRows={'60px 1fr 1fr 1fr'}
+				gridTemplateRows={'60px auto auto auto auto'}
 			>
 				<GridItem area={'header'}>
 					<Skeleton
@@ -58,12 +61,19 @@ const RankPage = () => {
 				>
 					<AllPlayRankGroup league={context} onHover={onHover} />
 				</GridItem>
-				<GridItem area={'cumulative_ranks'}>
-					<PowerRankingBumpChart league={context} displayIds={filteredIds} />
+				<GridItem area={'cumulative_ranks'} position='relative' minH={['420px', '0']}>
+					{/* Absolute so the chart fills the row set by the matrix instead of sizing it */}
+					<Box position='absolute' inset={0}>
+						<PowerRankingBumpChart league={context} displayIds={filteredIds} />
+					</Box>
 				</GridItem>
 
-				<GridItem area={'owner_skill'}>
+				<GridItem area={'owner_skill'} h={['400px', '600px']}>
 					<MemberSkillScatterPlot league={context} />
+				</GridItem>
+
+				<GridItem area={'playoff_odds'}>
+					<PlayoffOdds league={context} />
 				</GridItem>
 			</Grid>
 		</Box>
