@@ -1,6 +1,8 @@
 import { Heading, HStack, Icon } from "@chakra-ui/react";
+import { useContext } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { TradedPick } from "../../../classes/sleeper/DraftPick";
+import { LeagueContext } from "../../../contexts/LeagueContext";
 import { ordinal_suffix_of } from "../../../utility/rosterFunctions";
 
 interface MyProps {
@@ -9,6 +11,7 @@ interface MyProps {
 }
 
 export default function DraftPickTransaction(props: MyProps) {
+  const [league] = useContext(LeagueContext);
   let addDropIcon;
   let iconColor;
   if (props.added) {
@@ -19,7 +22,8 @@ export default function DraftPickTransaction(props: MyProps) {
     iconColor = "red";
   }
 
-  const pickValue = `${props.pick.season} ${ordinal_suffix_of(props.pick.round)} (Team ${props.pick.roster_id})`
+  const originalOwner = league?.members?.get(props.pick.roster_id)?.name ?? `Team ${props.pick.roster_id}`
+  const pickValue = `${props.pick.season} ${ordinal_suffix_of(props.pick.round)} (${originalOwner})`
 
   return (
     <HStack>

@@ -1,4 +1,4 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { DatabasePlayer } from "../../../classes/custom/Player";
 import { TradedPick } from "../../../classes/sleeper/DraftPick";
 import DraftPickTransaction from "./DraftPickTransaction";
@@ -13,12 +13,27 @@ interface MyProps {
   playerDrops?: DatabasePlayer[]
   draftPickDrops?: TradedPick[]
   faab?: number
+  // Net points the received players scored minus the sent players since the trade
+  netPoints?: number
+  outcome?: 'winner' | 'loser' | 'even'
 }
 
+const OUTCOME_COLOR = {winner: 'green.300', loser: 'red.300', even: 'white'}
+
 export default function TradeSide(props: MyProps) {
+  const outcomeColor = OUTCOME_COLOR[props.outcome ?? 'even']
   return (
-    <VStack align="stretch" spacing={2} borderStart="solid" borderStartWidth={"medium"} borderStartColor="white" pl={2}>
-      <Text as={'b'} size={'xs'}>{props.ownerName}</Text>
+    <VStack align="stretch" spacing={2} borderStart="solid" borderStartWidth={"medium"} borderStartColor={outcomeColor} pl={2}>
+      <HStack justify="space-between" spacing={3}>
+        <Text as={'b'} size={'xs'}>{props.ownerName}</Text>
+        {props.netPoints !== undefined && (
+          <Tooltip hasArrow label="Net points scored by players received minus players sent since the trade">
+            <Text fontSize="xs" fontWeight="bold" color={outcomeColor}>
+              {props.netPoints > 0 ? '+' : ''}{props.netPoints.toFixed(2)} pts
+            </Text>
+          </Tooltip>
+        )}
+      </HStack>
       {props.playerAdds && props.playerAdds.map(player => <PlayerTransaction key={`add_${player?.details?.player_id}`} player={player.details} added={true}/>)}
       {props.draftPickAdds && props.draftPickAdds.map(pick => <DraftPickTransaction key={`add_${pick.season}_${pick.round}_${pick.roster_id}`} pick={pick} added={true}/>)}
       {props.faab && props.faab > 0 && <FaabTransaction cash={props.faab}/>}

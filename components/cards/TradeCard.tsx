@@ -86,6 +86,19 @@ export default function TradeCard(props: MyProps) {
 	if (playerDetails == null || playerDetails == undefined)
 		return <Box>Loading</Box>
 
+	// Winner is whoever's received players outscored the ones they sent
+	const netPoints = (id: number) => props.trade?.memberNetPoints.get(id)
+	const allNet = (props.trade?.consenter_ids ?? []).map((id) => netPoints(id) ?? 0)
+	const bestNet = Math.max(...allNet)
+	const worstNet = Math.min(...allNet)
+	const outcomeFor = (id: number) => {
+		const net = netPoints(id) ?? 0
+		if (bestNet === worstNet) return 'even' as const
+		if (net === bestNet) return 'winner' as const
+		if (net === worstNet) return 'loser' as const
+		return 'even' as const
+	}
+
 	return (
 		<Stack
 			bg={'surface.0'}
@@ -123,6 +136,8 @@ export default function TradeCard(props: MyProps) {
 						draftPickAdds={draftPickAdds.get(id)}
 						draftPickDrops={draftPickDrops.get(id)}
 						faab={faabLedger.get(id)}
+						netPoints={netPoints(id)}
+						outcome={outcomeFor(id)}
 					/>
 				)
 			})}
