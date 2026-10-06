@@ -5,12 +5,15 @@ import {useContext, useState} from 'react'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
+import ManagerDetailPanel from '../../../../components/groups/ManagerDetailPanel'
 import PlayoffOdds from '../../../../components/groups/PlayoffOdds'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 const RankPage = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const [filteredIds, setFilteredIds] = useState([] as number[])
+	const [selectedMember, setSelectedMember] = useState<string | null>(null)
+	const [hoveredMember, setHoveredMember] = useState<string | null>(null)
 
 
 	const onHover: (rosterIds: number[]) => void = (rosterIds: number[]) => {
@@ -68,8 +71,18 @@ const RankPage = () => {
 					</Box>
 				</GridItem>
 
-				<GridItem area={'owner_skill'} h={['400px', '600px']}>
-					<MemberSkillScatterPlot league={context} />
+				<GridItem area={'owner_skill'}>
+					<Grid templateColumns={['1fr', '2fr 1fr']} gap={3} h={['auto', '600px']}>
+						<Box h={['400px', '100%']}>
+							<MemberSkillScatterPlot
+								league={context}
+								selectedName={selectedMember}
+								onHoverMember={setHoveredMember}
+								onSelectMember={setSelectedMember}
+							/>
+						</Box>
+						<ManagerDetailPanel league={context} memberName={hoveredMember ?? selectedMember} />
+					</Grid>
 				</GridItem>
 
 				<GridItem area={'playoff_odds'}>

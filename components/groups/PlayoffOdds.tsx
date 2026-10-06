@@ -1,5 +1,5 @@
 'use client'
-import {Avatar, Box, Button, Flex, Grid, GridItem, Heading, NumberInput, NumberInputField, Spinner, Switch, Text, Tooltip} from '@chakra-ui/react'
+import {Avatar, Box, Button, Flex, Grid, GridItem, Heading, NumberInput, NumberInputField, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Spinner, Switch, Text, Tooltip} from '@chakra-ui/react'
 import axios from 'axios'
 import {useMemo, useState} from 'react'
 import useSWR from 'swr'
@@ -18,6 +18,7 @@ const RECENCY_DECAY = 0.9
 const MIN_STD_DEV = 10
 const FALLBACK_MEAN = 100
 const FALLBACK_STD_DEV = 20
+const DEFAULT_VARIANCE = 1.5
 
 const fetchSchedule = async (leagueId: string, firstWeek: number, lastWeek: number) => {
 	const requests = []
@@ -40,13 +41,16 @@ const PlayoffOdds = ({league}: MyProps) => {
 	const [teamsText, setTeamsText] = useState<string | undefined>()
 	const [spotsText, setSpotsText] = useState('0')
 	const [winnersFirstDraft, setWinnersFirstDraft] = useState(false)
-	const [applied, setApplied] = useState<{teams?: number; spots: number; winnersFirst: boolean}>({
+	const [varianceDraft, setVarianceDraft] = useState(DEFAULT_VARIANCE)
+	const [applied, setApplied] = useState<{teams?: number; spots: number; winnersFirst: boolean; variance: number}>({
 		spots: 0,
 		winnersFirst: false,
+		variance: DEFAULT_VARIANCE,
 	})
 	const playoffTeams = applied.teams ?? settingsPlayoffTeams
 	const divisionSpots = applied.spots
 	const divisionWinnersFirst = applied.winnersFirst
+	const varianceScale = applied.variance
 	const lastScored = league?.settings?.settings?.last_scored_leg ?? 0
 	const firstUnplayed = Math.min(lastScored, playoffStart - 1) + 1
 	const lastRegularWeek = playoffStart - 1
@@ -162,7 +166,7 @@ const PlayoffOdds = ({league}: MyProps) => {
 		})
 		schedules.forEach((entries) => entries.sort((x, y) => x.week - y.week))
 
-		const odds = simulatePlayoffOdds({teams: oddsTeams, remaining, playoffTeams, divisionSpots, divisionWinnersFirst})
+		const odds = simulatePlayoffOdds({teams: oddsTeams, remaining, playoffTeams, divisionSpots, divisionWinnersFirst, varianceScale})
 		return {
 			rows: odds
 				.map((odd) => ({odd, team: teams.get(odd.id)!}))
@@ -173,7 +177,7 @@ const PlayoffOdds = ({league}: MyProps) => {
 			}),
 			schedules,
 		}
-	}, [league, schedule, hasRemaining, playoffStart, playoffTeams, divisionSpots, divisionWinnersFirst, firstUnplayed])
+	}, [league, schedule, hasRemaining, playoffStart, playoffTeams, divisionSpots, divisionWinnersFirst, varianceScale, firstUnplayed])
 
 	if (league?.members == undefined) return <Spinner />
 	if (playoffStart <= 0 || playoffTeams <= 0) return null
@@ -194,7 +198,10 @@ const PlayoffOdds = ({league}: MyProps) => {
 	const draftTeams = clampInt(teamsText, settingsPlayoffTeams, 1, numMembers)
 	const draftSpots = clampInt(spotsText, 0, 0, numMembers)
 	const canApply =
-		draftTeams !== playoffTeams || draftSpots !== divisionSpots || winnersFirstDraft !== divisionWinnersFirst
+		draftTeams !== playoffTeams ||
+		draftSpots !== divisionSpots ||
+		winnersFirstDraft !== divisionWinnersFirst ||
+		varianceDraft !== varianceScale
 	const columns = `minmax(130px, 1.4fr) 60px minmax(90px, 1fr) 55px repeat(${seedCount}, minmax(26px, 1fr))`
 
 	return (
@@ -258,12 +265,38 @@ const PlayoffOdds = ({league}: MyProps) => {
 						</Tooltip>
 					</>
 				)}
+				<Tooltip
+					hasArrow
+					label='How much random swing each week has. Higher means more upsets and wider odds.'
+				>
+					<Flex align='center' gap={2}>
+						<Text>Variance</Text>
+						<Slider
+							aria-label='Variance slider'
+							w='120px'
+							min={0.5}
+							max={3}
+							step={0.05}
+							value={varianceDraft}
+							onChange={setVarianceDraft}
+							focusThumbOnChange={false}
+						>
+							<SliderTrack>
+								<SliderFilledTrack bg='secondary.300' />
+							</SliderTrack>
+							<SliderThumb />
+						</Slider>
+						<Text w='32px' color='white'>
+							{varianceDraft.toFixed(2)}
+						</Text>
+					</Flex>
+				</Tooltip>
 				<Button
 					size='xs'
 					colorScheme='teal'
 					isDisabled={!canApply}
 					onClick={() => {
-						setApplied({teams: draftTeams, spots: draftSpots, winnersFirst: winnersFirstDraft})
+						setApplied({teams: draftTeams, spots: draftSpots, winnersFirst: winnersFirstDraft, variance: varianceDraft})
 						setTeamsText(String(draftTeams))
 						setSpotsText(String(draftSpots))
 					}}

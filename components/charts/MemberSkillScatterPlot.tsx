@@ -6,7 +6,7 @@ import {
 	ScatterPlotNodeData,
 	ScatterPlotNodeProps,
 } from '@nivo/scatterplot'
-import {useMemo, useState} from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import {project_colors} from '../../utility/project_colors'
@@ -18,6 +18,68 @@ interface ScatterSeries {
 
 interface MyProps {
 	league: League | undefined
+	// Team name of the clicked point, highlighted until another is picked
+	selectedName?: string | null
+	onHoverMember?: (name: string | null) => void
+	onSelectMember?: (name: string) => void
+}
+
+interface NodeRenderContextValue {
+	radius: number
+	selectedName?: string | null
+	getAvatar: (name: string | number) => string
+}
+
+const NodeRenderContext = createContext<NodeRenderContextValue>({radius: 16, getAvatar: () => ''})
+
+const AvatarShape = ({node, active}: {node: ScatterPlotNodeData<ScatterPlotDatum>; active: boolean}) => {
+	const {radius, selectedName, getAvatar} = useContext(NodeRenderContext)
+	const selected = node.serieId === selectedName
+	const r = active ? radius * 1.4 : selected ? radius * 1.2 : radius
+	const clipId = `clipCircle-${node.id}${active ? '-active' : ''}`
+	return (
+		<g transform={`translate(${node.x}, ${node.y})`} style={{pointerEvents: 'none'}}>
+			<defs>
+				<clipPath id={clipId}>
+					<circle r={r} />
+				</clipPath>
+			</defs>
+			<image clipPath={`url(#${clipId})`} x={-r} y={-r} width={r * 2} height={r * 2} href={getAvatar(node.serieId)} />
+			<circle
+				r={r}
+				fill='none'
+				stroke={active ? 'white' : selected ? project_colors.statColor.good : 'rgba(255, 255, 255, 0.5)'}
+				strokeWidth={active || selected ? 2 : 1.5}
+			/>
+		</g>
+	)
+}
+
+// Module-level so its identity is stable and hovering never remounts the element under the cursor
+const PlotNode = <RawDatum extends ScatterPlotDatum>({
+	node,
+	onMouseEnter,
+	onMouseMove,
+	onMouseLeave,
+	onClick,
+}: ScatterPlotNodeProps<RawDatum>) => {
+	const {radius} = useContext(NodeRenderContext)
+	return (
+		<g>
+			<AvatarShape node={node as ScatterPlotNodeData<ScatterPlotDatum>} active={false} />
+			<circle
+				cx={node.x}
+				cy={node.y}
+				r={radius * 1.2}
+				fill='transparent'
+				style={{cursor: 'pointer'}}
+				onMouseEnter={(event) => onMouseEnter?.(node, event)}
+				onMouseMove={(event) => onMouseMove?.(node, event)}
+				onMouseLeave={(event) => onMouseLeave?.(node, event)}
+				onClick={(event) => onClick?.(node, event)}
+			/>
+		</g>
+	)
 }
 
 export default function MemberSkillScatterPlot(props: MyProps) {
@@ -63,47 +125,9 @@ export default function MemberSkillScatterPlot(props: MyProps) {
 			: 'https://sleepercdn.com/images/v2/avatars/avatar_default_blue.webp'
 	}
 
-	const renderAvatar = (node: ScatterPlotNodeData<ScatterPlotDatum>, active: boolean) => {
-		const r = active ? baseRadius * 1.4 : baseRadius
-		const clipId = `clipCircle-${node.id}`
-		return (
-			<g
-				key={node.id}
-				transform={`translate(${node.x}, ${node.y})`}
-				style={{pointerEvents: 'none'}}
-			>
-				<defs>
-					<clipPath id={clipId}>
-						<circle r={r} />
-					</clipPath>
-				</defs>
-				<image
-					clipPath={`url(#${clipId})`}
-					x={-r}
-					y={-r}
-					width={r * 2}
-					height={r * 2}
-					href={getAvatar(node.serieId)}
-				/>
-				<circle
-					r={r}
-					fill='none'
-					stroke={active ? 'white' : 'rgba(255, 255, 255, 0.5)'}
-					strokeWidth={active ? 2 : 1.5}
-				/>
-			</g>
-		)
-	}
-
-	const CustomNode = <RawDatum extends ScatterPlotDatum>({
-		node,
-	}: ScatterPlotNodeProps<RawDatum>) =>
-		// Hovered node is drawn by HoverLayer so it sits on top
-		node.id === hoveredId ? <g /> : renderAvatar(node as ScatterPlotNodeData<ScatterPlotDatum>, false)
-
 	const HoverLayer = ({nodes}: ScatterPlotLayerProps<ScatterPlotDatum>) => {
 		const hovered = nodes.find((n) => n.id === hoveredId)
-		return hovered ? renderAvatar(hovered, true) : null
+		return hovered ? <AvatarShape node={hovered} active={true} /> : null
 	}
 
 	const QuadrantLayer = ({xScale, yScale, innerWidth, innerHeight}: ScatterPlotLayerProps<ScatterPlotDatum>) => {
@@ -139,6 +163,7 @@ export default function MemberSkillScatterPlot(props: MyProps) {
 
 	return (
 		<Box h='100%' w='100%' bg='surface.1' borderRadius='md' overflow='hidden'>
+		<NodeRenderContext.Provider value={{radius: baseRadius, selectedName: props.selectedName, getAvatar}}>
 		<ResponsiveScatterPlot
 			data={data}
 			theme={theme}
@@ -168,10 +193,18 @@ export default function MemberSkillScatterPlot(props: MyProps) {
 				legendPosition: 'middle',
 				legendOffset: -60,
 			}}
-			layers={[QuadrantLayer, 'grid', 'axes', 'nodes', HoverLayer, 'mesh']}
-			nodeComponent={CustomNode}
-			onMouseEnter={(node) => setHoveredId(node.id)}
-			onMouseLeave={() => setHoveredId(null)}
+			layers={[QuadrantLayer, 'grid', 'axes', 'nodes', HoverLayer]}
+			useMesh={false}
+			nodeComponent={PlotNode}
+			onMouseEnter={(node) => {
+				setHoveredId(node.id)
+				props.onHoverMember?.(String(node.serieId))
+			}}
+			onMouseLeave={() => {
+				setHoveredId(null)
+				props.onHoverMember?.(null)
+			}}
+			onClick={(node) => props.onSelectMember?.(String(node.serieId))}
 			tooltip={({node}) => {
 				const goodSkill = node.xValue > 0
 				const goodRoster = node.yValue > avgPp
@@ -207,6 +240,7 @@ export default function MemberSkillScatterPlot(props: MyProps) {
 			role='application'
 			ariaLabel='Member skill vs roster strength scatterplot'
 		/>
+		</NodeRenderContext.Provider>
 		</Box>
 	)
 }

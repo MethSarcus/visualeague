@@ -51,6 +51,8 @@ export interface SimulationInput {
 	divisionSpots?: number
 	// Division leaders take the top seeds ahead of wild cards; implies at least one spot per division
 	divisionWinnersFirst?: boolean
+	// Multiplies each team's weekly score spread; above 1 widens outcomes
+	varianceScale?: number
 	simulations?: number
 	seed?: number
 }
@@ -161,6 +163,7 @@ export function simulatePlayoffOdds({
 	playoffTeams,
 	divisionSpots: requestedDivisionSpots = 0,
 	divisionWinnersFirst = false,
+	varianceScale = 1.5,
 	simulations = 5000,
 	seed = 20240901,
 }: SimulationInput): TeamOdds[] {
@@ -191,13 +194,17 @@ export function simulatePlayoffOdds({
 	for (let s = 0; s < simulations; s++) {
 		const wins = teams.map((t) => t.wins + t.ties / 2)
 		const pf = teams.map((t) => t.pf)
+		// Each team's true strength is uncertain, and more so with fewer games played
+		const means = teams.map(
+			(t) => t.mean + (t.stdDev / Math.sqrt(Math.max(t.wins + t.losses + t.ties, 1))) * normal()
+		)
 
 		for (const [homeId, awayId] of remaining) {
 			const h = indexById.get(homeId)
 			const a = indexById.get(awayId)
 			if (h == undefined || a == undefined) continue
-			const homeScore = teams[h].mean + teams[h].stdDev * normal()
-			const awayScore = teams[a].mean + teams[a].stdDev * normal()
+			const homeScore = means[h] + teams[h].stdDev * varianceScale * normal()
+			const awayScore = means[a] + teams[a].stdDev * varianceScale * normal()
 			pf[h] += homeScore
 			pf[a] += awayScore
 			if (homeScore > awayScore) wins[h] += 1

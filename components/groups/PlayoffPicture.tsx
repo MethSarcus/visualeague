@@ -24,29 +24,17 @@ const roundLabel = (roundIndex: number, totalRounds: number) => {
 const record = (team: OddsTeam) => `${team.wins}-${team.losses}${team.ties > 0 ? `-${team.ties}` : ''}`
 
 const RESULT_COLOR = {W: 'green.300', L: 'red.300', T: 'yellow.300'}
-const ROW_COLUMNS = '44px 22px 1fr auto'
+const ROW_COLUMNS = '44px 56px 1fr auto'
 
-const ScheduleTip = ({
-	league,
-	name,
-	entries,
-	projectedWins,
-}: {
-	league: League
-	name?: string
-	entries: ScheduleEntry[]
-	projectedWins: number
-}) => {
+// Matchup difficulty for a projected game, from the team's win chance
+const difficulty = (winProb: number) => {
+	if (winProb >= 0.6) return {label: 'Easy', color: 'green.300'}
+	if (winProb <= 0.4) return {label: 'Tough', color: 'red.300'}
+	return {label: 'Toss-up', color: 'yellow.300'}
+}
+
+const ScheduleTip = ({league, name, entries}: {league: League; name?: string; entries: ScheduleEntry[]}) => {
 	const firstProjected = entries.findIndex((entry) => !entry.played)
-	// The projected record's extra wins go to the games the team is most likely to win
-	const playedWins = entries.filter((entry) => entry.played && entry.result === 'W').length
-	const projectedWinWeeks = new Set(
-		entries
-			.filter((entry) => !entry.played)
-			.sort((a, b) => (b.winProb ?? 0) - (a.winProb ?? 0))
-			.slice(0, Math.max(projectedWins - playedWins, 0))
-			.map((entry) => entry.week)
-	)
 	return (
 		<Box minW='280px' p={2}>
 			<Text fontWeight='bold' fontSize='sm' mb={2}>
@@ -55,7 +43,9 @@ const ScheduleTip = ({
 			{entries.length === 0 && <Text fontSize='xs'>No games found</Text>}
 			{entries.map((entry, index) => {
 				const opponent = league.members.get(entry.opponentId)?.name ?? 'Unknown'
-				const result = entry.played ? entry.result ?? 'T' : projectedWinWeeks.has(entry.week) ? 'W' : 'L'
+				const badge = entry.played
+					? {label: entry.result ?? 'T', color: RESULT_COLOR[entry.result ?? 'T']}
+					: difficulty(entry.winProb ?? 0.5)
 				return (
 					<Box key={entry.week}>
 						{index === firstProjected && (
@@ -74,10 +64,10 @@ const ScheduleTip = ({
 								textAlign='center'
 								borderRadius='sm'
 								bg='whiteAlpha.100'
-								color={RESULT_COLOR[result]}
-								opacity={entry.played ? 1 : 0.7}
+								color={badge.color}
+								px={1}
 							>
-								{result}
+								{badge.label}
 							</Text>
 							<Text overflow='hidden' textOverflow='ellipsis'>
 								{opponent}
@@ -136,7 +126,6 @@ const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, 
 						league={league}
 						name={name(team)}
 						entries={schedules.get(team.id) ?? []}
-						projectedWins={team.wins}
 					/>
 				}
 			>
