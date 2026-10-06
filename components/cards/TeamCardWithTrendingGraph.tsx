@@ -5,9 +5,12 @@ import {
 	Center,
 	Grid,
 	GridItem,
+	HStack,
 	Image,
 	Skeleton,
 	SkeletonText,
+	Tag,
+	TagLabel,
 	Text,
 	Tooltip,
 	VStack,
@@ -27,31 +30,46 @@ type MyProps = {
 const TeamCardWithTrendingGraph = (props: MyProps) => {
 	const {variant, size, ...rest} = props
   const [imageLoaded, setImageLoaded] = useState(false)
+	const weekCount = props.league?.weeks?.size ?? 0
+	const averagePf = props.member && weekCount > 0
+		? (props.member.stats.pf / weekCount).toFixed(2)
+		: '--'
+	const averagePa = props.member && weekCount > 0
+		? (props.member.stats.pa / weekCount).toFixed(2)
+		: '--'
 	return (
-		<Card boxShadow={'lg'} rounded={'md'} bg='surface.0' textColor={'white'} height={"max-content"}>
+		<Card
+			boxShadow='md'
+			borderWidth='1px'
+			borderColor='whiteAlpha.100'
+			rounded='md'
+			bg='surface.0'
+			textColor='white'
+			height='max-content'
+			overflow='hidden'
+		>
 			<Grid
 				templateAreas={`"member linechart"`}
-				templateColumns='max-content minmax(0, 1fr)'
-				gap='1'
+				templateColumns={['minmax(0, 1fr) minmax(0, 1fr)', 'max-content minmax(0, 1fr)']}
+				alignItems='stretch'
 				width='100%'
 			>
-				<GridItem area={'member'}>
-					<Center>
-						<Skeleton isLoaded={imageLoaded} fadeDuration={4} >
+				<GridItem area={'member'} minW={0} borderRightWidth='1px' borderColor='whiteAlpha.100'>
+					<Center h='full' justifyContent='flex-start' px={[2, 4]} py={3}>
+						<Skeleton isLoaded={imageLoaded} fadeDuration={4} flexShrink={0}>
 							<Image
 								objectFit='cover'
-								maxW={'100px'}
-                loading={"eager"}
-				_placeholder={{ color: 'gray.500' }}
-                onLoad={() => setImageLoaded(true)}
-                minH={"60px"}
+								boxSize={['56px', '76px']}
+								loading='eager'
+								_placeholder={{color: 'gray.500'}}
+								onLoad={() => setImageLoaded(true)}
 								src={`https://sleepercdn.com/avatars/thumbs/${props.member?.avatar}`}
 								alt='Team Image'
 							/>
 						</Skeleton>
-						<VStack spacing={0} pl={2} alignItems={'left'} flex={1}>
+						<VStack spacing={1} pl={2} alignItems='flex-start' flex={1} minW={0}>
 							<SkeletonText noOfLines={2} isLoaded={props.league?.settings != undefined}>
-								<Text maxWidth={['120px']} noOfLines={1}>
+								<Text fontSize={['sm', 'md']} maxW='full' noOfLines={1}>
 									{props?.member?.name}
 								</Text>
 								<Tooltip
@@ -63,7 +81,7 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 											: ''
 									} Division Record`}
 								>
-									<Text p={0}>
+									<Text p={0} fontSize={['md', 'lg']} fontWeight='bold'>
 										{props.member?.stats.wins} - {props.member?.stats.losses}{' '}
 										{(props.member?.stats?.ties ?? 0) > 0
 											? `- ${props.member?.stats?.ties}`
@@ -71,6 +89,26 @@ const TeamCardWithTrendingGraph = (props: MyProps) => {
 									</Text>
 								</Tooltip>
 							</SkeletonText>
+							<HStack spacing={1} flexWrap='wrap' rowGap={1}>
+								<Tag
+									size='sm'
+									bg='whiteAlpha.100'
+									borderWidth='1px'
+									borderColor='whiteAlpha.200'
+									color='secondary.100'
+								>
+									<TagLabel>PF/G {averagePf}</TagLabel>
+								</Tag>
+								<Tag
+									size='sm'
+									bg='whiteAlpha.100'
+									borderWidth='1px'
+									borderColor='whiteAlpha.200'
+									color='red.200'
+								>
+									<TagLabel>PA/G {averagePa}</TagLabel>
+								</Tag>
+							</HStack>
 						</VStack>
 					</Center>
 				</GridItem>

@@ -1,5 +1,7 @@
 import Providers from './providers'
 import GoogleAnalytics from '../components/GoogleAnalytics'
+import '../styles/globals.css'
+
 const RootLayout = ({children}: {children: React.ReactNode}) => {
 	return (
 		<html lang='en'>

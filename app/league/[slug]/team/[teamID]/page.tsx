@@ -63,9 +63,17 @@ const TeamPage = () => {
   "weekStats"
   "radar"`
 	return (
-		<Box overflowX={'hidden'}>
-			<Grid gap={5} mx={4} my={2} templateAreas={[mobileTemplate, desktopTemplate]}>
-				<GridItem area={'TeamSum'} mt={3}>
+		<Box overflowX='hidden' minW={0}>
+			<Grid
+				gap={5}
+				mx={4}
+				my={2}
+				w='calc(100% - 2rem)'
+				minW={0}
+				gridTemplateColumns={['minmax(0, 1fr)', 'repeat(3, minmax(0, 1fr))']}
+				templateAreas={[mobileTemplate, desktopTemplate]}
+			>
+				<GridItem area={'TeamSum'} mt={3} minW={0}>
 					<TeamCardWithTrendingGraph member={member} league={context} variant={''} size={'md'} />
 				</GridItem>
 				<GridItem overflowX={'auto'} area={'schedule'}>
@@ -81,12 +89,12 @@ const TeamPage = () => {
 						})}
 					</Flex>
 				</GridItem>
-				<GridItem area={'stats'}>
+				<GridItem area={'stats'} minW={0}>
 					{/* <Text color={"white"}>Division Record: {member?.stats?.divisionWins} - {member?.stats?.divisionLosses}</Text> */}
 					<TeamStatGroup league={context} memberId={parseInt(memberId!)} />
 				</GridItem>
 
-				<GridItem area={'playerStats'} overflowX={'clip'}>
+				<GridItem area={'playerStats'} overflowX={'clip'} minW={0}>
 					<Text mb={2} textColor={'textTheme.mediumEmphasis'}>
 						Player Stats
 					</Text>
@@ -94,7 +102,7 @@ const TeamPage = () => {
 						<TeamPlayerStatGroup league={context} memberId={parseInt(memberId!)} />
 					</Box>
 				</GridItem>
-				<GridItem area={'weekStats'} overflowX={'clip'}>
+				<GridItem area={'weekStats'} overflowX={'clip'} minW={0}>
 					<Text mb={2} textColor={'textTheme.mediumEmphasis'}>
 						Matchup Stats
 					</Text>
@@ -102,7 +110,7 @@ const TeamPage = () => {
 						<WeeklyTeamStatGroup league={context} memberId={parseInt(memberId!)} />
 					</Box>
 				</GridItem>
-				<GridItem minH='300px' area={'radar'}>
+				<GridItem minH='300px' area={'radar'} minW={0}>
 					<Tabs variant='soft-rounded' colorScheme={'secondary'}>
 						<TabList>
 							<Tab>Positional Point Chart</Tab>
