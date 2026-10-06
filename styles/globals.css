@@ -1,9 +1,3 @@
-/* Matches surface.0 so overscroll and the area under mobile browser bars aren't white */
-html,
-body {
-  background-color: #111718;
-}
-
 a {
   color: inherit;
   text-decoration: none;

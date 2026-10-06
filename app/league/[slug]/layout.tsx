@@ -147,7 +147,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 		<Grid
 			bg={'surface.6'}
 			gap={0}
-			h={'100dvh'}
+			minH={'100dvh'}
 			gridTemplateRows={'0fr 1fr 0fr'}
 			templateAreas={`"header header"
                     "main main"
@@ -157,11 +157,11 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 			<GridItem area={'header'}>
 				<Navbar leagueID={slug} />
 			</GridItem>
-			<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
+			<GridItem area={'main'} p={[0, 0, 4]}>
 				{children}
 			</GridItem>
 
-			<GridItem bg='surface.0' mt={'auto'} area={'footer'}>
+			<GridItem bg='surface.0' mt={'auto'} area={'footer'} pb='env(safe-area-inset-bottom)'>
 				<Footer />
 			</GridItem>
 		</Grid>

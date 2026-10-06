@@ -1,5 +1,5 @@
 'use client'
-import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react'
+import {Box, Button, Center, Flex, HStack, Image, useMediaQuery} from '@chakra-ui/react'
 import {produce} from 'immer'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
@@ -41,7 +41,8 @@ const Navbar = (props: MyProps) => {
 			position="sticky"
 			top={0}
 			zIndex="docked"
-			minH="64px"
+			minH="calc(64px + env(safe-area-inset-top))"
+			pt="env(safe-area-inset-top)"
 			maxWidth={'100vw'}
 			align="center"
 			backdropFilter="blur(16px)"
@@ -55,12 +56,18 @@ const Navbar = (props: MyProps) => {
 				maxWidth={'100vw'}
 				overflow='hidden'>
 				<MobileSidebar />
-				<NavbarButton
-					buttonText='VisuaLeague'
-					disabled={context.settings == undefined}
-					link={`/league/${context.settings?.league_id}`}
-				/>
 			</HStack>
+			{/* Centered over the bar so it stays centered regardless of the buttons on each side */}
+			<Box
+				display={{sm: 'none', base: 'block'}}
+				position='absolute'
+				left='50%'
+				top='calc(50% + env(safe-area-inset-top) / 2)'
+				transform='translate(-50%, -50%)'>
+				<Link href={context.settings ? `/league/${context.settings.league_id}` : '/'}>
+					<Image src='/images/logo.png' alt='VisuaLeague' h='40px' maxW='none' />
+				</Link>
+			</Box>
 			<HStack
 				py={0}
 				my={0}

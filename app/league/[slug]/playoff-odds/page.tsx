@@ -8,7 +8,7 @@ const PlayoffOddsPage = () => {
 	const [context] = useContext(LeagueContext)
 
 	return (
-		<Box overflowX={'hidden'} w={'full'} height={'full'}>
+		<Box overflowX={'clip'} w={'full'} height={'full'}>
 			<Box mx={[2, 4]} my={2}>
 				<Skeleton fontWeight='black' mx={10} isLoaded={context.settings != undefined}>
 					<Heading textAlign={'center'} size={'lg'} m={2} color={'white'}>

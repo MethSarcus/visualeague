@@ -15,7 +15,7 @@ import { borderRadius } from "./overrides/Layout";
 // import { borderRadius, sizes, spacing } from "./overrides/Layout";
 
 const overrides = {
-  theme,
+  ...theme,
   // ...sizes,
   ...borderRadius,
 

@@ -29,7 +29,7 @@ const RankPage = () => {
 	"allplay_table"
 	"owner_skill"`
 	return (
-		<Box overflowX={'hidden'} w={'full'} height={'full'}>
+		<Box overflowX={'clip'} w={'full'} height={'full'}>
 			<Grid
 				gap={3}
 				mx={[2, 4]}
