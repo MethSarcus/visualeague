@@ -19,6 +19,7 @@ export default function MobileSidebar() {
 			{context.settings && (
 				<IconButton
 					variant={'ghost'}
+					color={'secondary.200'}
 					icon={<HamburgerIcon />}
 					_hover={{background: 'secondary.600'}}
 					onClick={onOpen}

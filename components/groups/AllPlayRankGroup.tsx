@@ -4,6 +4,7 @@ import {
 	Grid,
 	GridItem,
 	Spinner,
+	Text,
 } from '@chakra-ui/react'
 import League from '../../classes/custom/League'
 import AllPlayStatBox, { StatBoxProps } from './AllPlayStatBox'
@@ -45,17 +46,17 @@ const AllPlayRankGroup = (props: MyProps) => {
 	})
 	return (
 		<Grid
-			gap='5px'
-			templateColumns={`repeat(${props.league.members.size + 1}, 1fr)`}
+			gap={['2px', '5px']}
+			templateColumns={`repeat(${props.league.members.size + 1}, minmax(0, 1fr))`}
 			templateRows={`repeat(${props.league.members.size + 1}, 1fr)`}
 			textAlign={'center'}
 		>
 			<GridItem
 				my={'auto'}
-				width={'50px'}
-				height={'50px'}
+				width={['100%', '50px']}
+				height={['34px', '50px']}
 				color='textTheme.highEmphasis'
-				fontSize={'.9em'}
+				fontSize={['.7em', '.9em']}
 				noOfLines={1}
 			>
 				User
@@ -108,16 +109,16 @@ interface MemberNameProps {
 function MemberNameHeader(props: MemberNameProps) {
 	return (
 		<Center
-			width={'50px'}
-			height={'50px'}
+			width={['100%', '50px']}
+			height={['34px', '50px']}
 			color='textTheme.highEmphasis'
 			fontSize={'.7em'}
 			px={1}
 			textAlign={'center'}
 			noOfLines={2}
 		>
-			<Avatar src={props.imageSrc} size={'sm'} name={props.name} />
-			{props.isRotated != true && props.name}
+			<Avatar src={props.imageSrc} size={['2xs', 'sm']} name={props.name} />
+			{props.isRotated != true && <Text display={['none', 'block']}>{props.name}</Text>}
 		</Center>
 	)
 }

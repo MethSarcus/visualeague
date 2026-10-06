@@ -83,12 +83,12 @@ export default function AllPlayStatBox(props: StatBoxProps) {
 					borderRadius={'4px'}
 					width={'auto'}
 					onClick={onOpen}
-					height={'50px'}
+					height={['34px', '50px']}
 					
-					p='.5em'
+					p={['0', '.5em']}
 					bg={props.disabled ? 'surface' : 'surface.0'}
 					color='textTheme.mediumEmphasis'
-					fontSize={'.9em'}
+					fontSize={['.65em', '.9em']}
 					transition={'all .2s ease-in-out'}
 					dropShadow={'dark-lg'}
 					onMouseEnter={() => props.onHover?.([props.homeId, props.opponentId])}

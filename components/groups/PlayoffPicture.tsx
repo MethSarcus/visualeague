@@ -1,5 +1,5 @@
 'use client'
-import {Avatar, Badge, Box, Flex, Grid, Heading, Text, Tooltip} from '@chakra-ui/react'
+import {Avatar, Badge, Box, Flex, Grid, Heading, Text, Tooltip, useMediaQuery} from '@chakra-ui/react'
 import {useMemo} from 'react'
 import League from '../../classes/custom/League'
 import {buildBracket, OddsTeam, ScheduleEntry, seedTeams} from '../../utility/playoffOdds'
@@ -84,6 +84,8 @@ const ScheduleTip = ({league, name, entries}: {league: League; name?: string; en
 }
 
 const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, divisionWinnersFirst}: MyProps) => {
+	// The bracket is too wide for phones, so only the standings show there
+	const [isDesktop] = useMediaQuery('(min-width: 800px)')
 	const picture = useMemo(() => {
 		const order = seedTeams({
 			wins: teams.map((t) => t.wins + t.ties / 2),
@@ -166,7 +168,7 @@ const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, 
 		)
 
 	return (
-		<Box bg='surface.1' borderRadius='md' p={4} overflowX='auto'>
+		<Box bg='surface.1' borderRadius='md' p={[2, 4]} overflowX='auto'>
 			<Heading size='md' color='white' textAlign='center' mb={1}>
 				Playoff Picture
 			</Heading>
@@ -174,7 +176,7 @@ const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, 
 				Projected final standings (most likely record)
 			</Text>
 			<Flex gap={8} wrap='wrap' justify='center' align='flex-start'>
-				<Flex direction='column' gap={3} minW='240px'>
+				<Flex direction='column' gap={3} minW={['100%', '240px']}>
 					{picture.divisionList.map((division) => (
 						<Box key={String(division.id)} bg='surface.2' borderRadius='md' p={2}>
 							<Text fontSize='xs' fontWeight='bold' color='textTheme.mediumEmphasis' mb={1}>
@@ -211,6 +213,7 @@ const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, 
 						</Box>
 					))}
 				</Flex>
+				{isDesktop && (
 				<Flex align='stretch'>
 					{picture.bracket.map((round, roundIndex) => {
 						const isLastRound = roundIndex === picture.bracket.length - 1
@@ -267,6 +270,7 @@ const PlayoffPicture = ({league, teams, schedules, playoffTeams, divisionSpots, 
 						)
 					})}
 				</Flex>
+				)}
 			</Flex>
 		</Box>
 	)

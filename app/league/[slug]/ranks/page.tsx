@@ -35,13 +35,13 @@ const RankPage = () => {
 		<Box overflowX={'hidden'} w={'full'} height={'full'}>
 			<Grid
 				gap={3}
-				mx={4}
+				mx={[2, 4]}
 				my={2}
 				templateAreas={[mobileTemplate, desktopTemplate]}
-				gridTemplateColumns={['1fr', '1fr 1fr']}
+				gridTemplateColumns={['minmax(0, 1fr)', '1fr 1fr']}
 				gridTemplateRows={'60px auto auto auto auto'}
 			>
-				<GridItem area={'header'}>
+				<GridItem area={'header'} minW={0}>
 					<Skeleton
 						fontWeight='black'
 						mx={10}
@@ -59,20 +59,21 @@ const RankPage = () => {
 				</GridItem>
 				<GridItem
 					area={'allplay_table'}
+					minW={0}
 					overflowX={'auto'}
 					overflowY={'hidden'}
 				>
 					<AllPlayRankGroup league={context} onHover={onHover} />
 				</GridItem>
-				<GridItem area={'cumulative_ranks'} position='relative' minH={['420px', '0']}>
+				<GridItem area={'cumulative_ranks'} minW={0} position='relative' minH={['420px', '0']}>
 					{/* Absolute so the chart fills the row set by the matrix instead of sizing it */}
 					<Box position='absolute' inset={0}>
 						<PowerRankingBumpChart league={context} displayIds={filteredIds} />
 					</Box>
 				</GridItem>
 
-				<GridItem area={'owner_skill'}>
-					<Grid templateColumns={['1fr', '2fr 1fr']} gap={3} h={['auto', '600px']}>
+				<GridItem area={'owner_skill'} minW={0}>
+					<Grid templateColumns={['minmax(0, 1fr)', '2fr 1fr']} gap={3} h={['auto', '600px']}>
 						<Box h={['400px', '100%']}>
 							<MemberSkillScatterPlot
 								league={context}
@@ -85,7 +86,7 @@ const RankPage = () => {
 					</Grid>
 				</GridItem>
 
-				<GridItem area={'playoff_odds'}>
+				<GridItem area={'playoff_odds'} minW={0}>
 					<PlayoffOdds league={context} />
 				</GridItem>
 			</Grid>

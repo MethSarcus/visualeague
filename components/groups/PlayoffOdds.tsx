@@ -1,5 +1,5 @@
 'use client'
-import {Avatar, Box, Button, Flex, Grid, GridItem, Heading, NumberInput, NumberInputField, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Spinner, Switch, Text, Tooltip} from '@chakra-ui/react'
+import {Avatar, Box, Button, Flex, Grid, GridItem, Heading, NumberInput, NumberInputField, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Spinner, Switch, Text, Tooltip, useMediaQuery} from '@chakra-ui/react'
 import axios from 'axios'
 import {useMemo, useState} from 'react'
 import useSWR from 'swr'
@@ -37,6 +37,7 @@ const PlayoffOdds = ({league}: MyProps) => {
 	const settingsPlayoffTeams = league?.settings?.settings?.playoff_teams ?? 0
 	const numDivisions = league?.settings?.settings?.divisions ?? 0
 	const numMembers = league?.members?.size ?? 0
+	const [isDesktop] = useMediaQuery('(min-width: 800px)')
 	// Inputs are edited as text and only take effect when Apply is pressed
 	const [teamsText, setTeamsText] = useState<string | undefined>()
 	const [spotsText, setSpotsText] = useState('0')
@@ -202,11 +203,14 @@ const PlayoffOdds = ({league}: MyProps) => {
 		draftSpots !== divisionSpots ||
 		winnersFirstDraft !== divisionWinnersFirst ||
 		varianceDraft !== varianceScale
-	const columns = `minmax(130px, 1.4fr) 60px minmax(90px, 1fr) 55px repeat(${seedCount}, minmax(26px, 1fr))`
+	// The seed heatmap is hidden on narrow screens where it can't fit
+	const columns = isDesktop
+		? `minmax(130px, 1.4fr) 60px minmax(90px, 1fr) 55px repeat(${seedCount}, minmax(26px, 1fr))`
+		: 'minmax(80px, 1.4fr) 44px minmax(80px, 1fr) 36px'
 
 	return (
 		<Flex direction='column' gap={3}>
-		<Box bg='surface.1' borderRadius='md' p={4} overflowX='auto'>
+		<Box bg='surface.1' borderRadius='md' p={[2, 4]} overflowX='auto'>
 			<Heading size='md' color='white' textAlign='center' mb={1}>
 				Playoff Odds
 			</Heading>
@@ -304,12 +308,12 @@ const PlayoffOdds = ({league}: MyProps) => {
 					Apply
 				</Button>
 			</Flex>
-			<Grid templateColumns={columns} gap='4px' alignItems='center' minW='640px'>
+			<Grid templateColumns={columns} gap='4px' alignItems='center' minW={isDesktop ? '640px' : undefined}>
 				<Header>Team</Header>
 				<Header>Record</Header>
 				<Header>Playoffs</Header>
 				<Header>Exp W</Header>
-				{Array.from({length: seedCount}, (_, i) => (
+				{isDesktop && Array.from({length: seedCount}, (_, i) => (
 					<Header key={i}>{i + 1}</Header>
 				))}
 				{results.rows.map(({odd, team}) => {
@@ -345,7 +349,7 @@ const PlayoffOdds = ({league}: MyProps) => {
 							<GridItem textAlign='center' fontSize='sm' color='white'>
 								{odd.expectedWins.toFixed(1)}
 							</GridItem>
-							{odd.seedPct.map((pct, i) => (
+							{isDesktop && odd.seedPct.map((pct, i) => (
 								<Tooltip
 									key={i}
 									label={`${member?.name}: seed ${i + 1} in ${(pct * 100).toFixed(1)}% of simulations`}

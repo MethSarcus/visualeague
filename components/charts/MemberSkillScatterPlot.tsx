@@ -142,10 +142,14 @@ export default function MemberSkillScatterPlot(props: MyProps) {
 				<rect x={0} y={y0} width={x0} height={innerHeight - y0} fill={project_colors.statColor.bad} fillOpacity={0.07} />
 				<line x1={x0} x2={x0} y1={0} y2={innerHeight} stroke='white' strokeOpacity={0.3} strokeDasharray='4 4' />
 				<line x1={0} x2={innerWidth} y1={y0} y2={y0} stroke='white' strokeOpacity={0.3} strokeDasharray='4 4' />
-				<text x={innerWidth - 8} y={16} textAnchor='end' style={labelStyle}>GOOD MANAGER / GOOD ROSTER</text>
-				<text x={8} y={16} textAnchor='start' style={labelStyle}>BAD MANAGER / GOOD ROSTER</text>
-				<text x={innerWidth - 8} y={innerHeight - 8} textAnchor='end' style={labelStyle}>GOOD MANAGER / BAD ROSTER</text>
-				<text x={8} y={innerHeight - 8} textAnchor='start' style={labelStyle}>BAD MANAGER / BAD ROSTER</text>
+				{isLargerThan800 && (
+					<>
+						<text x={innerWidth - 8} y={16} textAnchor='end' style={labelStyle}>GOOD MANAGER / GOOD ROSTER</text>
+						<text x={8} y={16} textAnchor='start' style={labelStyle}>BAD MANAGER / GOOD ROSTER</text>
+						<text x={innerWidth - 8} y={innerHeight - 8} textAnchor='end' style={labelStyle}>GOOD MANAGER / BAD ROSTER</text>
+						<text x={8} y={innerHeight - 8} textAnchor='start' style={labelStyle}>BAD MANAGER / BAD ROSTER</text>
+					</>
+				)}
 			</g>
 		)
 	}

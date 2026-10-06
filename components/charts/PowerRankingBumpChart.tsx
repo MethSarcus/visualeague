@@ -36,7 +36,7 @@ const PowerRankingBumpChart = (props: MyProps) => {
 	}
 	const margins = isLargerThan800
 		? {top: 10, right: 170, bottom: 50, left: 50}
-		: {top: 20, right: 110, bottom: 50, left: 30}
+		: {top: 20, right: 80, bottom: 50, left: 30}
 
 	if (data == undefined || data.length <= 0) return <Spinner />
 
@@ -65,7 +65,10 @@ const PowerRankingBumpChart = (props: MyProps) => {
 			pointBorderColor={{from: 'serie.color'}}
 			interpolation='smooth'
 			startLabel={false}
-			endLabel={(serie) => `${(serie as PowerRankSerie).finalRank}. ${serie.id}`}
+			endLabel={(serie) => {
+				const label = `${(serie as PowerRankSerie).finalRank}. ${serie.id}`
+				return isLargerThan800 ? label : label.slice(0, 10)
+			}}
 			endLabelPadding={14}
 			axisTop={null}
 			axisRight={null}
