@@ -120,17 +120,19 @@ const MatchupPreview = (props: MyProps) => {
 		opponentId = props.matchup?.homeTeam?.roster_id
 	}
 
-	let shadowColor = `inset 1px 1px 1px 1px ${project_colors.outcomeColor.tie_red}, inset 0px 0px 0px 1px ${project_colors.outcomeColor.tie_green}`
+	let outcomeColor = project_colors.statColor.neutral
 	if (props.member != undefined && props.matchup && !props.matchup?.isTie) {
 		if (props.matchup?.winnerRosterId == props?.member.roster.roster_id) {
-			shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.good}`
+			outcomeColor = project_colors.statColor.good
 		} else {
-			shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.bad}`
+			outcomeColor = project_colors.statColor.bad
 		}
 	}
 
 	if (props.matchup?.isByeWeek) {
-		shadowColor = `inset 0px 0px 0px 1px ${project_colors.statColor.neutral}`
+		outcomeColor = project_colors.textTheme.disabled
+	} else if (props.matchup?.isTie) {
+		outcomeColor = project_colors.outcomeColor.tie_color
 	}
 
 	return (
@@ -147,9 +149,9 @@ const MatchupPreview = (props: MyProps) => {
 					gap={0}
 					onClick={onOpen}
 					borderRadius={'md'}
-					boxShadow={shadowColor}
+					boxShadow={`inset 0px 0px 0px 1px ${outcomeColor}`}
 					transition={'all .2s ease-in-out'}
-					textOverflow={""}
+					textOverflow={''}
 					_hover={{
 						transform: 'scale(1.1)',
 						backgroundColor: 'surface.0',
@@ -184,17 +186,7 @@ const MatchupPreview = (props: MyProps) => {
 					<Text
 						pt={2}
 						fontWeight={'semibold'}
-						color={
-							props.matchup?.winnerRosterId == props.member?.roster.roster_id
-								? project_colors.outcomeColor.win
-								: project_colors.outcomeColor.loss
-						}
-						bgGradient={
-							props.matchup?.isTie
-								? 'linear(to-l, #7928CA, #FF0080)'
-								: undefined
-						}
-						bgClip={props.matchup?.isTie ? 'text' : undefined}
+						color={'secondary.100'}
 						letterSpacing={'wide'}
 					>
 						view

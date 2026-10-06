@@ -7,7 +7,7 @@ import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
 import {Draft} from '../../../classes/custom/Draft'
 import League from '../../../classes/custom/League'
-import {DatabasePlayer, PlayerScores, SleeperPlayerDetails} from '../../../classes/custom/Player'
+import {DatabasePlayer, PlayerScores} from '../../../classes/custom/Player'
 import Footer from '../../../components/Footer'
 import Navbar from '../../../components/nav/Navbar'
 import {LeagueContext} from '../../../contexts/LeagueContext'
@@ -31,31 +31,24 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 		revalidateOnReconnect: false,
 	}
 
-	const {data: sleeperLeagueData, error: sleeperLeagueError} = useSWR(
-		slug != undefined ? `https://api.sleeper.app/v1/league/${slug}` : null,
+	const {data: leagueData, error: leagueError} = useSWR(
+		slug != undefined ? `/api/league/${slug}` : null,
 		fetcher,
 		disableValidation
 	)
+	const leagueSettings = leagueData?.league?.sleeperDetails as LeagueSettings | undefined
 
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}`
+		leagueSettings?.draft_id != undefined && leagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${leagueSettings.draft_id}`
 			: null,
 		fetcher,
 		disableValidation
 	)
 
 	const {data: draftPicks, error: draftError} = useSWR(
-		sleeperLeagueData?.draft_id != undefined && sleeperLeagueError == undefined
-			? `https://api.sleeper.app/v1/draft/${sleeperLeagueData.draft_id}/picks`
-			: null,
-		fetcher,
-		disableValidation
-	)
-
-	const {data: leagueData, error: leagueError} = useSWR(
-		slug != undefined && sleeperLeagueError == undefined && sleeperLeagueData
-			? `/api/league/${slug}`
+		leagueSettings?.draft_id != undefined && leagueError == undefined
+			? `https://api.sleeper.app/v1/draft/${leagueSettings.draft_id}/picks`
 			: null,
 		fetcher,
 		disableValidation
@@ -82,8 +75,6 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 				playerDetails.set(player._id, player)
 				playerScores.set(player._id, playerObj)
 			})
-			console.log(playerDetails)
-			console.log(playerScores)
 			setPlayerScoresContext(playerScores)
 			setPlayerDetailsContext(playerDetails)
 			let users: UserData[] = []
@@ -107,7 +98,6 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 				tradeData?.trades
 			)
 			setLeagueContext(league)
-			console.log(league)
 
 			return
 		}
@@ -121,7 +111,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 		tradeData?.trades,
 	])
 
-	if (sleeperLeagueError) {
+	if (leagueError) {
 		return (
 			<section>
 				<main className={styles.main}>
@@ -152,12 +142,12 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 		)
 	}
 
-	if (leagueError || tradeError) return <Heading color={'white'}>Failed to load</Heading>
+	if (tradeError) return <Heading color={'white'}>Failed to load</Heading>
 	return (
 		<Grid
 			bg={'surface.6'}
 			gap={0}
-			h={'100dvh'}
+			minH={'100dvh'}
 			gridTemplateRows={'0fr 1fr 0fr'}
 			templateAreas={`"header header"
                     "main main"
@@ -167,11 +157,11 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 			<GridItem area={'header'}>
 				<Navbar leagueID={slug} />
 			</GridItem>
-			<GridItem area={'main'} p={[0, 0, 4]} overflowY={'auto'}>
+			<GridItem area={'main'} p={[0, 0, 4]}>
 				{children}
 			</GridItem>
 
-			<GridItem bg='surface.0' mt={'auto'} area={'footer'}>
+			<GridItem bg='surface.0' mt={'auto'} area={'footer'} pb='env(safe-area-inset-bottom)'>
 				<Footer />
 			</GridItem>
 		</Grid>

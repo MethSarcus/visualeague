@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SleeperPlayerDetails } from "../../../classes/custom/Player";
+import type { MongoClient } from "mongodb";
 
 const { connectToDatabase } = require("../../../lib/mongodb");
-const { MongoClient } = require("mongodb");
 
 type Data = {
   details: SleeperPlayerDetails | string;
@@ -43,7 +43,7 @@ export default async function handler(
 }
 
 export async function getPlayerDetails(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerId: string
 ) {
   const client = await connectToDatabase;
@@ -66,7 +66,7 @@ export async function getPlayerDetails(
 }
 
 export async function getPlayerStats(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerId: string,
   season: number,
   week: number
@@ -91,7 +91,7 @@ export async function getPlayerStats(
 
 
 export async function getPlayerProjections(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerId: string,
   season: number,
   week: number
@@ -115,7 +115,7 @@ export async function getPlayerProjections(
 }
 
 export async function getMultiPlayerProjections(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerIds: string[],
   week: number,
   season: number
@@ -138,7 +138,7 @@ export async function getMultiPlayerProjections(
 }
 
 export async function getMultiPlayerStats(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerIds: string[],
   season: number,
   week: number
@@ -161,9 +161,11 @@ export async function getMultiPlayerStats(
 }
 
 export async function getMultiPlayerDetails(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerIds: string[],
   season: string,
+  startWeek: number,
+  endWeek: number,
 ) {
   const client = await connectToDatabase;
   if (!client) {
@@ -176,21 +178,22 @@ export async function getMultiPlayerDetails(
     let details = db.collection("player_details");
 
     let query = { _id: { $in: playerIds } };
-    let projectionQuery = {
-      projection: {
-        "details.fantasy_positions": 1,
-        "details.position": 1,
-        "details.last_name": 1,
-        "details.first_name": 1,
-        "details.player_id": 1,
-        "details.team": 1,
-        "details.age": 1,
-        "details.ktc": 1,
-        "stats": 1,
-        "projections": 1,
-      },
-    };
-    let playerDetails = await details.find(query, projectionQuery).toArray();
+    const projection: Record<string, 1> = {
+      "details.fantasy_positions": 1,
+      "details.position": 1,
+      "details.last_name": 1,
+      "details.first_name": 1,
+      "details.player_id": 1,
+      "details.team": 1,
+      "details.age": 1,
+      "details.ktc": 1,
+    }
+    for (let week = startWeek; week <= endWeek; week++) {
+      projection[`stats.${week}`] = 1
+      projection[`projections.${week}`] = 1
+    }
+
+    const playerDetails = await details.find(query, {projection}).toArray();
     return playerDetails;
   } catch (err) {
     console.log(err);
@@ -198,7 +201,7 @@ export async function getMultiPlayerDetails(
 }
 
 export async function getWeeklyPlayerStats(
-  connectToDatabase: typeof MongoClient,
+  connectToDatabase: Promise<MongoClient>,
   playerIds: string[],
   season: string,
   startWeek: number,

@@ -1,5 +1,5 @@
 'use client'
-import {Box, Button, Center, Flex, HStack, useMediaQuery} from '@chakra-ui/react'
+import {Box, Button, Center, Flex, HStack, Image, useMediaQuery} from '@chakra-ui/react'
 import {produce} from 'immer'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
@@ -9,7 +9,6 @@ import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import {PlayerDetailsContext} from '../../contexts/PlayerDetailsContext'
 import {PlayerScoresContext} from '../../contexts/PlayerScoresContext'
-import {project_colors} from '../../utility/project_colors'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import MobileSidebar from './MobileSidebar'
 import SeasonPortionSelector from './SeasonPortionSelector'
@@ -36,31 +35,45 @@ const Navbar = (props: MyProps) => {
 	}
 	return (
 		<Flex
-			bg={'secondary.600'}
-			bgGradient='linear(to-r, surface.1, surface.0)'
+			bg={'surface.0'}
+			borderBottom="1px solid"
+			borderColor="whiteAlpha.200"
+			position="sticky"
+			top={0}
+			zIndex="docked"
+			minH="calc(64px + env(safe-area-inset-top))"
+			pt="env(safe-area-inset-top)"
 			maxWidth={'100vw'}
+			align="center"
+			backdropFilter="blur(16px)"
 			color={'white'}>
 			<HStack
 				spacing='0px'
 				pl={3}
-				paddingY={1}
+				paddingY={2}
 				flex={1}
 				display={{sm: 'none', base: 'flex'}}
 				maxWidth={'100vw'}
 				overflow='hidden'>
 				<MobileSidebar />
-				<NavbarButton
-					buttonText='VisuaLeague'
-					disabled={context.settings == undefined}
-					link={`/league/${context.settings?.league_id}`}
-				/>
 			</HStack>
+			{/* Centered over the bar so it stays centered regardless of the buttons on each side */}
+			<Box
+				display={{sm: 'none', base: 'block'}}
+				position='absolute'
+				left='50%'
+				top='calc(50% + env(safe-area-inset-top) / 2)'
+				transform='translate(-50%, -50%)'>
+				<Link href={context.settings ? `/league/${context.settings.league_id}` : '/'}>
+					<Image src='/images/logo.png' alt='VisuaLeague' h='40px' maxW='none' />
+				</Link>
+			</Box>
 			<HStack
 				py={0}
 				my={0}
 				flex={1}
-				mx={6}
-				gap={0}
+				mx={4}
+				gap={1}
 				spacing='0px'
 				display={{sm: 'flex', base: 'none'}}
 				maxWidth={'100vw'}
@@ -75,6 +88,11 @@ const Navbar = (props: MyProps) => {
 					buttonText='Power Rankings'
 					disabled={context.settings == undefined}
 					link={`/league/${context?.settings?.league_id}/ranks`}
+				/>
+				<NavbarButton
+					buttonText='Playoff Odds'
+					disabled={context.settings == undefined}
+					link={`/league/${context?.settings?.league_id}/playoff-odds`}
 				/>
 				<NavbarButton
 					buttonText='Trading'
@@ -116,25 +134,27 @@ interface NavButtonProps {
 function NavbarButton(props: NavButtonProps) {
 	const pathName = usePathname()
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
+	const isCurrent = props.link !== undefined && (
+		pathName === props.link ||
+		(props.buttonText !== 'League' && pathName?.startsWith(`${props.link}/`))
+	)
 	if (props.link != undefined && props.disabled != true) {
 		return (
 			<Link href={props.link}>
 				<Button
-					transition={'all .2s ease'}
-					_hover={{
-						backgroundColor: 'secondary.600',
-						cursor: 'pointer',
-					}}
+					transition={'all .18s ease'}
+					_hover={{backgroundColor: 'whiteAlpha.100', cursor: 'pointer'}}
 					onClick={props.onclick}
 					disabled={props.disabled ?? false}
-					size={'md'}
+					size={'sm'}
 					fontWeight={'semibold'}
-					borderRadius={0}
-					colorScheme={'primary'}
-					textColor='white'
-					isActive={pathName == '/' + props.link && isLargerThan800}
-					_active={{bg: project_colors.secondary[500]}}
+					borderRadius={'md'}
+					color={isCurrent ? 'white' : 'textTheme.mediumEmphasis'}
+					bg={isCurrent ? 'whiteAlpha.200' : 'transparent'}
+					isActive={isCurrent && isLargerThan800}
+					_active={{bg: 'secondary.700'}}
 					variant={'ghost'}
+					px={3}
 					aria-label={props.buttonText}>
 					{props.buttonText}
 				</Button>
@@ -143,20 +163,16 @@ function NavbarButton(props: NavButtonProps) {
 	} else {
 		return (
 			<Button
-				transition={'all .2s ease'}
-				_hover={{
-					backgroundColor: 'secondary.600',
-					cursor: 'pointer',
-				}}
+				transition={'all .18s ease'}
+				_hover={{backgroundColor: 'whiteAlpha.100', cursor: 'pointer'}}
 				onClick={props.onclick}
 				disabled={props.disabled ?? false}
-				size={'md'}
-				borderRadius={0}
+				size={'sm'}
+				borderRadius={'md'}
 				fontWeight={'medium'}
-				colorScheme={'primary'}
-				textColor='white'
-				isActive={pathName?.includes('/' + props.link) && isLargerThan800}
-				_active={{bg: project_colors.secondary[500]}}
+				color='textTheme.mediumEmphasis'
+				isActive={isCurrent && isLargerThan800}
+				_active={{bg: 'secondary.700'}}
 				variant='ghost'
 				aria-label={props.buttonText}>
 				{props.buttonText}

@@ -1,13 +1,23 @@
 import Providers from './providers'
+import type {Viewport} from 'next'
 import GoogleAnalytics from '../components/GoogleAnalytics'
+import '../styles/globals.css'
+
+// Next adds its own viewport tag, so this must be set here for viewport-fit to take effect
+export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	viewportFit: 'cover',
+	themeColor: '#111718',
+	colorScheme: 'dark',
+}
+
 const RootLayout = ({children}: {children: React.ReactNode}) => {
 	return (
 		<html lang='en'>
 			<head>
-				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 				<title>VisuaLeague</title>
 				<meta name='Visualize your league' content='Created by Seth Marcus' />
-				<meta name='theme-color' content='#121212' />
 				<meta
 					name='description'
 					content='Visualize your fantasy football leagues and find insights to help you improve. Gauge the strengths and weaknesses for each team at a glance to Learn from past mistakes and prevent future ones'></meta>

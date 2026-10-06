@@ -4,12 +4,12 @@ import Link from 'next/link'
 import {useContext} from 'react'
 import {RxLoop} from 'react-icons/rx'
 import {GiStrong} from 'react-icons/gi'
-import {BsGrid3X2, BsBarChart} from 'react-icons/bs'
+import {BsGrid3X2, BsBarChart, BsTrophy} from 'react-icons/bs'
 import {VscListTree} from 'react-icons/vsc'
 import {LeagueContext} from '../../contexts/LeagueContext'
 import ExpandableLeagueSearch from '../forms/ExpandableLeagueSearch'
 import TeamsMobileMenuContainer from './TeamsMobileMenuContainer'
-import { useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, Text, DrawerHeader, Center, Avatar, Heading, DrawerBody, VStack, Divider, Button, HStack, DrawerFooter, Box } from '@chakra-ui/react'
+import { useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, Text, DrawerHeader, Center, Avatar, Heading, DrawerBody, VStack, Button, HStack, Box } from '@chakra-ui/react'
 
 export default function MobileSidebar() {
 	const [context] = useContext(LeagueContext)
@@ -19,6 +19,7 @@ export default function MobileSidebar() {
 			{context.settings && (
 				<IconButton
 					variant={'ghost'}
+					color={'secondary.200'}
 					icon={<HamburgerIcon />}
 					_hover={{background: 'secondary.600'}}
 					onClick={onOpen}
@@ -26,37 +27,41 @@ export default function MobileSidebar() {
 				/>
 			)}
 			<Drawer isOpen={isOpen} placement='left' onClose={onClose}>
-				<DrawerOverlay />
-				<DrawerContent bg={'surface.1'} textColor='white'>
+				<DrawerOverlay bg='blackAlpha.700' />
+				<DrawerContent bg={'surface.0'} textColor='white' borderRight='1px solid' borderColor='whiteAlpha.200'>
 					<DrawerCloseButton />
-					<DrawerHeader>
+					<DrawerHeader borderBottom='1px solid' borderColor='whiteAlpha.200' pb={5}>
 						{context != undefined && context.settings && (
-							<Box mt={8} display={'inline-block'}>
-								<Center>
+							<Box mt={5}>
+								<Center justifyContent='flex-start'>
 									<Avatar
 										name={context.settings.name}
 										src={`https://sleepercdn.com/avatars/thumbs/${context.settings.avatar}`}
 									/>
-									<Heading ml={1} size={'lg'}>
+									<Heading ml={3} size={'md'} noOfLines={1}>
 										{context.settings.name}
 									</Heading>
 								</Center>
 							</Box>
 						)}
-						<br />
 					</DrawerHeader>
 					<DrawerBody>
 						<VStack
-							divider={<Divider borderColor={'textTheme.disabled'} />}
-							spacing={0}
+							spacing={1}
 							align='stretch'
 						>
 							{context?.settings && (
 								<Link href={`/league/${context.settings.league_id}`}>
 									<Button
-										variant={'unstyled'}
+										variant={'ghost'}
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
 										leftIcon={<BsBarChart/>}
-										_hover={{textColor: 'grey'}}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
 										onClick={onClose}
 									>
 										League Summary
@@ -71,11 +76,35 @@ export default function MobileSidebar() {
 								<Link href={`/league/${context.settings.league_id}/ranks`}>
 									<Button
 										leftIcon={<GiStrong />}
-										variant={'unstyled'}
-										_hover={{textColor: 'grey'}}
+										variant={'ghost'}
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
 										onClick={onClose}
 									>
 										Power Ranks
+								</Button>
+							</Link>
+						)}
+						{context?.settings && (
+							<Link href={`/league/${context.settings.league_id}/playoff-odds`}>
+								<Button
+									leftIcon={<BsTrophy />}
+									variant={'ghost'}
+									w='full'
+									justifyContent='flex-start'
+									borderRadius='md'
+									minH='44px'
+									px={3}
+									color='textTheme.mediumEmphasis'
+									_hover={{bg: 'surface.2', color: 'white'}}
+									onClick={onClose}
+								>
+									Playoff Odds
 									</Button>
 								</Link>
 							)}
@@ -83,8 +112,14 @@ export default function MobileSidebar() {
 								<Link href={`/league/${context.settings.league_id}/trades`}>
 									<Button
 										leftIcon={<RxLoop />}
-										variant={'unstyled'}
-										_hover={{textColor: 'grey'}}
+										variant={'ghost'}
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
 										onClick={onClose}
 									>
 										Trades
@@ -94,8 +129,14 @@ export default function MobileSidebar() {
 							{context?.settings && (
 								<Link href={`/league/${context.settings.league_id}/draft`}>
 									<Button
-										variant={'unstyled'}
-										_hover={{textColor: 'grey'}}
+										variant={'ghost'}
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
 										onClick={onClose}
 									>
 										<HStack>
@@ -109,8 +150,14 @@ export default function MobileSidebar() {
 							{context?.settings && (
 								<Link href={`/league/${context.settings.league_id}/rosters`}>
 									<Button
-										variant={'unstyled'}
-										_hover={{textColor: 'grey'}}
+										variant={'ghost'}
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
 										onClick={onClose}
 									>
 										<HStack>
@@ -122,12 +169,10 @@ export default function MobileSidebar() {
 								</Link>
 							)}
 						</VStack>
-						<Box mt={'5'} ml={-1}>
+						<Box mt={5} pt={5} borderTop='1px solid' borderColor='whiteAlpha.200'>
 							<ExpandableLeagueSearch />
 						</Box>
 					</DrawerBody>
-
-					<DrawerFooter></DrawerFooter>
 				</DrawerContent>
 			</Drawer>
 		</>

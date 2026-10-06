@@ -22,14 +22,25 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
 
 	return (
 		<Box
-			_hover={{textColor: 'grey', cursor: 'pointer'}}
+			_hover={{cursor: 'pointer'}}
 			aria-label={'Teams'}
 			onClick={onToggle}
 		>
-			<Button variant={'unstyled'} rightIcon={<MdOutlineExpandMore />} color={"white"} leftIcon={<RiGroupLine/>}>
+			<Button
+				variant='ghost'
+				w='full'
+				justifyContent='flex-start'
+				borderRadius='md'
+				minH='44px'
+				px={3}
+				color='textTheme.mediumEmphasis'
+				_hover={{bg: 'surface.2', color: 'white'}}
+				rightIcon={<MdOutlineExpandMore />}
+				leftIcon={<RiGroupLine/>}>
 				Teams
 			</Button>
 			<Collapse in={isOpen} animateOpacity>
+				<Box px={3}>
 				{context &&
 					context.settings != undefined &&
 					Array.from(
@@ -46,6 +57,7 @@ export default function TeamsMobileMenuContainer(props: MyProps) {
 							</Box>
 						)
 					})}
+				</Box>
 			</Collapse>
 		</Box>
 	)

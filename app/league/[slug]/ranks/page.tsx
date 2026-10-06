@@ -5,11 +5,14 @@ import {useContext, useState} from 'react'
 import MemberSkillScatterPlot from '../../../../components/charts/MemberSkillScatterPlot'
 import PowerRankingBumpChart from '../../../../components/charts/PowerRankingBumpChart'
 import AllPlayRankGroup from '../../../../components/groups/AllPlayRankGroup'
+import ManagerDetailPanel from '../../../../components/groups/ManagerDetailPanel'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 const RankPage = () => {
 	const [context, setContext] = useContext(LeagueContext)
 	const [filteredIds, setFilteredIds] = useState([] as number[])
+	const [selectedMember, setSelectedMember] = useState<string | null>(null)
+	const [hoveredMember, setHoveredMember] = useState<string | null>(null)
 
 
 	const onHover: (rosterIds: number[]) => void = (rosterIds: number[]) => {
@@ -26,16 +29,16 @@ const RankPage = () => {
 	"allplay_table"
 	"owner_skill"`
 	return (
-		<Box overflowX={'hidden'} w={'full'} height={'full'}>
+		<Box overflowX={'clip'} w={'full'} height={'full'}>
 			<Grid
 				gap={3}
-				mx={4}
+				mx={[2, 4]}
 				my={2}
 				templateAreas={[mobileTemplate, desktopTemplate]}
-				gridTemplateColumns={['1fr', '1fr 1fr']}
-				gridTemplateRows={'60px 1fr 1fr 1fr'}
+				gridTemplateColumns={['minmax(0, 1fr)', '1fr 1fr']}
+				gridTemplateRows={'60px auto auto auto'}
 			>
-				<GridItem area={'header'}>
+				<GridItem area={'header'} minW={0}>
 					<Skeleton
 						fontWeight='black'
 						mx={10}
@@ -53,17 +56,31 @@ const RankPage = () => {
 				</GridItem>
 				<GridItem
 					area={'allplay_table'}
+					minW={0}
 					overflowX={'auto'}
 					overflowY={'hidden'}
 				>
 					<AllPlayRankGroup league={context} onHover={onHover} />
 				</GridItem>
-				<GridItem area={'cumulative_ranks'}>
-					<PowerRankingBumpChart league={context} displayIds={filteredIds} />
+				<GridItem area={'cumulative_ranks'} minW={0} position='relative' minH={['420px', '0']}>
+					{/* Absolute so the chart fills the row set by the matrix instead of sizing it */}
+					<Box position='absolute' inset={0}>
+						<PowerRankingBumpChart league={context} displayIds={filteredIds} />
+					</Box>
 				</GridItem>
 
-				<GridItem area={'owner_skill'}>
-					<MemberSkillScatterPlot league={context} />
+				<GridItem area={'owner_skill'} minW={0}>
+					<Grid templateColumns={['minmax(0, 1fr)', '2fr 1fr']} gap={3} h={['auto', '600px']}>
+						<Box h={['400px', '100%']}>
+							<MemberSkillScatterPlot
+								league={context}
+								selectedName={selectedMember}
+								onHoverMember={setHoveredMember}
+								onSelectMember={setSelectedMember}
+							/>
+						</Box>
+						<ManagerDetailPanel league={context} memberName={hoveredMember ?? selectedMember} />
+					</Grid>
 				</GridItem>
 			</Grid>
 		</Box>

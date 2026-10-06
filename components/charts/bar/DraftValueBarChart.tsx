@@ -45,7 +45,7 @@ const DraftValueBarChart = (props: MyProps) => {
                 }}
             >
                 <strong>
-                {props.league?.draft.picks.get(id as string)?.name}: {value}
+                {props.league?.draft.picks.get(id as string)?.name}: {Number(value).toFixed(2)}
             </strong>
             </div>
         )}
@@ -54,8 +54,9 @@ const DraftValueBarChart = (props: MyProps) => {
 			innerPadding={2}
 			borderRadius={1}
 			enableGridY={false}
-			margin={{top: 15, right: 0, bottom: 0, left: 30}}
+			margin={{top: 15, right: 10, bottom: 0, left: 50}}
 			padding={0.3}
+			valueScale={{type: 'linear', min: 'auto', max: 'auto'}}
 			indexScale={{type: 'band', round: true}}
 			theme={theme}
 			borderColor={{
@@ -66,7 +67,7 @@ const DraftValueBarChart = (props: MyProps) => {
 			axisRight={null}
 			axisLeft={
 				{tickSize: 0,
-				tickPadding: 2,
+				tickPadding: 8,
 				tickRotation: -30,
 				format: v => `${v.slice(0,4)}` ,
 				legendPosition: 'middle',

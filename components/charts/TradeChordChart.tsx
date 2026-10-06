@@ -159,13 +159,13 @@ const RibbonTooltip = ({ ribbon }: RibbonTooltipComponentProps) => (
                 <Chip key="source-chip" color={ribbon.source.color} />,
                 'Source',
                 <strong key="source-id">{ribbon.source.id}</strong>,
-                ribbon.source.value,
+                ribbon.source.value.toFixed(2),
             ],
             [
                 <Chip key="target-chip" color={ribbon.target.color} />,
                 'Target',
                 <strong key="target-id">{ribbon.target.id}</strong>,
-                ribbon.target.value,
+                ribbon.target.value.toFixed(2),
             ],
         ]}
     />

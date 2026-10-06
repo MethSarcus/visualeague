@@ -17,6 +17,8 @@ import {
 } from '../utility/rosterFunctions'
 import {MatchupPlayer} from '../classes/custom/MatchupPlayer'
 import Player, {PlayerMap, PlayerScores, SleeperPlayerDetails} from '../classes/custom/Player'
+import League from '../classes/custom/League'
+import MatchupInterface from '../classes/custom/MatchupInterface'
 
 const details = {player_id: 'p1'} as SleeperPlayerDetails
 
@@ -153,6 +155,113 @@ describe('roster and scoring utilities', () => {
 			settings: {type: 2},
 		} as never)
 		expect(result).toEqual({pprString: '0.5 PPR', numQbString: '2QB', leagueTypeString: 'Dynasty'})
+	})
+})
+
+describe('team notable weeks', () => {
+	it('selects managed-week extrema by points left across enabled weeks, including bye weeks', () => {
+		const makeMatchup = (
+			weekNumber: number,
+			pf: number,
+			opslap: number,
+			isByeWeek = false
+		) => ({
+			weekNumber,
+			isByeWeek,
+			getMemberSide: () => ({pf, opslap}),
+			getMargin: () => 10,
+		}) as unknown as MatchupInterface
+
+		const matchups = [
+			makeMatchup(1, 100, 125),
+			makeMatchup(2, 85, 150, true),
+			makeMatchup(3, 110, 120),
+			makeMatchup(4, 80, 200),
+		]
+		const league = {
+			getEnabledWeeks: () => [1, 2, 3],
+			weeks: new Map(
+				matchups.map((matchup) => [matchup.weekNumber, {getMemberMatchup: () => matchup}])
+			),
+		} as unknown as League
+
+		const notableWeeks = League.prototype.getMemberNotableWeeks.call(league, 42)
+
+		expect(notableWeeks.bestManagedWeek?.weekNumber).toBe(3)
+		expect(notableWeeks.worstManagedWeek?.weekNumber).toBe(2)
+	})
+})
+
+describe('league helper behavior', () => {
+	it('selects the rival with the smallest absolute point differential', () => {
+		const closeRival = {
+			rivalRosterId: 2,
+			wins: 1,
+			losses: 0,
+			ties: 0,
+			getPointDifferential: () => 5,
+		}
+		const distantRival = {
+			rivalRosterId: 3,
+			wins: 1,
+			losses: 0,
+			ties: 0,
+			getPointDifferential: () => -20,
+		}
+		const league = {
+			rivals: new Map([[1, new Map([[2, closeRival], [3, distantRival]])]]),
+		} as unknown as League
+
+		expect(League.prototype.getMemberRival.call(league, 1)?.rivalRosterId).toBe(2)
+	})
+
+	it('returns sorted trades without reordering the stored trades', () => {
+		const lowerDifferential = {biggestPointDifferential: 2}
+		const higherDifferential = {biggestPointDifferential: 8}
+		const trades = [lowerDifferential, higherDifferential]
+		const league = {trades} as unknown as League
+
+		expect(League.prototype.getSortedTrades.call(league)).toEqual([
+			higherDifferential,
+			lowerDifferential,
+		])
+		expect(trades).toEqual([lowerDifferential, higherDifferential])
+	})
+
+	it('attributes season players to the roster that fielded them', () => {
+		const member = {
+			players: new Map<string, {roster_id: number}>(),
+			stats: {
+				position_starts: new Map(),
+				position_scores: new Map(),
+				projected_position_scores: new Map(),
+			},
+		}
+		const awayTeam = {
+			roster_id: 42,
+			starters: [{playerId: 'away-player', position: 'RB', eligiblePositions: ['RB'], score: 12, projectedScore: 8}],
+			bench: [],
+			position_starts: new Map(),
+			position_scores: new Map(),
+			position_projected_scores: new Map(),
+		}
+		const addTeamPlayerStats = (League.prototype as unknown as {
+			addTeamPlayerStats: (member: unknown, team: unknown, weekNumber: number) => void
+		}).addTeamPlayerStats
+
+		addTeamPlayerStats.call({} as League, member, awayTeam, 1)
+
+		expect(member.players.get('away-player')?.roster_id).toBe(42)
+	})
+
+	it('returns empty notable and drafter results for a league with no members', () => {
+		const league = {members: new Map()} as unknown as League
+
+		expect(League.prototype.getNotableMembers.call(league)).toBeNull()
+		expect(League.prototype.getBestAndWorstDrafter.call(league)).toEqual({
+			bestDrafter: null,
+			worstDrafter: null,
+		})
 	})
 })
 

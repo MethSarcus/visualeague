@@ -17,13 +17,13 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react'
 import {useContext} from 'react'
-import Matchup from '../../../classes/custom/Matchup'
+import MatchupInterface from '../../../classes/custom/MatchupInterface'
 import {LeagueContext} from '../../../contexts/LeagueContext'
 import {project_colors} from '../../../utility/project_colors'
 import MatchupModalBody from '../../MatchupModalBody'
 
 type MyProps = {
-	matchup: Matchup | undefined
+	matchup: MatchupInterface | undefined
 	memberId?: number | undefined
 	title: String | undefined
 	score: String | undefined

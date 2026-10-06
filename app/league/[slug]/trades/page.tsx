@@ -22,6 +22,7 @@ import TradeCard from '../../../../components/cards/TradeCard'
 import WorstTradeCard from '../../../../components/cards/WorstTradeCard'
 import WeeklyTradesLineChart from '../../../../components/charts/line/WeeklyTradesLineChart'
 import TradeChordChart from '../../../../components/charts/TradeChordChart'
+import TradeActivityTable from '../../../../components/groups/TradeActivityTable'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
 const Page = () => {
@@ -75,9 +76,10 @@ const Page = () => {
 					</Box>
 				</GridItem>
 				<GridItem area='trades'>
-					<Container textColor={'white'} overflowY={'scroll'} color='white'>
+					<Container textColor={'white'} color='white'>
 						<Text color={'white'}>Trades</Text>
-						<VStack maxH={'800px'} overflowY={'auto'} align={'stretch'}>
+						{/* Only the list scrolls on desktop so there's a single scrollbar */}
+						<VStack maxH={['none', 'calc(100vh - 200px)']} overflowY={['visible', 'auto']} align={'stretch'}>
 							{trades.map((trade: Trade) => {
 								return <TradeCard key={trade.transaction_id} trade={trade} />
 							})}
@@ -87,6 +89,9 @@ const Page = () => {
 				<GridItem area='weeklyTradesChart' height={"300px"}>
 					<Center color={"white"} p={3}>Weekly Trades</Center>
 					<WeeklyTradesLineChart trades={(context as League).trades}/>
+				</GridItem>
+				<GridItem area='tradeBarGraph' mx={[2, 4]} my={[2, 0]}>
+					<TradeActivityTable league={context as League} />
 				</GridItem>
 			</Grid>
 		</Box>

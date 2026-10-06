@@ -1,5 +1,4 @@
 'use client'
-import '../styles/globals.css'
 import {Box, Container, Grid, GridItem} from '@chakra-ui/react'
 import Image from 'next/image'
 import UsernameForm from '../components/forms/UsernameForm'

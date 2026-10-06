@@ -6,22 +6,25 @@ const Card = {
   baseStyle: {
     display: "flex",
     flexDirection: "column",
-    background: "white",
+    background: "surface.1",
+    color: "textTheme.highEmphasis",
     alignItems: "center",
-    gap: 6,
+    gap: 4,
+    border: "1px solid",
+    borderColor: "whiteAlpha.200",
   },
   // The size styles for each part
   sizes: {},
   // The variant styles for each part
   variants: {
     stat: {
-      padding: 8,
-      borderRadius: "xl",
-      boxShadow: "xl",
+      padding: 6,
+      borderRadius: "lg",
+      boxShadow: "md",
     },
     smooth: {
       padding: 6,
-      borderRadius: "base",
+      borderRadius: "lg",
       boxShadow: "md",
     },
   },

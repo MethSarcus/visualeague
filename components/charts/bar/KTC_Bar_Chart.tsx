@@ -48,7 +48,7 @@ const KTC_Bar_Chart = (props: MyProps) => {
 						}}
 					>
 						<strong>
-							{`${playerDets?.first_name} ${playerDets?.last_name}`} KTC Value: {value}
+							{`${playerDets?.first_name} ${playerDets?.last_name}`} KTC Value: {Number(value).toFixed(2)}
 						</strong>
 					</div>
 				)
