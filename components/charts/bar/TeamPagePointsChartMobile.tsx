@@ -32,8 +32,8 @@ const TeamPagePointsChartMobile = (props: MyProps) => {
 	const getColor = (bar: {id: string | number; indexValue: string | number}) => {
 		const baseColor = project_colors.position[bar.indexValue as POSITION]
 		if (bar.id === memberName) return baseColor
-		if (bar.id === LEAGUE_AVG_KEY) return alterRGBAOpacity(baseColor, 0.3)
-		return alterRGBAOpacity(baseColor, 0.1)
+		if (bar.id === LEAGUE_AVG_KEY) return alterRGBAOpacity(baseColor, 0.65)
+		return alterRGBAOpacity(baseColor, 0.45)
 	}
 
 	const getBorderColor = (bar: {data: {id: string | number; indexValue: string | number}}) => {
@@ -54,6 +54,7 @@ const TeamPagePointsChartMobile = (props: MyProps) => {
 			valueScale={{type: 'linear'}}
 			indexScale={{type: 'band', round: true}}
 			colors={getColor}
+			valueFormat=' >-.2f'
 			borderWidth={2}
 			borderColor={getBorderColor}
 			theme={theme}

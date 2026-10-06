@@ -39,6 +39,7 @@ const BarChart = (props: MyProps) => {
     indexScale={{ type: 'band', round: true }}
     colors={{ scheme: 'nivo' }}
     theme={theme}
+    valueFormat=' >-.2f'
     borderWidth={1}
     borderColor={{
         from: 'color',

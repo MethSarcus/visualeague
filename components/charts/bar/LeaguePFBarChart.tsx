@@ -2,8 +2,8 @@ import {Spinner} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
-import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
-import {project_colors} from '../../../utility/project_colors'
+import {POSITION} from '../../../utility/rosterFunctions'
+import {alterRGBAOpacity, project_colors} from '../../../utility/project_colors'
 
 interface MyProps {
 	league?: League
@@ -22,7 +22,8 @@ const LeagueStackedPfBarChart = (props: MyProps) => {
 
 	if (chartData.data.length <= 0) return <Spinner />
 
-	const getColor = (bar: {id: string | number}) => getPositionColor(bar.id as POSITION)
+	const getColor = (bar: {id: string | number}) =>
+		alterRGBAOpacity(project_colors.position[bar.id as POSITION], 0.95)
 
 	return (
 		<ResponsiveBar
@@ -35,6 +36,7 @@ const LeagueStackedPfBarChart = (props: MyProps) => {
 			valueScale={{type: 'linear'}}
 			indexScale={{type: 'band', round: true}}
 			colors={getColor}
+			valueFormat=' >-.2f'
 			theme={theme}
 			borderColor={{from: 'color', modifiers: [['darker', 1.6]]}}
 			axisTop={{
