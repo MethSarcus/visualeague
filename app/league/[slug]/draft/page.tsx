@@ -18,17 +18,21 @@ import DraftPickCard from '../../../../components/cards/DraftPickCard'
 import GenericStatCard from '../../../../components/cards/statcards/GenericStatCard'
 import DraftValueBarChart from '../../../../components/charts/bar/DraftValueBarChart'
 import DraftBoard from '../../../../components/groups/DraftBoard'
+import DraftSpendingChart from '../../../../components/groups/DraftSpendingChart'
 import DraftPageStatGroup from '../../../../components/groups/stats/DraftPageStatGroup'
 import DraftValueTable from '../../../../components/tables/DraftValueTable'
 import {LeagueContext} from '../../../../contexts/LeagueContext'
 
-const Page = () => {
+const Page = ({params}: {params: Promise<{slug: string}>}) => {
+	const {slug} = React.use(params)
 	const [context, setContext] = useContext(LeagueContext)
 	const desktopGrid = `
 	"draft_cards draft_cards"
+	"draft_spending draft_spending"
 	"draft_table draft_chart"`
 
 	const mobileGrid = `"draft_cards"
+						"draft_spending"
 						"draft_chart"
 						"draft_table"`
 	if (!context.settings) return <Spinner />
@@ -45,15 +49,19 @@ const Page = () => {
 						
 							templateAreas={[mobileGrid, desktopGrid]}
 							gridTemplateColumns={['1fr', '1fr 1fr']}
-							mx={5}
+							mx={[0, 5]}
+							gap={4}
 						>
 							<GridItem area={'draft_cards'}>
 								<DraftPageStatGroup league={context} />
 							</GridItem>
-							<GridItem area={'draft_table'} overflowY={'auto'} maxH={'800px'}>
+							<GridItem area={'draft_spending'} minW={0}>
+								<DraftSpendingChart leagueId={slug} />
+							</GridItem>
+							<GridItem area={'draft_table'} minW={0}>
 								<DraftValueTable draft={context.draft} />
 							</GridItem>
-							<GridItem area={'draft_chart'} minHeight={'300px'} maxH={'800px'}>
+							<GridItem area={'draft_chart'} minW={0}>
 								<DraftValueBarChart league={context} />
 							</GridItem>
 						</Grid>
