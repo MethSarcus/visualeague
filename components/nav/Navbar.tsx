@@ -17,10 +17,12 @@ import TeamSidebar from './TeamSidebar'
 
 interface MyProps {
 	leagueID: string | undefined
+	isHistory?: boolean
 }
 
 const Navbar = (props: MyProps) => {
 	const [context, setContext] = useContext(LeagueContext)
+	const navLeagueId = props.isHistory ? props.leagueID : context.settings?.league_id
 	const [playerScores] = useContext(PlayerScoresContext) as [Map<string, PlayerScores>, unknown]
 	const [playerDetails] = useContext(PlayerDetailsContext) as [
 		Map<string, DatabasePlayer>,
@@ -55,7 +57,7 @@ const Navbar = (props: MyProps) => {
 				display={{sm: 'none', base: 'flex'}}
 				maxWidth={'100vw'}
 				overflow='hidden'>
-				<MobileSidebar />
+				<MobileSidebar leagueID={props.leagueID} isHistory={props.isHistory} />
 			</HStack>
 			{/* Centered over the bar so it stays centered regardless of the buttons on each side */}
 			<Box
@@ -64,7 +66,7 @@ const Navbar = (props: MyProps) => {
 				left='50%'
 				top='calc(50% + env(safe-area-inset-top) / 2)'
 				transform='translate(-50%, -50%)'>
-				<Link href={context.settings ? `/league/${context.settings.league_id}` : '/'}>
+				<Link href={navLeagueId ? `/league/${navLeagueId}` : '/'}>
 					<Image src='/images/logo.png' alt='VisuaLeague' h='40px' maxW='none' />
 				</Link>
 			</Box>
@@ -77,47 +79,54 @@ const Navbar = (props: MyProps) => {
 				spacing='0px'
 				display={{sm: 'flex', base: 'none'}}
 				maxWidth={'100vw'}
-				overflow='hidden'>
+				minW={0}
+				overflowX='auto'
+				overflowY='hidden'>
 				<NavbarButton
 					buttonText='League'
-					disabled={context.settings == undefined}
-					link={`/league/${context.settings?.league_id}`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}`}
 				/>
-				<TeamSidebar />
+				<NavbarButton
+					buttonText='History'
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/history`}
+				/>
+				{!props.isHistory && <TeamSidebar />}
 				<NavbarButton
 					buttonText='Power Rankings'
-					disabled={context.settings == undefined}
-					link={`/league/${context?.settings?.league_id}/ranks`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/ranks`}
 				/>
 				<NavbarButton
 					buttonText='Playoff Odds'
-					disabled={context.settings == undefined}
-					link={`/league/${context?.settings?.league_id}/playoff-odds`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/playoff-odds`}
 				/>
 				<NavbarButton
 					buttonText='Trading'
-					disabled={context.settings == undefined}
-					link={`/league/${context?.settings?.league_id}/trades`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/trades`}
 				/>
 				<NavbarButton
 					buttonText='Draft'
-					disabled={context.settings == undefined}
-					link={`/league/${context?.settings?.league_id}/draft`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/draft`}
 				/>
 				<NavbarButton
 					buttonText='Rosters'
-					disabled={context.settings == undefined}
-					link={`/league/${context?.settings?.league_id}/rosters`}
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/rosters`}
 				/>
 				<Box pl={3}>
 					<ExpandableLeagueSearch />
 				</Box>
 			</HStack>
 			<Center pr={3} my={2}>
-				<SeasonPortionSelector onclick={setSeasonPortion} />
+				{!props.isHistory && <SeasonPortionSelector onclick={setSeasonPortion} />}
 			</Center>
 			<Center pr={3} my={2}>
-				{context?.settings && <SettingsSidebar leagueSettings={context?.settings} />}
+				{!props.isHistory && context?.settings && <SettingsSidebar leagueSettings={context?.settings} />}
 			</Center>
 		</Flex>
 	)

@@ -1,159 +1,71 @@
-import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {BarDatum, ComputedDatum, ResponsiveBar} from '@nivo/bar'
+import {Box, Flex, Heading, HStack, Skeleton, Text, useMediaQuery} from '@chakra-ui/react'
+import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
-import LeagueMember from '../../../classes/custom/LeagueMember'
 import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
-import {project_colors} from '../../../utility/project_colors'
-import { DraftPlayer } from '../../../classes/custom/Draft'
 
-interface MyProps {
-	league?: League
-}
+const format = (value: number) => value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
-const theme = {
-	background: 'none',
-	text: {fill: project_colors.textTheme.highEmphasis}
-}
-
-const DraftValueBarChart = (props: MyProps) => {
-	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	const league = props.league
-	const formattedData = useMemo(() => {
-		if (league?.settings == undefined) return undefined
-		return formatScoresForBarChart(league)
-	}, [league])
-	if (formattedData == undefined) return <Spinner />
-	const keys = formattedData.chartKeys
-	const data = formattedData.chartData as BarDatum[]
-	if (data.length <= 0) return <Spinner />
-	const getColor = (bar: ComputedDatum<BarDatum>) => {
-		return getPositionColor(
-			(league?.draft.picks.get(String(bar.id))?.metadata.position ?? undefined) as POSITION
-		)
-	}
-	return (
-		<ResponsiveBar
-			data={data}
-			keys={keys}
-      tooltip={({ id, value, color }) => (
-            <div
-                style={{
-                    padding: 12,
-                    color,
-                    background: '#222222',
-                }}
-            >
-                <strong>
-                {props.league?.draft.picks.get(id as string)?.name}: {Number(value).toFixed(2)}
-            </strong>
-            </div>
-        )}
-			indexBy='member'
-			layout='horizontal'
-			innerPadding={2}
-			borderRadius={1}
-			enableGridY={false}
-			margin={{top: 15, right: 10, bottom: 0, left: 50}}
-			padding={0.3}
-			valueScale={{type: 'linear', min: 'auto', max: 'auto'}}
-			indexScale={{type: 'band', round: true}}
-			theme={theme}
-			borderColor={{
-				from: 'color',
-				modifiers: [['darker', 1.6]],
-			}}
-			axisTop={{legend: "Draft Value Found", legendPosition: "start", legendOffset: isOnMobile ? 0 : 0, format: () => '', tickSize: 0}}
-			axisRight={null}
-			axisLeft={
-				{tickSize: 0,
-				tickPadding: 8,
-				tickRotation: -30,
-				format: v => `${v.slice(0,4)}` ,
-				legendPosition: 'middle',
-				legendOffset: 0}}
-      		enableLabel={false}
-			colors={getColor}
-
-			legends={[
-				{
-					dataFrom: 'keys',
-					anchor: 'bottom',
-					direction: 'row',
-					justify: false,
-					itemTextColor: 'white',
-					itemWidth: 50,
-					itemHeight: -100,
-					itemDirection: 'left-to-right',
-					itemOpacity: 1,
-					symbolSize: 20,
-					effects: [
-						{
-							on: 'hover',
-							style: {
-								itemOpacity: 1,
-							},
-						},
-					],
-				},
-			]}
-			role='application'
-			ariaLabel='Draft value for each member'
-		/>
-	)
-}
-
-interface MemberDataObj {
-	[key: string]: any
-}
-
-function formatScoresForBarChart(league: League) {
-	let keys: Set<string> = new Set<string>()
-	let data: object[] = []
-	let memberDataObjects = new Map<number, MemberDataObj>()
-
-	league.members.forEach((member: LeagueMember, key: number) => {
-		let memberData: {[k: string]: any} = {}
-		memberDataObjects.set(key, memberData)
-	})
-	Array.from(league.draft.picks.values()).sort(
-    (a: DraftPlayer, b: DraftPlayer) => {
-      if (a.draftValue < b.draftValue) {
-        return 1
-      } else if (a.draftValue > b.draftValue) {
-        return -1
-      } else {
-        return 0
-      }
-    }
-  ).forEach((pick) => {
-		keys.add(pick.player_id)
-		let memberDataObj = memberDataObjects.get(pick.roster_id)
-		if (memberDataObj && !isNaN(+pick.draftValue)) {
-			memberDataObj[pick.player_id] = pick.draftValue
+export function formatDraftValueChart(league: League) {
+	const members = Array.from(league.members.values())
+		.sort((a, b) => a.stats.draftValue - b.stats.draftValue || a.name.localeCompare(b.name) || a.roster.roster_id - b.roster.roster_id)
+	const dataByRoster = new Map<number, BarDatum>(members.map((member) => [
+		member.roster.roster_id, {rosterId: String(member.roster.roster_id), member: member.name},
+	]))
+	const picks = Array.from(league.draft.picks.values()).sort((a, b) => b.draftValue - a.draftValue)
+	const keys: string[] = []
+	const positions = new Set<POSITION>()
+	for (const pick of picks) {
+		const row = dataByRoster.get(pick.roster_id)
+		if (!row || !Number.isFinite(pick.draftValue)) continue
+		keys.push(pick.player_id)
+		row[pick.player_id] = pick.draftValue
+		if (Object.values(POSITION).includes(pick.metadata.position as POSITION)) {
+			positions.add(pick.metadata.position as POSITION)
 		}
-	})
-
-	memberDataObjects.forEach((memberDataObj, key: number) => {
-		memberDataObj.member = league.members.get(key)?.name
-		memberDataObj.draftValue = league.members.get(key)?.stats.draftValue
-	})
-
-	let formattedData = {
-		chartKeys: Array.from(keys),
-		chartData: Array.from(memberDataObjects.values()).sort(
-			(a: MemberDataObj, b: MemberDataObj) => {
-				if (a.draftValue > b.draftValue) {
-					return 1
-				} else if (a.draftValue < b.draftValue) {
-					return -1
-				} else {
-					return 0
-				}
-			}
-		),
 	}
-	return formattedData
+	return {members, data: Array.from(dataByRoster.values()), keys, positions: Object.values(POSITION).filter((position) => positions.has(position))}
 }
 
-export default DraftValueBarChart
+export default function DraftValueBarChart({league}: {league?: League}) {
+	const [isMobile] = useMediaQuery('(max-width: 768px)')
+	const chart = useMemo(() => league?.settings ? formatDraftValueChart(league) : undefined, [league])
+	if (!chart || !league) return <Skeleton h='350px' borderRadius='xl' aria-label='Loading draft value by team' />
+	const names = new Map(chart.members.map((member) => [String(member.roster.roster_id), member.name]))
+	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} h='100%'>
+		<Heading size='sm' color='white'>Draft value by team</Heading>
+		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
+			Player draft values by team and position. Hover over a segment for player details.
+		</Text>
+		{!chart.members.length || !chart.keys.length ? <Text mt={4} color='surface.8' fontWeight='normal'>No draft value available.</Text> : <>
+			<HStack spacing={4} mt={4} flexWrap='wrap' rowGap={2}>
+				{chart.positions.map((position) => <HStack key={position} spacing={2}>
+					<Box boxSize='10px' borderRadius='full' bg={getPositionColor(position)} />
+					<Text fontSize='xs' color='surface.9'>{position}</Text>
+				</HStack>)}
+			</HStack>
+			<Box h={`${Math.max(260, chart.members.length * 40 + 45)}px`} mt={2}>
+				<ResponsiveBar data={chart.data} keys={chart.keys} indexBy='rosterId' layout='horizontal' groupMode='stacked'
+					margin={{top: 10, right: 20, bottom: 34, left: isMobile ? 95 : 135}} padding={0.3} innerPadding={1}
+					valueScale={{type: 'linear', min: 'auto', max: 'auto'}}
+					colors={({id}) => getPositionColor(league.draft.picks.get(String(id))?.metadata.position as POSITION)}
+					theme={{text: {fill: '#c5cccc', fontSize: 11}, grid: {line: {stroke: '#3a4849', strokeWidth: 1}},
+						axis: {ticks: {line: {stroke: '#526162'}}, domain: {line: {stroke: '#526162'}}}}}
+					axisTop={null} axisRight={null} enableGridY={false} gridXValues={5}
+					axisBottom={{tickValues: 5, tickSize: 0, tickPadding: 8}}
+					axisLeft={{tickSize: 0, tickPadding: 8, format: (value) => {
+						const name = names.get(String(value)) || String(value)
+						const limit = isMobile ? 11 : 18
+						return name.length > limit ? `${name.slice(0, limit - 1)}…` : name
+					}}}
+					enableLabel={false} borderWidth={1} borderColor='#182021'
+					tooltip={({id, value, data, color}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm'>
+						<Text>{data.member}</Text>
+						<Flex justify='space-between' gap={5}><Text color={color}>{league.draft.picks.get(String(id))?.name}</Text>
+							<Text>{format(Number(value))}</Text></Flex>
+					</Box>}
+					role='img' ariaLabel='Draft value for each team by player' />
+			</Box>
+		</>}
+	</Box>
+}

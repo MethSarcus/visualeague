@@ -1,158 +1,82 @@
-import {Spinner, useMediaQuery} from '@chakra-ui/react'
-import {LineSeries, ResponsiveLine} from '@nivo/line'
+import {Box, Flex, Heading, HStack, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery} from '@chakra-ui/react'
+import {LineCustomSvgLayerProps, LineSeries, ResponsiveLine} from '@nivo/line'
 import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
-import {project_colors} from '../../../utility/project_colors'
+import {Week} from '../../../classes/custom/Week'
 
-interface MyProps {
-	league: League | undefined
+const colors: Record<string, string> = {High: '#00c7ab', Average: '#bb86fc', Low: '#f6c64f'}
+const format = (score: number) => score.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
+
+function LineHalos({series, lineGenerator}: LineCustomSvgLayerProps<LineSeries>) {
+	return <g pointerEvents='none' aria-hidden='true'>
+		{series.map((line) => <path key={line.id} d={lineGenerator(line.data.map((point) => point.position)) ?? undefined}
+			fill='none' stroke={line.color} strokeWidth={10} strokeOpacity={0.14} strokeLinecap='round' strokeLinejoin='round' />)}
+	</g>
 }
 
-const WeekRangeChart = (props: MyProps) => {
-	const [isOnMobile] = useMediaQuery('(max-width: 768px)')
-	const league = props.league
-	const data = useMemo(
-		() => (league?.settings == undefined ? undefined : formatScoresForLineChart(league)),
-		[league]
-	)
-	if (data == undefined) return <Spinner />
-	const theme = {
-		background: isOnMobile ? undefined : project_colors.surface[1],
-		text: {fill: project_colors.textTheme.highEmphasis},
-	}
-
-  const desktopMargin = {top: 20, right: 170, bottom: 50, left: 60}
-
-  const mobileMargin = {top: 25, right: 10, bottom: 40, left: 40}
-
-	const deskTopLegend: NonNullable<Parameters<typeof ResponsiveLine>[0]['legends']>[number] = {
-		anchor: 'bottom-right',
-		direction: 'column',
-		justify: false,
-		toggleSerie: true,
-		translateX: 100,
-		translateY: 0,
-		itemsSpacing: 0,
-		itemDirection: 'left-to-right',
-		itemWidth: 80,
-		itemHeight: 20,
-		itemOpacity: 0.75,
-		symbolSize: 12,
-		symbolShape: 'circle',
-		symbolBorderColor: 'rgba(0, 0, 0, .5)',
-		effects: [
-			{
-				on: 'hover',
-				style: {
-					itemBackground: 'rgba(0, 0, 0, .03)',
-					itemOpacity: 1,
-				},
-			},
-		],
-	}
-
-	return (
-		<ResponsiveLine
-			data={data}
-			theme={theme}
-			margin={isOnMobile ? mobileMargin : desktopMargin}
-			curve={'natural'}
-			enableGridX={false}
-			enableCrosshair={false}
-			xScale={{type: 'point'}}
-			yScale={{
-				type: 'linear',
-				min: 0,
-				max: 'auto',
-				stacked: false,
-				reverse: false,
-			}}
-			yFormat=' >-.1f'
-			axisTop={{legend: "Weekly PF Range", legendPosition: "middle", legendOffset: isOnMobile ? -20 : -40, format: () => '', tickSize: 0}}
-			axisRight={null}
-			enableSlices={false}
-      lineWidth={1}
-			axisBottom={{
-				tickSize: 5,
-				tickPadding: 5,
-				tickRotation: 0,
-				legend: isOnMobile ? 'Weeks' : '',
-				legendOffset: isOnMobile ? 30 : 36,
-				legendPosition: 'middle',
-			}}
-			axisLeft={{
-				tickSize: 5,
-				tickPadding: 5,
-				tickRotation: 0,
-				legend: 'PF',
-				legendOffset: isOnMobile ? -30 : -40,
-				legendPosition: 'middle',
-			}}
-			pointSize={isOnMobile ? 1 : 10}
-			tooltip={({point}) => {
-				return (
-					<div
-						style={{
-							background: 'white',
-							padding: '9px 12px',
-							border: '1px solid #ccc',
-							color: 'black',
-						}}
-					>
-						<div>{`${point.seriesId}: ${Number(point.data.y).toFixed(
-							2
-						)}`}</div>
-					</div>
-				)
-			}}
-			pointColor={{from: 'series.color', modifiers: [['brighter', 1.1]]}}
-			pointBorderWidth={0}
-			pointLabelYOffset={-12}
-			useMesh={true}
-			debugMesh={false}
-			legends={[deskTopLegend]}
-		/>
-	)
+export function weeklyScoringRanges(weeks: Iterable<Week>) {
+	return Array.from(weeks).flatMap((week) => {
+		const scores = week.getAllTeams().map((team) => team.pf).filter((score) => Number.isFinite(score))
+		if (!scores.length) return []
+		return [{
+			week: week.weekNumber,
+			high: Math.max(...scores),
+			average: scores.reduce((sum, score) => sum + score, 0) / scores.length,
+			low: Math.min(...scores),
+		}]
+	}).sort((a, b) => a.week - b.week)
 }
 
-function formatScoresForLineChart(league: League): LineSeries[] {
-	const data: LineSeries[] = []
-	const leagueAverageScores: {x: number; y: number}[] = []
-    const weekHighestScores: {x: number; y: number}[] = []
-    const weekLowestScores: {x: number; y: number}[] = []
+export default function WeekRangeChart({league}: {league: League | undefined}) {
+	const [isMobile] = useMediaQuery('(max-width: 768px)')
+	const rows = useMemo(() => league?.settings ? weeklyScoringRanges(league.weeks.values()) : undefined, [league])
+	const data: LineSeries[] = useMemo(() => rows ? [
+		{id: 'High', data: rows.map((row) => ({x: row.week, y: row.high}))},
+		{id: 'Average', data: rows.map((row) => ({x: row.week, y: row.average}))},
+		{id: 'Low', data: rows.map((row) => ({x: row.week, y: row.low}))},
+	] : [], [rows])
+	if (!rows) return <Skeleton h='350px' borderRadius='xl' aria-label='Loading weekly scoring range' />
 
-	league.weeks?.forEach((week) => {
-		let weekRange = week.getWeekRange()
-
-		leagueAverageScores.push({
-			x: week.weekNumber,
-			y: weekRange.averageScore,
-		})
-		weekHighestScores.push({
-			x: week.weekNumber,
-			y: weekRange.highScore ?? 0,
-		})
-		weekLowestScores.push({
-			x: week.weekNumber,
-			y: weekRange.lowScore ?? 0,
-		})
-	})
-
-	data.push({
-		id: 'Average',
-		data: leagueAverageScores
-	})
-
-	data.push({
-		id: 'High Score',
-		data: weekHighestScores
-	})
-
-	data.push({
-		id: 'Low Score',
-		data: weekLowestScores
-	})
-	return data
+	const tickValues = isMobile && rows.length > 9
+		? rows.filter((_, index) => index % 2 === 0 || index === rows.length - 1).map((row) => row.week)
+		: rows.map((row) => row.week)
+	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]}>
+		<Heading size='sm' color='white'>Weekly scoring range</Heading>
+		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>Highest, average and lowest team score each week. The vertical scale is zoomed to the scores.</Text>
+		{rows.length === 0 ? <Text mt={4} color='surface.8' fontWeight='normal'>No weekly scores available.</Text> : <>
+			<HStack spacing={4} mt={4} flexWrap='wrap' rowGap={2}>
+				{['High', 'Average', 'Low'].map((label) => <HStack key={label} spacing={2}>
+					<Box boxSize='10px' borderRadius='full' bg={colors[label]} />
+					<Text fontSize='xs' color='surface.9'>{label}</Text>
+				</HStack>)}
+			</HStack>
+			<Box h={['245px', '270px']} mt={2} aria-hidden='true'>
+				<ResponsiveLine data={data} colors={(series) => colors[String(series.id)]}
+					theme={{text: {fill: '#c5cccc', fontSize: 11}, grid: {line: {stroke: '#3a4849', strokeWidth: 1}},
+						axis: {ticks: {line: {stroke: '#526162'}}, domain: {line: {stroke: '#526162'}}}}}
+					margin={{top: 12, right: 12, bottom: 40, left: 45}}
+					xScale={{type: 'point'}} yScale={{type: 'linear', min: 'auto', max: 'auto', stacked: false}}
+					curve='monotoneX' lineWidth={2.5} enableGridX={false} gridYValues={5} axisTop={null} axisRight={null}
+					layers={['grid', 'markers', 'axes', LineHalos, 'lines', 'points', 'slices', 'legends']}
+					axisBottom={{tickValues, tickSize: 0, tickPadding: 8, legend: 'Week', legendOffset: 32, legendPosition: 'middle'}}
+					axisLeft={{tickValues: 5, tickSize: 0, tickPadding: 8}} pointSize={5}
+					pointColor={{from: 'series.color'}} pointBorderWidth={1} pointBorderColor='#182021'
+					enableSlices='x' sliceTooltip={({slice}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm'>
+						<Text mb={1}>Week {slice.points[0]?.data.xFormatted}</Text>
+						{slice.points.slice().sort((a, b) => Number(b.data.y) - Number(a.data.y)).map((point) =>
+							<Flex key={point.id} justify='space-between' gap={5} color={point.seriesColor}>
+								<Text>{point.seriesId}</Text><Text>{format(Number(point.data.y))}</Text>
+							</Flex>)}
+					</Box>} />
+			</Box>
+			<Box as='details' mt={2}>
+				<Box as='summary' color='secondary.200' fontSize='sm' cursor='pointer'>View weekly scores</Box>
+				<TableContainer mt={3}><Table size='sm' aria-label='Weekly scoring ranges' sx={{'th, td': {px: 2}}}>
+					<Thead><Tr><Th>Week</Th><Th isNumeric>High</Th><Th isNumeric>Average</Th><Th isNumeric>Low</Th></Tr></Thead>
+					<Tbody>{rows.map((row) => <Tr key={row.week}><Td>{row.week}</Td><Td isNumeric>{format(row.high)}</Td>
+						<Td isNumeric>{format(row.average)}</Td><Td isNumeric>{format(row.low)}</Td></Tr>)}</Tbody>
+				</Table></TableContainer>
+			</Box>
+		</>}
+	</Box>
 }
-
-export default WeekRangeChart

@@ -9,6 +9,7 @@ import LeagueStackedPfBarChart from '../../../components/charts/bar/LeaguePFBarC
 import LeagueWeeklyPointsLineChart from '../../../components/charts/line/LineChart'
 import WeekRangeChart from '../../../components/charts/line/WeekRangeChart'
 import TeamRadarChart from '../../../components/charts/TeamRadarChart'
+import FaabBalances from '../../../components/groups/FaabBalances'
 import HomeStatGroup from '../../../components/groups/stats/HomeStatGroup'
 import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/LeagueWeekGroup'
 import SuperStatsGroup from '../../../components/groups/stats/SuperStatsGroup'
@@ -24,6 +25,7 @@ const LeaguePage = () => {
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
 					  "super_stats super_stats super_stats"
+					  "faab faab faab"
                       "pfTable pfLineChart pfLineChart"
                       "radarChart pfBarChart pfBarChart"`
 
@@ -31,6 +33,7 @@ const LeaguePage = () => {
                       "leagueTable"
                       "weekStats"
 					  "super_stats"
+					  "faab"
                       "pfTable"
                       "pfBarChart"
 					  "pfLineChart"
@@ -68,6 +71,9 @@ const LeaguePage = () => {
 				<GridItem area={'super_stats'}>
 					<SuperStatsGroup league={context} />
 				</GridItem>
+				<GridItem area={'faab'} minW={0}>
+					<FaabBalances league={context} />
+				</GridItem>
 				<GridItem overflowX={'hidden'} area={'pfTable'} borderRadius={4}>
 					<LeagueOverviewDataTable league={context} />
 				</GridItem>
@@ -75,9 +81,9 @@ const LeaguePage = () => {
 					<LeagueNotableWeeksStatGroup league={context} />
 				</GridItem>
 				<GridItem area={'pfLineChart'}>
-					<Box height={'350px'} textColor='black'>
-						{isMobile ? <WeekRangeChart league={context} /> : <LeagueWeeklyPointsLineChart league={context} />}
-					</Box>
+					{isMobile ? <WeekRangeChart league={context} /> : <Box height='350px' textColor='black'>
+						<LeagueWeeklyPointsLineChart league={context} />
+					</Box>}
 				</GridItem>
 
 

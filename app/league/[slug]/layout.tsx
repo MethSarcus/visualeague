@@ -3,6 +3,7 @@ import {Box, Button, Center, Grid, GridItem, Heading} from '@chakra-ui/react'
 import axios from 'axios'
 import {enableMapSet} from 'immer'
 import Link from 'next/link'
+import {usePathname} from 'next/navigation'
 import React, {useContext, useEffect} from 'react'
 import useSWR from 'swr'
 import {Draft} from '../../../classes/custom/Draft'
@@ -19,6 +20,8 @@ import {SleeperRoster} from '../../../classes/sleeper/SleeperRoster'
 import {BlankUserData, SleeperUser, UserData} from '../../../classes/sleeper/SleeperUser'
 const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Promise<{slug: string}>}) => {
 	const { slug } = React.use(params)
+	const pathname = usePathname()
+	const isHistory = pathname === `/league/${slug}/history`
 	enableMapSet()
 	const [leagueContext, setLeagueContext] = useContext(LeagueContext)
 	const [playerDetailsContext, setPlayerDetailsContext] = useContext(PlayerDetailsContext)
@@ -32,14 +35,14 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 	}
 
 	const {data: leagueData, error: leagueError} = useSWR(
-		slug != undefined ? `/api/league/${slug}` : null,
+		slug != undefined && !isHistory ? `/api/league/${slug}` : null,
 		fetcher,
 		disableValidation
 	)
 	const leagueSettings = leagueData?.league?.sleeperDetails as LeagueSettings | undefined
 
 	const {data: draftSettings, error: draftSettingsError} = useSWR(
-		leagueSettings?.draft_id != undefined && leagueError == undefined
+		!isHistory && leagueSettings?.draft_id != undefined && leagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${leagueSettings.draft_id}`
 			: null,
 		fetcher,
@@ -47,7 +50,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 	)
 
 	const {data: draftPicks, error: draftError} = useSWR(
-		leagueSettings?.draft_id != undefined && leagueError == undefined
+		!isHistory && leagueSettings?.draft_id != undefined && leagueError == undefined
 			? `https://api.sleeper.app/v1/draft/${leagueSettings.draft_id}/picks`
 			: null,
 		fetcher,
@@ -55,13 +58,13 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 	)
 
 	const {data: tradeData, error: tradeError} = useSWR(
-		slug != undefined ? `/api/trades/${slug}` : null,
+		slug != undefined && !isHistory ? `/api/trades/${slug}` : null,
 		fetcher,
 		disableValidation
 	)
 
 	useEffect(() => {
-		if (leagueData && draftPicks && draftSettings) {
+		if (!isHistory && leagueData && draftPicks && draftSettings) {
 			let playerScores = new Map<string, PlayerScores>()
 			let playerDetails = new Map<string, DatabasePlayer>()
 			leagueData.league.player_details.forEach((player: DatabasePlayer) => {
@@ -109,6 +112,7 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 		setPlayerScoresContext,
 		setPlayerDetailsContext,
 		tradeData?.trades,
+		isHistory,
 	])
 
 	if (leagueError) {
@@ -155,9 +159,9 @@ const LeagueLayout = ({children, params}: {children: React.ReactNode; params: Pr
 			color='surface.0'
 			fontWeight='bold'>
 			<GridItem area={'header'}>
-				<Navbar leagueID={slug} />
+				<Navbar leagueID={slug} isHistory={isHistory} />
 			</GridItem>
-			<GridItem area={'main'} p={[0, 0, 4]}>
+			<GridItem area={'main'} p={[0, 0, 4]} minW={isHistory ? 0 : undefined}>
 				{children}
 			</GridItem>
 
