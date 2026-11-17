@@ -19,6 +19,7 @@ export default function FaabBalances({league}: {league: League}) {
 		{revalidateOnFocus: false}
 	)
 	if (!league.settings) return <Skeleton h='180px' borderRadius='xl' aria-label='Loading FAAB balances' />
+	if (typeof waiverType === 'number' && Number.isFinite(waiverType) && !isFaab) return null
 
 	const budget = league.settings.settings?.waiver_budget
 	const validBudget = typeof budget === 'number' && Number.isFinite(budget) && budget >= 0
@@ -46,7 +47,6 @@ export default function FaabBalances({league}: {league: League}) {
 	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 6]}>
 		<Heading size='md' color='white'>FAAB remaining</Heading>
 		{typeof waiverType !== 'number' || !Number.isFinite(waiverType) ? <Text mt={3} color='surface.8' fontWeight='normal'>The league waiver settings are unavailable.</Text> :
-			!isFaab ? <Text mt={3} color='surface.8' fontWeight='normal'>This league does not use FAAB waivers.</Text> :
 			!validBudget ? <Text mt={3} color='surface.8' fontWeight='normal'>The league FAAB budget is unavailable.</Text> :
 			!balances.length ? <Text mt={3} color='surface.8' fontWeight='normal'>No roster balances are available.</Text> : <>
 				<Text mt={1} color='surface.8' fontSize='sm' fontWeight='normal'>

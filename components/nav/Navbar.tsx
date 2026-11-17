@@ -92,7 +92,7 @@ const Navbar = (props: MyProps) => {
 					disabled={!navLeagueId}
 					link={`/league/${navLeagueId}/history`}
 				/>
-				{!props.isHistory && <TeamSidebar />}
+				<TeamSidebar />
 				<NavbarButton
 					buttonText='Power Rankings'
 					disabled={!navLeagueId}

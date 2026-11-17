@@ -1,5 +1,6 @@
-import {calculateDraftSpending, DraftSpendingRow} from './draftSpending'
+import {calculateDraftSpending, DraftSpendingResponse, DraftSpendingRow} from './draftSpending'
 import {HistoryRoster, HistoryUser} from './leagueHistory'
+import {previousLeagueId} from './previousLeagueId'
 
 interface SleeperDraft {
 	draft_id: string
@@ -20,7 +21,7 @@ async function sleeper<T>(path: string): Promise<T> {
 	return response.json() as Promise<T>
 }
 
-export async function fetchDraftSpending(leagueId: string): Promise<DraftSpendingRow[]> {
+export async function fetchDraftSpending(leagueId: string): Promise<DraftSpendingResponse> {
 	const visited = new Set<string>()
 	const seasons: {leagueId: string; drafts: SleeperDraft[]}[] = []
 	let id: string | null = leagueId
@@ -40,7 +41,7 @@ export async function fetchDraftSpending(leagueId: string): Promise<DraftSpendin
 		}
 		const drafts = seasonDrafts.filter((draft) => draft.type === 'auction')
 		if (drafts.length) seasons.push({leagueId: id, drafts})
-		id = league.previous_league_id || null
+		id = previousLeagueId(league.previous_league_id)
 	}
 	const rows = (await Promise.all(seasons.map(async ({leagueId: seasonId, drafts}) => {
 		const [rosters, users, ...picksByDraft] = await Promise.all([
@@ -55,6 +56,9 @@ export async function fetchDraftSpending(leagueId: string): Promise<DraftSpendin
 			return calculateDraftSpending(draft, picks, rosters, users)
 		})
 	}))).flat()
-	return rows.filter((row): row is DraftSpendingRow => row !== null)
-		.sort((a, b) => b.season.localeCompare(a.season) || a.draftId.localeCompare(b.draftId))
+	return {
+		hasAuctionDrafts: seasons.length > 0,
+		drafts: rows.filter((row): row is DraftSpendingRow => row !== null)
+			.sort((a, b) => b.season.localeCompare(a.season) || a.draftId.localeCompare(b.draftId)),
+	}
 }

@@ -8,7 +8,7 @@ export interface LeagueSettings {
     season: string;
     scoring_settings: ScoringSettings;
     roster_positions?: (string)[] | null;
-    previous_league_id: string;
+    previous_league_id: string | null;
     name: string;
     metadata?: DivisionMetadata | null;
     loser_bracket_id?: null;

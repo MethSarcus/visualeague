@@ -1,5 +1,5 @@
 'use client'
-import {Flex, SimpleGrid, Spacer} from '@chakra-ui/react'
+import {Flex, SimpleGrid} from '@chakra-ui/react'
 import League from '../../../classes/custom/League'
 import GenericStatCard from '../../cards/statcards/GenericStatCard'
 
@@ -30,7 +30,7 @@ const SuperStatsGroup = (props: MyProps) => {
 		leastConsistent = notableMembers.leastConsistent
 	}
 	return (
-		<SimpleGrid columns={8} spacing={3} height={'full'} overflowX={'auto'} minChildWidth={'150px'}  >
+		<SimpleGrid columns={{base: 1, sm: 2, md: 4}} spacing={3} height='full'>
 			<GenericStatCard
 				statName={'Best Win Streak'}
 				isLoaded={props.league?.settings != undefined}

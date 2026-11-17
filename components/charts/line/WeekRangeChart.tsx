@@ -71,7 +71,8 @@ export default function WeekRangeChart({league}: {league: League | undefined}) {
 			</Box>
 			<Box as='details' mt={2}>
 				<Box as='summary' color='secondary.200' fontSize='sm' cursor='pointer'>View weekly scores</Box>
-				<TableContainer mt={3}><Table size='sm' aria-label='Weekly scoring ranges' sx={{'th, td': {px: 2}}}>
+				<TableContainer mt={3} overflowX='auto'><Table size='sm' aria-label='Weekly scoring ranges' color='surface.9'
+					sx={{'th, td': {px: 2, borderColor: 'whiteAlpha.200'}, th: {color: 'surface.8'}, td: {color: 'surface.9', fontWeight: 'normal'}}}>
 					<Thead><Tr><Th>Week</Th><Th isNumeric>High</Th><Th isNumeric>Average</Th><Th isNumeric>Low</Th></Tr></Thead>
 					<Tbody>{rows.map((row) => <Tr key={row.week}><Td>{row.week}</Td><Td isNumeric>{format(row.high)}</Td>
 						<Td isNumeric>{format(row.average)}</Td><Td isNumeric>{format(row.low)}</Td></Tr>)}</Tbody>

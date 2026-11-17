@@ -1,8 +1,8 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {fetchDraftSpending} from '../../../../lib/fetchDraftSpending'
-import {DraftSpendingRow} from '../../../../lib/draftSpending'
+import {DraftSpendingResponse} from '../../../../lib/draftSpending'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<DraftSpendingRow[] | {error: string}>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<DraftSpendingResponse | {error: string}>) {
 	if (req.method !== 'GET') {
 		res.setHeader('Allow', 'GET')
 		return res.status(405).json({error: 'Method not allowed'})

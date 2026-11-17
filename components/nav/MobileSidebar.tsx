@@ -13,7 +13,7 @@ import { useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, Drawer
 
 export default function MobileSidebar({leagueID, isHistory}: {leagueID?: string; isHistory?: boolean}) {
 	const [context] = useContext(LeagueContext)
-	const hasContext = !isHistory && context?.settings
+	const hasContext = Boolean(context?.settings)
 	const navLeagueId = isHistory ? leagueID : context?.settings?.league_id
 	const {isOpen, onOpen, onClose} = useDisclosure()
 	return (

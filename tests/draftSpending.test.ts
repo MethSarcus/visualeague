@@ -1,4 +1,4 @@
-import {calculateDraftSpending} from '../lib/draftSpending'
+import {averageDraftSpending, calculateDraftSpending} from '../lib/draftSpending'
 import {fetchDraftSpending} from '../lib/fetchDraftSpending'
 
 const draft = {draft_id: '10', season: '2024', status: 'complete'}
@@ -32,7 +32,7 @@ it('follows linked seasons, includes each auction and excludes snake drafts', as
 			{...draft, draft_id: '21', season: '2025', type: 'snake'},
 			{...draft, draft_id: '22', season: '2025', type: 'auction', status: 'drafting'},
 		],
-		'league/1': {league_id: '1', previous_league_id: null},
+		'league/1': {league_id: '1', previous_league_id: '0'},
 		'league/1/drafts': [{...draft, type: 'auction'}],
 		'league/2/rosters': rosters,
 		'league/2/users': users,
@@ -50,14 +50,53 @@ it('follows linked seasons, includes each auction and excludes snake drafts', as
 	const originalFetch = global.fetch
 	global.fetch = fetchMock as unknown as typeof fetch
 	try {
-		const rows = await fetchDraftSpending('2')
+		const {drafts: rows, hasAuctionDrafts} = await fetchDraftSpending('2')
+		expect(hasAuctionDrafts).toBe(true)
 		expect(rows.map((row) => row.draftId)).toEqual(['20', '22', '10'])
 		expect(rows[1].status).toBe('drafting')
 		expect(rows[1].members[0]).toMatchObject({name: 'Alpha', total: 5, amounts: {TE: 5}})
 		expect(rows[2].members[0].name).toBe('Former owner')
+		expect(fetchMock).not.toHaveBeenCalledWith('https://api.sleeper.app/v1/league/0')
 		expect(fetchMock).not.toHaveBeenCalledWith(expect.stringContaining('draft/21/picks'))
 		responses['league/1'] = {league_id: '1', previous_league_id: '2'}
 		await expect(fetchDraftSpending('2')).rejects.toThrow('Cycle in Sleeper league history')
+	} finally {
+		global.fetch = originalFetch
+	}
+})
+
+it('averages manager shares by completed season using owner IDs, combining same-season auctions', () => {
+	const draftRow = (id: string, season: string, status: string, picks: ReturnType<typeof pick>[], seasonRosters = rosters) =>
+		calculateDraftSpending({draft_id: id, season, status}, picks, seasonRosters, users)!
+	const rows = [
+		draftRow('new', '2024', 'complete', [pick('QB', '100')]),
+		draftRow('extra', '2024', 'complete', [pick('RB', '100')]),
+		draftRow('old', '2023', 'complete', [pick('RB', '100', 3), pick('QB', '50', 2)],
+			[{roster_id: 3, owner_id: 'a'}, {roster_id: 2, owner_id: 'b'}]),
+		draftRow('active', '2025', 'drafting', [pick('WR', '100')]),
+	]
+	const averages = averageDraftSpending(rows)
+	expect(averages).toHaveLength(2)
+	expect(averages[0]).toMatchObject({
+		ownerId: 'a', seasons: 2, total: 150,
+		amounts: {QB: 50, RB: 100, WR: 0}, percentages: {QB: 25, RB: 75, WR: 0},
+	})
+	expect(averages[1]).toMatchObject({ownerId: 'b', seasons: 1, total: 50, percentages: {QB: 100}})
+})
+
+it('distinguishes leagues without auctions from auctions without recorded spending', async () => {
+	const originalFetch = global.fetch
+	const drafts = [{...draft, type: 'snake'}]
+	global.fetch = jest.fn(async (url: string) => ({
+		ok: true,
+		json: async () => url.endsWith('/drafts') ? drafts
+			: url.endsWith('/rosters') ? rosters : url.endsWith('/users') ? users
+				: url.endsWith('/picks') ? [] : {league_id: '1', previous_league_id: null},
+	})) as unknown as typeof fetch
+	try {
+		expect(await fetchDraftSpending('1')).toEqual({hasAuctionDrafts: false, drafts: []})
+		drafts.push({...draft, type: 'auction'})
+		expect(await fetchDraftSpending('1')).toEqual({hasAuctionDrafts: true, drafts: []})
 	} finally {
 		global.fetch = originalFetch
 	}

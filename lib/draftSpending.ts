@@ -5,6 +5,7 @@ export type SpendingPosition = typeof spendingPositions[number]
 
 export interface DraftSpendingMember {
 	rosterId: number
+	ownerId: string | null
 	name: string
 	manager: string
 	avatar: string | null
@@ -18,6 +19,67 @@ export interface DraftSpendingRow {
 	name: string
 	status: string
 	members: DraftSpendingMember[]
+}
+
+export interface DraftSpendingResponse {
+	hasAuctionDrafts: boolean
+	drafts: DraftSpendingRow[]
+}
+
+export interface AverageDraftSpendingMember {
+	ownerId: string
+	name: string
+	manager: string
+	avatar: string | null
+	seasons: number
+	total: number
+	amounts: Record<SpendingPosition, number>
+	percentages: Record<SpendingPosition, number>
+}
+
+function emptyAmounts(): Record<SpendingPosition, number> {
+	return {QB: 0, RB: 0, WR: 0, TE: 0, 'K/DEF': 0, Other: 0}
+}
+
+export function averageDraftSpending(drafts: DraftSpendingRow[]): AverageDraftSpendingMember[] {
+	const members = new Map<string, {
+		member: DraftSpendingMember
+		seasons: Map<string, {total: number; amounts: Record<SpendingPosition, number>}>
+	}>()
+	for (const draft of drafts.slice().sort((a, b) => b.season.localeCompare(a.season))) {
+		if (draft.status !== 'complete') continue
+		for (const member of draft.members) {
+			if (!member.ownerId) continue
+			let entry = members.get(member.ownerId)
+			if (!entry) {
+				entry = {member, seasons: new Map()}
+				members.set(member.ownerId, entry)
+			}
+			let season = entry.seasons.get(draft.season)
+			if (!season) {
+				season = {total: 0, amounts: emptyAmounts()}
+				entry.seasons.set(draft.season, season)
+			}
+			season.total += member.total
+			for (const position of spendingPositions) season.amounts[position] += member.amounts[position]
+		}
+	}
+	return Array.from(members.values()).flatMap(({member, seasons}) => {
+		const recorded = Array.from(seasons.values()).filter((season) => season.total > 0)
+		if (!recorded.length || !member.ownerId) return []
+		const amounts = emptyAmounts()
+		const percentages = emptyAmounts()
+		let total = 0
+		for (const season of recorded) {
+			total += season.total / recorded.length
+			for (const position of spendingPositions) {
+				amounts[position] += season.amounts[position] / recorded.length
+				percentages[position] += (season.amounts[position] / season.total * 100) / recorded.length
+			}
+		}
+		return [{ownerId: member.ownerId, name: member.name, manager: member.manager, avatar: member.avatar,
+			seasons: recorded.length, total, amounts, percentages}]
+	}).sort((a, b) => b.total - a.total || a.name.localeCompare(b.name) || a.ownerId.localeCompare(b.ownerId))
 }
 
 interface AuctionPick {
@@ -38,9 +100,9 @@ export function calculateDraftSpending(
 		const user = roster.owner_id ? usersById.get(roster.owner_id) : undefined
 		const manager = user?.display_name || (roster.owner_id ? `Manager ${roster.owner_id}` : `Unowned roster ${roster.roster_id}`)
 		members.set(roster.roster_id, {
-			rosterId: roster.roster_id, name: user?.metadata?.team_name || manager, manager,
+			rosterId: roster.roster_id, ownerId: roster.owner_id, name: user?.metadata?.team_name || manager, manager,
 			avatar: user?.metadata?.avatar || (user?.avatar ? `https://sleepercdn.com/avatars/thumbs/${user.avatar}` : null),
-			total: 0, amounts: {QB: 0, RB: 0, WR: 0, TE: 0, 'K/DEF': 0, Other: 0},
+			total: 0, amounts: emptyAmounts(),
 		})
 	}
 	for (const pick of picks) {
