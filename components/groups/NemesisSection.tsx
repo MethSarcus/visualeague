@@ -11,7 +11,7 @@ type NemesisMode = 'losses' | 'points'
 type NemesisCarouselCard = {team: HistoryTeam; rival: HistoryRival | null; mutual: boolean; tied: boolean; opponentTied: boolean}
 
 function representsTeam(card: NemesisCarouselCard, teamId: string) {
-	return card.team.id === teamId || (card.mutual && card.rival?.id === teamId)
+	return card.team.id === teamId
 }
 
 export default function NemesisSection({teams, showTies = teams.some((team) => team.ties > 0)}: {teams: HistoryTeam[]; showTies?: boolean}) {
@@ -25,7 +25,6 @@ export default function NemesisSection({teams, showTies = teams.some((team) => t
 	const reducedMotion = useReducedMotion()
 	const carouselId = useId()
 	const teamsById = new Map(teams.map((team) => [team.id, team]))
-	const seenPairs = new Set<string>()
 	const cards: NemesisCarouselCard[] = []
 	for (const team of teams) {
 		const rivals = team.nemeses[mode]
@@ -37,11 +36,6 @@ export default function NemesisSection({teams, showTies = teams.some((team) => t
 			const opponent = teamsById.get(rival.id)
 			const opponentRivals = opponent?.nemeses[mode] || []
 			const mutual = opponentRivals.some((item) => item.id === team.id)
-			if (mutual) {
-				const key = JSON.stringify([team.id, rival.id].sort())
-				if (seenPairs.has(key)) continue
-				seenPairs.add(key)
-			}
 			cards.push({team, rival, mutual, tied: rivals.length > 1, opponentTied: opponentRivals.length > 1})
 		}
 	}

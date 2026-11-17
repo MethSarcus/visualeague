@@ -26,6 +26,7 @@ import {LeagueContext} from '../../../../contexts/LeagueContext'
 const Page = ({params}: {params: Promise<{slug: string}>}) => {
 	const {slug} = React.use(params)
 	const [context, setContext] = useContext(LeagueContext)
+	const league: League = context
 	const desktopGrid = `
 	"draft_cards draft_cards"
 	"draft_spending draft_spending"
@@ -56,7 +57,9 @@ const Page = ({params}: {params: Promise<{slug: string}>}) => {
 								<DraftPageStatGroup league={context} />
 							</GridItem>
 							<GridItem area={'draft_spending'} minW={0}>
-								<DraftSpendingChart leagueId={slug} />
+								<DraftSpendingChart leagueId={slug} currentMemberIds={Array.from(league.members.values()).flatMap(
+									(member) => member.roster.owner_id ? [member.roster.owner_id] : []
+								)} />
 							</GridItem>
 							<GridItem area={'draft_table'} minW={0}>
 								<DraftValueTable draft={context.draft} />

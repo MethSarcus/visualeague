@@ -20,12 +20,14 @@ const LeaguePage = () => {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
 	const [context, setContext] = useContext(LeagueContext)
-	const isMobile = useMediaQuery('(max-width: 768px)')
+	const [isMobile] = useMediaQuery('(max-width: 768px)')
+	const waiverType = context.settings?.settings?.waiver_type
+	const showFaab = typeof waiverType !== 'number' || !Number.isFinite(waiverType) || waiverType === 2 || waiverType === 3
 
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
 					  "super_stats super_stats super_stats"
-					  "faab faab faab"
+					  ${showFaab ? '"faab faab faab"' : ''}
                       "pfTable pfLineChart pfLineChart"
                       "radarChart pfBarChart pfBarChart"`
 
@@ -33,7 +35,7 @@ const LeaguePage = () => {
                       "leagueTable"
                       "weekStats"
 					  "super_stats"
-					  "faab"
+					  ${showFaab ? '"faab"' : ''}
                       "pfTable"
                       "pfBarChart"
 					  "pfLineChart"
@@ -45,8 +47,8 @@ const LeaguePage = () => {
 				gap={3}
 				mx={4}
 				my={2}
-				templateAreas={[mobileGrid, desktopGrid]}
-				gridTemplateColumns={['1fr', '1fr 1fr 1fr']}
+				templateAreas={{base: mobileGrid, lg: desktopGrid}}
+				gridTemplateColumns={{base: 'minmax(0, 1fr)', lg: 'minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr)'}}
 			>
 				<GridItem area={'header'}>
 					<Skeleton
@@ -65,34 +67,34 @@ const LeaguePage = () => {
 						</Heading>
 					</Skeleton>
 				</GridItem>
-				<GridItem area={'leagueTable'}>
+				<GridItem area={'leagueTable'} minW={0}>
 					<HomeStatGroup league={context} />
 				</GridItem>
-				<GridItem area={'super_stats'}>
+				<GridItem area={'super_stats'} minW={0}>
 					<SuperStatsGroup league={context} />
 				</GridItem>
-				<GridItem area={'faab'} minW={0}>
+				{showFaab && <GridItem area={'faab'} minW={0}>
 					<FaabBalances league={context} />
-				</GridItem>
-				<GridItem overflowX={'hidden'} area={'pfTable'} borderRadius={4}>
+				</GridItem>}
+				<GridItem overflowX='auto' area={'pfTable'} borderRadius={4} minW={0}>
 					<LeagueOverviewDataTable league={context} />
 				</GridItem>
-				<GridItem area={'weekStats'} overflowX={'auto'}>
+				<GridItem area={'weekStats'} overflowX='auto' minW={0}>
 					<LeagueNotableWeeksStatGroup league={context} />
 				</GridItem>
-				<GridItem area={'pfLineChart'}>
+				<GridItem area={'pfLineChart'} minW={0}>
 					{isMobile ? <WeekRangeChart league={context} /> : <Box height='350px' textColor='black'>
 						<LeagueWeeklyPointsLineChart league={context} />
 					</Box>}
 				</GridItem>
 
 
-				<GridItem area={'radarChart'}>
+				<GridItem area={'radarChart'} minW={0}>
 					<Box height={'500px'} textColor='black'>
 						<TeamRadarChart league={context} />
 					</Box>
 				</GridItem>				
-				<GridItem area={'pfBarChart'} minHeight={"350px"}>
+				<GridItem area={'pfBarChart'} minHeight='350px' minW={0}>
 					<LeagueStackedPfBarChart league={context} />
 				</GridItem>
 			</Grid>

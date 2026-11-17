@@ -227,7 +227,7 @@ describe('history fetching', () => {
 	it('follows previous leagues and fetches every scored week without player endpoints', async () => {
 		const replies: Record<string, unknown> = {
 			'league/2': {league_id: '2', season: '2024', previous_league_id: '1', settings: {start_week: 1, last_scored_leg: 2}},
-			'league/1': {league_id: '1', season: '2023', previous_league_id: null, settings: {start_week: 2, last_scored_leg: 2}},
+			'league/1': {league_id: '1', season: '2023', previous_league_id: '0', settings: {start_week: 2, last_scored_leg: 2}},
 			'league/2/users': [], 'league/2/rosters': [{roster_id: 1, owner_id: 'a'}, {roster_id: 2, owner_id: null}], 'league/2/matchups/1': [], 'league/2/matchups/2': [],
 			'league/1/users': [], 'league/1/rosters': [{roster_id: 1, owner_id: 'a'}, {roster_id: 2, owner_id: 'former'}], 'league/1/matchups/2': [
 				{roster_id: 1, matchup_id: 1, points: 10}, {roster_id: 2, matchup_id: 1, points: 20},
@@ -246,6 +246,7 @@ describe('history fetching', () => {
 		expect(history.teams.find((team) => team.id === 'a')).toMatchObject({losses: 1, points: 10, nemeses: {losses: [{id: 'former'}]}})
 		expect(history.seasons).toEqual(['2024', '2023'])
 		expect(fetchMock).toHaveBeenCalledTimes(9)
+		expect(fetchMock).not.toHaveBeenCalledWith('https://api.sleeper.app/v1/league/0')
 		expect(fetchMock.mock.calls.map(([url]) => url)).not.toEqual(expect.arrayContaining([expect.stringContaining('/player')]))
 	})
 
@@ -256,6 +257,15 @@ describe('history fetching', () => {
 				{league_id: '2', season: '2024', previous_league_id: '2', settings: {start_week: 1, last_scored_leg: 0}},
 		} as Response)) as typeof fetch
 		await expect(fetchLeagueHistory('2')).rejects.toThrow('Cycle in Sleeper league history')
+	})
+
+	it('reports a failed request for a nonzero previous league', async () => {
+		global.fetch = jest.fn(async (url: string) => {
+			if (url.endsWith('/league/1')) return {ok: false, status: 404} as Response
+			return {ok: true, json: async () => url.endsWith('/users') || url.endsWith('/rosters') ? [] :
+				{league_id: '2', season: '2024', previous_league_id: '1', settings: {start_week: 1, last_scored_leg: 0}}} as Response
+		}) as typeof fetch
+		await expect(fetchLeagueHistory('2')).rejects.toThrow('Sleeper request failed (404): league/1')
 	})
 })
 

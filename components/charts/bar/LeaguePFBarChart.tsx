@@ -59,7 +59,8 @@ export default function LeagueStackedPfBarChart({league}: {league?: League}) {
 			</Box>
 			<Box as='details' mt={2}>
 				<Box as='summary' color='secondary.200' fontSize='sm' cursor='pointer'>View positional scores</Box>
-				<TableContainer mt={3}><Table size='sm' aria-label='Team points by position' sx={{'th, td': {px: 2}}}>
+				<TableContainer mt={3} overflowX='auto'><Table size='sm' aria-label='Team points by position' color='surface.9'
+					sx={{'th, td': {px: 2, borderColor: 'whiteAlpha.200'}, th: {color: 'surface.8'}, td: {color: 'surface.9', fontWeight: 'normal'}}}>
 					<Thead><Tr><Th>Team</Th>{chart.positions.map((position) => <Th key={position} isNumeric>{position}</Th>)}</Tr></Thead>
 					<Tbody>{chart.members.map((member) => <Tr key={member.roster.roster_id}><Td>{member.name}</Td>
 						{chart.positions.map((position) => <Td key={position} isNumeric>{format(member.stats.position_scores.get(position) ?? 0)}</Td>)}</Tr>)}</Tbody>

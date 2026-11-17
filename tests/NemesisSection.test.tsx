@@ -33,7 +33,7 @@ it('switches rival cards and their matchup history between losses and opponent p
 	expect(within(screen.getByRole('radiogroup', {name: 'Choose nemesis metric'})).getByRole('radio', {name: 'Points differential'})).toBeChecked()
 })
 
-it('combines mutual nemeses into one card and retains other tied rivals', async () => {
+it('keeps mutual nemeses as separate team cards and retains other tied rivals', async () => {
 	const season: HistorySeason = {
 		leagueId: '1', season: '2024',
 		users: [{user_id: 'a', display_name: 'Alpha'}, {user_id: 'b', display_name: 'Beta'}, {user_id: 'c', display_name: 'Gamma'}],
@@ -47,17 +47,17 @@ it('combines mutual nemeses into one card and retains other tied rivals', async 
 	render(<ChakraProvider theme={theme}><NemesisSection teams={calculateLeagueHistory([season]).teams} /></ChakraProvider>)
 	const carousel = screen.getByRole('region', {name: 'Nemesis cards'})
 	expect(carousel).toHaveAttribute('aria-roledescription', 'carousel')
-	expect(carousel.querySelectorAll('[data-carousel-card]')).toHaveLength(3)
+	expect(carousel.querySelectorAll('[data-carousel-card]')).toHaveLength(4)
 	const cardFaces = Array.from(carousel.querySelectorAll('[data-carousel-card]'), (card) => card.firstElementChild!.firstElementChild)
-	expect(screen.getByText('1 / 3')).toBeInTheDocument()
+	expect(screen.getByText('1 / 4')).toBeInTheDocument()
 	fireEvent.click(screen.getByRole('button', {name: 'Next nemesis card'}))
-	expect(screen.getByText('2 / 3')).toBeInTheDocument()
+	expect(screen.getByText('2 / 4')).toBeInTheDocument()
 	carousel.querySelectorAll('[data-carousel-card]').forEach((card, index) => {
 		expect(card.firstElementChild!.firstElementChild).toBe(cardFaces[index])
 	})
 	fireEvent.click(screen.getByRole('button', {name: 'Previous nemesis card'}))
-	expect(screen.getByText('1 / 3')).toBeInTheDocument()
-	for (let i = 0; i < 3 && !screen.queryByRole('button', {name: /view rivalry details between (Alpha and Beta|Beta and Alpha)/i}); i++) {
+	expect(screen.getByText('1 / 4')).toBeInTheDocument()
+	for (let i = 0; i < 4 && !screen.queryByRole('button', {name: /view rivalry details between (Alpha and Beta|Beta and Alpha)/i}); i++) {
 		fireEvent.click(screen.getByRole('button', {name: 'Next nemesis card'}))
 	}
 	expect(screen.getAllByRole('button', {name: /view rivalry details between/i})).toHaveLength(1)
@@ -99,7 +99,7 @@ it('navigates two cards in both directions and handles an empty list', () => {
 	expect(screen.queryByRole('button', {name: 'Next nemesis card'})).not.toBeInTheDocument()
 })
 
-it('navigates team chips to the nearest matching card and highlights mutual nemeses', () => {
+it('selects only the requested team and orients mutual nemesis cards to that team', async () => {
 	const season: HistorySeason = {
 		leagueId: '1', season: '2024',
 		users: [{user_id: 'a', display_name: 'Alpha'}, {user_id: 'b', display_name: 'Beta'},
@@ -113,8 +113,8 @@ it('navigates team chips to the nearest matching card and highlights mutual neme
 		id, name: find(id).name, avatar: null, wins: 0, losses: 1, ties: 0,
 		pointsFor: 90, pointsAgainst: 100, matchups: [],
 	})
-	find('a').nemeses.losses = [rival('b'), rival('c')]
-	find('b').nemeses.losses = [rival('a')]
+	find('a').nemeses.losses = [{...rival('b'), wins: 10, losses: 8}, rival('c')]
+	find('b').nemeses.losses = [{...rival('a'), wins: 8, losses: 10}]
 	find('c').nemeses.losses = [rival('d')]
 	const orderedTeams = ['a', 'b', 'c', 'd'].map(find)
 	const {rerender} = render(<ChakraProvider theme={theme}><NemesisSection teams={orderedTeams} /></ChakraProvider>)
@@ -124,21 +124,31 @@ it('navigates team chips to the nearest matching card and highlights mutual neme
 	const gamma = within(chips).getByRole('button', {name: 'Gamma'})
 	const delta = within(chips).getByRole('button', {name: 'Delta'})
 	expect(alpha).toHaveAttribute('aria-pressed', 'true')
-	expect(beta).toHaveAttribute('aria-pressed', 'true')
+	expect(beta).toHaveAttribute('aria-pressed', 'false')
+	expect(screen.getByRole('button', {name: /view rivalry details between Alpha and Beta/i})).toBeInTheDocument()
 	expect(gamma).toHaveAttribute('aria-pressed', 'false')
 	fireEvent.click(gamma)
-	expect(screen.getByText('3 / 4')).toBeInTheDocument()
+	expect(screen.getByText('4 / 5')).toBeInTheDocument()
 	expect(gamma).toHaveAttribute('aria-pressed', 'true')
 	expect(delta).toHaveAttribute('aria-pressed', 'false')
 	fireEvent.click(alpha)
-	expect(screen.getByText('2 / 4')).toBeInTheDocument()
+	expect(screen.getByText('1 / 5')).toBeInTheDocument()
 	expect(alpha).toHaveAttribute('aria-pressed', 'true')
 	expect(gamma).toHaveAttribute('aria-pressed', 'false')
 	fireEvent.click(beta)
-	expect(screen.getByText('1 / 4')).toBeInTheDocument()
+	expect(screen.getByText('3 / 5')).toBeInTheDocument()
 	expect(beta).toHaveAttribute('aria-pressed', 'true')
+	expect(alpha).toHaveAttribute('aria-pressed', 'false')
+	const activeCard = screen.getByRole('region', {name: 'Nemesis cards'}).querySelector('[data-carousel-card] > div:not([aria-hidden])')!
+	expect(within(activeCard as HTMLElement).getByLabelText('Beta: 8 wins against Alpha')).toBeInTheDocument()
+	fireEvent.click(screen.getByRole('button', {name: /view rivalry details between Beta and Alpha/i}))
+	expect(await screen.findByRole('dialog')).toHaveTextContent('Beta vs Alpha')
+	fireEvent.click(screen.getByRole('button', {name: 'Close'}))
 	fireEvent.click(screen.getByRole('button', {name: 'Previous nemesis card'}))
-	expect(screen.getByText('4 / 4')).toBeInTheDocument()
+	expect(screen.getByText('2 / 5')).toBeInTheDocument()
+	expect(alpha).toHaveAttribute('aria-pressed', 'true')
+	fireEvent.click(delta)
+	expect(screen.getByText('5 / 5')).toBeInTheDocument()
 	expect(delta).toHaveAttribute('aria-pressed', 'true')
 	fireEvent.click(screen.getByRole('radio', {name: 'Points differential'}))
 	expect(screen.getByText('1 / 4')).toBeInTheDocument()

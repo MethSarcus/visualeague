@@ -47,7 +47,8 @@ it('sorts remaining balances, includes transfers and handles missing roster data
 it('handles non-FAAB leagues, continuous FAAB and missing settings', () => {
 	const league = makeLeague(1, 100, [{name: 'Alpha', used: 0}])
 	const {rerender} = render(<ChakraProvider theme={theme}><FaabBalances league={league} /></ChakraProvider>)
-	expect(screen.getByText('This league does not use FAAB waivers.')).toBeInTheDocument()
+	expect(screen.queryByRole('heading', {name: 'FAAB remaining'})).not.toBeInTheDocument()
+	expect(jest.mocked(useSWR).mock.calls.at(-1)?.[0]).toBeNull()
 	league.settings.settings.waiver_type = 3
 	rerender(<ChakraProvider theme={theme}><FaabBalances league={league} /></ChakraProvider>)
 	expect(screen.getByRole('group', {name: 'Alpha: $100 FAAB remaining'})).toBeInTheDocument()

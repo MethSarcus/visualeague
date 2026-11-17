@@ -1,5 +1,6 @@
 import {LeagueSettings} from '../classes/sleeper/LeagueSettings'
 import {calculateCurrentMembersHistory, calculateLeagueHistory, HistoryMatchup, HistoryRoster, HistorySeason, HistoryUser} from './leagueHistory'
+import {previousLeagueId} from './previousLeagueId'
 
 interface BracketMatch {
 	p?: number | null
@@ -57,7 +58,7 @@ export async function fetchLeagueHistory(leagueId: string) {
 			divisionCount: settings.settings.divisions, divisionNames, championRosterId,
 			weeks: weekNumbers.map((week, index) => ({week, matchups: weeks[index]})),
 		})
-		id = settings.previous_league_id || null
+		id = previousLeagueId(settings.previous_league_id)
 	}
 	const currentMemberIds = new Set(seasons[0].rosters.flatMap((roster) => roster.owner_id ? [roster.owner_id] : []))
 	const currentMembers = calculateCurrentMembersHistory(seasons, currentMemberIds)
