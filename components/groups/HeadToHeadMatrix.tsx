@@ -8,6 +8,7 @@ import {useMemo, useState} from 'react'
 import {HistoryTeam} from '../../lib/leagueHistory'
 import {describeHistoryRecord, formatHistoryRecord} from '../../lib/historyRecordFormat'
 import HeadToHeadDetails from './HeadToHeadDetails'
+import SurfacePanel from '../SurfacePanel'
 
 export default function HeadToHeadMatrix({teams, showTies = teams.some((team) => team.ties > 0)}: {teams: HistoryTeam[]; showTies?: boolean}) {
 	const [selection, setSelection] = useState<{teamId: string; opponentId: string} | null>(null)
@@ -17,11 +18,9 @@ export default function HeadToHeadMatrix({teams, showTies = teams.some((team) =>
 	const selectedOpponent = teams.find((team) => team.id === selection?.opponentId)
 	const selectedRecord = selectedTeam && selectedOpponent ? records.get(selectedTeam.id)?.get(selectedOpponent.id) : undefined
 
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' mt={6} p={[4, 6]} minW={0}>
-		<Heading size='md' color='white'>All-time head-to-head</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
-			Records are {showTies ? 'wins–losses–ties' : 'wins–losses'} for the team in each row. Select a matchup for details; scroll sideways to see more opponents.
-		</Text>
+	return <SurfacePanel mt={6} p={[4, 6]} minW={0} title='All-time head-to-head'
+		description={`Records are ${showTies ? 'wins–losses–ties' : 'wins–losses'} for the team in each row. Select a matchup for details; scroll sideways to see more opponents.`}
+		descriptionProps={{mt: 1}}>
 		<HStack spacing={4} mt={2} fontSize='xs' color='surface.9'>
 			<Text><Box as='span' color='secondary.300'>●</Box> More wins</Text>
 			<Text><Box as='span' color='primary.400'>●</Box> More losses</Text>
@@ -83,7 +82,7 @@ export default function HeadToHeadMatrix({teams, showTies = teams.some((team) =>
 				</ModalBody>
 			</ModalContent>
 		</Modal>
-	</Box>
+	</SurfacePanel>
 }
 
 function TeamHeader({team}: {team: HistoryTeam}) {

@@ -3,6 +3,7 @@ import { LineSeries, ResponsiveLine } from "@nivo/line";
 import { useMemo } from "react";
 import League from "../../../classes/custom/League";
 import { project_colors } from "../../../utility/project_colors";
+import ChartTooltip from '../ChartTooltip'
 
 interface MyProps {
   league: League;
@@ -76,25 +77,9 @@ const TrendingLineChart = (props: MyProps) => {
       pointBorderWidth={0}
       useMesh={true}
       legends={[]}
-      tooltip={({ point }) => {
-        return (
-          <div
-            style={{
-              padding: "1px",
-              color: project_colors.textTheme.highEmphasis,
-              fontSize: "12px",
-              background: project_colors.surface[0],
-              border: `1px solid ${project_colors.surface[3]}`,
-              borderRadius: "4px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-              paddingInline: "8px",
-              paddingBlock: "5px",
-            }}
-          >
-            <div>{`${Number(point.data.y).toFixed(2)}`}</div>
-          </div>
-        );
-      }}
+      tooltip={({point}) => <ChartTooltip title={point.seriesId} rows={[{
+        key: 'points', label: 'Points', value: Number(point.data.y).toFixed(2), color: point.seriesColor,
+      }]} />}
 
       markers = {[
         {

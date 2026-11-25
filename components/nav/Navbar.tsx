@@ -103,11 +103,11 @@ const Navbar = (props: MyProps) => {
 					disabled={!navLeagueId}
 					link={`/league/${navLeagueId}/position-scoring`}
 				/>
-				<NavbarButton
+				{process.env.NODE_ENV === 'development' && <NavbarButton
 					buttonText='Experimental'
 					disabled={!navLeagueId}
 					link={`/league/${navLeagueId}/experimental`}
-				/>
+				/>}
 				<NavbarButton
 					buttonText='Playoff Odds'
 					disabled={!navLeagueId}

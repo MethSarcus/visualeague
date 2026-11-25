@@ -1,10 +1,13 @@
-import {Box, Button, Flex, Heading, HStack, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery} from '@chakra-ui/react'
+import {Avatar, Box, Button, Flex, Heading, HStack, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import {useMemo, useState} from 'react'
 import League from '../../../classes/custom/League'
 import {POSITION} from '../../../utility/rosterFunctions'
 import {project_colors} from '../../../utility/project_colors'
 import LeagueMember from '../../../classes/custom/LeagueMember'
+import ChartTooltip from '../ChartTooltip'
+import SurfacePanel from '../../SurfacePanel'
+import {memberChartNames} from '../memberChartNames'
 
 const format = (value: number) => value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
 type ScoreMode = 'ppg' | 'total'
@@ -42,36 +45,63 @@ export default function LeagueStackedPfBarChart({
 	hiddenPositions,
 	hiddenRosterIds,
 	onTogglePosition,
+	onToggleRoster,
 }: {
 	league?: League
 	hiddenPositions: POSITION[]
 	hiddenRosterIds: number[]
 	onTogglePosition: (position: POSITION) => void
+	onToggleRoster: (rosterId: number) => void
 }) {
 	const [isMobile] = useMediaQuery('(max-width: 768px)')
 	const [scoreMode, setScoreMode] = useState<ScoreMode>('ppg')
 	const chart = useMemo(() => league?.settings ? formatScoresForBarChart(league, scoreMode) : undefined, [league, scoreMode])
-	if (!chart) return <Skeleton w='full' h='350px' borderRadius='xl' aria-label='Loading points by position' />
+	if (!chart || !league) return <Skeleton w='full' h='350px' borderRadius='xl' aria-label='Loading points by position' />
 	const names = new Map(chart.members.map((member) => [String(member.roster.roster_id), member.name]))
+	const members = Array.from(league.members.values())
+	const memberNames = memberChartNames(members)
 	const visiblePositions = chart.positions.filter((position) => !hiddenPositions.includes(position))
 	const visibleMembers = chart.members.filter((member) => !hiddenRosterIds.includes(member.roster.roster_id))
 	const visibleData = chart.data.filter((row) => !hiddenRosterIds.includes(Number(row.rosterId)))
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} w='full' h='100%' minW={0}>
-		<Heading size='sm' color='white'>Team points by position</Heading>
-		{!chart.members.length || !chart.positions.length ? <Text mt={4} color='surface.8' fontWeight='normal'>No positional scoring available.</Text> : <>
-			<Flex mt={3} justify='space-between' align={{base: 'stretch', sm: 'center'}} gap={4} wrap='wrap'>
-				<HStack role='group' aria-label='Scoring metric' spacing={1} p={1} bg='surface.2' borderRadius='lg' border='1px solid' borderColor='whiteAlpha.100'>
-					{([{value: 'ppg', label: 'PPG'}, {value: 'total', label: 'Total points'}] as const).map(({value, label}) =>
-						<Button key={value} size='sm' variant='unstyled' px={3} minW={value === 'ppg' ? 'auto' : '110px'}
-							h='34px' borderRadius='md' aria-pressed={scoreMode === value}
-							bg={scoreMode === value ? 'secondary.300' : 'transparent'}
-							color={scoreMode === value ? 'gray.900' : 'surface.8'}
-							fontWeight={scoreMode === value ? 'semibold' : 'medium'}
-							_hover={{bg: scoreMode === value ? 'secondary.200' : 'whiteAlpha.100', color: scoreMode === value ? 'gray.900' : 'white'}}
-							onClick={() => setScoreMode(value)}>{label}</Button>)}
-				</HStack>
-				<Text fontSize='xs' color='surface.8'>Sorted by selected positional {scoreMode === 'ppg' ? 'PPG' : 'points'}</Text>
+	return <SurfacePanel w='full' h='100%' minW={0} title='Team points by position' titleSize='sm'>
+		{!!chart.members.length && !!chart.positions.length && <Flex mt={3} justify='space-between' align={{base: 'stretch', sm: 'center'}} gap={4} wrap='wrap'>
+			<HStack role='group' aria-label='Scoring metric' spacing={1} p={1} bg='surface.2' borderRadius='lg' border='1px solid' borderColor='whiteAlpha.100'>
+				{([{value: 'ppg', label: 'PPG'}, {value: 'total', label: 'Total points'}] as const).map(({value, label}) =>
+					<Button key={value} size='sm' variant='unstyled' px={3} minW={value === 'ppg' ? 'auto' : '110px'}
+						h='34px' borderRadius='md' aria-pressed={scoreMode === value}
+						bg={scoreMode === value ? 'secondary.300' : 'transparent'}
+						color={scoreMode === value ? 'gray.900' : 'surface.8'}
+						fontWeight={scoreMode === value ? 'semibold' : 'medium'}
+						_hover={{bg: scoreMode === value ? 'secondary.200' : 'whiteAlpha.100', color: scoreMode === value ? 'gray.900' : 'white'}}
+						onClick={() => setScoreMode(value)}>{label}</Button>)}
+			</HStack>
+			<Text fontSize='xs' color='surface.8'>Sorted by selected positional {scoreMode === 'ppg' ? 'PPG' : 'points'}</Text>
+		</Flex>}
+		{!!members.length && <Box mt={4}>
+			<Text mb={2} fontSize='xs' color='surface.8' fontWeight='medium'>Show teams</Text>
+			<Flex wrap='wrap' gap={1} role='group' aria-label='Toggle teams on positional charts'>
+				{members.map((member) => {
+					const rosterId = member.roster.roster_id
+					const visible = !hiddenRosterIds.includes(rosterId)
+					const name = memberNames.get(String(rosterId)) ?? member.name
+					return <Button key={rosterId} size='xs' variant='outline' h={8} px={2} fontSize='sm' aria-pressed={visible}
+						aria-label={`${visible ? 'Hide' : 'Show'} ${name} on positional charts`}
+						borderColor={visible ? 'secondary.300' : 'whiteAlpha.200'}
+						bg={visible ? 'whiteAlpha.100' : 'transparent'}
+						color={visible ? 'white' : 'surface.7'}
+						_hover={{bg: visible ? 'whiteAlpha.200' : 'whiteAlpha.100', borderColor: 'secondary.200'}}
+						onClick={() => onToggleRoster(rosterId)}>
+						<HStack spacing={1.5}>
+							<Avatar size='xs' name={member.name}
+								src={member.teamAvatar || member.avatar ? member.getTeamAvatar() : undefined}
+								border={0} opacity={visible ? 1 : 0.45} aria-hidden='true' />
+							<Text>{name}</Text>
+						</HStack>
+					</Button>
+				})}
 			</Flex>
+		</Box>}
+		{!chart.members.length || !chart.positions.length ? <Text mt={4} color='surface.8' fontWeight='normal'>No positional scoring available.</Text> : <>
 			<Box mt={4}>
 				<Text mb={2} fontSize='xs' color='surface.8' fontWeight='medium'>Show positions</Text>
 				<HStack spacing={2} flexWrap='wrap' rowGap={2}>
@@ -112,11 +142,10 @@ export default function LeagueStackedPfBarChart({
 					}}}
 					enableLabel={false} borderWidth={0} role='img'
 					ariaLabel={`Team ${scoreMode === 'ppg' ? 'points per game' : 'total points'} by position`}
-					tooltip={({id, value, data}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm'>
-						<Text>{data.member}</Text>
-						<Flex justify='space-between' gap={5}><Text color={project_colors.position[id as POSITION]}>{id}</Text>
-							<Text>{format(Number(value))} {scoreMode === 'ppg' ? 'PPG' : 'points'}</Text></Flex>
-					</Box>} />}
+					tooltip={({id, value, data}) => <ChartTooltip title={data.member} rows={[{
+						key: String(id), label: String(id), color: project_colors.position[id as POSITION],
+						value: `${format(Number(value))} ${scoreMode === 'ppg' ? 'PPG' : 'points'}`,
+					}]} />} />}
 			</Box>
 			<Box as='details' mt={2}>
 				<Box as='summary' color='secondary.200' fontSize='sm' cursor='pointer'>View positional table</Box>
@@ -131,5 +160,5 @@ export default function LeagueStackedPfBarChart({
 				</Table></TableContainer>
 			</Box>
 		</>}
-	</Box>
+	</SurfacePanel>
 }

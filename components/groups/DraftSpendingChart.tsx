@@ -5,6 +5,7 @@ import axios from 'axios'
 import {useMemo, useState} from 'react'
 import useSWR from 'swr'
 import {averageDraftSpending, DraftSpendingResponse, spendingPositions, SpendingPosition} from '../../lib/draftSpending'
+import SurfacePanel from '../SurfacePanel'
 
 const colors: Record<SpendingPosition, string> = {
 	QB: '#ed7d8c', RB: '#6ccda2', WR: '#65b6ed', TE: '#f6c64f', 'K/DEF': '#8290a9', Other: '#b5a2cf',
@@ -37,7 +38,7 @@ export default function DraftSpendingChart({leagueId, currentMemberIds}: {league
 			}, {QB: 0, RB: 0, WR: 0, TE: 0, 'K/DEF': 0, Other: 0}),
 		})) || []
 	if (data && !data.hasAuctionDrafts && !error) return null
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 6]} my={4}>
+	return <SurfacePanel p={[4, 6]} my={4}>
 		<Flex justify='space-between' gap={4} direction={{base: 'column', md: 'row'}} align={{base: 'stretch', md: 'center'}}>
 			<Box>
 				<Heading size='md' color='white'>Auction expenditure by position</Heading>
@@ -118,5 +119,5 @@ export default function DraftSpendingChart({leagueId, currentMemberIds}: {league
 						: "Percentages are each team's share of recorded spending. Totals include keeper picks."}
 				</Text>
 			</>}
-	</Box>
+	</SurfacePanel>
 }

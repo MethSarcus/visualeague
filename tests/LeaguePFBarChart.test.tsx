@@ -16,7 +16,7 @@ function ChartHarness({league}: {league: League}) {
 	const togglePosition = (position: POSITION) => setHiddenPositions((hidden) =>
 		hidden.includes(position) ? hidden.filter((item) => item !== position) : [...hidden, position])
 	return <LeagueStackedPfBarChart league={league} hiddenPositions={hiddenPositions} hiddenRosterIds={[]}
-		onTogglePosition={togglePosition} />
+		onTogglePosition={togglePosition} onToggleRoster={jest.fn()} />
 }
 
 function member(id: number, name: string, pf: number, scores: [POSITION, number][], starts: [POSITION, number][] = []): LeagueMember {
@@ -54,6 +54,9 @@ it('defaults to PPG and switches both the graph and table to total points', () =
 	render(<ChakraProvider theme={theme}><ChartHarness league={leagueWithScores()} /></ChakraProvider>)
 	const card = screen.getByRole('heading', {name: 'Team points by position'}).parentElement
 	expect(card).toHaveStyle({width: 'var(--chakra-sizes-full)'})
+	expect(screen.getByRole('group', {name: 'Scoring metric'}).compareDocumentPosition(
+		screen.getByRole('group', {name: 'Toggle teams on positional charts'})
+	) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 	let barProps = jest.mocked(ResponsiveBar).mock.calls.at(-1)?.[0]
 	expect(barProps?.data).toEqual([
 		{rosterId: '1', member: 'Same name', QB: 30, RB: 0},
@@ -99,6 +102,7 @@ it('fills its container while loading', () => {
 		hiddenPositions={[]}
 		hiddenRosterIds={[]}
 		onTogglePosition={jest.fn()}
+		onToggleRoster={jest.fn()}
 	/></ChakraProvider>)
 	expect(screen.getByLabelText('Loading points by position')).toHaveStyle({width: 'var(--chakra-sizes-full)'})
 })
@@ -115,6 +119,7 @@ it('omits hidden league members from the graph and table', () => {
 		hiddenPositions={[]}
 		hiddenRosterIds={[2]}
 		onTogglePosition={jest.fn()}
+		onToggleRoster={jest.fn()}
 	/></ChakraProvider>)
 	const barProps = jest.mocked(ResponsiveBar).mock.calls.at(-1)?.[0]
 	expect(barProps?.data.map((row) => row.rosterId)).toEqual(['1'])

@@ -8,6 +8,8 @@ import {Week} from '../../../classes/custom/Week'
 import {POSITION} from '../../../utility/rosterFunctions'
 import {project_colors} from '../../../utility/project_colors'
 import {getPlayerAvatarSrc} from '../../../utility/statCardHelpers'
+import ChartTooltip from '../ChartTooltip'
+import SurfacePanel from '../../SurfacePanel'
 
 interface DistributionPoint {
 	x: number
@@ -157,12 +159,12 @@ function DistributionGraph({distributions, showScoreLabels = false}: {
 			axisLeft={null}
 			layers={['grid', 'axes', 'lines', 'slices', 'legends']}
 			enableSlices='x'
-			sliceTooltip={({slice}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm' whiteSpace='nowrap'>
-				<Text mb={1}>{format(Number(slice.points[0]?.data.x ?? 0))} points</Text>
-				<VStack align='stretch' spacing={1}>
-					{slice.points.map((point) => <Text key={point.id} color={point.seriesColor}>{point.seriesId}</Text>)}
-				</VStack>
-			</Box>}
+			sliceTooltip={({slice}) => <ChartTooltip whiteSpace='nowrap'
+				title={`${format(Number(slice.points[0]?.data.x ?? 0))} points`}
+				rows={slice.points.map((point) => ({
+					key: String(point.id), label: String(point.seriesId), color: point.seriesColor,
+				}))}
+			/>}
 		/></Box> : <Text pt={8} textAlign='center' color='surface.8' fontWeight='normal'>
 			All starter scores are the same, so there is no curve to show.
 		</Text>}
@@ -211,17 +213,15 @@ function PlayerHighlightCard({playerId, name, points, detail, owner, rosterDataC
 				<Text color='surface.8' fontSize='xs' fontWeight='normal'>{detail}</Text>
 			</Box>
 		</HStack>
-		<Box mt='auto' pt={3}>
-			<HStack spacing={2} align='center' borderTop='1px solid' borderColor='whiteAlpha.200' pt={2}>
-				{owner && <Avatar size='xs' flexShrink={0} name={owner.teamName} src={owner.getTeamAvatar()} aria-hidden='true' />}
-				<Box minW={0}>
-					<Text color='surface.8' fontSize='xs' lineHeight='short' fontWeight='normal'>Current team</Text>
-					<Text color='surface.9' fontSize='xs' lineHeight='short' fontWeight='medium' overflowWrap='anywhere'>
-						{owner?.teamName ?? (rosterDataComplete ? 'Not currently rostered' : 'Unavailable')}
-					</Text>
-				</Box>
-			</HStack>
-		</Box>
+		<HStack mt='auto' pt={5} spacing={2} align='center' borderTop='1px solid' borderColor='whiteAlpha.200'>
+			{owner && <Avatar size='xs' flexShrink={0} name={owner.teamName} src={owner.getTeamAvatar()} aria-hidden='true' />}
+			<Box minW={0}>
+				<Text color='surface.8' fontSize='xs' lineHeight='short' fontWeight='normal'>Current team</Text>
+				<Text color='surface.9' fontSize='xs' lineHeight='short' fontWeight='medium' overflowWrap='anywhere'>
+					{owner?.teamName ?? (rosterDataComplete ? 'Not currently rostered' : 'Unavailable')}
+				</Text>
+			</Box>
+		</HStack>
 	</Box>
 }
 
@@ -255,11 +255,9 @@ export default function PositionScoringDistributionChart({league, playerScores, 
 
 	if (!distributions || !highlights) return <Skeleton h='350px' borderRadius='xl' aria-label='Loading position scoring distributions' />
 
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]}>
-		<Heading size='sm' color='white'>Weekly starter points by position</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
-			Each score is one player&apos;s points in a week they started. Empty lineup spots are left out.
-		</Text>
+	return <SurfacePanel title='Weekly starter points by position' titleSize='sm'
+		description="Each score is one player's points in a week they started. Empty lineup spots are left out."
+		descriptionProps={{mt: 1}}>
 		<Box mt={3} bg='surface.2' borderRadius='md' p={3} fontSize='sm' color='surface.9' fontWeight='normal'>
 			<Text><strong>How to read the graph:</strong> Move left to right to see points scored.
 				A higher part of a line means scores around that point are estimated to be more common for that position.</Text>
@@ -332,5 +330,5 @@ export default function PositionScoringDistributionChart({league, playerScores, 
 				</SimpleGrid>
 			</>}
 		</>}
-	</Box>
+	</SurfacePanel>
 }

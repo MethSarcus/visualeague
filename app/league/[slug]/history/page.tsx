@@ -11,10 +11,10 @@ import NemesisSection from '../../../../components/groups/NemesisSection'
 import HistoryStandings from '../../../../components/groups/HistoryStandings'
 import DivisionHistory from '../../../../components/groups/DivisionHistory'
 import HeadToHeadMatrix from '../../../../components/groups/HeadToHeadMatrix'
+import SurfacePanel from '../../../../components/SurfacePanel'
 import {HistoryTeam, LeagueHistory, LeagueHistoryResponse} from '../../../../lib/leagueHistory'
 
 const points = (value: number) => value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
-const panel = {bg: 'surface.1', border: '1px solid', borderColor: 'whiteAlpha.200', borderRadius: 'xl'}
 
 export default function HistoryPage({params}: {params: Promise<{slug: string}>}) {
 	const {slug} = React.use(params)
@@ -52,7 +52,7 @@ export default function HistoryPage({params}: {params: Promise<{slug: string}>})
 
 	return (
 		<Box maxW='container.xl' mx='auto' px={[4, 6]} py={[5, 8]} color='textTheme.highEmphasis'>
-			<Box {...panel} p={[5, 8]} bgGradient='linear(to-br, surface.2, surface.0)' position='relative' overflow='hidden'>
+			<SurfacePanel p={[5, 8]} bgGradient='linear(to-br, surface.2, surface.0)' position='relative' overflow='hidden'>
 				<Heading color='white' size={['xl', '2xl']}>League history</Heading>
 				<Text mt={2} fontSize='sm' color='surface.8' fontWeight='normal'>{data.seasons.join(' · ')}</Text>
 				<Flex mt={5} justify='space-between' align={{base: 'stretch', md: 'end'}} direction={{base: 'column', md: 'row'}} gap={4}>
@@ -70,7 +70,7 @@ export default function HistoryPage({params}: {params: Promise<{slug: string}>})
 						<Badge colorScheme='teal'>{data.games} head-to-head games</Badge>
 					</Flex>
 				</Flex>
-			</Box>
+			</SurfacePanel>
 
 			{!hasScores ? (
 				<Alert status='info' mt={6} borderRadius='lg'><AlertIcon />{currentOnly ? 'No scored weeks are available for current league members.' : "No scored weeks are available in this league's history yet."}</Alert>
@@ -88,7 +88,7 @@ export default function HistoryPage({params}: {params: Promise<{slug: string}>})
 					<HeadToHeadMatrix key={currentOnly ? 'current' : 'all'} teams={data.teams} showTies={showTies} />
 					<HistoryStandings teams={data.teams} showTies={showTies} />
 					<DivisionHistory history={data.divisionHistory} showTies={showTies} />
-					<Box {...panel} p={[4, 6]} mt={6}>
+					<SurfacePanel p={[4, 6]} mt={6}>
 						<SectionHeading title='Highest weekly scores' subtitle='The top 10 individual team performances.' />
 						<Stack spacing={0} mt={4}>
 							{data.highScores.map((score, index) => <Flex key={`${score.season}-${score.week}-${index}`} py={3} align='center' borderBottom='1px solid' borderColor='whiteAlpha.100' gap={3}>
@@ -97,7 +97,7 @@ export default function HistoryPage({params}: {params: Promise<{slug: string}>})
 								<Text color='white'>{points(score.points)}</Text>
 							</Flex>)}
 						</Stack>
-					</Box>
+					</SurfacePanel>
 					<SimpleGrid columns={{base: 1, md: 2}} spacing={4} mt={6}>
 						<GameHighlight label='CLOSEST WIN' game={data.closestGame} />
 						<GameHighlight label='BIGGEST BLOWOUT' game={data.biggestWin} />
@@ -117,7 +117,7 @@ function SectionHeading({title, subtitle}: {title: string; subtitle: string}) {
 }
 
 function Highlight({label, value, detail}: {label: string; value: string; detail: string}) {
-	return <Box {...panel} p={5}><Text fontSize='xs' letterSpacing='wider' color='secondary.300'>{label}</Text><Text fontSize='3xl' color='white' mt={1}>{value}</Text><Text fontSize='sm' color='surface.9' fontWeight='normal' noOfLines={1}>{detail}</Text></Box>
+	return <SurfacePanel p={5}><Text fontSize='xs' letterSpacing='wider' color='secondary.300'>{label}</Text><Text fontSize='3xl' color='white' mt={1}>{value}</Text><Text fontSize='sm' color='surface.9' fontWeight='normal' noOfLines={1}>{detail}</Text></SurfacePanel>
 }
 
 function seasonLeagueAverages(teams: HistoryTeam[]) {
@@ -140,7 +140,7 @@ function LeaderHighlight({label, team, metric, showTies, leagueAverages}: {label
 			? `${((record.wins + record.ties / 2) / record.games * 100).toFixed(1)}% win rate${showTies ? ' · ties count half' : ''}`
 			: `${points(record.pointsFor / record.games)} PF / head-to-head game`
 		: metric === 'wins' ? 'No head-to-head games' : 'No head-to-head scoring average'
-	return <Box {...panel} p={5} minW={0}>
+	return <SurfacePanel p={5} minW={0}>
 		<Text fontSize='xs' letterSpacing='wider' color='secondary.300'>{label}</Text>
 		<Text fontSize='3xl' color='white' mt={1}>{team ? metric === 'wins' ? team.wins : points(team.points) : '—'}</Text>
 		{team ? <>
@@ -151,7 +151,7 @@ function LeaderHighlight({label, team, metric, showTies, leagueAverages}: {label
 			</HStack>
 			<SeasonTrend team={team} metric={metric} leagueAverages={leagueAverages} />
 		</> : <Text fontSize='sm' color='surface.9' fontWeight='normal'>{metric === 'wins' ? 'No games yet' : 'No scores yet'}</Text>}
-	</Box>
+	</SurfacePanel>
 }
 
 function SeasonTrend({team, metric, leagueAverages}: {team: HistoryTeam; metric: 'wins' | 'points'; leagueAverages?: ReadonlyMap<string, number | null>}) {

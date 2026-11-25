@@ -58,6 +58,7 @@ export async function fetchDraftSpending(leagueId: string): Promise<DraftSpendin
 	}))).flat()
 	return {
 		hasAuctionDrafts: seasons.length > 0,
+		hasUncompletedAuctions: seasons.some(({drafts}) => drafts.some((draft) => draft.status !== 'complete')),
 		drafts: rows.filter((row): row is DraftSpendingRow => row !== null)
 			.sort((a, b) => b.season.localeCompare(a.season) || a.draftId.localeCompare(b.draftId)),
 	}

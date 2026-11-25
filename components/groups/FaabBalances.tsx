@@ -6,6 +6,7 @@ import {useState} from 'react'
 import useSWR from 'swr'
 import League from '../../classes/custom/League'
 import {FaabPurchaseDetails} from '../../lib/faabTransactions'
+import SurfacePanel from '../SurfacePanel'
 
 const currency = (amount: number) => `${amount < 0 ? '-' : ''}$${Math.abs(amount).toLocaleString()}`
 
@@ -44,8 +45,7 @@ export default function FaabBalances({league}: {league: League}) {
 	const scale = balances.reduce((max, {remaining, spent}) => Math.max(max, Math.max(remaining ?? 0, 0) + spent), validBudget ? budget : 0)
 	const selected = balances.find(({member}) => member.roster.roster_id === selectedRosterId)
 
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 6]}>
-		<Heading size='md' color='white'>FAAB remaining</Heading>
+	return <SurfacePanel p={[4, 6]} title='FAAB remaining'>
 		{typeof waiverType !== 'number' || !Number.isFinite(waiverType) ? <Text mt={3} color='surface.8' fontWeight='normal'>The league waiver settings are unavailable.</Text> :
 			!validBudget ? <Text mt={3} color='surface.8' fontWeight='normal'>The league FAAB budget is unavailable.</Text> :
 			!balances.length ? <Text mt={3} color='surface.8' fontWeight='normal'>No roster balances are available.</Text> : <>
@@ -61,10 +61,10 @@ export default function FaabBalances({league}: {league: League}) {
 						columnGap={3} rowGap={2} alignItems='center'>
 						<Avatar size='sm' name={name} src={member.roster.owner_id && member.avatar ? member.getAvatar() : undefined} aria-hidden='true' />
 						<Text minW={0} color='white' fontSize='sm' noOfLines={1} title={name}>{name}</Text>
-						<Flex gridColumn={{base: '1 / -1', md: 'auto'}} gridRow={{base: 2, md: 'auto'}} minW={0} h='16px' borderRadius='full' bg='whiteAlpha.100'
+						<Flex gridColumn={{base: '1 / -1', md: 'auto'}} gridRow={{base: 2, md: 'auto'}} minW={0} h='16px' borderRadius='full' overflow='hidden' bg='whiteAlpha.100'
 							role='group' aria-label={`${name}: ${remaining === null ? 'FAAB balance unavailable' : `${currency(remaining)} FAAB remaining`}`}>
 							{remaining !== null && <Box h='full' w={`${scale > 0 ? Math.max(0, remaining) / scale * 100 : 0}%`}
-								bg='secondary.300' borderRadius='full' flexShrink={0} />}
+								bg='secondary.300' flexShrink={0} />}
 							{entries.map((purchase, index) => {
 								const label = `${purchase.playerNames.join(', ')} · ${currency(purchase.amount)} · Week ${purchase.week}`
 								return <Tooltip key={purchase.id} label={label} hasArrow maxW='260px' whiteSpace='normal'>
@@ -74,8 +74,6 @@ export default function FaabBalances({league}: {league: League}) {
 											'&::before': {content: '""', position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', maxWidth: '100%', background: 'var(--chakra-colors-surface-1)'},
 										} : undefined}
 										position='relative'
-										borderLeftRadius={index === 0 ? 'full' : 0}
-										borderRightRadius={index === entries.length - 1 ? 'full' : 0}
 										boxShadow='inset 0 1px 0 rgba(255,255,255,0.2)'
 										_hover={{bgGradient: 'linear(to-b, #c0d0d0, #8ca3a3)'}}
 										_focusVisible={{outline: '2px solid white', outlineOffset: '-2px', zIndex: 1}} />
@@ -110,5 +108,5 @@ export default function FaabBalances({league}: {league: League}) {
 					</ModalContent>
 				</Modal>
 			</>}
-	</Box>
+	</SurfacePanel>
 }

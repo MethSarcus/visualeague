@@ -1,20 +1,22 @@
-import {Box, Button, Flex, Heading, HStack, Skeleton, Text, useMediaQuery} from '@chakra-ui/react'
-import {ResponsiveRadar} from '@nivo/radar'
+import {Box, Flex, Skeleton, Text, useMediaQuery} from '@chakra-ui/react'
+import {RadarSliceTooltipProps, ResponsiveRadar} from '@nivo/radar'
 import {useMemo} from 'react'
 import League from '../../classes/custom/League'
 import LeagueMember from '../../classes/custom/LeagueMember'
 import {POSITION} from '../../utility/rosterFunctions'
+import ChartTooltip from './ChartTooltip'
+import SurfacePanel from '../SurfacePanel'
+import {memberChartNames} from './memberChartNames'
 
 interface MyProps {
 	league: League | undefined
 	hiddenPositions: POSITION[]
 	hiddenRosterIds: number[]
-	onToggleRoster: (rosterId: number) => void
 }
 
 const teamColors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-const TeamRadarChart = ({league, hiddenPositions, hiddenRosterIds, onToggleRoster}: MyProps) => {
+const TeamRadarChart = ({league, hiddenPositions, hiddenRosterIds}: MyProps) => {
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)', {ssr: true, fallback: false})
 	const data = useMemo(() => {
 		if (!league?.settings) return undefined
@@ -30,32 +32,12 @@ const TeamRadarChart = ({league, hiddenPositions, hiddenRosterIds, onToggleRoste
 	const colorByRosterId = new Map(data.members.map((member, index) => [
 		String(member.roster.roster_id), teamColors[index % teamColors.length],
 	]))
-	const nameCounts = new Map<string, number>()
-	data.members.forEach((member) => nameCounts.set(member.name, (nameCounts.get(member.name) ?? 0) + 1))
+	const nameByRosterId = memberChartNames(data.members)
 
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]}
-		h='100%' minW={0} display='flex' flexDirection='column'>
-		<Heading size='sm' color='white'>Average points per game by position</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
-			Compare teams&apos; average starter scoring across positions.
-		</Text>
-		{!!data.members.length && <Flex mt={3} wrap='wrap' gap={1} role='group' aria-label='Toggle teams on radar chart'>
-			{data.members.map((member, index) => {
-				const rosterId = member.roster.roster_id
-				const visible = !hiddenRosterIds.includes(rosterId)
-				const name = (nameCounts.get(member.name) ?? 0) > 1 ? `${member.name} (Roster ${rosterId})` : member.name
-				return <Button key={rosterId} size='xs' variant='ghost' h={7} px={2} aria-pressed={visible}
-					aria-label={`${visible ? 'Hide' : 'Show'} ${name} on radar chart`}
-					color={visible ? 'surface.9' : 'surface.7'} opacity={visible ? 1 : 0.55}
-					_hover={{bg: 'whiteAlpha.100', color: 'white'}}
-					onClick={() => onToggleRoster(rosterId)}>
-					<HStack spacing={1.5}>
-						<Box boxSize='8px' borderRadius='full' bg={teamColors[index % teamColors.length]} />
-						<Text>{name}</Text>
-					</HStack>
-				</Button>
-			})}
-		</Flex>}
+	return <SurfacePanel h='100%' minW={0} display='flex' flexDirection='column'
+		title='Average points per game by position' titleSize='sm'
+		description="Compare teams' average starter scoring across positions."
+		descriptionProps={{mt: 1}}>
 		<Box flex='1' minH='260px' mt={3} bg='surface.0' borderRadius='lg' p={2}>
 			{chartKeys.length === 0 || visiblePositions.length === 0
 				? <Flex h='full' minH='260px' align='center' justify='center' px={4}>
@@ -83,6 +65,15 @@ const TeamRadarChart = ({league, hiddenPositions, hiddenRosterIds, onToggleRoste
 					dotColor={{theme: 'background'}}
 					dotBorderWidth={2}
 					colors={({key}) => colorByRosterId.get(key) ?? teamColors[0]}
+					sliceTooltip={({index, data: slice}: RadarSliceTooltipProps) => <ChartTooltip
+						title={index}
+						rows={slice.map((point) => ({
+							key: point.id,
+							label: nameByRosterId.get(point.id) ?? point.id,
+							value: point.formattedValue,
+							color: point.color,
+						}))}
+					/>}
 					fillOpacity={0.08}
 					blendMode='normal'
 					motionConfig='gentle'
@@ -90,7 +81,7 @@ const TeamRadarChart = ({league, hiddenPositions, hiddenRosterIds, onToggleRoste
 					ariaLabel='Average points per game by position and team'
 				/>}
 		</Box>
-	</Box>
+	</SurfacePanel>
 }
 
 function formatScoresForRadarChart(members: LeagueMember[], positions: POSITION[]) {

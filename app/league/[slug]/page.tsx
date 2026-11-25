@@ -102,7 +102,6 @@ const LeaguePage = () => {
 							league={context}
 							hiddenPositions={hiddenPositions}
 							hiddenRosterIds={hiddenRosterIds}
-							onToggleRoster={toggleRoster}
 						/>
 					</Box>
 				</GridItem>				
@@ -112,6 +111,7 @@ const LeaguePage = () => {
 						hiddenPositions={hiddenPositions}
 						hiddenRosterIds={hiddenRosterIds}
 						onTogglePosition={togglePosition}
+						onToggleRoster={toggleRoster}
 					/>
 				</GridItem>
 			</Grid>

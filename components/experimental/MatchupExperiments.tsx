@@ -3,17 +3,10 @@ import {useMemo} from 'react'
 import League from '../../classes/custom/League'
 import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {butterflyEffect, carryJobs, opponentTax, pointsGraveyard, revengeTour, teamDNA} from '../../utility/experimentalMatchups'
+import SurfacePanel from '../SurfacePanel'
 
 const points = (value: number) => value.toFixed(2)
 const signed = (value: number) => `${value > 0 ? '+' : ''}${points(value)}`
-
-function Panel({title, description, children}: {title: string; description: string; children: React.ReactNode}) {
-	return <Box as='section' bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} minW={0}>
-		<Heading as='h2' size='md' color='white'>{title}</Heading>
-		<Text mt={2} fontSize='sm' color='surface.8' fontWeight='normal'>{description}</Text>
-		<Box mt={4}>{children}</Box>
-	</Box>
-}
 
 function Empty({children}: {children: React.ReactNode}) {
 	return <Text fontSize='sm' color='surface.8' fontWeight='normal'>{children}</Text>
@@ -58,7 +51,7 @@ export default function MatchupExperiments({league, teamId, details, scores}: {
 	const revengeScale = Math.max(1, ...data.revenge.map((entry) => Math.abs(entry.player.score)))
 	const graveScale = Math.max(1, ...data.graveyard.slice(0, 10).map((entry) => Math.abs(entry.player.score)))
 	return <VStack align='stretch' spacing={4}>
-		<Panel title='The butterfly effect' description='Could one bench player have changed a matchup? We test direct swaps into the same eligible starting slot, using recorded player scores. A change includes a win, loss, or tie becoming a different result. Adjusted matchups and games without recorded starter stats on both sides are excluded. The league model treats other missing starter scores as zero. Weekly snapshots cannot confirm game-time availability or reserve and taxi eligibility.'>
+		<SurfacePanel as='section' minW={0} title='The butterfly effect' description='Could one bench player have changed a matchup? We test direct swaps into the same eligible starting slot, using recorded player scores. A change includes a win, loss, or tie becoming a different result. Adjusted matchups and games without recorded starter stats on both sides are excluded. The league model treats other missing starter scores as zero. Weekly snapshots cannot confirm game-time availability or reserve and taxi eligibility.' contentProps={{mt: 4}}>
 			<Text color='white' fontSize='sm' mb={3}>
 				{flips.length} of {data.butterfly.games.length} unadjusted matchups had a result-changing swap
 				{data.butterfly.adjustedGames > 0 && ` · ${data.butterfly.adjustedGames} unavailable or adjusted matchups excluded`}
@@ -73,9 +66,9 @@ export default function MatchupExperiments({league, teamId, details, scores}: {
 					</Text>
 				</Box>)}
 			</VStack> : <Empty>No recorded eligible single-player swap changed a result.</Empty>}
-		</Panel>
+		</SurfacePanel>
 		<SimpleGrid columns={{base: 1, lg: 2}} spacing={4}>
-			<Panel title='The carry job' description='The top starter’s share of recorded starter points each week. Weeks with missing starter scores or nonpositive totals are omitted. Shares can exceed 100% when teammates score below zero; team adjustments are not included.'>
+			<SurfacePanel as='section' minW={0} title='The carry job' description='The top starter’s share of recorded starter points each week. Weeks with missing starter scores or nonpositive totals are omitted. Shares can exceed 100% when teammates score below zero; team adjustments are not included.' contentProps={{mt: 4}}>
 				{data.carry.length ? <VStack align='stretch' spacing={3}>{data.carry.map((entry) => <Box key={entry.week}>
 					<Flex justify='space-between' gap={2} color='white' fontSize='sm' wrap='wrap'>
 						<Text>Week {entry.week} · {entry.player.name}</Text><Text>{entry.share.toFixed(1)}%</Text>
@@ -85,8 +78,8 @@ export default function MatchupExperiments({league, teamId, details, scores}: {
 					</Box>
 					<Text color='surface.8' fontWeight='normal' fontSize='xs'>{points(entry.player.score)} of {points(entry.total)} starter points</Text>
 				</Box>)}</VStack> : <Empty>No complete, positive starter totals to compare yet.</Empty>}
-			</Panel>
-			<Panel title='Opponent tax' description='Average points per recorded opposing starter at each position against this team versus against all other teams, using paired games in the selected season portion. This describes the schedule, not a real defensive ability.'>
+			</SurfacePanel>
+			<SurfacePanel as='section' minW={0} title='Opponent tax' description='Average points per recorded opposing starter at each position against this team versus against all other teams, using paired games in the selected season portion. This describes the schedule, not a real defensive ability.' contentProps={{mt: 4}}>
 				{data.tax.length ? <VStack align='stretch' spacing={3}>{data.tax.map((entry) => <Box key={entry.position} bg='surface.2' borderRadius='md' p={3}>
 					<Flex justify='space-between' gap={2} color='white' fontSize='sm'>
 						<Text>{entry.position}</Text>
@@ -98,23 +91,23 @@ export default function MatchupExperiments({league, teamId, details, scores}: {
 						{' · '}Against others: {entry.baseline === undefined ? '—' : points(entry.baseline)} ({entry.baselineCount} starts)
 					</Text>
 				</Box>)}</VStack> : <Empty>No recorded opposing starter scores with known positions yet.</Empty>}
-			</Panel>
-			<Panel title='The revenge tour' description='Players started against this team who appeared on its roster in an earlier weekly snapshot this season. Earlier weeks outside the selected season portion are included when checking history. Snapshots can miss short stays, reserve, taxi, and midweek moves.'>
+			</SurfacePanel>
+			<SurfacePanel as='section' minW={0} title='The revenge tour' description='Players started against this team who appeared on its roster in an earlier weekly snapshot this season. Earlier weeks outside the selected season portion are included when checking history. Snapshots can miss short stays, reserve, taxi, and midweek moves.' contentProps={{mt: 4}}>
 				{data.revenge.length ? <VStack align='stretch' spacing={2}>{data.revenge.map((entry) => <Box key={`${entry.week}-${entry.player.id}`} bg='surface.2' p={3} borderRadius='md'>
 					<Text color='white' fontSize='sm'>{entry.player.name} · {points(entry.player.score)} points</Text>
 					<DivergingBar value={entry.player.score} scale={revengeScale} color='purple.300' />
 					<Text color='surface.9' fontWeight='normal' fontSize='xs'>Week {entry.week} for {entry.opponent} · last seen on this team in Week {entry.lastRostered}</Text>
 				</Box>)}</VStack> : <Empty>No recorded former players started against this team in the selected weeks.</Empty>}
-			</Panel>
-			<Panel title='Points graveyard' description='The biggest recorded starter performances in this team’s losses. Only paired matchups without custom adjustments and with recorded starter stats on both sides count; ties and bye weeks are excluded. The league model treats other missing starter scores as zero.'>
+			</SurfacePanel>
+			<SurfacePanel as='section' minW={0} title='Points graveyard' description='The biggest recorded starter performances in this team’s losses. Only paired matchups without custom adjustments and with recorded starter stats on both sides count; ties and bye weeks are excluded. The league model treats other missing starter scores as zero.' contentProps={{mt: 4}}>
 				{data.graveyard.length ? <VStack align='stretch' spacing={2}>{data.graveyard.slice(0, 10).map((entry) => <Box key={`${entry.week}-${entry.player.id}`} bg='surface.2' p={3} borderRadius='md'>
 					<Text color='white' fontSize='sm'>{entry.player.name} · {points(entry.player.score)} points</Text>
 					<DivergingBar value={entry.player.score} scale={graveScale} color='teal.300' />
 					<Text color='surface.9' fontWeight='normal' fontSize='xs'>Week {entry.week} · lost {points(entry.teamScore)}–{points(entry.opponentScore)}</Text>
 				</Box>)}</VStack> : <Empty>No recorded starter performances in unadjusted losses yet.</Empty>}
-			</Panel>
+			</SurfacePanel>
 		</SimpleGrid>
-		<Panel title='Team DNA' description='A playful snapshot, not a prediction. Close games are decided by 10 points or fewer; blowouts by 30 or more. Matchup numbers exclude custom adjustments, bye weeks, and games without recorded starter stats on both sides. The league model treats other missing starter scores as zero.'>
+		<SurfacePanel as='section' minW={0} title='Team DNA' description='A playful snapshot, not a prediction. Close games are decided by 10 points or fewer; blowouts by 30 or more. Matchup numbers exclude custom adjustments, bye weeks, and games without recorded starter stats on both sides. The league model treats other missing starter scores as zero.' contentProps={{mt: 4}}>
 			<Text color='white' fontSize='sm' mb={3}>{persona}</Text>
 			<SimpleGrid columns={{base: 1, md: 3}} spacing={3}>
 				<Box bg='surface.2' p={3} borderRadius='md'><Heading as='h3' size='xs' color='white'>Star power</Heading>
@@ -124,7 +117,7 @@ export default function MatchupExperiments({league, teamId, details, scores}: {
 				<Box bg='surface.2' p={3} borderRadius='md'><Heading as='h3' size='xs' color='white'>Blowout energy</Heading>
 					<Text color='surface.9' fontWeight='normal' fontSize='sm' mt={2}>{data.dna.games.length ? `${data.dna.blowouts.length} blowouts: ${data.dna.bigWins} wins and ${data.dna.blowouts.length - data.dna.bigWins} losses.` : 'No unadjusted matchups yet.'}</Text></Box>
 			</SimpleGrid>
-		</Panel>
+		</SurfacePanel>
 	</VStack>
 }
 

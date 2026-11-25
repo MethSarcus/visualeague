@@ -4,16 +4,9 @@ import League from '../../classes/custom/League'
 import {DatabasePlayer, PlayerScores} from '../../classes/custom/Player'
 import {experimentalTeams, ExperimentalTeam, scoreTwins, starterBenchAverages, teamFunFacts} from '../../utility/experimentalLeague'
 import MatchupExperiments from './MatchupExperiments'
+import SurfacePanel from '../SurfacePanel'
 
 const points = (value: number) => value.toFixed(2)
-
-function Panel({title, description, children}: {title: string; description: string; children: React.ReactNode}) {
-	return <Box as='section' bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} minW={0}>
-		<Heading as='h2' size='md' color='white'>{title}</Heading>
-		<Text mt={2} fontSize='sm' color='surface.8' fontWeight='normal'>{description}</Text>
-		<Box mt={4}>{children}</Box>
-	</Box>
-}
 
 function StarterMosaic({team}: {team: ExperimentalTeam}) {
 	const appearances = new Map<string, {name: string; count: number}>()
@@ -123,7 +116,7 @@ export default function ExperimentalDashboard({league, playerDetails, playerScor
 	if (!teams.length || teams.every((team) => !team.weeks.length)) return <Text color='surface.8' textAlign='center'>No team scores available for this season portion yet.</Text>
 	const team = teams.find((candidate) => String(candidate.id) === selectedId) ?? teams[0]
 	return <VStack align='stretch' spacing={4}>
-		<Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]}>
+		<SurfacePanel>
 			<Flex align={{base: 'stretch', sm: 'center'}} direction={{base: 'column', sm: 'row'}} gap={3}>
 				<Text as='label' htmlFor='experimental-team' color='white'>Explore a team</Text>
 				<Select id='experimental-team' value={String(team.id)} onChange={(event) => setSelectedId(event.target.value)}
@@ -131,32 +124,34 @@ export default function ExperimentalDashboard({league, playerDetails, playerScor
 					{teams.map((member) => <option key={member.id} value={member.id}>{member.name}</option>)}
 				</Select>
 			</Flex>
-		</Box>
+		</SurfacePanel>
 		<Text color='surface.8' fontSize='sm' fontWeight='normal'>
 			Player scores are included only when stats were recorded that week; a missing score does not necessarily mean a player didn&apos;t play.
 		</Text>
 		{league && playerDetails && playerScores && <MatchupExperiments league={league} teamId={team.id} details={playerDetails} scores={playerScores} />}
-		<Panel title='Starter mosaic' description='A week-by-week picture of your most-used starters (up to 15). Purple is 20+ points, teal is 10–19.99, gray is 0–9.99, and orange is below zero. A dash means no recorded start. Scroll sideways for more weeks.'>
+		<SurfacePanel as='section' minW={0} title='Starter mosaic'
+			description='A week-by-week picture of your most-used starters (up to 15). Purple is 20+ points, teal is 10–19.99, gray is 0–9.99, and orange is below zero. A dash means no recorded start. Scroll sideways for more weeks.'
+			contentProps={{mt: 4}}>
 			<StarterMosaic team={team} />
-		</Panel>
+		</SurfacePanel>
 		<SimpleGrid columns={{base: 1, lg: 2}} spacing={4}>
-			<Panel title='Score twins' description='Each week’s two starters with the closest scores. Dots use the same scale across weeks: teal is the first player listed, orange the second. Actual scores are below; ties are broken by lineup order.'>
+			<SurfacePanel as='section' minW={0} title='Score twins' description='Each week’s two starters with the closest scores. Dots use the same scale across weeks: teal is the first player listed, orange the second. Actual scores are below; ties are broken by lineup order.' contentProps={{mt: 4}}>
 				<ScoreTwins team={team} />
-			</Panel>
-			<Panel title='Starter or bench?' description='For players with recorded scores in both roles, compare their average points when started versus benched by this team. Up to 10 players with the biggest differences are shown. Small samples can be misleading; this is not a prediction.'>
+			</SurfacePanel>
+			<SurfacePanel as='section' minW={0} title='Starter or bench?' description='For players with recorded scores in both roles, compare their average points when started versus benched by this team. Up to 10 players with the biggest differences are shown. Small samples can be misleading; this is not a prediction.' contentProps={{mt: 4}}>
 				<BenchSplit team={team} />
-			</Panel>
-			<Panel title='Starter constellation' description='The top 12 players by total points while starting for this team. Bigger stars earned more points; only positive totals with recorded stats are shown.'>
+			</SurfacePanel>
+			<SurfacePanel as='section' minW={0} title='Starter constellation' description='The top 12 players by total points while starting for this team. Bigger stars earned more points; only positive totals with recorded stats are shown.' contentProps={{mt: 4}}>
 				<Constellation team={team} />
-			</Panel>
+			</SurfacePanel>
 		</SimpleGrid>
-		<Panel title='Five team fun facts' description={`${team.name} · Selected season portion. Facts use recorded starter and bench scores; ties use the first week and lineup order.`}>
+		<SurfacePanel as='section' minW={0} title='Five team fun facts' description={`${team.name} · Selected season portion. Facts use recorded starter and bench scores; ties use the first week and lineup order.`} contentProps={{mt: 4}}>
 			<SimpleGrid columns={{base: 1, md: 2, xl: 3}} spacing={3}>
 				{teamFunFacts(team).map((fact) => <Box key={fact.title} bg='surface.2' borderRadius='md' p={3}>
 					<Heading as='h3' size='xs' color='white'>{fact.title}</Heading>
 					<Text mt={2} color='surface.9' fontSize='sm' fontWeight='normal'>{fact.text}</Text>
 				</Box>)}
 			</SimpleGrid>
-		</Panel>
+		</SurfacePanel>
 	</VStack>
 }

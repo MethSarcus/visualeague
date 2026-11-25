@@ -50,8 +50,9 @@ it('follows linked seasons, includes each auction and excludes snake drafts', as
 	const originalFetch = global.fetch
 	global.fetch = fetchMock as unknown as typeof fetch
 	try {
-		const {drafts: rows, hasAuctionDrafts} = await fetchDraftSpending('2')
+		const {drafts: rows, hasAuctionDrafts, hasUncompletedAuctions} = await fetchDraftSpending('2')
 		expect(hasAuctionDrafts).toBe(true)
+		expect(hasUncompletedAuctions).toBe(true)
 		expect(rows.map((row) => row.draftId)).toEqual(['20', '22', '10'])
 		expect(rows[1].status).toBe('drafting')
 		expect(rows[1].members[0]).toMatchObject({name: 'Alpha', total: 5, amounts: {TE: 5}})
@@ -94,9 +95,13 @@ it('distinguishes leagues without auctions from auctions without recorded spendi
 				: url.endsWith('/picks') ? [] : {league_id: '1', previous_league_id: null},
 	})) as unknown as typeof fetch
 	try {
-		expect(await fetchDraftSpending('1')).toEqual({hasAuctionDrafts: false, drafts: []})
+		expect(await fetchDraftSpending('1')).toEqual({
+			hasAuctionDrafts: false, hasUncompletedAuctions: false, drafts: [],
+		})
 		drafts.push({...draft, type: 'auction'})
-		expect(await fetchDraftSpending('1')).toEqual({hasAuctionDrafts: true, drafts: []})
+		expect(await fetchDraftSpending('1')).toEqual({
+			hasAuctionDrafts: true, hasUncompletedAuctions: false, drafts: [],
+		})
 	} finally {
 		global.fetch = originalFetch
 	}

@@ -137,7 +137,7 @@ export default function MobileSidebar({leagueID, isHistory}: {leagueID?: string;
 									</Button>
 								</Link>
 							)}
-							{navLeagueId && (
+							{navLeagueId && process.env.NODE_ENV === 'development' && (
 								<Link href={`/league/${navLeagueId}/experimental`}>
 									<Button
 										leftIcon={<BsGrid3X2 />}

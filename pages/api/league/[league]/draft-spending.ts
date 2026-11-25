@@ -11,7 +11,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (typeof league !== 'string' || !/^\d+$/.test(league)) return res.status(400).json({error: 'A valid league ID is required'})
 	try {
 		const rows = await fetchDraftSpending(league)
-		res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300')
+		const cacheSeconds = rows.hasUncompletedAuctions ? 300 : 3600
+		res.setHeader('Cache-Control', `public, s-maxage=${cacheSeconds}, stale-while-revalidate=${cacheSeconds}`)
 		return res.status(200).json(rows)
 	} catch (error) {
 		console.error('Failed to load auction draft history:', error)

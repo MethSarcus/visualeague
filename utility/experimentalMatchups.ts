@@ -47,7 +47,8 @@ function usableGame(game: Game, scores: Map<string, PlayerScores>) {
 }
 
 export function butterflyEffect(league: League, teamId: number, details: Map<string, DatabasePlayer>, scores: Map<string, PlayerScores>) {
-	const games = gamesFor(league, teamId).filter((game) => usableGame(game, scores))
+	const allGames = gamesFor(league, teamId)
+	const games = allGames.filter((game) => usableGame(game, scores))
 	const results = games.map((game) => {
 		const teamScore = rounded(game.team.pf)
 		const opponentScore = rounded(game.opponent.pf)
@@ -73,7 +74,7 @@ export function butterflyEffect(league: League, teamId: number, details: Map<str
 		}).sort((a, b) => (b.newScore - a.newScore) || a.bench.name.localeCompare(b.bench.name) || a.starter.name.localeCompare(b.starter.name))
 		return {week: game.week, original, teamScore, opponentScore, swaps}
 	})
-	return {games: results, adjustedGames: gamesFor(league, teamId).length - games.length}
+	return {games: results, adjustedGames: allGames.length - games.length}
 }
 
 export function carryJobs(league: League, teamId: number, details: Map<string, DatabasePlayer>, scores: Map<string, PlayerScores>) {
@@ -94,6 +95,7 @@ export function carryJobs(league: League, teamId: number, details: Map<string, D
 
 export function opponentTax(league: League, teamId: number, details: Map<string, DatabasePlayer>, scores: Map<string, PlayerScores>) {
 	const groups = new Map<POSITION, {against: number[]; others: number[]}>()
+	const knownPositions = Object.values(POSITION)
 	for (const week of league.weeks.values()) for (const matchup of week.matchups.values()) {
 		if (!matchup.awayTeam) continue
 		for (const [offense, defense] of [[matchup.homeTeam, matchup.awayTeam], [matchup.awayTeam, matchup.homeTeam]] as const) {
@@ -101,8 +103,8 @@ export function opponentTax(league: League, teamId: number, details: Map<string,
 				const player = playerScore(starter, week.weekNumber, details, scores)
 				if (!player) continue
 				const position = details.get(player.id)?.details.position
-				if (!Object.values(POSITION).some((candidate) => candidate === position)) continue
-				const key = Object.values(POSITION).find((candidate) => candidate === position)!
+				const key = knownPositions.find((candidate) => candidate === position)
+				if (!key) continue
 				const group = groups.get(key) ?? {against: [], others: []}
 				group[defense.roster_id === teamId ? 'against' : 'others'].push(player.score)
 				groups.set(key, group)
