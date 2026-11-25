@@ -1,8 +1,10 @@
-import {Box, Flex, Heading, HStack, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery} from '@chakra-ui/react'
+import {Box, Flex, HStack, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery} from '@chakra-ui/react'
 import {LineCustomSvgLayerProps, LineSeries, ResponsiveLine} from '@nivo/line'
 import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import {Week} from '../../../classes/custom/Week'
+import ChartTooltip from '../ChartTooltip'
+import SurfacePanel from '../../SurfacePanel'
 
 const colors: Record<string, string> = {High: '#00c7ab', Average: '#bb86fc', Low: '#f6c64f'}
 const format = (score: number) => score.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
@@ -40,9 +42,9 @@ export default function WeekRangeChart({league}: {league: League | undefined}) {
 	const tickValues = isMobile && rows.length > 9
 		? rows.filter((_, index) => index % 2 === 0 || index === rows.length - 1).map((row) => row.week)
 		: rows.map((row) => row.week)
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]}>
-		<Heading size='sm' color='white'>Weekly scoring range</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>Highest, average and lowest team score each week. The vertical scale is zoomed to the scores.</Text>
+	return <SurfacePanel title='Weekly scoring range' titleSize='sm'
+		description='Highest, average and lowest team score each week. The vertical scale is zoomed to the scores.'
+		descriptionProps={{mt: 1}}>
 		{rows.length === 0 ? <Text mt={4} color='surface.8' fontWeight='normal'>No weekly scores available.</Text> : <>
 			<HStack spacing={4} mt={4} flexWrap='wrap' rowGap={2}>
 				{['High', 'Average', 'Low'].map((label) => <HStack key={label} spacing={2}>
@@ -61,13 +63,12 @@ export default function WeekRangeChart({league}: {league: League | undefined}) {
 					axisBottom={{tickValues, tickSize: 0, tickPadding: 8, legend: 'Week', legendOffset: 32, legendPosition: 'middle'}}
 					axisLeft={{tickValues: 5, tickSize: 0, tickPadding: 8}} pointSize={5}
 					pointColor={{from: 'series.color'}} pointBorderWidth={1} pointBorderColor='#182021'
-					enableSlices='x' sliceTooltip={({slice}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm'>
-						<Text mb={1}>Week {slice.points[0]?.data.xFormatted}</Text>
-						{slice.points.slice().sort((a, b) => Number(b.data.y) - Number(a.data.y)).map((point) =>
-							<Flex key={point.id} justify='space-between' gap={5} color={point.seriesColor}>
-								<Text>{point.seriesId}</Text><Text>{format(Number(point.data.y))}</Text>
-							</Flex>)}
-					</Box>} />
+					enableSlices='x' sliceTooltip={({slice}) => <ChartTooltip
+						title={`Week ${slice.points[0]?.data.xFormatted}`}
+						rows={slice.points.slice().sort((a, b) => Number(b.data.y) - Number(a.data.y)).map((point) => ({
+							key: String(point.id), label: String(point.seriesId), value: format(Number(point.data.y)), color: point.seriesColor,
+						}))}
+					/>} />
 			</Box>
 			<Box as='details' mt={2}>
 				<Box as='summary' color='secondary.200' fontSize='sm' cursor='pointer'>View weekly scores</Box>
@@ -79,5 +80,5 @@ export default function WeekRangeChart({league}: {league: League | undefined}) {
 				</Table></TableContainer>
 			</Box>
 		</>}
-	</Box>
+	</SurfacePanel>
 }

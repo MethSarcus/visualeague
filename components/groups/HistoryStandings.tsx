@@ -7,6 +7,7 @@ import {
 import {useMemo, useState} from 'react'
 import {HistoryTeam} from '../../lib/leagueHistory'
 import {formatHistoryRecord} from '../../lib/historyRecordFormat'
+import SurfacePanel from '../SurfacePanel'
 
 interface Standing {
 	id: string
@@ -27,7 +28,6 @@ interface Standing {
 
 type SortKey = 'name' | 'wins' | 'winLossRatio' | 'games' | 'points' | 'pointsAgainst' | 'ppg' | 'papg' | 'seasons'
 const format = (value: number) => value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
-const panel = {bg: 'surface.1', border: '1px solid', borderColor: 'whiteAlpha.200', borderRadius: 'xl'}
 const scoringColors = {for: 'secondary.300', against: 'primary.400'}
 
 export default function HistoryStandings({teams, showTies = teams.some((team) => team.ties > 0)}: {teams: HistoryTeam[]; showTies?: boolean}) {
@@ -75,7 +75,7 @@ export default function HistoryStandings({teams, showTies = teams.some((team) =>
 		{key: 'papg', label: 'PA / game', numeric: true},
 		...(selectedSeasonId === 'all' ? [{key: 'seasons' as const, label: 'Seasons', numeric: true}] : []),
 	]
-	return <Box {...panel} mt={6} p={[4, 6]}>
+	return <SurfacePanel mt={6} p={[4, 6]}>
 		<Flex justify='space-between' align={{base: 'stretch', md: 'end'}} direction={{base: 'column', md: 'row'}} gap={4}>
 			<Box>
 				<Heading size='md' color='white'>All-time standings</Heading>
@@ -113,7 +113,7 @@ export default function HistoryStandings({teams, showTies = teams.some((team) =>
 			GP, PA and per-game averages use paired head-to-head games only. PF includes all scored weeks, including byes and unpaired matchups. {showTies ? 'W-L-T' : 'W-L'} sorts by wins. W/L is wins divided by losses{showTies ? ', excluding ties' : ''}; ∞ means wins with no losses, and — means no wins or losses.
 		</Text>
 		<ScoringChart standings={standings} />
-	</Box>
+	</SurfacePanel>
 }
 
 function ScoringChart({standings}: {standings: Standing[]}) {

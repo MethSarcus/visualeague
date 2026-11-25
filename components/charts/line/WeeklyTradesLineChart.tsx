@@ -3,6 +3,7 @@ import { LineSeries, ResponsiveLine } from "@nivo/line";
 import { useMemo } from "react";
 import Trade from "../../../classes/custom/Trade";
 import { project_colors } from "../../../utility/project_colors";
+import ChartTooltip from '../ChartTooltip'
 
 interface MyProps {
   trades: Trade[] | undefined
@@ -26,20 +27,9 @@ const WeeklyTradesLineChart = (props: MyProps) => {
       margin={{ top: 20, right: 40, bottom: 40, left: 60 }}
       enableGridX={false}
       enableCrosshair={false}
-      tooltip={({ point }) => {
-            return (
-                <div
-                    style={{
-                        background: project_colors.surface[0],
-                        padding: '9px 12px',
-                        border: '1px solid #ccc',
-                        color: "white"
-                    }}
-                >
-                    <div>{`${point.seriesId}: ${Number(point.data.y).toFixed(2)}`}</div>
-                </div>
-            )
-        }}
+      tooltip={({point}) => <ChartTooltip title={point.seriesId} rows={[{
+        key: 'trades', label: 'Trades', value: Number(point.data.y).toFixed(2), color: point.seriesColor,
+      }]} />}
       pointColor={{ from: "series.color", modifiers: [["brighter", 1.1]] }}
       pointBorderWidth={0}
       useMesh={true}

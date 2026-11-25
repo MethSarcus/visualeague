@@ -23,6 +23,7 @@ export interface DraftSpendingRow {
 
 export interface DraftSpendingResponse {
 	hasAuctionDrafts: boolean
+	hasUncompletedAuctions: boolean
 	drafts: DraftSpendingRow[]
 }
 

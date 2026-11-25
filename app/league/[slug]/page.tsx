@@ -15,31 +15,38 @@ import LeagueNotableWeeksStatGroup from '../../../components/groups/stats/League
 import SuperStatsGroup from '../../../components/groups/stats/SuperStatsGroup'
 import LeagueOverviewDataTable from '../../../components/tables/LeagueOverviewDatatable'
 import { LeagueContext } from '../../../contexts/LeagueContext'
+import {POSITION} from '../../../utility/rosterFunctions'
 
 const LeaguePage = () => {
 	const [show, setShow] = useState(false)
 	const handleToggle = () => setShow(!show)
 	const [context, setContext] = useContext(LeagueContext)
 	const [isMobile] = useMediaQuery('(max-width: 768px)')
+	const [hiddenPositions, setHiddenPositions] = useState<POSITION[]>([])
+	const [hiddenRosterIds, setHiddenRosterIds] = useState<number[]>([])
+	const togglePosition = (position: POSITION) => setHiddenPositions((hidden) =>
+		hidden.includes(position) ? hidden.filter((item) => item !== position) : [...hidden, position])
+	const toggleRoster = (rosterId: number) => setHiddenRosterIds((hidden) =>
+		hidden.includes(rosterId) ? hidden.filter((id) => id !== rosterId) : [...hidden, rosterId])
 	const waiverType = context.settings?.settings?.waiver_type
 	const showFaab = typeof waiverType !== 'number' || !Number.isFinite(waiverType) || waiverType === 2 || waiverType === 3
 
 	const desktopGrid = `"header header header"
                       "leagueTable weekStats weekStats"
 					  "super_stats super_stats super_stats"
-					  ${showFaab ? '"faab faab faab"' : ''}
                       "pfTable pfLineChart pfLineChart"
-                      "radarChart pfBarChart pfBarChart"`
+                      "radarChart pfBarChart pfBarChart"
+					  ${showFaab ? '"faab faab faab"' : ''}`
 
 	const mobileGrid = `"header"
                       "leagueTable"
                       "weekStats"
 					  "super_stats"
-					  ${showFaab ? '"faab"' : ''}
                       "pfTable"
                       "pfBarChart"
 					  "pfLineChart"
-					  "radarChart"`
+					  "radarChart"
+					  ${showFaab ? '"faab"' : ''}`
 
 	return (
 		<Box overflowX={'hidden'}>
@@ -48,7 +55,7 @@ const LeaguePage = () => {
 				mx={4}
 				my={2}
 				templateAreas={{base: mobileGrid, lg: desktopGrid}}
-				gridTemplateColumns={{base: 'minmax(0, 1fr)', lg: 'minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr)'}}
+				gridTemplateColumns={{base: 'minmax(0, 1fr)', lg: 'repeat(3, minmax(0, 1fr))'}}
 			>
 				<GridItem area={'header'}>
 					<Skeleton
@@ -89,13 +96,23 @@ const LeaguePage = () => {
 				</GridItem>
 
 
-				<GridItem area={'radarChart'} minW={0}>
-					<Box height={'500px'} textColor='black'>
-						<TeamRadarChart league={context} />
+				<GridItem area={'radarChart'} minW={0} display='flex'>
+					<Box w='full' h='100%' minW={0} textColor='black'>
+						<TeamRadarChart
+							league={context}
+							hiddenPositions={hiddenPositions}
+							hiddenRosterIds={hiddenRosterIds}
+						/>
 					</Box>
 				</GridItem>				
-				<GridItem area={'pfBarChart'} minHeight='350px' minW={0}>
-					<LeagueStackedPfBarChart league={context} />
+				<GridItem area={'pfBarChart'} minHeight='350px' minW={0} display='flex'>
+					<LeagueStackedPfBarChart
+						league={context}
+						hiddenPositions={hiddenPositions}
+						hiddenRosterIds={hiddenRosterIds}
+						onTogglePosition={togglePosition}
+						onToggleRoster={toggleRoster}
+					/>
 				</GridItem>
 			</Grid>
 		</Box>

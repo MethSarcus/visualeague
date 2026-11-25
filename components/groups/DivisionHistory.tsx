@@ -4,6 +4,7 @@ import {Box, Flex, Heading, SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs,
 import {FaTrophy} from 'react-icons/fa'
 import {aggregateDivisionHistory, aggregateDivisionPairs, DivisionHistory as DivisionHistoryData, DivisionPair, DivisionRecord, DivisionSeason} from '../../lib/divisionHistory'
 import {formatHistoryRecord} from '../../lib/historyRecordFormat'
+import SurfacePanel from '../SurfacePanel'
 
 const colors = ['secondary.300', 'primary.400', 'orange.300', 'blue.300', 'pink.300', 'yellow.300']
 const color = (id: number) => colors[(id - 1) % colors.length]
@@ -14,11 +15,9 @@ export default function DivisionHistory({history, showTies = history.seasons.som
 	const pairs = aggregateDivisionPairs(history)
 	const missing = history.seasons.reduce((sum, season) => sum + season.missingDivisionRosters, 0)
 	const excluded = history.seasons.reduce((sum, season) => sum + season.excludedGames, 0)
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' mt={6} p={[4, 6]}>
-		<Heading size='md' color='white'>Division bragging rights</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
-			Head-to-head results between divisions. Records and scoring averages use the same interdivision games. {showTies && 'Ties count as half a win.'}
-		</Text>
+	return <SurfacePanel mt={6} p={[4, 6]} title='Division bragging rights'
+		description={<>Head-to-head results between divisions. Records and scoring averages use the same interdivision games. {showTies && 'Ties count as half a win.'}</>}
+		descriptionProps={{mt: 1}}>
 		{history.seasons.length === 0 ? <Text color='surface.9' mt={5} fontWeight='normal'>No linked seasons have divisions configured.</Text> :
 			<Tabs mt={5} colorScheme='teal' isLazy>
 				<TabList borderColor='whiteAlpha.200'><Tab>All time</Tab><Tab>By season</Tab></TabList>
@@ -45,7 +44,7 @@ export default function DivisionHistory({history, showTies = history.seasons.som
 			Includes paired regular season and playoff games between divisions, including consolation games. Same-division games, byes, median games, incomplete or invalid matchups, and results for rosters with unknown divisions are excluded. Division assignments use season roster settings and may change mid-season. Season cards compare each metric separately; the trophy identifies the league champion&apos;s reported division, even when the champion is filtered out.
 			{history.seasonsWithoutDivisions > 0 && ` ${history.seasonsWithoutDivisions} season(s) without configured divisions are not shown.`}
 		</Text>
-	</Box>
+	</SurfacePanel>
 }
 
 function DivisionComparison({pairs, showTies}: {pairs: DivisionPair[]; showTies: boolean}) {

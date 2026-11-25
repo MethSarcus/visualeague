@@ -120,6 +120,42 @@ export default function MobileSidebar({leagueID, isHistory}: {leagueID?: string;
 								</Link>
 							)}
 							{navLeagueId && (
+								<Link href={`/league/${navLeagueId}/position-scoring`}>
+									<Button
+										leftIcon={<BsBarChart />}
+										variant='ghost'
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
+										onClick={onClose}
+									>
+										Position Scoring
+									</Button>
+								</Link>
+							)}
+							{navLeagueId && process.env.NODE_ENV === 'development' && (
+								<Link href={`/league/${navLeagueId}/experimental`}>
+									<Button
+										leftIcon={<BsGrid3X2 />}
+										variant='ghost'
+										w='full'
+										justifyContent='flex-start'
+										borderRadius='md'
+										minH='44px'
+										px={3}
+										color='textTheme.mediumEmphasis'
+										_hover={{bg: 'surface.2', color: 'white'}}
+										onClick={onClose}
+									>
+										Experimental
+									</Button>
+								</Link>
+							)}
+							{navLeagueId && (
 								<Link href={`/league/${navLeagueId}/trades`}>
 									<Button
 										leftIcon={<RxLoop />}

@@ -4,6 +4,7 @@ import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import LeagueMember from '../../../classes/custom/LeagueMember'
 import {project_colors} from '../../../utility/project_colors'
+import ChartTooltip from '../ChartTooltip'
 
 interface MyProps {
 	league: League | undefined
@@ -90,22 +91,9 @@ const LeagueWeeklyPointsLineChart = (props: MyProps) => {
 				legendPosition: 'middle',
 			}}
 			pointSize={isOnMobile ? 1 : 10}
-			tooltip={({point}) => {
-				return (
-					<div
-						style={{
-							background: 'white',
-							padding: '9px 12px',
-							border: '1px solid #ccc',
-							color: 'black',
-						}}
-					>
-						<div>{`${point.seriesId}: ${Number(point.data.y).toFixed(
-							2
-						)}`}</div>
-					</div>
-				)
-			}}
+			tooltip={({point}) => <ChartTooltip title={point.seriesId} rows={[{
+				key: 'points', label: 'Points', value: Number(point.data.y).toFixed(2), color: point.seriesColor,
+			}]} />}
 			pointColor={{from: 'series.color', modifiers: [['brighter', 1.1]]}}
 			pointBorderWidth={0}
 			pointLabelYOffset={-12}

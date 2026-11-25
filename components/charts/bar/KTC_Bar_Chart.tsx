@@ -6,6 +6,7 @@ import LeagueMember from '../../../classes/custom/LeagueMember'
 import { SleeperPlayerDetails } from '../../../classes/custom/Player'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
 import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
+import ChartTooltip from '../ChartTooltip'
 
 interface MyProps {
 	league?: League
@@ -38,20 +39,9 @@ const KTC_Bar_Chart = (props: MyProps) => {
 			data={data}
 			keys={keys}
 			tooltip={({id, value, color}) => {
-				let playerDets = playerDetails?.get(String(id))
-				return (
-					<div
-						style={{
-							padding: 12,
-							color,
-							background: '#222222',
-						}}
-					>
-						<strong>
-							{`${playerDets?.first_name} ${playerDets?.last_name}`} KTC Value: {Number(value).toFixed(2)}
-						</strong>
-					</div>
-				)
+				const player = playerDetails?.get(String(id))
+				return <ChartTooltip title={`${player?.first_name ?? ''} ${player?.last_name ?? ''}`.trim()}
+					rows={[{key: 'value', label: 'KTC Value', value: Number(value).toFixed(2), color}]} />
 			}}
 			indexBy='member'
 			layout='horizontal'

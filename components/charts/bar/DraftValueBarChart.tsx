@@ -1,8 +1,10 @@
-import {Box, Flex, Heading, HStack, Skeleton, Text, useMediaQuery} from '@chakra-ui/react'
+import {Box, Flex, HStack, Skeleton, Text, useMediaQuery} from '@chakra-ui/react'
 import {BarDatum, ResponsiveBar} from '@nivo/bar'
 import {useMemo} from 'react'
 import League from '../../../classes/custom/League'
 import {getPositionColor, POSITION} from '../../../utility/rosterFunctions'
+import ChartTooltip from '../ChartTooltip'
+import SurfacePanel from '../../SurfacePanel'
 
 const format = (value: number) => value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
@@ -32,11 +34,9 @@ export default function DraftValueBarChart({league}: {league?: League}) {
 	const chart = useMemo(() => league?.settings ? formatDraftValueChart(league) : undefined, [league])
 	if (!chart || !league) return <Skeleton h='350px' borderRadius='xl' aria-label='Loading draft value by team' />
 	const names = new Map(chart.members.map((member) => [String(member.roster.roster_id), member.name]))
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} h='100%'>
-		<Heading size='sm' color='white'>Draft value by team</Heading>
-		<Text mt={1} fontSize='sm' color='surface.8' fontWeight='normal'>
-			Player draft values by team and position. Hover over a segment for player details.
-		</Text>
+	return <SurfacePanel h='100%' title='Draft value by team' titleSize='sm'
+		description='Player draft values by team and position. Hover over a segment for player details.'
+		descriptionProps={{mt: 1}}>
 		{!chart.members.length || !chart.keys.length ? <Text mt={4} color='surface.8' fontWeight='normal'>No draft value available.</Text> : <>
 			<HStack spacing={4} mt={4} flexWrap='wrap' rowGap={2}>
 				{chart.positions.map((position) => <HStack key={position} spacing={2}>
@@ -59,13 +59,12 @@ export default function DraftValueBarChart({league}: {league?: League}) {
 						return name.length > limit ? `${name.slice(0, limit - 1)}…` : name
 					}}}
 					enableLabel={false} borderWidth={1} borderColor='#182021'
-					tooltip={({id, value, data, color}) => <Box bg='surface.2' color='white' p={3} borderRadius='md' boxShadow='lg' fontSize='sm'>
-						<Text>{data.member}</Text>
-						<Flex justify='space-between' gap={5}><Text color={color}>{league.draft.picks.get(String(id))?.name}</Text>
-							<Text>{format(Number(value))}</Text></Flex>
-					</Box>}
+					tooltip={({id, value, data, color}) => <ChartTooltip title={data.member} rows={[{
+						key: String(id), label: league.draft.picks.get(String(id))?.name ?? String(id),
+						value: format(Number(value)), color,
+					}]} />}
 					role='img' ariaLabel='Draft value for each team by player' />
 			</Box>
 		</>}
-	</Box>
+	</SurfacePanel>
 }

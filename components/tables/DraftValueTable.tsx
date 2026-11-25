@@ -1,8 +1,9 @@
 'use client'
 
-import {Box, Button, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr} from '@chakra-ui/react'
+import {Box, Button, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr} from '@chakra-ui/react'
 import {useState} from 'react'
 import {AuctionDraftPlayer, Draft, DraftPlayer, DRAFT_TYPE} from '../../classes/custom/Draft'
+import SurfacePanel from '../SurfacePanel'
 
 interface DataRow {
 	id: string
@@ -50,11 +51,9 @@ export default function DraftValueTable({draft}: {draft: Draft | undefined}) {
 	const selectSort = (key: SortKey) => setSort((current) => ({
 		key, ascending: current.key === key ? !current.ascending : key === 'name',
 	}))
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' p={[4, 5]} h='100%'>
-		<Heading size='sm' color='white'>Drafted players</Heading>
-		<Text mt={1} mb={4} color='surface.8' fontSize='sm' fontWeight='normal'>
-			Player production and draft value. Select a column to sort.
-		</Text>
+	return <SurfacePanel h='100%' title='Drafted players' titleSize='sm'
+		description='Player production and draft value. Select a column to sort.'
+		descriptionProps={{mt: 1, mb: 4}}>
 		<Skeleton isLoaded={draft !== undefined} borderRadius='md'>
 			<TableContainer maxH='700px' overflowY='auto' overflowX='auto' border='1px solid' borderColor='whiteAlpha.200' borderRadius='md'>
 				<Table size='sm' aria-label='Drafted player statistics'
@@ -77,5 +76,5 @@ export default function DraftValueTable({draft}: {draft: Draft | undefined}) {
 				{draft && !rows.length && <Text p={4} color='surface.8' fontSize='sm'>No drafted players available.</Text>}
 			</TableContainer>
 		</Skeleton>
-	</Box>
+	</SurfacePanel>
 }

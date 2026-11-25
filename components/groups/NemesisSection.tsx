@@ -6,6 +6,7 @@ import {useReducedMotion} from 'framer-motion'
 import {useEffect, useId, useRef, useState} from 'react'
 import {HistoryRival, HistoryTeam} from '../../lib/leagueHistory'
 import NemesisCard from '../cards/NemesisCard'
+import SurfacePanel from '../SurfacePanel'
 
 type NemesisMode = 'losses' | 'points'
 type NemesisCarouselCard = {team: HistoryTeam; rival: HistoryRival | null; mutual: boolean; tied: boolean; opponentTied: boolean}
@@ -81,7 +82,7 @@ export default function NemesisSection({teams, showTies = teams.some((team) => t
 		})
 		if (nearestDistance !== undefined) navigate(nearestDistance)
 	}
-	return <Box bg='surface.1' border='1px solid' borderColor='whiteAlpha.200' borderRadius='xl' mt={6} p={[4, 6]}>
+	return <SurfacePanel mt={6} p={[4, 6]}>
 		<Flex justify='space-between' direction={{base: 'column', lg: 'row'}} gap={4}>
 			<Box>
 				<Heading size='md' color='white'>Every team has a nemesis</Heading>
@@ -172,5 +173,5 @@ export default function NemesisSection({teams, showTies = teams.some((team) => t
 					onClick={() => navigate(1)} />
 			</HStack>}
 		</> : <Text mt={4} color='surface.8'>No teams available.</Text>}
-	</Box>
+	</SurfacePanel>
 }

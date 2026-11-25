@@ -7,6 +7,7 @@ import SeasonPlayer from '../../../classes/custom/SeasonPlayer'
 import { PlayerDetailsContext } from '../../../contexts/PlayerDetailsContext'
 import { PlayerScoresContext } from '../../../contexts/PlayerScoresContext'
 import {project_colors} from '../../../utility/project_colors'
+import ChartTooltip from '../ChartTooltip'
 
 interface MyProps {
 	player: SeasonPlayer | undefined
@@ -53,19 +54,9 @@ const RosterPlayerTrendingLineChart = (props: MyProps) => {
 			pointBorderWidth={0}
 			useMesh={true}
 			legends={[]}
-			tooltip={({point}) => {
-				return (
-					<div
-						style={{
-							padding: '1px',
-							color: 'white',
-							fontSize: '12px',
-						}}
-					>
-						<div>{`${Number(point.data.y).toFixed(2)}`}</div>
-					</div>
-				)
-			}}
+			tooltip={({point}) => <ChartTooltip title={point.seriesId} rows={[{
+				key: 'points', label: 'Points', value: Number(point.data.y).toFixed(2), color: point.seriesColor,
+			}]} />}
 			markers={[
 				{
 					axis: 'y',
