@@ -104,6 +104,11 @@ const Navbar = (props: MyProps) => {
 					link={`/league/${navLeagueId}/position-scoring`}
 				/>
 				<NavbarButton
+					buttonText='Experimental'
+					disabled={!navLeagueId}
+					link={`/league/${navLeagueId}/experimental`}
+				/>
+				<NavbarButton
 					buttonText='Playoff Odds'
 					disabled={!navLeagueId}
 					link={`/league/${navLeagueId}/playoff-odds`}
